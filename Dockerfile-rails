@@ -1,0 +1,165 @@
+# DockerFile-DB
+
+# syntax=docker/dockerfile:1
+# check=error=true
+
+# Base Ruby image
+ARG RUBY_VERSION=3.2.6
+FROM ruby:${RUBY_VERSION} AS build
+
+ENV PATH="${PWD}/bin:${PATH}"
+
+WORKDIR /rails
+
+RUN env
+
+# Modify these defaults as needed
+ARG NODE_VERSION=23.2.0
+ARG INTERNAL_PORT=80
+ARG EXTERNAL_PORT=80
+ARG SSH_PORT="222"
+ARG SSH_PUBLIC_KEY
+ARG SERVER_NAME="jump_start_server_rails"
+ARG SUDO_AVAILABLE="true"
+ARG RAILS_USERNAME="rails"
+ARG USERNAME="jump_start"
+ARG GEM_HOME="/rails/gems"
+ARG USER_PASSWORD
+ARG RAILS_PASSWORD
+
+# Set environment variables for Rails configuration
+ENV INTERNAL_PORT=${INTERNAL_PORT}
+ENV EXTERNAL_PORT=${EXTERNAL_PORT}
+ENV SSH_PORT=${SSH_PORT}
+ENV SERVER_NAME=${SERVER_NAME}
+ENV SUDO_AVAILABLE=${SUDO_AVAILABLE}
+ENV RAILS_USERNAME=${RAILS_USERNAME}
+ENV GEM_HOME=${GEM_HOME}
+ENV USERNAME=${USERNAME}
+ENV SSH_PUBLIC_KEY=${SSH_PUBLIC_KEY}
+ENV USER_PASSWORD=${USER_PASSWORD}
+ENV RAILS_PASSWORD=${USER_PASSWORD}
+
+RUN echo "*** Installing Base Packages..."
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+    curl \
+    libjemalloc2 \
+    libvips \
+    postgresql-client \
+    openssl \
+    build-essential \
+    git \
+    libpq-dev \
+    node-gyp \
+    pkg-config \
+    locales \
+    python-is-python3 \
+    python3-pip \
+    procps \
+    passwd \
+    nano \
+    libyaml-dev && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+RUN pip install --no-cache-dir --break-system-packages  psycopg2-binary
+
+# Install Node.js 22 and npm
+RUN apt-get update -qq && apt-get install -y curl \
+    && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y nodejs
+
+RUN echo "*** Base Packages Installed."
+
+# Setup environmental variabl;es for all users
+COPY ./startup/rails/.env /etc/environment
+RUN chmod 644 /etc/environment
+RUN echo "set -o allexport && source /etc/environment && set +o allexport" >> /etc/profile
+
+COPY ./startup/rails/.env ./
+COPY ./startup/templates/ ./templates/
+COPY ./startup/rails/templates/ ./templates/
+COPY ./startup/scripts ./scripts/
+COPY ./startup/rails/scripts/ ./scripts/
+COPY ./bin/process_template.sh ./bin/
+
+RUN chmod 400 ./.env
+RUN ./scripts/setup_user.sh ${RAILS_USERNAME} ${RAILS_PASSWORD} 1001
+RUN ./scripts/setup_user.sh ${USERNAME} ${USER_PASSWORD} 1002 /home/${USERNAME}
+
+# Optionally install ssh
+RUN if [ -n "$SSH_PORT" ]; then \
+      ./scripts/configure_ssh.sh ${USERNAME} ./setup/${SSH_PUBLIC_KEY} ; \
+    else \
+      echo "*** SSH Server Not Installed" ; \
+    fi
+
+# Optionally install sudo and net tools
+RUN if [ "${SUDO_AVAILABLE}" = "true" ]; then \
+        ./scripts/install_sudo.sh rails ${USERNAME} ; \
+    fi
+
+# Set the hostname
+RUN echo "${SERVER_NAME}" > /etc/hostname
+RUN chown -R rails:rails .
+RUN ls -la
+
+FROM build AS bundle
+
+WORKDIR /rails
+USER rails
+
+RUN echo "*** Copying Files from base..."
+COPY --from=build /rails /rails
+RUN echo "*** Files copied from base."
+
+RUN echo "*** Copying Files to build..."
+COPY --chown=rails:rails ./bin/backup_database.sh ./bin/
+COPY --chown=rails:rails ./bin/load_database.sh ./bin/
+COPY --chown=rails:rails ./startup/${SSH_PUBLIC_KEY} ./setup/
+COPY --chown=rails:rails . .
+RUN echo "*** Files copied to build."
+
+RUN mkdir "${GEM_HOME}"
+
+# Remove extra files it's easier to copy the entire tree and remove what we don't want rather than try to specify what to copy
+RUN rm -rf ./startup/database ./startup/rails
+
+# Install the correct Bundler version
+RUN echo "*** Installing Bundler..."
+RUN gem install bundler -v '~> 2.5'
+RUN echo "*** Bundler Installed..."
+
+# Set production environment variables
+ENV RAILS_ENV="${RAILS_ENV}" \
+    BUNDLE_DEPLOYMENT="1" \
+    BUNDLE_PATH="/rails/bundle"
+
+# Copy and install dependencies
+RUN echo "*** Installing Gems"
+COPY --chown=rails:rails Gemfile Gemfile.lock ./
+RUN bundle install && \
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+    bundle exec bootsnap precompile --gemfile
+RUN echo "*** Gems Installed."
+
+COPY --chown=rails:rails package.json .
+
+RUN npm install
+
+RUN if [ "$RAILS_ENV" = "production" ]; then \
+        bundle exec rake assets:precompile ; \
+    fi
+
+RUN echo "*** Precompiling bootsnap ..."
+RUN bundle exec bootsnap precompile app/ lib/
+RUN echo "*** Bootsnap Precompiled."
+
+RUN if [ "${RAILS_ENV}" = "production" ]; then \
+    DISABLE_DATABASE_ENVIRONMENT_CHECK=1 bundle exec rails assets:precompile ; \
+fi
+
+# Expose HTTPS and SSH ports
+EXPOSE ${EXTERNAL_PORT} ${SSH_PORT}
+
+# Start Rails server (and optionall SSH Server)
+ENTRYPOINT ["/rails/scripts/rails-entrypoint.sh"]

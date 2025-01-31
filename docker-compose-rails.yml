@@ -1,0 +1,81 @@
+# docker-compose-rails.yml
+
+services:
+  rails:
+    image: "${PROJECT_NAME}_rails"
+    container_name: "${PROJECT_NAME}_rails"
+    restart: always
+
+    environment:
+      # You must define these either in the .env file, or in an environmental varaiable
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      # Set this if you want SSH enabled
+      SSH_PORT: ${SSH_PORT}
+
+      # These are the database defaults
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_DATABASE: ${DB_DATABASE:-rails}
+      DB_USERNAME: ${DB_USERNAME:-jump_start}
+      DB_URL: ${DB_URL}
+      PGGSSENCMODE: ${PGGSSENCMODE:-disable}
+
+      # SUDO
+      SUDO_AVAILABLE: ${SUDO_AVAILABLE:-false}
+
+      # Site info
+      SITE_NAME: ${SITE_NAME:-"Jump Start Server"}
+      SITE_DOMAIN: ${SITE_DOMAIN:-jumpstartserver.com}
+      SITE_HOST: ${SITE_HOST:-jumpstartserver.com}
+      SITE_URL: ${SITE_URL:-"https://jumpstartserver.com"}
+      SERVER_HOST: ${SERVER_HOST:-jumpstartserver.com}
+      SERVER_MODE: ${SERVER_MODE:-https}
+      SERVER_PORT: ${SERVER_PORT:-3000}
+      INTERNAL_PORT: ${INTERNAL_PORT:-3000}
+
+      GUEST_USER: ${GUEST_USER:-guest}
+
+      USERNAME: ${USERNAME:-jump_start}
+
+      # Rails
+      RACK_ENV: ${RACK_ENV:-production}
+      RAILS_ENV: ${RAILS_ENV:-production}
+      RAILS_SERVE_STATIC_FILES: ${RAILS_SERVE_STATIC_FILES:-enabled}
+      GEM_HOME: ${GEM_HOME:-/rails/gems}
+
+      # Captha
+      RECAPTCHA_ENABLED: ${RECAPTCHA_ENABLED:-false}
+      RECAPTCHA_SITE_KEY: ${RECAPTCHA_SITE_KEY}
+      RECAPTCHA_SECRET_KEY: ${RECAPTCHA_SECRET_KEY}
+
+      # Do not Change these
+      DOCKERIZED: true
+      STARTUP: true
+
+    ports:
+      - "${EXTERNAL_PORT:-3000}:${INTERNAL_PORT:-3000}"
+      - "${SSH_PORT:-22}:22"
+
+    volumes:
+      - ./log:/rails/log
+      - ./tmp:/rails/tmp
+      - storage:/rails/storage
+      - user_home:/home/${USERNAME}
+
+    networks:
+      - network
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "${SITE_URL}/home"]
+      interval: 300s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  storage:
+  user_home:
+
+networks:
+  network:

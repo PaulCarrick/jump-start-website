@@ -1,0 +1,23 @@
+<%= turbo_frame_tag "flash" do %>
+  <div id="error-area">
+    <% @error_displayed = false %>
+    <% flash.each do |key, message| %>
+      <% if key == "error" %>
+        <div class="alert alert-danger">
+          <%= message %>
+        </div>
+        <% @error_displayed = true %>
+      <% else %>
+        <div class="alert alert-info">
+          <%= message %>
+        </div>
+      <% end %>
+    <% end %>
+
+    <% if !@error_displayed && @error_message.present? %>
+      <div class="alert alert-danger">
+        <%= @error_message %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,69 @@
+# docker-compose-db.yml
+
+services:
+  db:
+    image: "${PROJECT_NAME}_database"
+    container_name: "${PROJECT_NAME}_database"
+    restart: always
+
+    environment:
+      # *** - Secrets
+      # You must define these either in the .env file, or in an environmental variable
+      DB_PASSWORD: ${DB_PASSWORD}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      USER_PASSWORD: ${USER_PASSWORD}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      RAILS_PASSWORD: ${RAILS_PASSWORD}
+      POSTFIXADMIN_DB_PASSWORD: ${POSTFIXADMIN_DB_PASSWORD}
+      POSTFIXADMIN_ADMIN_PASSWORD: ${POSTFIXADMIN_ADMIN_PASSWORD}
+
+      # These are the defaults
+      SETUP_DATABASE: ${SETUP_DATABASE:-true}
+      INTERNAL_PORT: ${INTERNAL_PORT:-5432}
+      EXTERNAL_PORT: ${EXTERNAL_PORT:-5432}
+
+      # Database Information
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_DATABASE: ${DB_DATABASE:-rails}
+      MAIL_DATABASE: ${DB_DATABASE:-mail}
+      DB_USERNAME: ${DB_USERNAME:-jump_start}
+      PGGSSENCMODE: ${PGGSSENCMODE:-disable}
+      DB_URL: ${DB_URL:-"postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}"}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+
+      # Users
+      POSTGRES_USERNAME: ${POSTGRES_USERNAME:-postgres}
+      RAILS_USERNAME: ${RAILS_USERNAME:-rails}
+      USERNAME: ${USERNAME:-jump_start}
+
+      # Optional Services Information
+      # SUDO
+      SUDO_AVAILABLE: ${SUDO_AVAILABLE:-true}
+
+      # SSH
+      SSH_PORT: ${SSH_PORT:-222} # External port, internally it runs 22. This is so both containers can be SShed into.
+      SSH_PUBLIC_KEY: ${SSH_PUBLIC_KEY:-ssh_public_key} # SSH public key file
+
+      # Do not Change these
+      STARTUP: true
+
+    ports:
+      - "${EXTERNAL_PORT:-5432}:${INTERNAL_PORT:-5432}"
+      - "${SSH_PORT:-22}:22"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - storage:/database/storage
+      - user_home:/home/${USERNAME}
+
+    networks:
+      - network
+
+volumes:
+  postgres_data:
+  storage:
+  user_home:
+
+networks:
+  network:

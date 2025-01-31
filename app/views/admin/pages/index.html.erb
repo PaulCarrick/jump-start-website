@@ -1,0 +1,53 @@
+<!-- app/views/admin/pages/index.html.erb -->
+<%= render layout: "layouts/admin_page" do %>
+  <div class="row border-bottom border-dark mb-2">
+    <div class="col-2">
+      <%= sortable_column('Name', 'name', "pages") %>
+    </div>
+    <div class="col-2">
+      <%= sortable_column('Section', 'section', "pages") %>
+    </div>
+    <div class="col-4">
+      <%= sortable_column('Title', 'title', "pages") %>
+    </div>
+    <div class="col-2">
+      <%= sortable_column('Access', 'access', "pages") %>
+    </div>
+    <div class="col-2">
+      <%= link_to "Clear Sort", '#', class: "action-links", onclick: "clearSort()" %>
+    </div>
+  </div>
+  <div class="scrollable-container p-2">
+    <% controller.get_items.each do |page| %>
+      <div class="row">
+        <div class="col-2">
+          <%= page.name %>
+        </div>
+        <div class="col-2">
+          <%= page.section %>
+        </div>
+        <div class="col-4">
+          <%= page.title %>
+        </div>
+        <div class="col-2">
+          <%= page.access %>
+        </div>
+        <div class="col-2" style="min-height: 2em;">
+          <% delete_path = admin_page_path(page).to_s + "/delete" %>
+          <%= action_links(page,
+                           admin_page_path(page),
+                           edit_admin_page_path(page),
+                           delete_path) %>
+        </div>
+      </div>
+    <% end %>
+    <div class="row mt-3 mb-3">
+      <div class="col-2">
+        <%= link_to("New page", new_admin_page_path, class: "btn btn-primary", target: "_self") %>
+      </div>
+      <div class="col-10 justify-content-end">
+        <%= render 'shared/page_navigation' %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,76 @@
+<!-- /app/views/layouts/_page_contents.erb -->
+
+<style>
+  <% if @site_information.present? %>
+  :root {
+      --header-bg: <%= @site_information.header_background %>;
+      --header-text-color: <%= @site_information.header_text_color %>;
+      --footer-bg: <%= @site_information.footer_background %>;
+      --footer-text-color: <%= @site_information.footer_text_color %>;
+      --container-bg: <%= @site_information.container_background %>;
+      --container-text-color: <%= @site_information.container_text_color %>;
+      --page-background-image: <%= @site_information.page_background_image %>;
+  }
+
+  <% end %>
+</style>
+
+<% if @page.present? %>
+  <title><%= "#{@site_information.site_name} - #{@page.title}" %></title>
+<% else %>
+  <title><%= "#{@site_information.site_name}" %></title>
+<% end %>
+
+<%= render layout: "layouts/header" do %>
+<% end %>
+
+<% if params[:data].present? %>
+  <div class="align-content-center p-5">
+    <h1>Welcome <%= params[:data][:name] %>!</h1>
+  </div>
+<% else %>
+  <% @missing_image ||= image_path("missing-image.jpg") %>
+
+  <section class="bg-light text-secondary auto-size">
+    <div class="container mb-5">
+      <p class="alert"><%= alert %></p>
+
+      <div id="contents">
+        <% @contents.each do |content| %>
+          <% section_classes = content == @focused_section ? 'highlight-section' : '' %>
+          <div class="<%= section_classes %>">
+            <%= react_component("DisplayContent", {
+              content:         content.description,
+              image:           content.image,
+              link:            content.link,
+              format:          content.formatting,
+              sectionId:       content.section_name,
+              textAttributes:  content.text_attributes,
+              imageAttributes: content.image_attributes,
+            }) %>
+          </div>
+        <% end %>
+      </div>
+      <div id="videoPlayer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 1000;">
+        <div style="position: relative; width: 80%; max-width: 800px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 10px;">
+          <video id="videoElement" controls style="width: 100%;"></video>
+          <button onclick="closeVideoPlayer()" style="display: block; margin: 20px auto; padding: 10px 20px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Close
+          </button>
+        </div>
+      </div>
+      <input type="hidden" id="content-rendered-signal" value="true"/>
+    </div>
+  </section>
+
+  <% if @application_user&.admin? && @page.present? %>
+    <%= link_to "Edit Page",
+                edit_admin_page_path(@page),
+                class:  "mb-5 ms-5 btn btn-danger",
+                target: "_blank" %>
+  <% end %>
+<% end %>
+
+<%= render layout: "layouts/footer" do %>
+
+<% end %>

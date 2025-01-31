@@ -1,0 +1,68 @@
+<!-- app/views/admin/pages/index.html.erb -->
+<%= render layout: "layouts/admin_page" do %>
+  <% if controller.get_item&.present? %>
+    <div class="row mb-3">
+      <div class="col-1">
+        Label:
+      </div>
+      <div class="col-11">
+        <%= controller.get_item.label %>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-center col-11">
+      <% if controller.get_item.icon %>
+        <%= image_tag(controller.get_item.icon,
+                      alt:   "Icon",
+                      class: "me-3 footer-bg",
+                      style: "min-width: 40px;") %>
+      <% end %>
+      <%= controller.get_item.icon %>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-1">
+        Options:
+      </div>
+      <div class="col-11">
+        <%= controller.get_item.options %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-1">
+        Link:
+      </div>
+      <div class="col-11">
+        <%= controller.get_item.link %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-1">
+        Access:
+      </div>
+      <div class="col-11">
+        <%= controller.get_item.access %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-1">
+        Footer Order:
+      </div>
+      <div class="col-11">
+        <%= controller.get_item.footer_order %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-1">
+        Parent:
+      </div>
+      <div class="col-11">
+        <%= controller.get_item.parent_id %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,27 @@
+<!-- app/views/shared/_top_page_navigation.html.erb -->
+<nav aria-label="Pagination">
+  <ul class="tight-pagination justify-content-end">
+    <% if @pagy.present? %>
+      <!-- First Page Link -->
+      <li class="action-link <%= 'disabled' unless @pagy.page > 1 %>">
+        <%= link_to 'First',
+                    url_for(params.permit!.to_h.merge(page: 1, sort: params[:sort], direction: params[:direction]).merge(q: params[:q]&.to_unsafe_h)), class: 'page-link', target: "_self" %>
+      </li>
+
+      <!-- Previous Page Link -->
+      <li class="action-link <%= 'disabled' unless @pagy.prev %>">
+        <%= link_to 'Previous', url_for(params.permit!.to_h.merge(page: @pagy.prev, sort: params[:sort], direction: params[:direction]).merge(q: params[:q]&.to_unsafe_h)), class: 'page-link', target: "_self" %>
+      </li>
+
+      <!-- Next Page Link -->
+      <li class="action-link <%= 'disabled' unless @pagy.next %>">
+        <%= link_to 'Next', url_for(params.permit!.to_h.merge(page: @pagy.next, sort: params[:sort], direction: params[:direction]).merge(q: params[:q]&.to_unsafe_h)), class: 'page-link', target: "_self" %>
+      </li>
+
+      <!-- Last Page Link -->
+      <li class="action-link <%= 'disabled' unless @pagy.page < @pagy.last %>">
+        <%= link_to 'Last', url_for(params.permit!.to_h.merge(page: @pagy.last, sort: params[:sort], direction: params[:direction]).merge(q: params[:q]&.to_unsafe_h)), class: 'page-link', target: "_self" %>
+      </li>
+    <% end %>
+  </ul>
+</nav>

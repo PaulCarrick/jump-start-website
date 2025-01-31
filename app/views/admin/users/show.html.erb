@@ -1,0 +1,70 @@
+<!-- app/views/admin/users/show.html.erb -->
+<%= render layout: "layouts/admin_page" do %>
+  <% if @user.present? %>
+    <div class="row mb-3">
+      <div class="col-1">
+        Email:
+      </div>
+      <div class="col-11">
+        <%= @user.email %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-1">
+        Name:
+      </div>
+      <div class="col-11">
+        <%= @user.name %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-1">
+        Admin:
+      </div>
+      <div class="col-11">
+        <% if @user.admin? %>
+          Yes
+        <% else %>
+          No
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-1">
+        Super:
+      </div>
+      <div class="col-11">
+        <% if @user.super? %>
+          Yes
+        <% else %>
+          No
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-1">
+        Roles:
+      </div>
+      <div class="col-11">
+        <%= @user.roles %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-1">
+        Approved:
+      </div>
+      <div class="col-11">
+        <% if @user.super? %>
+          Yes
+        <% else %>
+          No
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

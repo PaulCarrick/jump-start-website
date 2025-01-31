@@ -1,0 +1,111 @@
+<% content_for :title, "#{@site_information.site_name} - Admin Dashboard - #{controller.get_item&.persisted? ? "Edit Image" : "New Image"}" %>
+<%= javascript_include_tag 'views/admin/image_files/edit' %>
+
+<%= render layout: "layouts/admin_page" do %>
+  <%= form_with(model:  controller.get_item,
+                url:    controller.get_item&.persisted? ? admin_image_file_path(controller.get_item) : admin_image_files_path,
+                method: controller.get_item&.persisted? ? :patch : :post,
+                local:  true,
+                html:   { onsubmit: 'return validate(this)' }) do |form|
+  %>
+    <%= form.hidden_field :caption, id: "image_file_caption", name: "image_file[caption]" %>
+    <%= form.hidden_field :description, id: "image_file_description", name: "image_file[description]" %>
+
+    <div class="mb-3">
+      <%= form.label :name, "Name*", class: "form-label" %>
+      <%= form.text_field :name, class: "form-control", required: true, readonly: controller.get_item&.persisted?, placeholder: "Enter the name of the image." %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :image, "Upload Image*" %>
+      <%= form.file_field :image, required: (!controller.get_item&.persisted? || !controller.get_item.image.attached?), class: "form-control" %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :mime_type, "Mime Type", class: "form-label" %><br>
+      <%= form.select :mime_type,
+                      options_for_select([
+                                           [ "", "" ],
+                                           %w[JPEG image/jpeg],
+                                           %w[PNG image/png],
+                                           %w[GIF image/gif],
+                                           %w[BMP image/bmp],
+                                           %w[WebP image/webp],
+                                           %w[SVG image/svg+xml],
+                                           %w[TIFF image/tiff],
+                                           %w[ICO image/x-icon],
+                                           %w[HEIC image/heic],
+                                           %w[MP4 video/mp4]
+                                         ], selected: form.object.mime_type),
+                      { class: "form-control", placeholder: "Select the MIME type for the image." } %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :group, "Group", class: "form-label" %>
+      <%= form.text_field :group, id: "group-field", class: "form-control", placeholder: "Enter the group for the image." %>
+    </div>
+
+    <!-- Add to Group Button -->
+    <div class="mb-3">
+      <button type="button"
+              id="add-to-group-btn"
+              class="btn btn-secondary"
+              onclick="fetchGroups();">
+        Add to Group
+      </button>
+    </div>
+
+    <!-- Select Group Dropdown -->
+    <div id="group-select-container" style="display: none;">
+      <label for="group-select">Select a Group:</label>
+      <select id="group-select"
+              class="form-control"
+              onchange="groupChanged();">
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :slide_order, "Slide Order", class: "form-label" %>
+      <%= form.number_field :slide_order,
+                            id:    "slide-order-field",
+                            class: "form-control",
+                            step:  1, min: 1, max: 999,
+                            value: controller.get_item.slide_order || nil
+      %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :caption, "Caption", class: "form-label" %>
+      <%= react_component(
+            "HtmlEditor",
+            {
+              id:             "image-file-caption",
+              value:          form.object.caption || "",
+              placeholder:    "Enter the caption for the image...",
+              noSwitchButton: true,
+              onChange:       "handleEditorChange(editorContent,id);",
+              onBlur:         "handleEditorChange(editorContent,id);"
+            }
+          ) %>
+    </div>
+
+    <div class="mb-3">
+      <%= form.label :description, "Description", class: "form-label" %>
+      <%= react_component(
+            "HtmlEditor",
+            {
+              id:          "image-file-description",
+              value:       form.object.description || "",
+              placeholder: "Enter the description for the image...",
+              onChange:    "handleEditorChange(editorContent,id);",
+              onBlur:      "handleEditorChange(editorContent,id);"
+            }
+          ) %>
+    </div>
+
+    <div class="mb-3 pt-3">
+      <%= form.submit "Save Image", class: "btn btn-primary me-3", disabled: !@application_user.admin? %>
+      <%= link_to("Cancel", admin_image_files_url, class: "btn btn-secondary", target: "_self") %>
+    </div>
+  <% end %>
+<% end %>

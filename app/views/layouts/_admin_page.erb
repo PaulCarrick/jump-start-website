@@ -1,0 +1,15 @@
+<!-- app/views/layouts/_admin_page.html.erb -->
+<%= render layout: "layouts/header" do %>
+<% end %>
+
+<div class="header-bg" width="100%">
+  <div style="max-width: 98%; background: white;">
+    <%= render layout: "layouts/admin_menu" do %>
+      <%= render 'shared/flash_error' %>
+      <%= yield %>
+    <% end %>
+  </div>
+</div>
+
+<%= render layout: "layouts/footer" do %>
+<% end %>

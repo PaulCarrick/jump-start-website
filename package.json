@@ -1,0 +1,52 @@
+{
+  "name": "jump-start-server",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "@typescript-eslint/parser": "^8.18.1",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.19.0",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0"
+  },
+  "scripts": {
+    "build": "esbuild app/javascript/*.* --loader:.js=jsx --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
+    "build:css:compile": "sass ./app/assets/stylesheets/application.bootstrap.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules",
+    "build:css:prefix": "postcss ./app/assets/builds/application.css --use=autoprefixer --output=./app/assets/builds/application.css",
+    "build:css": "npm run build:css:compile && npm run build:css:prefix",
+    "watch:css": "nodemon --watch ./app/assets/stylesheets/ --ext scss --exec \"npm run build:css\""
+  },
+  "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "^8.0.12",
+    "@popperjs/core": "^2.11.8",
+    "@rails/actiontext": "^8.0.0",
+    "autoprefixer": "^10.4.20",
+    "axios": "^1.7.9",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "moment": "^2.30.1",
+    "nodemon": "^3.1.7",
+    "postcss": "^8.4.49",
+    "postcss-cli": "^11.0.0",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react_ujs": "^3.2.1",
+    "react-dom": "^18.3.1",
+    "react-quill": "^2.0.0",
+    "react-router-dom": "^6.28.0",
+    "react-select": "^5.9.0",
+    "sass": "^1.80.7",
+    "trix": "^2.1.8"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ]
+}

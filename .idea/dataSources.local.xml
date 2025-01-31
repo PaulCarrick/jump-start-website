@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="RM-243.22562.213">
+    <data-source name="Rails rails-website: development" uuid="26aad478-3fe2-4063-9908-ef61debd55e8">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="POSTGRES" exact-version="0" />
+      <auth-provider>pgpass</auth-provider>
+      <user-name>paul</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="Rails rails-website: test" uuid="15677fd6-1e37-449a-8b6d-8c0a3722d5e9">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="POSTGRES" exact-version="0" />
+      <auth-provider>pgpass</auth-provider>
+      <user-name>paul</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="Rails rails-website: default" uuid="51ff3852-b9c8-4a2c-bef2-5201aa217086">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="POSTGRES" exact-version="0" />
+      <auth-provider>pgpass</auth-provider>
+      <user-name>paul</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="rails-website: default" uuid="db2ae71b-f69a-419a-8689-e76322560287">
+      <database-info product="PostgreSQL" version="15.8 (Homebrew)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="15.8" exact-driver-version="42.7">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
+      <user-name>paul</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="database" qname="@">
+            <node kind="schema" qname="@" />
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+    <data-source name="rails-website: test" uuid="7bc0d66f-b163-4976-bfb8-64574b23d138">
+      <database-info product="PostgreSQL" version="15.8 (Homebrew)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="15.8" exact-driver-version="42.7">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
+      <user-name>paul</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="database" qname="@">
+            <node kind="schema" qname="@" />
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+    <data-source name="rails-website: development" uuid="275f3b4f-8acd-45e8-b7a4-dd26a72f6ae4">
+      <database-info product="PostgreSQL" version="15.8 (Homebrew)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="15.8" exact-driver-version="42.7">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
+      <user-name>paul</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="database" qname="@">
+            <node kind="schema" qname="@" />
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+  </component>
+</project>

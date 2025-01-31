@@ -1,0 +1,12 @@
+<!-- app/views/blogs/show.html.erb -->
+<% if @blog.present? %>
+  <div class="ms-3 ps-3">
+    <h2 style="font-size: 1.5em !important"><%= @blog.title %></h2>
+  </div>
+  <div class="ms-4 ps-4">
+    <%= @blog.posted %> - <%= @blog.author %>
+  </div>
+  <div class="ms-5 ps-5">
+    <%= raw(@blog.content) %>
+  </div>
+<% end %>

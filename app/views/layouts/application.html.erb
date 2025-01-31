@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= controller.get_title %></title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= yield :head %>
+
+  <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+  <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+  <link rel="icon" href="<%= asset_path('icon.png') %>" type="image/png">
+  <link rel="apple-touch-icon" href="<%= asset_path('icon.png') %>">
+
+  <%# Includes all stylesheet files in app/assets/stylesheets %>
+  <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+  <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css",
+                          rel:         "stylesheet",
+                          integrity:   "sha384-blOohCVdhjmtROpu8+CfTnUWham9nkX7P7OZQMst+RUnhtoY/9qemFAkIKOYxDI3",
+                          crossorigin: "anonymous" %>
+  <%= javascript_include_tag 'views/shared/utilities' %>
+
+  <!-- Include ReactQuill styles -->
+  <link rel="stylesheet" href="/assets/quill/quill.snow.css">
+</head>
+
+<body>
+
+<style>
+  <% if @site_information.present? %>
+  :root {
+      --header-bg: <%= @site_information.header_background %> !important;
+      --header-text-color: <%= @site_information.header_text_color %> !important;
+      --footer-bg: <%= @site_information.footer_background %> !important;
+      --footer-text-color: <%= @site_information.footer_text_color %> !important;
+      --container-bg: <%= @site_information.container_background %> !important;
+      --container-text-color: <%= @site_information.container_text_color %> !important;
+      --page-background-image: <%= @site_information.page_background_image %> !important;
+  }
+  <% end %>
+</style>
+
+<%= yield %>
+</body>
+
+</html>
+
+<script>
+//  refreshPage(250);
+</script>

@@ -1,0 +1,12 @@
+-- setup_rails.sql
+DO $$
+    BEGIN
+        IF NOT EXISTS (SELECT FROM pg_database WHERE datname = '${RAILS_DATABASE}') THEN
+            CREATE DATABASE ${RAILS_DATABASE};
+        END IF;
+    END
+$$;
+
+GRANT ALL PRIVILEGES ON DATABASE ${RAILS_DATABASE} TO ${DB_USERNAME};
+ALTER DATABASE ${RAILS_DATABASE} OWNER TO ${DB_USERNAME};
+-- End of setup_rails.sql

@@ -1,0 +1,57 @@
+<!-- app/views/contacts/new.html.erb -->
+<%= javascript_include_tag 'views/contacts/new' %>
+<% content_for :title, "#{@site_information.site_name} - Contact" %>
+<%= render layout: "layouts/header" do %>
+<% end %>
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+
+<section class="bg-light pt-5 text-secondary">
+  <div class="container">
+    <%= render 'shared/flash_error' %>
+    <h1>Contact Request Form</h1>
+
+    <%= form_for @contact, id: 'contact-form', html: { method: :post, local: true } do |form| %>
+      <% recaptcha_tags(site_key: ENV['RECAPTCHA_SITE_KEY'], script: :v3) %>
+
+      <% if false && flash[:recaptcha_error] %>
+        <div class="alert alert-danger">
+          <%= flash[:recaptcha_error] %>
+        </div>
+      <% end %>
+
+      <div class="mb-3">
+        <%= form.label :name, "Full Name*", class: "form-label" %>
+        <%= form.text_field :name, class: "form-control", required: true, placeholder: "Enter your full name (first and last)" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :email, "Email Address*", class: "form-label" %>
+        <%= form.email_field :email, class: "form-control", required: true, placeholder: "Enter your email address" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :phone, "Phone Number (optional)", class: "form-label" %>
+        <%= form.telephone_field :phone, class: "form-control", placeholder: "Enter your phone number",
+                                 pattern:       "^\+1\s*?(\(\d{3}\)|\d{3})?\s*?\d{3}\s*?-?\s*?\d{4}$",
+                                 oninvalid:     "this.setCustomValidity('Please enter a valid phone number (e.g., (+1) (optional) (999) 999-9999')",
+                                 oninput:       "this.setCustomValidity('')" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :message, "Message*", class: "form-label" %>
+        <%= form.rich_text_area :message, class: "form-control", required: true %>
+      </div>
+
+      <div class="pb-3">
+        * - Required Fields
+      </div>
+      <div class="mb-3">
+        <%= form.submit "Send Message", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<%= render layout: "layouts/footer" do %>
+<% end %>

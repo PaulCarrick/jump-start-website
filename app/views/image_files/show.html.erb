@@ -1,0 +1,19 @@
+<!-- app/views/image_file/show.html.erb -->
+<% if @image_file.present? %>
+  <container>
+    <div class="ps-3">
+      <h2><%= @image_file.caption %></h2>
+    </div>
+    <div class="ps-5">
+      <%= link_to @image_file.image_url, target: "_blank" do %>
+        <%= image_tag(@image_file.image_url,
+                      alt: @image_file.name,
+                      style: "object-fit: contain;")
+        %>
+      <% end %>
+    </div>
+    <div class="ps-5">
+      <%= raw(@image_file.description) %>
+    </div>
+  </container>
+<% end %>

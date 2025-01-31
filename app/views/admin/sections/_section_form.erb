@@ -1,0 +1,26 @@
+<!-- app/views/admin/sections/_section_form.erb -->
+<%= render 'shared/flash_error' %>
+<%=
+  success_path = controller.get_item&.persisted? ? admin_section_url(controller.get_item) : admin_sections_url
+  success_path = @return_url if @return_url.present?
+  cancel_path = admin_sections_url
+  cancel_path = @cancel_url if @cancel_url.present?
+  read_only_content_type = @read_only_content_type.present? ? @read_only_content_type : false
+  new_section = @new_section.present? ? @new_section : false
+
+  react_component(
+    "SectionEditor",
+    {
+      section:               controller.get_item,
+      availableContentTypes: @content_types,
+      availableImages:       @images,
+      availableImageGroups:  @groups,
+      availableVideos:       @videos,
+      submitPath:            controller.get_item&.persisted? ? admin_section_url(controller.get_item) : admin_sections_url,
+      successPath:           success_path,
+      cancelPath:            cancel_path,
+      readOnlyContentType:   read_only_content_type,
+      newSection:            new_section
+    }
+  )
+%>

@@ -1,0 +1,96 @@
+<!-- app/views/admin/menu_items/_menu_item_form.html.erb -->
+<%= javascript_include_tag 'views/admin/menu_items/edit' %>
+<%= form_with(model:  controller.get_item,
+              url:    controller.get_item.persisted? ? admin_menu_item_path(controller.get_item) : admin_menu_items_path,
+              method: controller.get_item.persisted? ? :patch : :post,
+              local:  true,
+              html: { onsubmit: 'return validate(this)' }) do |form| %>
+
+  <h1>
+    <% if controller.get_item&.persisted? %>
+      Edit <%= controller.model_title %>
+    <% else %>
+      New <%= controller.model_title %>
+    <% end %>
+  </h1>
+
+  <div class="mb-3">
+    <%= form.label :menu_type, "Menu Type", class: "form-label" %><br>
+    <%= form.select :menu_type,
+                    options_for_select(%w[Main Admin], controller.get_item.menu_type),
+                    required: true,
+                    class: "form-control"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :label, "Label*", class: "form-label" %>
+    <%= form.text_field :label,
+                        class:       "form-control",
+                        required:    true,
+                        placeholder: "Enter the label (name displayed) for the menu item"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :icon, "Icon", class: "form-label" %>
+    <%= form.text_field :icon, class: "form-control", placeholder: "Enter the icon filename, if any" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :options, "Options", class: "form-label" %>
+    <%= form.text_field :options, class: "form-control", placeholder: "Enter the options, if any" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :link, "Link", class: "form-label" %>
+    <%= form.text_field :link,
+                        class:       "form-control",
+                        placeholder: "Enter the URL to goto when the menu item is clicked, if any"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :access, "Access", class: "form-label" %>
+    <%= form.text_field :access, class: "form-control", placeholder: "Enter the access, if any" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :menu_order, "Menu Order*", class: "form-label" %>
+    <%= form.number_field :menu_order,
+                          id:          "menu-order-field",
+                          class:       "form-control",
+                          placeholder: "Enter the order for the menu item (1 is first), if any",
+                          required:    true,
+                          step:        1,
+                          min:         1,
+                          max:         999,
+                          value:       controller.get_item.menu_order || nil %>
+  </div>
+
+  <div class="mb-3">
+    <%
+      menus = [["", nil]]
+
+      controller.get_unfiltered_items.each do |menu_item|
+        menus << [
+          menu_item.label,
+          menu_item.id
+        ]
+      end
+    %>
+
+    <%= form.label :parent_id, "Parent menu", class: "form-label" %><br>
+    <%= form.select :parent_id,
+                    options_for_select(menus, form.object.parent_id),
+                    class: 'form-control' %>
+  </div>
+
+  <div class="pb-3">
+    * - Required Fields
+  </div>
+  <div class="mb-3">
+    <%= form.submit "Save Menu Item", class: "btn btn-primary me-3", disabled: !@application_user.admin?  %>
+    <%= link_to("Cancel", admin_menu_items_url, class: "btn btn-primary", target: "_self") %>
+  </div>
+<% end %>

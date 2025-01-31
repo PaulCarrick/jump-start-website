@@ -1,0 +1,22 @@
+<!-- app/views/search/new.html.erb -->
+<% content_for :title, "#{@site_information.site_name} - Search" %>
+<%= render layout: "layouts/header" do %>
+<% end %>
+
+<section class="bg-light pt-5 text-secondary">
+  <div class="container">
+    <h1>Search Website</h1>
+    <%= search_form_for @q, url: section_index_path, method: :get, local: true do |form| %>
+      <div class="mb-3" style="min-width: 100%;">
+        <%= form.label :description_cont, "Search site pages for", class: "form-label" %>
+        <%= form.search_field :description_cont, required: true, style: "min-width: 80%;" %>
+      </div>
+      <div class="mb-3">
+        <%= form.submit "Search Site Pages", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<%= render layout: "layouts/footer" do %>
+<% end %>

@@ -1,0 +1,5 @@
+<!-- app/views/employment/show.html.erb -->
+<%= javascript_include_tag 'views/pages/show' %>
+<% content_for :title, "#{@site_information.site_name} - #{@page_name}" %>
+<%= render layout: "layouts/page_contents" do %>
+<% end %>

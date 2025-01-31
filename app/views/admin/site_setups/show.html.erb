@@ -1,0 +1,269 @@
+<!-- app/views/admin/site_setups/show.html.erb -->
+<%= render layout: "layouts/admin_page" do %>
+  <% if controller.get_item&.present? %>
+    <div class="row mb-3">
+      <div class="col-3">
+        Configuration Name
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.configuration_name %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Site Owner
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.owner_name %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Site Name
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.site_name %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Default Site information
+      </div>
+      <div class="col-9">
+        <% if controller.get_item.default_setup %>
+          Yes
+        <% else %>
+          No
+        <% end %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Site Domain
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.site_domain %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Site Host
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.site_host %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Site URL
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.site_url %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Guest User Name
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.guest_user_name %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Email Server (SMTP host)
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.smtp_server %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Email Server Port
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.smtp_port %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Eail Server User Name
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.smtp_user %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Email Server Authentication
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.smtp_authentication %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Email Server Default Domain
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.smtp_domain %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Contact "Email From:"
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.contact_email_from %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Contact Email To
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.contact_email_to %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Contact Email Subject
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.contact_email_subject %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Header Background Color
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.header_background %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Header Text Color
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.header_text_color %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Footer Background Color
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.footer_background %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Footer Text Color
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.footer_text_color %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Container Background Color
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.container_background %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Container Text Color
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.container_text_color %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Page Background Image
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.page_background_image %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Facebook URL
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.facebook_url %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Twitter URL
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.twitter_url %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Instagram URL
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.instagram_url %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        LinkedIn URL
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.linkedin_url %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        GitHub URL
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.github_url %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-3">
+        Copyright
+      </div>
+      <div class="col-9">
+        <%= controller.get_item.copyright %>
+      </div>
+    </div>
+  <% end %>
+<% end %>

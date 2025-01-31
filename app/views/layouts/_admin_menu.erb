@@ -1,0 +1,78 @@
+<div class="d-flex flex-row bg-light">
+  <!-- Sidebar -->
+  <nav class="header-bg navbar navbar-dark flex-column py-4">
+    <div class="container-fluid">
+      <!-- Collapsible Menu -->
+      <div class="collapse navbar-collapse show" id="navbarNav">
+        <ul class="navbar-nav">
+          <% @admin_menu_items.each_with_index do |menu_item, index| %>
+            <li class="nav-item">
+              <% if menu_item.sub_items.any? %>
+                <!-- Dropdown Menu -->
+                <div class="dropdown">
+                  <%= link_to "#",
+                              class: "nav-link dropdown-toggle px-lg-3 py-2 text-uppercase",
+                              id: "navbarDropdown-#{index}",
+                              role: "button",
+                              data: { bs_toggle: "dropdown" },
+                              aria: { expanded: "false" },
+                              target: "_self" do %>
+                    <%= menu_item.label %>
+                  <% end %>
+                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown-#{index}">
+                    <% menu_item.sub_items.each do |sub_item| %>
+                      <li>
+                        <% link, method = sub_item[:link]&.split("|") %>
+                        <% if method %>
+                          <%= link_to sub_item[:label],
+                                      link,
+                                      method: method.to_sym,
+                                      class: "dropdown-item",
+                                      target: "_self"  %>
+                        <% else %>
+                          <%= link_to sub_item[:label],
+                                      sub_item[:link],
+                                      class: "dropdown-item",
+                                      target: "_self"  %>
+                        <% end %>
+                      </li>
+                    <% end %>
+                  </ul>
+                </div>
+              <% else %>
+                <!-- Regular Menu Item -->
+                <% if menu_item.options == "image-file" %>
+                  <a href="<%= menu_item[:link] %>" target="_self">
+                    <%= image_tag menu_item.icon,
+                                  alt: menu_item.label,
+                                  class: "nav-link px-lg-3 py-2 text-uppercase"
+                    %>
+                  </a>
+                <% else %>
+                  <% link, method = menu_item[:link]&.split("|") %>
+                  <% if method %>
+                    <%= link_to menu_item[:label],
+                                link,
+                                method: method.to_sym,
+                                class: "nav-link px-lg-3 py-2 text-uppercase",
+                                target: "_self"  %>
+                  <% else %>
+                    <%= link_to menu_item[:label],
+                                menu_item[:link],
+                                class: "nav-link px-lg-3 py-2 text-uppercase",
+                                target: "_self"  %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="flex-grow-1 p-4">
+    <%= yield %>
+  </div>
+</div>

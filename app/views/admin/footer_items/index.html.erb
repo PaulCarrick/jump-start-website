@@ -1,0 +1,48 @@
+<!-- app/views/admin/footer_items/index.html.erb -->
+<%= render layout: "layouts/admin_page" do %>
+  <div class="row border-bottom border-dark mb-2">
+    <div class="col-2">
+      <%= sortable_column('Label', 'label', "footer_items") %>
+    </div>
+    <div class="col-2">
+      <%= sortable_column('Footer Order', 'footer_order', "footer_items") %>
+    </div>
+    <div class="col-5">
+      <%= sortable_column('Link', 'link', "footer_items") %>
+    </div>
+    <div class="col-2">
+      <%= link_to "Clear Sort", '#', class: "action-links", onclick: "clearSort()" %>
+    </div>
+  </div>
+  <div class="scrollable-container p-2">
+    <% controller.get_items.each do |footer_item| %>
+      <div class="row">
+        <div class="col-2">
+          <%= footer_item.label %>
+        </div>
+        <div class="col-2">
+          <%= footer_item.footer_order %>
+        </div>
+        <div class="col-5">
+          <%= footer_item.link %>
+        </div>
+        <div class="col-2" style="min-height: 2em;">
+          <% delete_path = admin_footer_item_path(footer_item).to_s + "/delete" %>
+          <%= action_links(footer_item,
+                           admin_footer_item_path(footer_item),
+                           edit_admin_footer_item_path(footer_item),
+                           delete_path) %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="row mt-3 mb-3">
+    <div class="col-3">
+      <%= link_to("New Footer Item", new_admin_footer_item_path, class: "btn btn-primary", target: "_self") %>
+    </div>
+    <div class="col-3"></div>
+    <div class="col-6 justify-content-end">
+      <%= render 'shared/page_navigation' %>
+    </div>
+  </div>
+<% end %>

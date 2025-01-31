@@ -1,0 +1,53 @@
+<!-- app/views/admin/devise/sessions/new.html.erb -->
+<%= javascript_include_tag 'views/devise/sessions/new' %>
+<% content_for :title, "#{@site_information.site_name} - Administration" %>
+<%= render layout: "layouts/header" do %>
+<% end %>
+
+<section class="bg-light text-secondary">
+  <div class="container">
+    <div style="max-width: 50%;">
+      <% unless user_signed_in? %>
+        <h2 class="mt-5">Login</h2>
+        <%= form_with(url: new_user_session_path, scope: :user, local: true) do |form| %>
+          <div class="mb-3">
+            <%= form.label :email, "Email Address", class: "form-label" %>
+            <%= form.email_field :email,
+                                 class: "form-control",
+                                 required: true,
+                                 placeholder: "Enter your email address" %>
+          </div>
+
+          <div class="mb-3 position-relative">
+            <%= form.label :password, "Password", class: "form-label" %>
+            <div class="input-group">
+              <%= form.password_field :password,
+                                      class: "form-control",
+                                      id: "password-field",
+                                      placeholder: "Enter your password" %>
+              <span class="input-group-text" onclick="togglePasswordVisibility()" style="cursor: pointer;">
+                <i id="toggle-password-icon" class="fa fa-eye"></i>
+              </span>
+            </div>
+          </div>
+
+          <div class="mb-3 form-check">
+            <%= form.check_box :remember_me, class: "form-check-input" if devise_mapping.rememberable? %>
+            <%= form.label :remember_me, "Remember me", class: "form-check-label" if devise_mapping.rememberable? %>
+          </div>
+
+          <div class="d-grid">
+            <%= form.submit "Log in", class: "btn btn-primary mb-5", style: "max-width: 6em"%>
+          </div>
+        <% end %>
+      <% else %>
+        <h2>Welcome, <%= current_user.email %>!</h2>
+        <p>You are logged in.</p>
+        <%= link_to "Log out", destroy_user_session_path, method: :delete, class: "btn btn-danger" %>
+      <% end %>
+      </div>
+  </div>
+</section>
+
+<%= render layout: "layouts/footer" do %>
+<% end %>

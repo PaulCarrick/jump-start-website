@@ -1,0 +1,62 @@
+<!-- app/views/admin/pages/index.html.erb -->
+<%= form_with(model:  @user,
+              url:    @user.persisted? ? admin_user_path(@user) : admin_users_path,
+              method: @user.persisted? ? :patch : :post,
+              local:  true) do |form| %>
+  <h1>
+    <% if @user.persisted? %>
+      Edit User
+    <% else %>
+      New User
+    <% end %>
+  </h1>
+  <div class="mb-3">
+    <%= form.label :email, "Email*", class: "form-label" %>
+    <%= form.text_field :email, class: "form-control", required: true, placeholder: "Enter the email for the user." %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :name, "Name*", class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", required: true, placeholder: "Enter the name of the user." %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :password, "Password*", class: "form-label" %>
+    <%= form.password_field :password,
+                            class:       "form-control",
+                            required:    !@user.persisted?,
+                            placeholder: @user.persisted? ?
+                                           "Leave blank to keep the current password." :
+                                           "Enter the password for the user."
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :access, "Access", class: "form-label" %><br>
+    <%= form.select :access,
+                    options_for_select([
+                                         ["Regular", "regular"],
+                                         ["Read Only", "read_only"],
+                                         ["Post Blogs", "blogs"],
+                                         ["Administrator", "admin"],
+                                         ["Super User", "super"]
+                                       ], @user.access),
+                    required: true,
+                    class:    "form-control"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :roles, "Roles", class: "form-label" %>
+    <%= form.text_field :roles, class: "form-control", placeholder: "Enter the roles for the user." %>
+  </div>
+
+  <div class="pb-3">
+    * - Required Fields
+  </div>
+
+  <div class="mb-3">
+    <%= form.submit "Save User", class: "btn btn-primary me-3", disabled: !@application_user.admin? %>
+    <%= link_to("Cancel", admin_users_url, class: "btn btn-primary", target: "_self") %>
+  </div>
+<% end %>

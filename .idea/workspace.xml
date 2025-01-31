@@ -1,0 +1,665 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_INJECTED_CODE" value="false" />
+    <option name="SCOPE_TYPE" value="3" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things." />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileColors">
+    <fileColor scope="Assets" color="Violet" />
+    <fileColor scope="Project Files" color="Blue" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Ruby Module" />
+        <option value="ERB File" />
+        <option value="RSpec" />
+        <option value="Ruby File" />
+        <option value="Ruby Class" />
+        <option value="JavaScript File" />
+        <option value="JSX File" />
+      </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform)); sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo, NoAppException&#10;for module in [&quot;main.py&quot;, &quot;wsgi.py&quot;, &quot;app.py&quot;]:&#10;    try: locals().update(ScriptInfo(app_import_path=module, create_app=None).load_app().make_shell_context()); print(&quot;\nFlask App: %s&quot; % app.import_name); break&#10;    except NoAppException: pass">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform)); sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo, NoAppException&#10;for module in [&quot;main.py&quot;, &quot;wsgi.py&quot;, &quot;app.py&quot;]:&#10;    try: locals().update(ScriptInfo(app_import_path=module, create_app=None).load_app().make_shell_context()); print(&quot;\nFlask App: %s&quot; % app.import_name); break&#10;    except NoAppException: pass" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
+  </component>
+  <component name="GeneratorOptions">
+    <option name="VCS_SHOW_CONFIRMATION" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;PaulCarrick&quot;
+  }
+}</component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:PaulCarrick/paul-carrick-website.git&quot;,
+    &quot;accountId&quot;: &quot;4a1c3f12-e7c2-452f-ba4f-5478a5c32da7&quot;
+  }
+}</component>
+  <component name="JsBowerSettings">
+    <bower-package value="" />
+    <bower.json value="" />
+  </component>
+  <component name="LogFilters">
+    <option name="FILTER_ERRORS" value="false" />
+    <option name="FILTER_WARNINGS" value="false" />
+    <option name="FILTER_INFO" value="true" />
+    <option name="FILTER_DEBUG" value="true" />
+    <option name="CUSTOM_FILTER" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="NamedScopeManager">
+    <order>
+      <scope name="Assets" />
+    </order>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2onf2dWHvYHu6ZJ4zcbq83FcvzA" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Docker.Docker.executor": "Run",
+    "Docker.docker-compose-mail.yml.mailhog: Compose Deployment.executor": "Run",
+    "JavaScript Debug.Debug Chrome JavaScript.executor": "Debug",
+    "JavaScript Debug.Debug Chrome.executor": "Debug",
+    "JavaScript Debug.Debug Rails an Javascript JavaScript.executor": "Debug",
+    "JavaScript Debug.Debug Rails and Javascript JavaScript.executor": "Debug",
+    "JavaScript Debug.Development: rails-website JavaScript.executor": "Debug",
+    "JavaScript Debug.Generic Chrome.executor": "Debug",
+    "Python.Build Python.executor": "Debug",
+    "Rails.Debug Rails an Javascript.executor": "Debug",
+    "Rails.Debug Rails and Javascript.executor": "Debug",
+    "Rails.Development: rails-website.executor": "Debug",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "database.data.extractors.current.export.id": "SQL Inserts",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/paul/Library/Application Support/JetBrains/RubyMine2024.3/scratches",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "ruby.structure.view.model.defaults.configured": "true",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "editor.preferences.smartKeys",
+    "settings.editor.splitter.proportion": "0.2631579",
+    "ts.external.directory.path": "/Applications/RubyMine.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "two.files.diff.last.used.file": "/Users/paul/src/paul-carrick-website/docker-compose-db.yml",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="ReactDesignerToolWindowState">
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.haulmont.rcb.reactComponents" value="false" />
+        <entry key="com.haulmont.rcb.reactInspector" value="false" />
+        <entry key="com.intellij.reactbuddy.reactComponents" value="false" />
+        <entry key="com.intellij.reactbuddy.reactInspector" value="false" />
+        <entry key="com.intellij.reactbuddy.storybook" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$APPLICATION_CONFIG_DIR$/scratches" />
+      <recent name="$PROJECT_DIR$/startup/mail/scripts" />
+      <recent name="$PROJECT_DIR$/startup/mail/templates" />
+      <recent name="$PROJECT_DIR$/startup/database/scripts" />
+      <recent name="$PROJECT_DIR$/startup/database/databases/rails" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/startup/rails/scripts" />
+      <recent name="$PROJECT_DIR$/startup/mail/templates" />
+      <recent name="$PROJECT_DIR$/startup/database/databases/rails" />
+      <recent name="$PROJECT_DIR$/startup/database/databases/mail" />
+      <recent name="$PROJECT_DIR$/startup/database/templates" />
+    </key>
+  </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="Newhall2Eastsound!" />
+    </option>
+  </component>
+  <component name="RunManager" selected="Docker.docker-compose-mail.yml.mailhog: Compose Deployment">
+    <configuration name="Debug Chrome JavaScript" type="JavascriptDebugType" uri="http://localhost:3000/">
+      <method v="2">
+        <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_OpenServer" />
+      </method>
+    </configuration>
+    <configuration name="Debug Edge" type="JavascriptDebugType" engineId="37cae5b9-e8b2-4949-9172-aafa37fbc09c" uri="http://localhost:3000" useFirstLineBreakpoints="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="Debug Opera" type="JavascriptDebugType" engineId="53e2f627-b1a7-4dfa-bfa7-5b83cc034776" uri="http://localhost:3000" useFirstLineBreakpoints="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="Generic Chrome" type="JavascriptDebugType" uri="http://localhost:3000">
+      <method v="2" />
+    </configuration>
+    <configuration name="Build Python" type="PythonConfigurationType" factoryName="Python">
+      <module name="rails-website" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.12" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/build/initdb.d/setup-database.py" />
+      <option name="PARAMETERS" value="-v 4 --port 5433" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Development: rails-website" type="RailsRunConfigurationType" factoryName="Rails">
+      <module name="rails-website" />
+      <predefined_log_file enabled="true" id="RUBY_RAILS_SERVER" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
+      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
+      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
+      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="SCRIPT_ARGS" VALUE="" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="PORT" VALUE="3000" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="IP" VALUE="127.0.0.1" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="DUMMY_APP" VALUE="test/dummy" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="RAILS_SERVER_TYPE" VALUE="puma" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="ENVIRONMENT_TYPE" VALUE="development" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="BROWSER_URL" VALUE="http://127.0.0.1:3000" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="LAUNCH_JS" VALUE="true" />
+      <method v="2">
+        <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Clear Development Logs" />
+      </method>
+    </configuration>
+    <configuration name="Production: rails-website" type="RailsRunConfigurationType" factoryName="Rails">
+      <module name="rails-website" />
+      <predefined_log_file enabled="true" id="RUBY_RAILS_SERVER" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
+      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
+      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
+      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="SCRIPT_ARGS" VALUE="" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="PORT" VALUE="3000" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="IP" VALUE="0.0.0.0" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="DUMMY_APP" VALUE="test/dummy" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="RAILS_SERVER_TYPE" VALUE="Default" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="ENVIRONMENT_TYPE" VALUE="production" />
+      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="LAUNCH_JS" VALUE="false" />
+      <method v="2" />
+    </configuration>
+    <configuration name="spec: rails-website" type="RakeRunConfigurationType" factoryName="Rake">
+      <module name="rails-website" />
+      <predefined_log_file enabled="true" id="RUBY_RAKE" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
+      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
+      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
+      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_NAME" VALUE="spec" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_ARGS" VALUE="" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_ATTACHED_TEST_FRAMEWORKS" VALUE=":rspec " />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_TRACE" VALUE="false" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_DRYRUN" VALUE="false" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_PREREQS" VALUE="false" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_TESTOPTS" VALUE="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test: rails-website" type="RakeRunConfigurationType" factoryName="Rake">
+      <module name="rails-website" />
+      <predefined_log_file enabled="true" id="RUBY_RAKE" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
+      <envs>
+        <env name="RAILS_ENV" value="test" />
+      </envs>
+      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
+      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
+      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_NAME" VALUE="test" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_ARGS" VALUE="" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_ATTACHED_TEST_FRAMEWORKS" VALUE=":test_unit " />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_TRACE" VALUE="false" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_DRYRUN" VALUE="false" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_PREREQS" VALUE="false" />
+      <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_TESTOPTS" VALUE="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="TestUnitRunConfigurationType" factoryName="Test::Unit/Shoulda/Minitest">
+      <predefined_log_file enabled="true" id="RUBY_TESTUNIT" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
+      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
+      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPTS_PATHS" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_METHOD_NAME" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="CUSTOM_SET_OF_FILES" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_OPTIONS" VALUE="" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose-mail.yml.mailhog: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="mailhog" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose-mail.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Docker.docker-compose-rails.yml: Compose Deployment" />
+      <item itemvalue="Docker.docker-compose-mail.yml.mailhog: Compose Deployment" />
+      <item itemvalue="JavaScript Debug.Debug Chrome JavaScript" />
+      <item itemvalue="JavaScript Debug.Debug Edge" />
+      <item itemvalue="JavaScript Debug.Debug Opera" />
+      <item itemvalue="JavaScript Debug.Generic Chrome" />
+      <item itemvalue="JavaScript Debug.Debug Chrome" />
+      <item itemvalue="Rails.Debug Rails and Javascript" />
+      <item itemvalue="Rails.Development: rails-website" />
+      <item itemvalue="Rails.Production: rails-website" />
+      <item itemvalue="Rake.spec: rails-website" />
+      <item itemvalue="Rake.test: rails-website" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.docker-compose-mail.yml.mailhog: Compose Deployment" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-RM-243.22562.213" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpringUtil" SPRING_PRE_LOADER_OPTION="true" RAKE_SPRING_PRE_LOADER_OPTION="true" RAILS_SPRING_PRE_LOADER_OPTION="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="" />
+      <created>1731510056489</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1731510056489</updated>
+      <workItem from="1731510058389" duration="333000" />
+      <workItem from="1731510406386" duration="177000" />
+      <workItem from="1731510638807" duration="793000" />
+      <workItem from="1731511832860" duration="3556000" />
+      <workItem from="1731515790705" duration="9161000" />
+      <workItem from="1731529311988" duration="36531000" />
+      <workItem from="1731621384580" duration="5063000" />
+      <workItem from="1731627905892" duration="64000" />
+      <workItem from="1731627981234" duration="3788000" />
+      <workItem from="1731681388487" duration="2809000" />
+      <workItem from="1731684239198" duration="37181000" />
+      <workItem from="1731774778624" duration="27380000" />
+      <workItem from="1731803142292" duration="714000" />
+      <workItem from="1731846851892" duration="1382000" />
+      <workItem from="1731848584513" duration="33881000" />
+      <workItem from="1731950116288" duration="22968000" />
+      <workItem from="1731978895796" duration="207000" />
+      <workItem from="1732020334463" duration="25220000" />
+      <workItem from="1732052747684" duration="990000" />
+      <workItem from="1732054111968" duration="14000" />
+      <workItem from="1732136631221" duration="10146000" />
+      <workItem from="1732193582655" duration="31809000" />
+      <workItem from="1732316154823" duration="1774000" />
+      <workItem from="1732373213901" duration="16693000" />
+      <workItem from="1732392943322" duration="1374000" />
+      <workItem from="1732395362891" duration="453000" />
+      <workItem from="1732405549184" duration="15047000" />
+      <workItem from="1732555752981" duration="17588000" />
+      <workItem from="1732627937548" duration="26409000" />
+      <workItem from="1732713421420" duration="38517000" />
+      <workItem from="1732802606225" duration="15260000" />
+      <workItem from="1732883912899" duration="26000" />
+      <workItem from="1732884240099" duration="33295000" />
+      <workItem from="1732972250485" duration="77233000" />
+      <workItem from="1733235916303" duration="17090000" />
+      <workItem from="1733319030941" duration="16588000" />
+      <workItem from="1733349983036" duration="143000" />
+      <workItem from="1733350306662" duration="242000" />
+      <workItem from="1733356476378" duration="977000" />
+      <workItem from="1733404878254" duration="32750000" />
+      <workItem from="1733489758618" duration="36919000" />
+      <workItem from="1733578496606" duration="14998000" />
+      <workItem from="1733602432158" duration="6658000" />
+      <workItem from="1733667826021" duration="78357000" />
+      <workItem from="1733924334289" duration="31371000" />
+      <workItem from="1734009303094" duration="161950000" />
+      <workItem from="1734368236863" duration="2938000" />
+      <workItem from="1734389136492" duration="3151000" />
+      <workItem from="1734394903269" duration="32096000" />
+      <workItem from="1734484014569" duration="83000" />
+      <workItem from="1734484358120" duration="3252000" />
+      <workItem from="1734526167510" duration="68601000" />
+      <workItem from="1734654084897" duration="60808000" />
+      <workItem from="1734799791390" duration="111423000" />
+      <workItem from="1735060275208" duration="1961000" />
+      <workItem from="1735062615239" duration="3376000" />
+      <workItem from="1735066085054" duration="6969000" />
+      <workItem from="1735081899830" duration="332000" />
+      <workItem from="1735082494053" duration="4755000" />
+      <workItem from="1735137714074" duration="1817000" />
+      <workItem from="1735139555727" duration="6259000" />
+      <workItem from="1735153013560" duration="8971000" />
+      <workItem from="1735226705938" duration="13709000" />
+      <workItem from="1735241216524" duration="2481000" />
+      <workItem from="1735244155347" duration="38338000" />
+      <workItem from="1735325978194" duration="7230000" />
+      <workItem from="1735343745888" duration="5738000" />
+      <workItem from="1735414041668" duration="45000" />
+      <workItem from="1735414092309" duration="2625000" />
+      <workItem from="1735420821529" duration="1790000" />
+      <workItem from="1735475408118" duration="65630000" />
+      <workItem from="1735586135924" duration="16723000" />
+      <workItem from="1735605405350" duration="20712000" />
+      <workItem from="1735665636800" duration="41038000" />
+      <workItem from="1735744041986" duration="44417000" />
+      <workItem from="1735851745124" duration="154000" />
+      <workItem from="1735851905586" duration="34318000" />
+      <workItem from="1735932126206" duration="349000" />
+      <workItem from="1735938585409" duration="684000" />
+      <workItem from="1736013797568" duration="7408000" />
+      <workItem from="1736081487041" duration="16569000" />
+      <workItem from="1736100854895" duration="3967000" />
+      <workItem from="1736195414184" duration="3137000" />
+      <workItem from="1736198783555" duration="2089000" />
+      <workItem from="1736256231413" duration="18372000" />
+      <workItem from="1736275137245" duration="12250000" />
+      <workItem from="1736288263239" duration="2289000" />
+      <workItem from="1736340147439" duration="40336000" />
+      <workItem from="1736432987356" duration="10448000" />
+      <workItem from="1736445275344" duration="1384000" />
+      <workItem from="1736446851471" duration="4287000" />
+      <workItem from="1736454419829" duration="5748000" />
+      <workItem from="1736460261712" duration="8189000" />
+      <workItem from="1736520743357" duration="12473000" />
+      <workItem from="1736533250369" duration="2137000" />
+      <workItem from="1736535397113" duration="401000" />
+      <workItem from="1736535809128" duration="15120000" />
+      <workItem from="1736550961231" duration="6399000" />
+      <workItem from="1736602613870" duration="23745000" />
+      <workItem from="1736690818102" duration="36000" />
+      <workItem from="1736690862783" duration="15113000" />
+      <workItem from="1736706878060" duration="7391000" />
+      <workItem from="1736717757987" duration="7885000" />
+      <workItem from="1736789406967" duration="723000" />
+      <workItem from="1736802425574" duration="434000" />
+      <workItem from="1736866809318" duration="151410000" />
+      <workItem from="1737202620097" duration="3000" />
+      <workItem from="1737205093695" duration="16930000" />
+      <workItem from="1737298730925" duration="4000" />
+      <workItem from="1737303704023" duration="2802000" />
+      <workItem from="1737419647008" duration="4638000" />
+      <workItem from="1737466097536" duration="23301000" />
+      <workItem from="1737494025568" duration="5628000" />
+      <workItem from="1737552192037" duration="14327000" />
+      <workItem from="1737640772875" duration="330000" />
+      <workItem from="1737641203727" duration="61000" />
+      <workItem from="1737642972960" duration="86046000" />
+      <workItem from="1737904996153" duration="1954000" />
+      <workItem from="1737906991221" duration="80731000" />
+      <workItem from="1738180780124" duration="405000" />
+      <workItem from="1738187645887" duration="37943000" />
+      <workItem from="1738324842736" duration="26587000" />
+    </task>
+    <task id="LOCAL-00001" summary="IDE Changes and WIP">
+      <option name="closed" value="true" />
+      <created>1736540062742</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1736540062742</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Fixed a bug is setting margins.">
+      <option name="closed" value="true" />
+      <created>1736553310767</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1736553310767</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Changed UI for index slightly.">
+      <option name="closed" value="true" />
+      <created>1736557280815</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1736557280815</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Lost reload logic. Reinstalled.">
+      <option name="closed" value="true" />
+      <created>1736623068810</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1736623068810</updated>
+    </task>
+    <task id="LOCAL-00005" summary="WIP">
+      <option name="closed" value="true" />
+      <created>1736636386012</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1736636386012</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Repec is all green now!">
+      <option name="closed" value="true" />
+      <created>1736701502277</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1736701502277</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Rubocop is green now as well.">
+      <option name="closed" value="true" />
+      <created>1736701560829</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1736701560829</updated>
+    </task>
+    <task id="LOCAL-00008" summary="ESLint is green now as well.">
+      <option name="closed" value="true" />
+      <created>1736705951169</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1736705951169</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Fix typo in achor link.">
+      <option name="closed" value="true" />
+      <created>1736707919168</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1736707919168</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Polishing things.">
+      <option name="closed" value="true" />
+      <created>1736714315057</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1736714315057</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
+    <servers />
+  </component>
+  <component name="TerminalProjectNonSharedOptionsProvider">
+    <envs>
+      <env key="PATH" value="$PROJECT_DIR$/bin:$PATH " />
+    </envs>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="IDE Changes and WIP" />
+    <MESSAGE value="Fixed a bug is setting margins." />
+    <MESSAGE value="Changed UI for index slightly." />
+    <MESSAGE value="Lost reload logic. Reinstalled." />
+    <MESSAGE value="WIP" />
+    <MESSAGE value="Repec is all green now!" />
+    <MESSAGE value="Rubocop is green now as well." />
+    <MESSAGE value="ESLint is green now as well." />
+    <MESSAGE value="Fix typo in achor link." />
+    <MESSAGE value="Polishing things." />
+    <option name="LAST_COMMIT_MESSAGE" value="Polishing things." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/app/javascript/components/SectionEditor.jsx</url>
+          <line>802</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/app/javascript/components/SectionEditor.jsx</url>
+          <line>812</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/app/javascript/components/SlideShow.jsx</url>
+          <line>83</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="JavascriptDebugType">
+        <watch expression="format" />
+      </configuration>
+      <configuration name="RailsRunConfigurationType">
+        <watch expression="request.url" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/paul_carrick_website$Build_Python.coverage" NAME="Build Python Coverage Results" MODIFIED="1737226763143" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+  </component>
+</project>

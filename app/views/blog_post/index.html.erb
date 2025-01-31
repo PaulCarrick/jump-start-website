@@ -1,0 +1,47 @@
+<!-- app/views/blog_posts/index.html.erb -->
+<% content_for :title, "#{@site_information.site_name} - Blogs" %>
+<%= render layout: "layouts/header" do %>
+<% end %>
+
+<div>
+  <%= render 'shared/flash_error' %>
+  <h1 class="text-dark">Blog Entries</h1>
+
+  <% @blog_posts.each do |blog_post| %>
+    <div class="ps-3 mb-3">
+      <div class="row ps-3">
+        <div class="col-lg-12">
+          <h2><%= blog_post.title %></h2>
+          <%
+            datetime = blog_post.posted.in_time_zone
+            day_with_suffix = datetime.day.ordinalize
+            posted_at = datetime.strftime("%b #{day_with_suffix} %I:%M %p")
+          %>
+
+          <%= "#{posted_at} - #{blog_post.author}" %>
+
+          <div class="ms-3">
+            <% if blog_post.content.length > 100 %>
+            <span id="post-content-<%= blog_post.id %>">
+              <%= blog_post.content[0, 100] + "..." %>
+            </span>
+              <%= button_to "Read More",
+                            "#",
+                            class: "btn btn-link",
+                            data: { action: "expand-content",
+                                    content: blog_post.content,
+                                    post_id: blog_post.id
+                            }
+              %>
+            <% else %>
+              <%= blog_post.content %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<%= render layout: "layouts/footer" do %>
+<% end %>

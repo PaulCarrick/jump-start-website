@@ -1,0 +1,276 @@
+:root {
+    --header-bg: #0d6efd; /* Default header color */
+    --header-text-color: #f8f9fa; /* Default header color */
+    --footer-bg: #0d6efd; /* Default footer color */
+    --footer-text-color: #f8f9fa; /* Default header color */
+    --container-bg: #f8f9fa; /* Default container color */
+    --container-text-color: #000000; /* Default header color */
+    --page-background-image: none; /* Default background image */
+}
+
+.tight-pagination {
+    --bs-pagination-padding-x: 0.25rem;
+    --bs-pagination-padding-y: 0.375rem;
+    --bs-pagination-font-size: 10pt;
+    --bs-pagination-hover-color: var(--bs-link-hover-color);
+    --bs-pagination-hover-bg: var(--bs-tertiary-bg);
+    --bs-pagination-focus-color: var(--bs-link-hover-color);
+    --bs-pagination-focus-bg: var(--bs-secondary-bg);
+    --bs-pagination-active-color: #fff;
+    --bs-pagination-active-bg: #0d6efd;
+    --bs-pagination-active-border-color: #0d6efd;
+    --bs-pagination-disabled-color: var(--bs-secondary-color);
+    --bs-pagination-disabled-bg: var(--bs-secondary-bg);
+    --bs-pagination-disabled-border-color: var(--bs-border-color);
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+}
+
+.tight-pagination a {
+    color: var(--bs-link-color);
+    text-decoration: underline; /* Ensures links are underlined */
+}
+
+.btn-bad {
+    color: blue;
+    background-color: rgba(220, 53, 69, 0.49);
+    border-color: #dc3545;
+}
+
+.btn-bad:hover {
+    color: white;
+    background-color: rgba(220, 53, 69);
+    border-color: #dc3545;
+}
+
+.btn-good {
+    color: blue;
+    background-color: rgba(53, 106, 220, 0.49);
+    border-color: #3556dc;
+}
+
+.btn-good:hover {
+    color: white;
+    background-color: rgba(53, 106, 220);
+    border-color: #3556dc;
+}
+
+.ql-snow.ql-toolbar button.ql-div::before {
+    content: '<div>';
+    border-radius: 5px;
+}
+
+.ql-snow.ql-toolbar button.ql-backgroundColor::before {
+    content: 'Background';
+    min-width: 20em;
+    border-radius: 5px;
+}
+
+.header-bg {
+    background-color: #0d6efd;
+    background-color: var(--header-bg);
+}
+
+.header-text {
+    color: #f8f9fa;
+    color: var(--header-text-color);
+}
+
+.footer-bg {
+    background-color: #f8f9fa;
+    background-color: var(--footer-bg);
+}
+
+.footer-text {
+    color: #f8f9fa;
+    color: var(--footer-text-color);
+}
+
+.container-bg {
+    background-color: #0d6efd;
+    background-color: var(--container-bg);
+}
+
+.container-text {
+    color: #000000;
+    color: var(--container-text-color);
+}
+
+.background-image {
+    background-image: none;
+    background-image: var(--page-background-image);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.auto-size {
+    width: auto;
+    height: fit-content;
+}
+
+.error-box {
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    position: relative;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2em;
+}
+
+.distributed-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.center-item {
+    margin: 0 auto;
+}
+
+.col-quarter {
+    flex: 0 0 2.0833335%;
+    max-width: 2.0833335%;
+}
+
+.col-half {
+    flex: 0 0 4.166667%;
+    max-width: 4.166667%;
+}
+
+.col-1-and-a-half {
+    flex: 0 0 12.4999995%;
+    max-width: 12.4999995%;
+}
+
+.col-2-and-a-half {
+    flex: 0 0 20.8333325%;
+    max-width: 20.8333325%;
+}
+
+.col-3-and-a-half {
+    flex: 0 0 29.1666655%;
+    max-width: 29.1666655%;
+}
+
+.col-4-and-a-half {
+    flex: 0 0 37.4999985%;
+    max-width: 37.4999985%;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0
+}
+
+.btn-link:disabled {
+    color: gray; /* Change the color to gray */
+    text-decoration: none; /* Remove the underline */
+    cursor: not-allowed; /* Optional: Change the cursor to indicate it's disabled */
+}
+
+.rtf-text-area {
+    max-height: 14em;
+    overflow: auto;
+    resize: none;
+    box-sizing: border-box;
+}
+
+.action-links {
+    white-space: nowrap;
+    margin: 3px 10px 0 0;
+    padding: 0px;
+    font-size: 8pt;
+    float: right;
+}
+
+.action-link {
+    white-space: nowrap;
+    margin: 3px 0 0 0;
+    padding: 0px;
+    font-size: 8pt;
+}
+
+.rounded-box {
+    border: 1px solid #000;
+    border-radius: 5px;
+}
+
+div.reset-styles {
+    all: unset; /* Resets all inherited and applied styles */
+    display: block; /* Reapply block display since 'unset' removes it */
+}
+
+.scrollable-container {
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-size: 10pt;
+}
+
+.slideshow-container {
+    max-width: 100%;
+    position: relative;
+    margin: auto;
+}
+
+.slide {
+    display: none;
+}
+
+.fade-3 {
+    animation: fadeEffect 3s;
+}
+
+.fade-5 {
+    animation: fadeEffect 3s;
+}
+
+.fade-10 {
+    animation: fadeEffect 10s;
+}
+
+.fade-20 {
+    animation: fadeEffect 20s;
+}
+
+.fade-30 {
+    animation: fadeEffect 30s;
+}
+
+@keyframes fadeEffect {
+    from {
+        opacity: 0.4
+    }
+    to {
+        opacity: 1
+    }
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.grid-item {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}

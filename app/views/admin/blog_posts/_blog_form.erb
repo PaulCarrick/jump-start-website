@@ -1,0 +1,76 @@
+<!-- app/views/admin/blog_posts/_blog_form.html.erb -->
+<%= javascript_include_tag 'views/admin/blog_posts/edit' %>
+<%= form_with(model:  controller.get_item,
+              url:    controller.get_item&.persisted? ? admin_blog_post_path(controller.get_item) : admin_blog_posts_path,
+              method: controller.get_item.persisted? ? :patch : :post,
+              local:  true,
+              html:   { onsubmit: 'return validate(this)' }) do |form|
+%>
+  <%= form.hidden_field :content, id: "blog_post_content", name: "blog_post[content]" %>
+  <%= form.hidden_field :posted, value: controller.get_item&.posted.present? ? controller.get_item.posted : DateTime.now %>
+
+  <h1>
+    <% if controller.get_item&.persisted? %>
+      Edit <%= controller.model_title %>
+    <% else %>
+      New <%= controller.model_title %>
+    <% end %>
+  </h1>
+
+  <div class="mb-3">
+    <%= form.label :author, "Author*", class: "form-label" %>
+    <%= form.text_field :author,
+                        class:       "form-control",
+                        required:    true,
+                        placeholder: "Enter the name of the author (first and last)",
+                        value:       controller.get_item.persisted? ? controller.get_item.author : current_user.name
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :title, "Title*", class: "form-label" %>
+    <%= form.text_field :title, class: "form-control", required: true, placeholder: "Enter the title" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :visibility, "Visibility", class: "form-label" %><br>
+    <%= form.select :visibility,
+                    options_for_select(%w[Public Private]),
+                    class: "form-control"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :blog_type, "Blog Type", class: "form-label" %><br>
+    <%= form.select :blog_type,
+                    options_for_select(%w[Personal Professional]),
+                    class: "form-control"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :content, "Post*", class: "form-label" %>
+    <%= react_component(
+          "HtmlEditor",
+          {
+            id:          "blog-post-content",
+            value:       form.object.content || "",
+            placeholder: "Enter the content for the post...",
+            onChange:    "handleEditorChange(editorContent, id);",
+            onBlur:      "handleEditorChange(editorContent, id);"
+          }
+        ) %>
+  </div>
+
+  <div class="pb-3">
+    * - Required Fields
+  </div>
+  <div class="mb-3">
+    <%= form.submit "Save #{controller.model_title}",
+                    class:    "btn btn-primary me-3",
+                    disabled: !@application_user.admin?
+    %>
+
+    <%= link_to("Cancel", admin_blog_posts_url, class: "btn btn-primary", target: "_self") %>
+  </div>
+<% end %>

@@ -1,0 +1,17 @@
+<!-- app/views/contacts/new.html.erb -->
+<% content_for :title, "#{@site_information.site_name} - Contact" %>
+<%= render layout: "layouts/header" do %>
+<% end %>
+
+<section class="bg-light text-secondary">
+  <%= render 'shared/flash_error' %>
+  <div class="container align-content-lg-center">
+    <h1>Contact Form Submission</h1>
+    <p>
+      <%= @results %>
+    </p>
+  </div>
+</section>
+
+<%= render layout: "layouts/footer" do %>
+<% end %>

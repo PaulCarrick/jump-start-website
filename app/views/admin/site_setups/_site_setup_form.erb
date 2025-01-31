@@ -1,0 +1,279 @@
+<!-- app/views/admin/site_setups/_site_setup_form.html.erb -->
+
+<%= form_with(model:  controller.get_item,
+              url:    controller.get_item.persisted? ? admin_site_setup_path(controller.get_item) : admin_site_setups_path,
+              method: controller.get_item.persisted? ? :patch : :post,
+              local:  true) do |form| %>
+
+  <h1>
+    <% if controller.get_item&.persisted? %>
+      Edit <%= controller.model_title %>
+    <% else %>
+      New <%= controller.model_title %>
+    <% end %>
+  </h1>
+
+  <div class="mb-3">
+    <%= form.label :configuration_name, "Configuration Name*", class: "form-label" %>
+    <%= form.text_field :configuration_name,
+                        class:       "form-control",
+                        required:    true,
+                        placeholder: "Enter the configuration name for this #{controller.model_title}"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :default_setup, "Default setup", class: "form-label" %>
+    <%= form.check_box :default_setup,
+                       class: "form-check-input" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :owner_name, "Owner Name*", class: "form-label" %>
+    <%= form.text_field :owner_name,
+                        class:       "form-control",
+                        required:    true,
+                        placeholder: "Enter the owner name for this #{controller.model_title}"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :site_name, "Site Name*", class: "form-label" %>
+    <%= form.text_field :site_name,
+                        class:       "form-control",
+                        required:    true,
+                        placeholder: "Enter the site name for this #{controller.model_title}"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :site_domain, "Site Domain*", class: "form-label" %>
+    <%= form.text_field :site_domain,
+                        class:       "form-control",
+                        required:    true,
+                        placeholder: "Enter the site domain for this #{controller.model_title}"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :site_host, "Site Host*", class: "form-label" %>
+    <%= form.text_field :site_host,
+                        class:       "form-control",
+                        required:    true,
+                        placeholder: "Enter the site host for this #{controller.model_title}"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :site_url, "Site URL*", class: "form-label" %>
+    <%= form.text_field :site_url,
+                        class:       "form-control",
+                        required:    true,
+                        placeholder: "Enter the site URL for this #{controller.model_title}"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :guest_user_name, "Guest User Name*", class: "form-label" %>
+    <%= form.text_field :guest_user_name,
+                        class:       "form-control",
+                        value:       controller.get_item&.guest_user_name || "guest",
+                        required:    true,
+                        placeholder: "Enter the guest user name this #{controller.model_title}"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :smtp_server, "Email server (SMTP host)", class: "form-label" %>
+    <%= form.text_field :smtp_server,
+                        class:       "form-control",
+                        placeholder: "Enter the address for the SMTP server for this #{controller.model_title}"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :smtp_port, "Email Server Port", class: "form-label" %>
+    <%= form.text_field :smtp_port,
+                        class: "form-control",
+                        value: controller.get_item&.smtp_port || 465,
+                        placeholder: "Enter the port for the SMTP server for this #{controller.model_title}",
+                        list: "smtp-port-options" %>
+
+    <datalist id="smtp-port-options">
+      <option value="25">25 (Unencrypted)</option>
+      <option value="465">465 (SSL)</option>
+      <option value="587">587 (TLS)</option>
+    </datalist>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :smtp_user, "Email server username", class: "form-label" %>
+    <%= form.text_field :smtp_user,
+                        class:       "form-control",
+                        placeholder: "Enter the username for the SMTP server for this #{controller.model_title}" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :smtp_password, "Email server password", class: "form-label" %>
+    <%= form.password_field :smtp_password,
+                            class:       "form-control",
+                            placeholder: "Enter the password for the SMTP server for this #{controller.model_title}" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :smtp_authentication, "SMTP Server Authentication", class: "form-label" %>
+    <%= form.select :smtp_authentication,
+                    options_for_select([["Plain", "plain"], ["Login", "login"]], form.object.smtp_authentication),
+                    { include_blank: "Select Authentication" },
+                    class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :smtp_domain, "Email server default domain", class: "form-label" %>
+    <%= form.text_field :smtp_domain,
+                        class:       "form-control",
+                        placeholder: "Enter the default domain for the SMTP server for this #{controller.model_title}"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :contact_email_from, "Contact email from address", class: "form-label" %>
+    <%= form.email_field :contact_email_from,
+                         class:       "form-control",
+                         placeholder: "Enter the email address that the contact email will be from for this #{controller.model_title}" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :contact_email_to, "Contact email to address", class: "form-label" %>
+    <%= form.email_field :contact_email_to,
+                         class:       "form-control",
+                         placeholder: "Enter the email address that the contact email will sent to for this #{controller.model_title}" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :contact_email_subject, "Contact Email subject line", class: "form-label" %>
+    <%= form.text_field :contact_email_subject,
+                        class:       "form-control",
+                        placeholder: "Enter the subject line for the contact email for this #{controller.model_title}"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :header_background, "Header Background Color*", class: "form-label" %><br>
+    <%= form.select :header_background,
+                    options_for_select(Admin::SiteSetupsController::COLOR_ARRAY,
+                                       controller.get_item.header_background),
+                    required: true,
+                    class:    'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :header_text_color, "Header Text Color*", class: "form-label" %><br>
+    <%= form.select :header_text_color,
+                    options_for_select(Admin::SiteSetupsController::COLOR_ARRAY,
+                                       controller.get_item.header_text_color),
+                    required: true,
+                    class:    'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :footer_background, "Footer Background Color*", class: "form-label" %><br>
+    <%= form.select :footer_background,
+                    options_for_select(Admin::SiteSetupsController::COLOR_ARRAY,
+                                       controller.get_item.footer_background),
+                    required: true,
+                    class:    'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :footer_text_color, "Footer Text Color*", class: "form-label" %><br>
+    <%= form.select :footer_text_color,
+                    options_for_select(Admin::SiteSetupsController::COLOR_ARRAY,
+                                       controller.get_item.footer_text_color),
+                    required: true,
+                    class:    'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :container_background, "Container Background Color*", class: "form-label" %><br>
+    <%= form.select :container_background,
+                    options_for_select(Admin::SiteSetupsController::COLOR_ARRAY,
+                                       controller.get_item.container_background),
+                    required: true,
+                    class:    'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :container_text_color, "Container Text Color*", class: "form-label" %><br>
+    <%= form.select :container_text_color,
+                    options_for_select(Admin::SiteSetupsController::COLOR_ARRAY,
+                                       controller.get_item.container_text_color),
+                    required: true,
+                    class:    'form-control' %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :page_background_image, "Background Image", class: "form-label" %>
+    <%= form.text_field :page_background_image,
+                        class:       "form-control",
+                        placeholder: "Enter the background image for this #{controller.model_title} (optional)"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :facebook_url, "Facebook URL", class: "form-label" %>
+    <%= form.text_field :facebook_url,
+                        class:       "form-control",
+                        placeholder: "Enter the Facebook URL for this #{controller.model_title} (optional)"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :twitter_url, "Twitter URL", class: "form-label" %>
+    <%= form.text_field :twitter_url,
+                        class:       "form-control",
+                        placeholder: "Enter the Twitter URL for this #{controller.model_title} (optional)"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :instagram_url, "Instagram URL", class: "form-label" %>
+    <%= form.text_field :instagram_url,
+                        class:       "form-control",
+                        placeholder: "Enter the Instagram URL for this #{controller.model_title} (optional)"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :linkedin_url, "Linkedin URL", class: "form-label" %>
+    <%= form.text_field :linkedin_url,
+                        class:       "form-control",
+                        placeholder: "Enter the LinkedIn URL for this #{controller.model_title} (optional)"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :github_url, "GitHub URL", class: "form-label" %>
+    <%= form.text_field :github_url,
+                        class:       "form-control",
+                        placeholder: "Enter the Github URL for this #{controller.model_title} (optional)"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :copyright, "Copyright", class: "form-label" %>
+    <%= form.text_field :copyright,
+                        class:       "form-control",
+                        placeholder: "Enter the copyright this #{controller.model_title} (optional)"
+    %>
+  </div>
+
+
+  <div class="pb-3">
+    * - Required Fields
+  </div>
+  <div class="mb-3">
+    <%= form.submit "Save #{controller.model_title}", class: "btn btn-primary me-3", disabled: !@application_user&.admin? %>
+    <%= link_to("Cancel", admin_site_setups_url, class: "btn btn-primary", target: "_self") %>
+  </div>
+<% end %>

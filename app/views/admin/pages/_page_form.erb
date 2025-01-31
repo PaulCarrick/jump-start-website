@@ -1,0 +1,118 @@
+<!-- app/views/admin/pages/_page_form.html.erb -->
+<%
+  if controller.get_item&.id.present?
+    @return_path = edit_admin_page_path(controller.get_item, target: "_self")
+  else
+    @return_path = new_admin_page_path(target: "_self")
+  end
+%>
+
+<%= form_with(model:  controller.get_item,
+              url:    controller.get_item.persisted? ? admin_page_path(controller.get_item) : admin_pages_path,
+              method: controller.get_item.persisted? ? :patch : :post,
+              local:  true) do |form| %>
+
+  <h1>
+    <% if controller.get_item&.persisted? %>
+      Edit <%= controller.model_title %>
+    <% else %>
+      New <%= controller.model_title %>
+    <% end %>
+  </h1>
+
+  <div class="mb-3">
+    <%= form.label :name, "Name*", class: "form-label" %>
+    <%= form.text_field :name,
+                        class:       "form-control",
+                        required:    true,
+                        placeholder: "Enter the name for the page"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :section, "Section", class: "form-label" %>
+    <%= form.text_field :section,
+                        class:       "form-control",
+                        placeholder: "Enter the sections associated with this page, if any"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :title, "Title", class: "form-label" %>
+    <%= form.text_field :title, class: "form-control", placeholder: "Enter the title, if any" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :access, "Access", class: "form-label" %>
+    <%= form.text_field :access, class: "form-control", placeholder: "Enter the access, if any" %>
+  </div>
+
+  <h1>Preview</h1>
+  <div>
+    <div class="w-100 border border-danger border-width-8 p-2">
+      <% sections = controller.get_item&.sections %>
+
+      <% if sections.present? %>
+        <% sections.each do |section| %>
+          <%= link_to "Edit",
+                      edit_admin_section_path(section,
+                                              return_url:             @return_path,
+                                              cancel_url:             @return_path,
+                                              read_only_content_type: true,
+                                              new_section:            false,
+                                              target:                 "_self"),
+                      class:  "ms-2",
+                      target: "_self" %>
+          <% if @application_user.admin? %>
+            <%= link_to "Delete",
+                        admin_delete_section_path(section, method: :delete, return_url: @return_path),
+                        method:  :delete,
+                        data:    { confirm: "Are you sure?" },
+                        class:   "btn-link",
+                        style:   "color: red",
+                        target:  "_self",
+                        onclick: "if (!confirm('Are you sure you want to delete this?')) { return false; }" %>
+          <% end %>
+          <%= react_component("RenderSection", { section: section, noBorder: true }) %>
+        <% end %>
+      <% else %>
+        <h1>No Content</h1>
+      <% end %>
+    </div>
+  </div>
+  <div>
+    <% if controller.get_item&.id.present? %>
+      <div class="mt-3">
+        <%= link_to "Add Section",
+                    admin_add_section_to_existing_page_path(controller.get_item,
+                                                            return_url:             @return_path,
+                                                            cancel_url:             @return_path,
+                                                            new_section:            true,
+                                                            read_only_content_type: true),
+                    class:  "btn btn-good",
+                    target: "_self" %>
+      </div>
+    <% else %>
+      <% if controller.get_item&.name.present? && controller.get_item&.section.present? %>
+        <div class="mt-3">
+          <%= link_to "Add Section",
+                      admin_add_section_to_new_page_path(controller.get_item,
+                                                         return_url:             @return_path,
+                                                         cancel_url:             @return_path,
+                                                         read_only_content_type: true,
+                                                         new_section:            true,
+                                                         target:                 "_self"),
+                      class:  "btn btn-good",
+                      target: "_self" %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="pb-3">
+    * - Required Fields
+  </div>
+  <div class="mb-3">
+    <%= form.submit "Save Page", class: "btn btn-primary me-3", disabled: !@application_user.admin? %>
+    <%= link_to("Cancel", admin_pages_url, class: "btn btn-secondary", target: "_self") %>
+  </div>
+<% end %>

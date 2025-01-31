@@ -1,0 +1,110 @@
+# DockerFile-DB
+
+# Use the official PostgreSQL image as the base
+FROM postgres:15 AS build
+
+WORKDIR /database
+
+RUN env
+
+ARG EXTERNAL_PORT=5433
+ARG SSH_PORT="2222"
+ARG SERVER_NAME="jump_start_server_db"
+ARG SUDO_AVAILABLE="true"
+ARG RAILS_USERNAME="jump_start"
+ARG USERNAME="jump_start"
+ARG SSH_PUBLIC_KEY="ssh_public_key"
+ARG DB_USERNAME="jump_start"
+ARG RAILS_DATABASE="rails"
+ARG MAIL_DATABASE="mail"
+ARG DB_PASSWORD
+ARG POSTGRES_USERNAME="postgres"
+ARG POSTGRES_PASSWORD
+ARG RAILS_USERNAME="rails"
+ARG RAILS_PASSWORD
+ARG USERNAME="jump_start"
+ARG USER_PASSWORD
+
+# Set environment variables for PostgreSQL configuration
+ENV EXTERNAL_PORT=${EXTERNAL_PORT}
+ENV SSH_PORT=${SSH_PORT}
+ENV SERVER_NAME=${SERVER_NAME}
+ENV SUDO_AVAILABLE=${SUDO_AVAILABLE}
+ENV USERNAME=${USERNAME}
+ENV SSH_PUBLIC_KEY=${SSH_PUBLIC_KEY}
+ENV DB_USERNAME=${DB_USERNAME}
+ENV RAILS_DATABASE=${RAILS_DATABASE}
+ENV MAIL_DATABASE=${MAIL_DATABASE}
+ENV POSTGRES_USERNAME=${POSTGRES_USERNAME}
+ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+ENV RAILS_USERNAME=${RAILS_USERNAME}
+ENV RAILS_PASSWORD=${RAILS_PASSWORD}
+ENV USERNAME=${USERNAME}
+ENV USER_PASSWORD=${USER_PASSWORD}
+
+RUN echo "*** Installing Base Packages..." && \
+    apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+    postgresql \
+    postgresql-client \
+    postgresql-contrib \
+    libpq-dev \
+    postgresql-server-dev-all \
+    gettext \
+    curl \
+    openssl \
+    procps \
+    passwd \
+    python-is-python3 \
+    python3-pip \
+    python3-psycopg2 \
+    nano && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives && \
+    echo "*** Base Packages Installed."
+
+# Setup environmental variabl;es for all users
+COPY ./startup/rails/.env /etc/environment
+RUN chmod 644 /etc/environment
+RUN echo "set -o allexport && source /etc/environment && set +o allexport" >> /etc/profile
+
+COPY ./startup/database/.env ./
+COPY ./startup/scripts/setup_user.sh ./scripts/
+
+RUN chmod 400 ./.env
+RUN ./scripts/setup_user.sh ${POSTGRES_USERNAME} ${POSTGRES_PASSWORD}
+RUN ./scripts/setup_user.sh ${RAILS_USERNAME} ${RAILS_PASSWORD} 1001
+RUN ./scripts/setup_user.sh ${USERNAME} ${USER_PASSWORD} 1002 /home/${USERNAME}
+
+# Set the hostname
+RUN echo "${SERVER_NAME}" > /etc/hostname
+
+FROM build AS bundle
+
+COPY --from=build /database /database
+COPY ./startup/templates/ ./templates/
+COPY ./startup/database/templates/ ./templates/
+COPY ./startup/scripts ./scripts/
+COPY ./startup/database/scripts/ ./scripts/
+COPY ./startup/database/databases ./databases/
+COPY ./bin/process_template.sh ./bin/
+COPY ./bin/backup_database.sh ./bin/
+COPY ./bin/load_database.sh ./bin/
+COPY ./startup/${SSH_PUBLIC_KEY} ./setup/
+
+# Optionally install ssh
+RUN if [ -n "$SSH_PORT" ]; then \
+      ./scripts/configure_ssh.sh ${USERNAME} ./setup/${SSH_PUBLIC_KEY} ; \
+    else \
+      echo "*** SSH Server Not Installed" ; \
+    fi
+
+# Optionally install sudo and net tools
+RUN if [ "${SUDO_AVAILABLE}" = "true" ]; then \
+        ./scripts/install_sudo.sh postgres ${USERNAME} ; \
+    fi
+
+# Define a volume for persistent data storage
+VOLUME /var/lib/postgresql/data
+
+EXPOSE ${EXTERNAL_PORT}
+ENTRYPOINT ["/database/scripts/database-entrypoint.sh"]

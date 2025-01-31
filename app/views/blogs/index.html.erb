@@ -1,0 +1,17 @@
+<!-- app/views/blogs/index.html.erb -->
+<% content_for :title, "#{@site_information.site_name} - Blogs" %>
+<%= render layout: "layouts/header" do %>
+<% end %>
+
+<section class="bg-light pt-5 text-secondary">
+  <div class="container mb-5">
+    <%= react_component('PostList',
+                        {
+                          user: @application_user,
+                          email: @application_user.email,
+                          blog_type: @blog_type }) %>
+  </div>
+</section>
+
+<%= render layout: "layouts/footer" do %>
+<% end %>

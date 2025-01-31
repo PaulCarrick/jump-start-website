@@ -1,0 +1,100 @@
+<!-- app/views/admin/pages/index.html.erb -->
+<%= render layout: "layouts/admin_page" do %>
+  <% image_file = controller.get_item %>
+  <% if image_file.present? %>
+    <div class="row mb-5 w-75">
+      <% if image_file.image.attached? %>
+        <div class="row">
+          <center><%= raw(image_file.caption) %></center>
+        </div>
+        <div class="row text-center">
+          <% if image_file.mime_type === "video/mp4" %>
+            <a href="#" onclick="showVideoPlayer('<%= image_file.image_url %>')">
+              <%= image_file.name %>
+            </a>
+          <% else %>
+            <%
+              section = Section.new(content_type:  "Temp",
+                                    section_order: 1,
+                                    image:         "ImageFile:#{image_file.name}",
+                                    description:   image_file.description,
+                                    row_style:     "image-single",
+                                    formatting:    { row_style: "image-single" }
+              )
+            %>
+          <% end %>
+        </div>
+        <div class="row">
+          <%= react_component("RenderSection", { section: section, noBorder: true }) %>
+        </div>
+        <div class="row ms-2">
+          <%= raw(image_file.description) %>
+        </div>
+      <% else %>
+        "<p>No image available</p>"
+      <% end %>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-2">
+        Name:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.name %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-2">
+        caption:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.caption %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-2">
+        Description:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.description %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-2">
+        MIME Type:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.mime_type %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-2">
+        Group:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.group %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-2">
+        Slide Order:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.slide_order %>
+      </div>
+    </div>
+    <div id="videoPlayer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 1000;">
+      <div style="position: relative; width: 80%; max-width: 800px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 10px;">
+        <video id="videoElement" controls style="width: 100%;"></video>
+        <button onclick="closeVideoPlayer()" style="display: block; margin: 20px auto; padding: 10px 20px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">
+          Close
+        </button>
+      </div>
+    </div>
+  <% end %>
+<% end %>

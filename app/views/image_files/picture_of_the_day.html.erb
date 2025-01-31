@@ -1,0 +1,20 @@
+<!-- app/views/image_file/picture_of_the_day.html.erb -->
+<% if @image_file.present? %>
+  <container>
+    <h1>Picture of the Day</h1>
+    <div class="ps-5">
+      <%= raw(@image_file.caption) %>
+    </div>
+    <div class="ps-5">
+      <%= link_to @image_file.image_url, target: "_blank" do %>
+        <%= image_tag(@image_file.image_url,
+                      alt: @image_file.name,
+                      style: "max-width: 400px; max-height: 400px; object-fit: contain;")
+        %>
+      <% end %>
+    </div>
+    <div class="ps-5" style="font-size: 8pt !important; max-width: 320px">
+      <%= raw(Utilities.truncate_html(@image_file.description, 150)) %>
+    </div>
+  </container>
+<% end %>

@@ -1,0 +1,85 @@
+<!-- app/views/admin/footer_items/_footer_item_form.html.erb -->
+<%= form_with(model:  controller.get_item,
+              url:    controller.get_item.persisted? ? admin_footer_item_path(controller.get_item) : admin_footer_items_path,
+              method: controller.get_item.persisted? ? :patch : :post,
+              local:  true) do |form| %>
+
+  <h1>
+    <% if controller.get_item&.persisted? %>
+      Edit <%= controller.model_title %>
+    <% else %>
+      New <%= controller.model_title %>
+    <% end %>
+  </h1>
+
+  <div class="mb-3">
+    <%= form.label :label, "Label*", class: "form-label" %>
+    <%= form.text_field :label,
+                        class:       "form-control",
+                        required:    true,
+                        placeholder: "Enter the label (name displayed) for the footer item"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :icon, "Icon", class: "form-label" %>
+    <%= form.text_field :icon, class: "form-control", placeholder: "Enter the icon filename, if any" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :options, "Options", class: "form-label" %>
+    <%= form.text_field :options, class: "form-control", placeholder: "Enter the options, if any" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :link, "Link", class: "form-label" %>
+    <%= form.text_field :link,
+                        class:       "form-control",
+                        placeholder: "Enter the URL to goto when the footer item is clicked, if any"
+    %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :access, "Access", class: "form-label" %>
+    <%= form.text_field :access, class: "form-control", placeholder: "Enter the access, if any" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :footer_order, "Footer Order*", class: "form-label" %>
+    <%= form.number_field :footer_order,
+                          id:          "footer-order-field",
+                          class:       "form-control",
+                          placeholder: "Enter the order for the footer item (1 is first), if any",
+                          required:    true,
+                          step:        1,
+                          min:         1,
+                          max:         999,
+                          value:       controller.get_item.footer_order || nil %>
+  </div>
+
+  <div class="mb-3">
+    <%
+      footers = [["", nil]]
+
+      controller.get_unfiltered_items.each do |footer_item|
+        footers << [
+          footer_item.label,
+          footer_item.id
+        ]
+      end
+    %>
+
+    <%= form.label :parent_id, "Parent footer", class: "form-label" %><br>
+    <%= form.select :parent_id,
+                    options_for_select(footers, form.object.parent_id),
+                    class: 'form-control' %>
+  </div>
+
+  <div class="pb-3">
+    * - Required Fields
+  </div>
+  <div class="mb-3">
+    <%= form.submit "Save Footer Item", class: "btn btn-primary me-3", disabled: !@application_user.admin? %>
+    <%= link_to("Cancel", admin_footer_items_url, class: "btn btn-primary", target: "_self") %>
+  </div>
+<% end %>

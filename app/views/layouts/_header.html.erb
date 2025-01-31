@@ -1,0 +1,79 @@
+<header>
+  <div class="bg-light">
+    <nav class="header-bg navbar navbar-dark navbar-expand-lg py-4">
+      <div class="header-bg container">
+        <!-- Brand Name -->
+        <%= link_to @site_information.site_name,
+                    root_path,
+                    target: "_self",
+                    class: "fs-2 fw-bold header-text nav-link text-uppercase",
+                    style: "margin-top: 3px"
+        %>
+
+        <!-- Toggler Button for Hamburger Menu -->
+        <%= button_tag type:  "button",
+                       class: "navbar-toggler",
+                       data:  { bs_toggle: "collapse", bs_target: "#navbarNav" },
+                       aria:  { controls: "navbarNav", expanded: "false", label: "Toggle navigation" } do %>
+          <span class="navbar-toggler-icon"></span>
+        <% end %>
+
+        <!-- Collapsible Menu -->
+        <div class="header-bg collapse navbar-collapse" id="navbarNav">
+          <ul class="header-bg ms-auto navbar-nav">
+            <% @main_menu_items.each_with_index do |menu_item, index| %>
+              <% next if menu_item.access == 'admin' && !controller.current_user_is_admin? %>
+              <li class="header-bg nav-item">
+                <% if menu_item.sub_items.any? %>
+                  <!-- Dropdown Menu -->
+                  <div class="header-bg dropdown">
+                    <%= link_to "#",
+                                class: "header-bg header-text nav-link dropdown-toggle px-lg-3 py-lg-4 text-uppercase",
+                                id:    "navbarDropdown-#{index}",
+                                role:  "button",
+                                data:  { bs_toggle: "dropdown" },
+                                aria:  { expanded: "false" } do %>
+                      <%= menu_item.label %>
+                    <% end %>
+                    <ul class="header-bg dropdown-menu" aria-labelledby="navbarDropdown-#{index}">
+                      <% menu_item.sub_items.each do |sub_item| %>
+                        <% next if sub_item.access == 'admin' && !controller.current_user_is_admin? %>
+                        <li>
+                          <% link, method = sub_item[:link]&.split("|") %>
+
+                          <% if method %>
+                            <%= link_to sub_item[:label], link, method: method.to_sym, class: "header-bg header-text dropdown-item", target: "_self" %>
+                          <% else %>
+                            <%= link_to sub_item[:label], sub_item[:link], class: "header-bg header-text dropdown-item", target: "_self" %>
+                          <% end %>
+                        </li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% else %>
+                  <!-- Regular Menu Item -->
+                  <% if menu_item.options == "image-file" %>
+                    <a href="<%= menu_item[:link] %>" target="_self">
+                      <%= image_tag menu_item.icon,
+                                    alt:   menu_item.label,
+                                    class: "header-bg header-text nav-link px-lg-3 py-lg-4 text-uppercase"
+                      %>
+                    </a>
+                  <% else %>
+                    <% link, method = menu_item[:link]&.split("|") %>
+                    <% if method %>
+                      <%= link_to menu_item[:label], link, method: method.to_sym, class: "header-text nav-link px-lg-3 py-lg-4 text-uppercase", target: "_self" %>
+                    <% else %>
+                      <%= link_to menu_item[:label], menu_item[:link], class: "header-text nav-link px-lg-3 py-lg-4 text-uppercase", target: "_self" %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<%= javascript_include_tag 'views/layouts/header' %>

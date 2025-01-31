@@ -1,0 +1,83 @@
+<!-- app/views/admin/pages/show.html.erb -->
+<%= render layout: "layouts/admin_page" do %>
+  <% if controller.get_item&.present? %>
+    <div class="row mb-3">
+      <%= react_component("RenderSection", { section: controller.get_item } ) %>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-2">
+        Content Type:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.content_type %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-2">
+        Section Name:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.section_name %>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-2">
+        Section Order:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.section_order %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-2">
+        Image:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.image %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-2">
+        Link:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.link %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-2">
+        Formatting:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.formatting %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-2">
+        Description:
+      </div>
+      <div class="col-10">
+        <%= raw(controller.get_item.description) %>
+      </div>
+    </div>
+  <% end %>
+  <span class="mb-3">
+    <% if @application_user.admin? %>
+      <%= link_to("Edit Section",
+                  edit_admin_section_path(controller.get_item),
+                  class: "btn btn-primary",
+                  target: "_self") %>
+      <%= link_to("Back to Sections",
+                  admin_sections_url,
+                  class: "btn btn-secondary",
+                  target: "_self") %>
+    <% end %>
+  </span>
+<% end %>

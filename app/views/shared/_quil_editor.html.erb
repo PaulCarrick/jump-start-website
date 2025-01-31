@@ -1,0 +1,20 @@
+<!-- app/views/shared/_quil_editor.html.erb -->
+
+<%
+  div_id = 'quil-editor' unless defined?(div_id) && div_id.present?
+  attribute_name = 'description' unless defined?(attribute_name) && attribute_name.present?
+  classes = '' unless defined?(classes) && classes.present?
+  styles = '' unless defined?(styles) && styles.present?
+%>
+
+<div id="<%= div_id %>" class="<%= classes %>" style="<%= styles %>">
+  <%= react_component(
+        "HtmlEditor",
+        {
+          id:     div_id,
+          value:  controller.get_item.public_send(attribute_name),
+          onBlur: "#{attribute_name}BlurCallback(editorContent, id)"
+        }
+      )
+  %>
+</div>

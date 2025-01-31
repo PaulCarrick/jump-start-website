@@ -1,0 +1,15 @@
+<!-- app/views/blogs/latest.html.erb -->
+<%= render layout: "layouts/admin_page" do %>
+  <% if controller.get_item&.present? %>
+    <h1 style="font-size: 1.8em !important">Blog</h1>
+    <div class="ms-3 ps-3">
+      <h2 style="font-size: 1.5em !important"><%= controller.get_item&.title %></h2>
+    </div>
+    <div class="ms-4 ps-4">
+      <%= controller.get_item&.posted %> - <%= controller.get_item&.author %>
+    </div>
+    <div class="ms-5 ps-5">
+      <%= raw(controller.get_item&.content) %>
+    </div>
+  <% end %>
+<% end %>

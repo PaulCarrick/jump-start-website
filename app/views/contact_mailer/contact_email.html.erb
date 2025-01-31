@@ -1,0 +1,50 @@
+Paul:
+<p>
+  Someone has requested you to contact them.
+</p>
+
+<table style=" width: 100%; border: none;">
+  <tr>
+    <td>
+      <h4>
+        Name:
+      </h4>
+    </td>
+    <td>
+      <%= @sender_name %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h4>
+        Email Address:
+      </h4>
+    </td>
+    <td>
+      <%= @sender_email %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h4>
+        Phone:
+      </h4>
+    </td>
+    <td>
+      <%= @sender_phone %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <h4>
+        Message:
+      </h4>
+    </td>
+    <td>
+      <%= raw(@sender_message) %>
+    </td>
+  </tr>
+</table>
+<p>
+  <%= @from %>
+</p>

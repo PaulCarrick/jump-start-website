@@ -1,0 +1,61 @@
+<%= render layout: "layouts/admin_page" do %>
+  <div class="row mb-2">
+    <h1>Manage Users</h1>
+    <div class="row border-bottom border-dark mb-2">
+      <div class="col-3">
+        <%= sortable_column('Email', 'email', "users") %>
+      </div>
+      <div class="col-2">
+        <%= sortable_column('Name', 'name', "users") %>
+      </div>
+      <div class="col-2">
+        <%= sortable_column('Access', 'access', "users") %>
+      </div>
+      <div class="col-2">
+        <%= sortable_column('Roles', 'roles', "users") %>
+      </div>
+      <div class="col-3">
+      </div>
+    </div>
+    <div class="scrollable-container p-2 border-bottom border-dark" style="max-height: 60%">
+      <% if @users.present? %>
+        <% @users.each do |user| %>
+          <div class="row">
+            <div class="col-3">
+              <%= user.email %>
+            </div>
+            <div class="col-2">
+              <%= user.name || "N/A" %>
+            </div>
+            <div class="col-2 text-start">
+              <%= user.access %>
+            </div>
+            <div class="col-2">
+              <%= user.roles.present? ? user.roles : "None" %>
+            </div>
+            <div class="col-3" style="min-height: 2em;">
+              <% delete_path = admin_user_path(user).to_s + "/delete" %>
+              <%= action_links(user,
+                               admin_user_path(user),
+                               edit_admin_user_path(user),
+                               delete_path)
+              %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <p>No users found.</p>
+      <% end %>
+    </div>
+
+    <div class="row mt-3 mb-3">
+      <div class="col-2">
+        <%= link_to("New User", new_admin_user_path, class: "btn btn-primary", target: "_self") %>
+      </div>
+      <div class="col-3"></div>
+      <div class="col-7 justify-content-end">
+        <%= render "shared/page_navigation" %>
+      </div>
+    </div>
+  </div>
+<% end %>
