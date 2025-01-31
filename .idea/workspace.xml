@@ -8,7 +8,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things." />
+    <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/startup/database/databases/rails/dump.sql" beforeDir="false" afterPath="$PROJECT_DIR$/startup/database/databases/rails/dump.sql" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -63,12 +66,12 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;git@github.com:PaulCarrick/paul-carrick-website.git&quot;,
-    &quot;accountId&quot;: &quot;4a1c3f12-e7c2-452f-ba4f-5478a5c32da7&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:PaulCarrick/jump-start-website.git",
+    "accountId": "4a1c3f12-e7c2-452f-ba4f-5478a5c32da7"
   }
-}</component>
+}]]></component>
   <component name="JsBowerSettings">
     <bower-package value="" />
     <bower.json value="" />
@@ -117,7 +120,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "database.data.extractors.current.export.id": "SQL Inserts",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/paul/Library/Application Support/JetBrains/RubyMine2024.3/scratches",
+    "last_opened_file_path": "/Users/paul/src/jump-start-website",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.detected.package.tslint": "true",
@@ -514,6 +517,7 @@
       <workItem from="1738180780124" duration="405000" />
       <workItem from="1738187645887" duration="37943000" />
       <workItem from="1738324842736" duration="26587000" />
+      <workItem from="1738362547712" duration="270000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />
