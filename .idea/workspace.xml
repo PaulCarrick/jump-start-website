@@ -10,7 +10,6 @@
   <component name="ChangeListManager">
     <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/startup/database/databases/rails/dump.sql" beforeDir="false" afterPath="$PROJECT_DIR$/startup/database/databases/rails/dump.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,12 +65,12 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:PaulCarrick/jump-start-website.git",
-    "accountId": "4a1c3f12-e7c2-452f-ba4f-5478a5c32da7"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:PaulCarrick/jump-start-website.git&quot;,
+    &quot;accountId&quot;: &quot;4a1c3f12-e7c2-452f-ba4f-5478a5c32da7&quot;
   }
-}]]></component>
+}</component>
   <component name="JsBowerSettings">
     <bower-package value="" />
     <bower.json value="" />
@@ -102,41 +101,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Docker.Docker.executor": "Run",
-    "Docker.docker-compose-mail.yml.mailhog: Compose Deployment.executor": "Run",
-    "JavaScript Debug.Debug Chrome JavaScript.executor": "Debug",
-    "JavaScript Debug.Debug Chrome.executor": "Debug",
-    "JavaScript Debug.Debug Rails an Javascript JavaScript.executor": "Debug",
-    "JavaScript Debug.Debug Rails and Javascript JavaScript.executor": "Debug",
-    "JavaScript Debug.Development: rails-website JavaScript.executor": "Debug",
-    "JavaScript Debug.Generic Chrome.executor": "Debug",
-    "Python.Build Python.executor": "Debug",
-    "Rails.Debug Rails an Javascript.executor": "Debug",
-    "Rails.Debug Rails and Javascript.executor": "Debug",
-    "Rails.Development: rails-website.executor": "Debug",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "database.data.extractors.current.export.id": "SQL Inserts",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/paul/src/jump-start-website",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "ruby.structure.view.model.defaults.configured": "true",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "editor.preferences.smartKeys",
-    "settings.editor.splitter.proportion": "0.2631579",
-    "ts.external.directory.path": "/Applications/RubyMine.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
-    "two.files.diff.last.used.file": "/Users/paul/src/paul-carrick-website/docker-compose-db.yml",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Docker.Docker.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.docker-compose-mail.yml.mailhog: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript Debug.Debug Chrome JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Debug Chrome.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Debug Rails an Javascript JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Debug Rails and Javascript JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Development: rails-website JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Generic Chrome.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.Build Python.executor&quot;: &quot;Debug&quot;,
+    &quot;Rails.Debug Rails an Javascript.executor&quot;: &quot;Debug&quot;,
+    &quot;Rails.Debug Rails and Javascript.executor&quot;: &quot;Debug&quot;,
+    &quot;Rails.Development: rails-website.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;SQL Inserts&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/paul/src/jump-start-website&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;ruby.structure.view.model.defaults.configured&quot;: &quot;true&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.smartKeys&quot;,
+    &quot;settings.editor.splitter.proportion&quot;: &quot;0.2631579&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Applications/RubyMine.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;two.files.diff.last.used.file&quot;: &quot;/Users/paul/src/paul-carrick-website/docker-compose-db.yml&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -517,7 +516,8 @@
       <workItem from="1738180780124" duration="405000" />
       <workItem from="1738187645887" duration="37943000" />
       <workItem from="1738324842736" duration="26587000" />
-      <workItem from="1738362547712" duration="270000" />
+      <workItem from="1738362547712" duration="682000" />
+      <workItem from="1738419769607" duration="3594000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />
