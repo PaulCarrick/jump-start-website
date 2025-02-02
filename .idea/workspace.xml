@@ -9,6 +9,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
+      <change afterPath="$PROJECT_DIR$/bin/setup.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -518,6 +519,8 @@
       <workItem from="1738324842736" duration="26587000" />
       <workItem from="1738362547712" duration="682000" />
       <workItem from="1738419769607" duration="3594000" />
+      <workItem from="1738444741083" duration="3783000" />
+      <workItem from="1738507709429" duration="6461000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />
