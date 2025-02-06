@@ -8,7 +8,7 @@
     <%= react_component('PostList',
                         {
                           user: @application_user,
-                          email: @application_user.email,
+                          email: @application_user&.email,
                           blog_type: @blog_type }) %>
   </div>
 </section>
