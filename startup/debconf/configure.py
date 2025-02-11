@@ -117,12 +117,12 @@ def get_parameters(args):
     )
 
     host = args.host or debconf.get_validated_input(
-            "jump-start-website/server-host", validators.hostname,
+            "jump-start-website/host", validators.hostname,
             "ERROR: You must enter a server name."
     )
 
     port = int(args.port or debconf.get_validated_input(
-            "jump-start-website/server-port", valid_integer,
+            "jump-start-website/port", valid_integer,
             "ERROR: You must enter a valid port number."
     ))
 
