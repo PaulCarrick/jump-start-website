@@ -94,7 +94,7 @@ class DebConf:
     def __is_debconf_installed(self):
         """Check to see if Debconf is installed."""
         try:
-            subprocess.run(["debconf-show"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+            subprocess.run(["debconf-show", "--listdbs"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
             self._debconf_installed = True
         except (FileNotFoundError, subprocess.CalledProcessError):
             self._debconf_installed = False
@@ -104,23 +104,32 @@ class DebConf:
 
     def initialize_debconf_environment(self):
         """Initialize the Debconf environment."""
+        result = True
+
         if not self.__is_debconf_installed():
             self.__parse_debconf_template(self.template_filename)
-            return False
+            result = False
 
-        debconf_env = subprocess.check_output(
-                ". /usr/share/debconf/confmodule && env",
-                shell=True,
-                text=True,
-                executable="/bin/bash"
-        )
+        if result:
+            try:
+                debconf_env = subprocess.check_output(
+                        ". /usr/share/debconf/confmodule && env",
+                        timeout=5,
+                        shell=True,
+                        text=True,
+                        executable="/bin/bash"
+                )
 
-        for line in debconf_env.splitlines():
-            key, _, value = line.partition("=")
-            if key.startswith("DEBCONF_") or key.startswith("DEBIAN_"):
-                os.environ[key] = value
+                for line in debconf_env.splitlines():
+                    key, _, value = line.partition("=")
+                    if key.startswith("DEBCONF_") or key.startswith("DEBIAN_"):
+                        os.environ[key] = value
+            except subprocess.TimeoutExpired:
+                result = False
+            except subprocess.CalledProcessError:
+                result = False
 
-        return True
+        return result
 
 
     def __get_debconf_template(self, key):

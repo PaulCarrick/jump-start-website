@@ -9,20 +9,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
-      <change afterPath="$PROJECT_DIR$/startup/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/startup/debconf/configuration/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/startup/debconf/configuration/debconf.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/startup/debconf/configuration/dialog.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/startup/debconf/configuration/templates" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/startup/debconf/configuration/utilities.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/startup/debconf/configure" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/startup/debconf/configure.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/rails-website.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/rails-website.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/Debug_Rails_and_Javascript.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/Debug_Rails_and_Javascript.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/startup/debconf/configuration/debconf.py" beforeDir="false" afterPath="$PROJECT_DIR$/startup/debconf/configuration/debconf.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/startup/debconf/configuration/utilities.py" beforeDir="false" afterPath="$PROJECT_DIR$/startup/debconf/configuration/utilities.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -42,7 +42,7 @@ def display_message(error_level, message):
         sys.exit(error_level - 19)
 
 
-def run_command(command, flag_error=True, capture_output=True):
+def run_command(command, flag_error=True, capture_output=True, timeout=None):
     """
     Execute a shell command and return the output.
 
@@ -57,11 +57,19 @@ def run_command(command, flag_error=True, capture_output=True):
     result = None
 
     try:
-        result = subprocess.run(command,
-                                shell=True,
-                                capture_output=True,
-                                text=True,
-                                env=os.environ)
+        if timeout:
+            result = subprocess.run(command,
+                                    timeout=timeout,
+                                    shell=True,
+                                    capture_output=True,
+                                    text=True,
+                                    env=os.environ)
+        else:
+            result = subprocess.run(command,
+                                    shell=True,
+                                    capture_output=True,
+                                    text=True,
+                                    env=os.environ)
 
         if result.returncode != 0:
             if flag_error:
@@ -78,6 +86,11 @@ def run_command(command, flag_error=True, capture_output=True):
                 result = result.stdout
             else:
                 result = True
+    except subprocess.TimeoutExpired:
+        if capture_output:
+            result = ""
+        else:
+            result = False
     except subprocess.CalledProcessError as e:
         display_message(90,
                         f"Error: Error running {command}. Error: {str(e)}")
