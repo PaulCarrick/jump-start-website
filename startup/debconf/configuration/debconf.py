@@ -108,7 +108,6 @@ class DebConf:
     def initialize_debconf_environment(self):
         """Initialize the Debconf environment."""
         if not self.__is_debconf_available():
-            self.__parse_debconf_template(self.template_filename)
             result = False
         else:
             try:
@@ -130,6 +129,9 @@ class DebConf:
                 result = False
             except subprocess.CalledProcessError:
                 result = False
+
+        if not result:
+            self.__parse_debconf_template(self.template_filename)
 
         self.debconf_installed = result
 
