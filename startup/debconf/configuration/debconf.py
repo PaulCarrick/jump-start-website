@@ -16,7 +16,8 @@ class DebConf:
     def __init__(self, template_filename=None):
         self.templates = SimpleNamespace()
         self.template_filename = template_filename
-        self._debconf_installed = False
+        self.debconf_available = False
+        self.debconf_installed = False
 
 
     def __dict_to_namespace(self, d):
@@ -53,6 +54,7 @@ class DebConf:
                     continue
 
                 field_match = re.match(r"^(Type|Default|Choices|Description):\s*(.+)", line)
+
                 if field_match:
                     field_name = field_match.group(1)  # Type, Default, Choices, Description
                     value = field_match.group(2)
@@ -91,20 +93,21 @@ class DebConf:
         return getattr(self.templates, template_name, None)
 
 
-    def __is_debconf_installed(self):
+    def __is_debconf_available(self):
         """Check to see if Debconf is installed."""
         try:
-            subprocess.run(["debconf-show", "--listdbs"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-            result = True
+            subprocess.run(["debconf-show", "--listdbs"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                           check=True)
+            self.debconf_available = True
         except (FileNotFoundError, subprocess.CalledProcessError):
-            result = False
+            self.debconf_available = False
 
-        return result
+        return self.debconf_available
 
 
     def initialize_debconf_environment(self):
         """Initialize the Debconf environment."""
-        if not self.__is_debconf_installed():
+        if not self.__is_debconf_available():
             self.__parse_debconf_template(self.template_filename)
             result = False
         else:
@@ -128,21 +131,21 @@ class DebConf:
             except subprocess.CalledProcessError:
                 result = False
 
-        self._debconf_installed = result
+        self.debconf_installed = result
 
         return result
 
 
     def __get_debconf_template(self, key):
         """Retrieve a template from parsed data."""
-        return getattr(self.templates, key, None) if not self._debconf_installed else None
+        return getattr(self.templates, key, None) if not self.debconf_installed else None
 
 
     def __get_debconf_value(self, key):
         """Retrieve a value from debconf."""
         result = None
 
-        if not self.__is_debconf_installed():
+        if not self.debconf_installed:
             template = self.__get_debconf_template(key)
 
             if template:
@@ -168,7 +171,7 @@ class DebConf:
         """Set a value in debconf."""
         result = None
 
-        if not self.__is_debconf_installed():
+        if not self.debconf_installed:
             template = self.__get_debconf_template(key)
 
             if template:
@@ -189,11 +192,11 @@ class DebConf:
         if message:
             self.set_debconf_value(key, message)
 
-        if not self.__is_debconf_installed():
+        if not self.debconf_installed:
             template = self.__get_debconf_template(key)
 
             if template:
-                [ _, status ] = Dialog.show(template.description)
+                [_, status] = Dialog.show(template.description)
 
                 if status == "Aborted":
                     display_message(10, "Installation aborted by user.")
