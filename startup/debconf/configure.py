@@ -292,33 +292,39 @@ def install_server(params):
         display_message(0, f"Creating installation directory: {install_directory}")
         os.makedirs(install_directory)
 
-    if params.install_postgres:
+    if params.install_postgres.upper() == "YES":
         display_message(0, "Installing PostgreSQL...")
         run_command("apt-get update", True, False)
-        run_command("apt install -y postgresql postgresql-contrib", True, False)
+        run_long_command("apt install -y postgresql postgresql-contrib", True, False)
         run_command("systemctl start postgresql", True, False)
         run_command("systemctl enable postgresql", True, False)
         display_message(0, "Installed PostgreSQL.")
 
+
     # Install Ruby if required
-    if params.install_ruby:
+    if params.install_ruby.upper() == "YES":
         install_ruby()
 
     # Ensure the package directory exists
     package_dir = run_command("dpkg-query -L jump-start-website | grep -E '^/usr/share/' | head -n 1",
                               capture_output=True)
 
-    if not package_dir or not os.path.exists(package_dir):
+    if not package_dir:
+        package_dir ="."
+
+    if not os.path.exists(package_dir):
         display_message(23, "Error: Package directory not found.")
         sys.exit(1)
 
     # Copy files to install directory
     run_command(f"cp -r \"{package_dir}/.\" \"{install_directory}\"")
-    run_command(f"chown -R \"{owner}:{owner}\" \"{install_directory}\"")
+    run_command(f"cd {install_directory}")
 
     variables = generate_variables(params)
 
     generate_env(".env", variables)
+    run_command(f"chown -R \"{owner}:{owner} .")
+
 
 def generate_variables(params):
     """
