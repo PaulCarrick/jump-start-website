@@ -50,6 +50,7 @@ def run_command(command, flag_error=True, capture_output=True, timeout=None):
         command (str): The command to run.
         capture_output (bool=False): Capture the output.
         flag_error (bool=False): Flag whether to exit with an error.
+        timeout (float|None): Optional timeout for command execution.
 
     Returns:
         A string or a boolean based on capture output.
@@ -158,7 +159,7 @@ def generate_env(env_filename, variables):
 def create_user(username, password):
     display_message(0, f"Setting up user: {username}...")
 
-    if not run_command(f"useradd -m -s /bin/bash {username}", True, False)
+    if not run_command(f"useradd -m -s /bin/bash {username}", True, False):
         display_message(92, f"Cannot create user: {username}...")
 
     try:
