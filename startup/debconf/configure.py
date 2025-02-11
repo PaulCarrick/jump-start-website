@@ -104,11 +104,13 @@ def get_parameters(args):
             "ERROR: You must enter a domain name."
     )
 
+    debconf.set_debconf_value("jump-start-website/hostname", domain)
     hostname = args.hostname or debconf.get_validated_input(
             "jump-start-website/hostname", validators.hostname,
             "ERROR: You must enter a server name."
     )
 
+    debconf.set_debconf_value("jump-start-website/url", f"{mode}://{hostname}")
     url = args.url or debconf.get_validated_input(
             "jump-start-website/url", validators.url,
             "ERROR: You must enter a valid URL."
