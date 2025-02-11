@@ -32,6 +32,9 @@ def parse_arguments():
     parser.add_argument("-H", "--db-host",
                         help="Specify the hostname for the database.",
                         default=os.getenv("DB_HOST"))
+    parser.add_argument("-g", "--install-postgres",
+                        action="store_true", help="Install Postgres",
+                        default=False)
     parser.add_argument("-i", "--installation-dir",
                         help="Specify the installation directory.")
     parser.add_argument("-m", "--mode", action="store_true",
@@ -182,6 +185,11 @@ def get_parameters(args):
         )
 
     if not args.no_install:
+        postgres = args.install_postgres or debconf.get_validated_input(
+                "jump-start-website/install-postgres", valid_boolean_response,
+                "ERROR: Invalid choice. Select Yes or No."
+        )
+
         ruby = args.install_ruby or debconf.get_validated_input(
                 "jump-start-website/install-ruby", valid_boolean_response,
                 "ERROR: Invalid choice. Select Yes or No."
@@ -212,7 +220,8 @@ def get_parameters(args):
                 "owner":             owner,
                 "owner_password":    owner_password,
                 "install_directory": install_directory,
-                "install_ruby":      ruby
+                "install_ruby":      ruby,
+                "install_postgres":  postgres
         })
     else:
         result.update({
@@ -282,6 +291,14 @@ def install_server(params):
     if not os.path.exists(install_directory):
         display_message(0, f"Creating installation directory: {install_directory}")
         os.makedirs(install_directory)
+
+    if params.install_postgres:
+        display_message(0, "Installing PostgreSQL...")
+        run_command("apt-get update", True, False)
+        run_command("apt install -y postgresql postgresql-contrib", True, False)
+        run_command("systemctl start postgresql", True, False)
+        run_command("systemctl enable postgresql", True, False)
+        display_message(0, "Installed PostgreSQL.")
 
     # Install Ruby if required
     if params.install_ruby:

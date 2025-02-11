@@ -85,6 +85,12 @@ Default: /opt/jump-start-website/rails
 Description: Installation directory for Jump Start Website.
  Please specify the directory where Jump Start Website should be installed.
 
+Template: jump-start-website/install-postgres
+Type: select
+Choices: Yes, No, Quit
+Default: Yes
+Description: Should Postgres be installed?
+
 Template: jump-start-website/install-ruby
 Type: select
 Choices: Yes, No, Quit
