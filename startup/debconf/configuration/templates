@@ -1,0 +1,98 @@
+# Introduction Template
+Template: jump-start-website/introduction
+Type: note
+Description: This program will help you set up the Jump Start Server Website.
+ Unless otherwise specified, all fields are required. Many fields do have reasonable defaults,
+ in which case you can just choose <OK>.
+
+# Error Template
+Template: jump-start-website/error
+Type: note
+Description: Error: Invalid input detected. Please check your input and try again.
+
+# Server Parameters
+Template: jump-start-website/mode
+Type: select
+Choices: http, https
+Default: https
+Description: Choose whether the server runs in SSL mode (https) or clear mode (http).
+ HTTPS is strongly recommended unless a frontend proxy (e.g., Nginx) handles SSL.
+
+Template: jump-start-website/domain
+Type: string
+Description: Enter the public domain name for the website.
+
+Template: jump-start-website/hostname
+Type: string
+Description: Enter the public server name for the server.
+
+Template: jump-start-website/url
+Type: string
+Description: Enter the full URL for the server, e.g, https://jumpstartserver.com.
+
+Template: jump-start-website/host
+Type: string
+Default: localhost
+Description: Enter the local hostname for the server.
+
+Template: jump-start-website/port
+Type: string
+Default: 3000
+Description: Enter the local port for the server.
+
+# Database Parameters
+Template: jump-start-website/db-host
+Type: string
+Default: localhost
+Description: Enter the host name for the database.
+
+Template: jump-start-website/db-port
+Type: string
+Default: 5432
+Description: Enter the port number for the database.
+
+Template: jump-start-website/db-name
+Type: string
+Default: rails
+Description: Enter the database name for Jump Start Server.
+
+Template: jump-start-website/db-user
+Type: string
+Default: jump_start
+Description: Enter the database user for Jump Start Server.
+
+Template: jump-start-website/db-password
+Type: password
+Description: Enter the database password for Jump Start Server.
+ This password will be used for the database user.
+
+# Install Parameters
+Template: jump-start-website/owner
+Type: string
+Description: Enter the username that the code should run as.
+ Rails code should not normally be run as root.
+ Please enter the username that should own and run the Rails code.
+ Note: If the user does not exist it will be created..
+
+Template: jump-start-website/owner-password
+Type: password
+Description: Enter the password for owner.
+ This password will be used for the owner.
+
+Template: jump-start-website/install-dir
+Type: string
+Default: /opt/jump-start-website/rails
+Description: Installation directory for Jump Start Website.
+ Please specify the directory where Jump Start Website should be installed.
+
+Template: jump-start-website/install-ruby
+Type: select
+Choices: Yes, No, Quit
+Default: Yes
+Description: Should Ruby be installed? Ruby 3.2 or greater is required to run.
+
+Template: jump-start-website/confirm-install
+Type: select
+Choices: Yes, No, Quit
+Default: Yes
+Description: Setup is done. Should the installation continue?

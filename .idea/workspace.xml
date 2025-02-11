@@ -9,7 +9,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
-      <change afterPath="$PROJECT_DIR$/bin/setup_ruby.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/startup/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/startup/debconf/configuration/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/startup/debconf/configuration/debconf.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/startup/debconf/configuration/dialog.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/startup/debconf/configuration/templates" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/startup/debconf/configuration/utilities.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/startup/debconf/configure" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/startup/debconf/configure.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/rails-website.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/rails-website.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/Debug_Rails_and_Javascript.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/Debug_Rails_and_Javascript.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -31,6 +43,7 @@
         <option value="Ruby Class" />
         <option value="JavaScript File" />
         <option value="JSX File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -120,7 +133,7 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;database.data.extractors.current.export.id&quot;: &quot;SQL Inserts&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/paul/src/jump-start-website&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/paul/src/jump-start-website/startup/debconf&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -130,7 +143,7 @@
     &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
     &quot;ruby.structure.view.model.defaults.configured&quot;: &quot;true&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.smartKeys&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.Python&quot;,
     &quot;settings.editor.splitter.proportion&quot;: &quot;0.2631579&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/Applications/RubyMine.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
     &quot;two.files.diff.last.used.file&quot;: &quot;/Users/paul/src/paul-carrick-website/docker-compose-db.yml&quot;,
@@ -150,18 +163,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/startup/debconf" />
+      <recent name="$PROJECT_DIR$/startup/debconf/configure_server" />
       <recent name="$APPLICATION_CONFIG_DIR$/scratches" />
       <recent name="$PROJECT_DIR$/startup/mail/scripts" />
       <recent name="$PROJECT_DIR$/startup/mail/templates" />
-      <recent name="$PROJECT_DIR$/startup/database/scripts" />
-      <recent name="$PROJECT_DIR$/startup/database/databases/rails" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/startup/debconf/configure_server" />
       <recent name="$PROJECT_DIR$/startup/rails/scripts" />
       <recent name="$PROJECT_DIR$/startup/mail/templates" />
       <recent name="$PROJECT_DIR$/startup/database/databases/rails" />
       <recent name="$PROJECT_DIR$/startup/database/databases/mail" />
-      <recent name="$PROJECT_DIR$/startup/database/templates" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -170,6 +183,27 @@
     </option>
   </component>
   <component name="RunManager" selected="Docker.docker-compose-mail.yml.mailhog: Compose Deployment">
+    <configuration default="true" type="TestUnitRunConfigurationType" factoryName="Test::Unit/Shoulda/Minitest">
+      <predefined_log_file enabled="true" id="RUBY_TESTUNIT" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
+      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
+      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPTS_PATHS" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_METHOD_NAME" VALUE="" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="CUSTOM_SET_OF_FILES" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
+      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_OPTIONS" VALUE="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Debug Chrome JavaScript" type="JavascriptDebugType" uri="http://localhost:3000/">
       <method v="2">
         <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_OpenServer" />
@@ -314,32 +348,6 @@
       <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_TESTOPTS" VALUE="" />
       <method v="2" />
     </configuration>
-    <configuration default="true" type="TestUnitRunConfigurationType" factoryName="Test::Unit/Shoulda/Minitest">
-      <predefined_log_file enabled="true" id="RUBY_TESTUNIT" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
-      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
-        <COVERAGE_PATTERN ENABLED="true">
-          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
-        </COVERAGE_PATTERN>
-      </EXTENSION>
-      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPTS_PATHS" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_FILE_MASK" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_METHOD_NAME" VALUE="" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_TEST_TYPE" VALUE="CUSTOM_SET_OF_FILES" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="DRB" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ZEUS" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="SPRING" VALUE="false" />
-      <RTEST_RUN_CONFIG_SETTINGS_ID NAME="RUNNER_OPTIONS" VALUE="" />
-      <method v="2" />
-    </configuration>
     <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
       <deployment type="docker-compose.yml">
         <settings />
@@ -367,11 +375,7 @@
       <item itemvalue="JavaScript Debug.Debug Opera" />
       <item itemvalue="JavaScript Debug.Generic Chrome" />
       <item itemvalue="JavaScript Debug.Debug Chrome" />
-      <item itemvalue="Rails.Debug Rails and Javascript" />
-      <item itemvalue="Rails.Development: rails-website" />
-      <item itemvalue="Rails.Production: rails-website" />
-      <item itemvalue="Rake.spec: rails-website" />
-      <item itemvalue="Rake.test: rails-website" />
+      <item itemvalue="Python.Build Python" />
     </list>
     <recent_temporary>
       <list>
@@ -525,7 +529,10 @@
       <workItem from="1738789978555" duration="2000" />
       <workItem from="1738790631011" duration="33000" />
       <workItem from="1738852278235" duration="5447000" />
-      <workItem from="1738863718776" duration="3603000" />
+      <workItem from="1738863718776" duration="7282000" />
+      <workItem from="1739024159699" duration="33252000" />
+      <workItem from="1739120713898" duration="21367000" />
+      <workItem from="1739196457620" duration="5000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />
