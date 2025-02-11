@@ -120,8 +120,8 @@ class Dialog:
         curses.use_default_colors()
         curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)  # Normal background
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_YELLOW)  # Highlighted input
-        curses.init_pair(3, curses.COLOR_RED, curses.COLOR_BLUE)  # Normal buttons
-        curses.init_pair(4, curses.COLOR_RED, curses.COLOR_YELLOW)  # Highlighted buttons
+        curses.init_pair(3, curses.COLOR_MAGENTA, curses.COLOR_BLUE)  # Normal buttons
+        curses.init_pair(4, curses.COLOR_MAGENTA, curses.COLOR_YELLOW)  # Highlighted buttons
 
         self.color_normal = curses.color_pair(1)
         self.color_highlighted = curses.color_pair(2)
