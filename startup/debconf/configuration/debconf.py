@@ -93,13 +93,15 @@ class DebConf:
 
     def __is_debconf_installed(self):
         """Check to see if Debconf is installed."""
+        result = None
+
         try:
             subprocess.run(["debconf-show", "--listdbs"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
-            self._debconf_installed = True
+            result = True
         except (FileNotFoundError, subprocess.CalledProcessError):
-            self._debconf_installed = False
+            result = False
 
-        return self._debconf_installed
+        return result
 
 
     def initialize_debconf_environment(self):
@@ -114,7 +116,7 @@ class DebConf:
             try:
                 debconf_env = subprocess.check_output(
                         ". /usr/share/debconf/confmodule && env",
-                        timeout=5,
+                        timeout=3,
                         shell=True,
                         text=True,
                         executable="/bin/bash"
@@ -128,6 +130,8 @@ class DebConf:
                 result = False
             except subprocess.CalledProcessError:
                 result = False
+
+        self._debconf_installed = result
 
         return result
 
