@@ -72,7 +72,7 @@ Type: string
 Description: Enter the username that the code should run as.
  Rails code should not normally be run as root.
  Please enter the username that should own and run the Rails code.
- Note: If the user does not exist it will be created..
+ Note: If the user does not exist it will be created.
 
 Template: jump-start-website/owner-password
 Type: password

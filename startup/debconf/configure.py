@@ -154,7 +154,7 @@ def get_parameters(args):
 
     # Installation information
     owner = args.owner or debconf.get_validated_input(
-            "jump-start-website/owner", user_exists,
+            "jump-start-website/owner", present,
             "ERROR: You must enter a valid owner."
     )
 
