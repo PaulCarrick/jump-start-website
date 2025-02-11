@@ -5,6 +5,9 @@
 import sys
 import os
 import subprocess
+import time
+import threading
+import itertools
 from pathlib import Path
 
 
@@ -176,3 +179,33 @@ def create_user(username, password):
         display_message(94, f"Error setting password for {username}: {e}")
 
     display_message(0, f"User: {username} setup complete.")
+
+
+def spinner(stop_event):
+    """
+    Display a spinner on the command line.
+    """
+    spinner_symbols = itertools.cycle(['-', '\\', '|', '/'])
+    while not stop_event.is_set():  # Run until stop_event is set
+        sys.stdout.write(next(spinner_symbols))
+        sys.stdout.flush()
+        time.sleep(0.1)
+        sys.stdout.write('\b')
+
+def run_long_command(command, flag_error=True, capture_output=True, timeout=None):
+    """
+    Run a command with a spinner
+    """
+
+    stop_event = threading.Event()
+    spinner_thread = threading.Thread(target=spinner, args=(stop_event,))
+
+    spinner_thread.start()  # Start spinner
+
+    result = run_command(command, flag_error, capture_output, timeout)
+
+    stop_event.set()  # Stop spinner
+    spinner_thread.join()  # Wait for spinner to finish
+    sys.stdout.write('\n')  # Move to new line after completion
+
+    return result

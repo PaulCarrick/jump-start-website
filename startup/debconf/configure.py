@@ -10,7 +10,7 @@ from types import SimpleNamespace
 from configuration.debconf import DebConf
 from configuration.utilities import display_message, run_command, present,\
     valid_integer, user_exists, directory_exists, valid_boolean_response,\
-    generate_env, create_user
+    generate_env, create_user, run_long_command
 
 TEMPLATES = "./configuration/templates"
 
@@ -241,21 +241,26 @@ def install_ruby():
     Install Ruby 3.2.2.
     """
     display_message(0, "Installing Ruby 3.2.2...")
-
+    display_message(0, "Getting required packages...")
     run_command("apt-get update", True, False)
     run_command("apt-get install -y curl build-essential libssl-dev libreadline-dev zlib1g-dev", True, False)
+    display_message(0, "Installed required packages.")
 
     # Download and install ruby-install
+    display_message(0, "Downloading and installing ruby-install...")
     run_command("curl -L https://github.com/postmodern/ruby-install/archive/refs/tags/v0.9.1.tar.gz | tar -xz", True,
                 False)
     run_command("cd ruby-install-0.9.1 && make install && cd .. && rm -rf ruby-install-0.9.1", True, False)
+    display_message(0, "'ruby-install' installed.")
 
     # Install Ruby 3.2.2
-    run_command("ruby-install ruby 3.2.2", True, False)
+    display_message(0, "Installing Ruby 3.2.2 from source...")
+    run_long_command("ruby-install ruby 3.2.2", True, False)
+    display_message(0, "Ruby 3.2.2 from installed.")
 
     # Set up environment variables
     run_command("echo 'export PATH=\"$HOME/.rubies/ruby-3.2.2/bin:$PATH\"' >> /etc/profile.d/ruby.sh", True, False)
-    run_command("source /etc/profile.d/ruby.sh", True, False)
+    run_command(". /etc/profile.d/ruby.sh", True, False)
 
 
 def install_server(params):
