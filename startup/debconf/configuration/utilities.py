@@ -156,11 +156,13 @@ def generate_env(env_filename, variables):
 
 
 def create_user(username, password):
-    display_message(0, 'Setting up user: {username}...')
-    run_command("useradd -m -s /bin/bash {owner}", True, False)
+    display_message(0, f"Setting up user: {username}...")
+
+    if not run_command(f"useradd -m -s /bin/bash {username}", True, False)
+        display_message(92, f"Cannot create user: {username}...")
 
     try:
-        display_message(0, 'Setting passwod for user: {username}...')
+        display_message(0, f"Setting passwod for user: {username}...")
 
         process = subprocess.Popen(["sudo", "chpasswd"], stdin=subprocess.PIPE, text=True)
         process.communicate(input=f"{username}:{password}")
@@ -168,8 +170,8 @@ def create_user(username, password):
         if process.returncode == 0:
             display_message(0, f"Password successfully set for user: {username}.")
         else:
-            display_message(92, f"Failed to set password for user: {username}.")
+            display_message(93, f"Failed to set password for user: {username}.")
     except subprocess.SubprocessError as e:
-        display_message(93, f"Error setting password for {username}: {e}")
+        display_message(94, f"Error setting password for {username}: {e}")
 
-    display_message(0, 'User: {username} setup complete.')
+    display_message(0, f"User: {username} setup complete.")
