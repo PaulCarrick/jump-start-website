@@ -103,41 +103,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Docker.Docker.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.docker-compose-mail.yml.mailhog: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;JavaScript Debug.Debug Chrome JavaScript.executor&quot;: &quot;Debug&quot;,
-    &quot;JavaScript Debug.Debug Chrome.executor&quot;: &quot;Debug&quot;,
-    &quot;JavaScript Debug.Debug Rails an Javascript JavaScript.executor&quot;: &quot;Debug&quot;,
-    &quot;JavaScript Debug.Debug Rails and Javascript JavaScript.executor&quot;: &quot;Debug&quot;,
-    &quot;JavaScript Debug.Development: rails-website JavaScript.executor&quot;: &quot;Debug&quot;,
-    &quot;JavaScript Debug.Generic Chrome.executor&quot;: &quot;Debug&quot;,
-    &quot;Python.Build Python.executor&quot;: &quot;Debug&quot;,
-    &quot;Rails.Debug Rails an Javascript.executor&quot;: &quot;Debug&quot;,
-    &quot;Rails.Debug Rails and Javascript.executor&quot;: &quot;Debug&quot;,
-    &quot;Rails.Development: rails-website.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;database.data.extractors.current.export.id&quot;: &quot;SQL Inserts&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/paul/src/jump-start-website/startup/debconf&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;ruby.structure.view.model.defaults.configured&quot;: &quot;true&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.Python&quot;,
-    &quot;settings.editor.splitter.proportion&quot;: &quot;0.2631579&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/Applications/RubyMine.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
-    &quot;two.files.diff.last.used.file&quot;: &quot;/Users/paul/src/paul-carrick-website/docker-compose-db.yml&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Docker.Docker.executor": "Run",
+    "Docker.docker-compose-mail.yml.mailhog: Compose Deployment.executor": "Run",
+    "JavaScript Debug.Debug Chrome JavaScript.executor": "Debug",
+    "JavaScript Debug.Debug Chrome.executor": "Debug",
+    "JavaScript Debug.Debug Rails an Javascript JavaScript.executor": "Debug",
+    "JavaScript Debug.Debug Rails and Javascript JavaScript.executor": "Debug",
+    "JavaScript Debug.Development: rails-website JavaScript.executor": "Debug",
+    "JavaScript Debug.Generic Chrome.executor": "Debug",
+    "Python.Build Python.executor": "Debug",
+    "Rails.Debug Rails an Javascript.executor": "Debug",
+    "Rails.Debug Rails and Javascript.executor": "Debug",
+    "Rails.Development: rails-website.executor": "Debug",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "database.data.extractors.current.export.id": "SQL Inserts",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/paul/src/jump-start-website/startup/debconf",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "ruby.structure.view.model.defaults.configured": "true",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "editor.preferences.completion",
+    "settings.editor.splitter.proportion": "0.2631579",
+    "ts.external.directory.path": "/Applications/RubyMine.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "two.files.diff.last.used.file": "/Users/paul/src/paul-carrick-website/docker-compose-db.yml",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>

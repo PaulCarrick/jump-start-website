@@ -93,8 +93,6 @@ class DebConf:
 
     def __is_debconf_installed(self):
         """Check to see if Debconf is installed."""
-        result = None
-
         try:
             subprocess.run(["debconf-show", "--listdbs"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
             result = True
@@ -106,13 +104,10 @@ class DebConf:
 
     def initialize_debconf_environment(self):
         """Initialize the Debconf environment."""
-        result = True
-
         if not self.__is_debconf_installed():
             self.__parse_debconf_template(self.template_filename)
             result = False
-
-        if result:
+        else:
             try:
                 debconf_env = subprocess.check_output(
                         ". /usr/share/debconf/confmodule && env",
@@ -126,6 +121,8 @@ class DebConf:
                     key, _, value = line.partition("=")
                     if key.startswith("DEBCONF_") or key.startswith("DEBIAN_"):
                         os.environ[key] = value
+
+                result = True
             except subprocess.TimeoutExpired:
                 result = False
             except subprocess.CalledProcessError:
@@ -196,11 +193,11 @@ class DebConf:
             template = self.__get_debconf_template(key)
 
             if template:
-                [ result, status ] = Dialog.show(template.description)
+                [ _, status ] = Dialog.show(template.description)
 
-            if status == "Aborted":
-                display_message(10, "Installation aborted by user.")
-                sys.exit(0)
+                if status == "Aborted":
+                    display_message(10, "Installation aborted by user.")
+                    sys.exit(0)
         else:
             run_command(f"db_fset {key} seen false", True, False)
             run_command(f"db_input critical {key}", True, False)
