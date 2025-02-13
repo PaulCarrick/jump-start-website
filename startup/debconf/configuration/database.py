@@ -127,7 +127,7 @@ class Database:
         results = []
 
         try:
-            results = self.db_cursor.fetchall()
+            self.db_cursor.fetchall()
         except psycopg2.ProgrammingError:
             return None
         except Exception as e:
@@ -143,16 +143,27 @@ class Database:
 
     def execute_sql_command(self, sql_command, commit=False):
         """
-        Execute a single SQL query.
+        Execute a single SQL query (the query can be multi-line).
 
         Args:
             sql_command (str): The SQL command
             commit (bool): Commit changes after execution.
         """
+        results = None
+
         self.check_database_connection()
 
         try:
             self.db_cursor.execute(sql.SQL(sql_command))
+
+            rows = self.db_cursor.fetchall()
+
+            if len(rows) > 1:
+                results = rows
+            elif len(rows) == 1:
+                results = rows[0]
+            else:
+                results = None
 
             if commit:
                 self.db_connection.commit()
@@ -161,7 +172,7 @@ class Database:
         except Exception as e:
             display_message(125, f"Error: {e}")
 
-        return self.get_results()
+        return results
 
 
     def execute_sql_commands(self, sql_lines, commit=False):
@@ -174,15 +185,17 @@ class Database:
         Return:
             The results from the last sql command
         """
+        results = None
+
         self.check_database_connection()
 
         for sql_line in sql_lines:
-            self.execute_sql_command(sql_line)
+            results = self.execute_sql_command(sql_line)
 
         if commit:
             self.db_cursor.connection.commit()
 
-        return self.get_results()
+        return results
 
 
     def process_sql_template(self, sql_file, params, commit=False):
@@ -210,9 +223,7 @@ class Database:
         display_message(0, f"Checking if database {db_database} exists...")
         self.check_database_connection()
 
-        self.execute_sql_command(f"SELECT datname FROM pg_database WHERE datname = '{db_database}';")
-
-        if not self.get_results():  # Database does not exist
+        if not self.execute_sql_command(f"SELECT datname FROM pg_database WHERE datname = '{db_database}';"):
             display_message(0, f"Creating database {db_database}...")
 
             # Open a separate connection with autocommit enabled
