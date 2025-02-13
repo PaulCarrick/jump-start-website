@@ -242,7 +242,7 @@ def spinner(stop_event):
     while not stop_event.is_set():  # Run until stop_event is set
         sys.stdout.write(next(spinner_symbols))
         sys.stdout.flush()
-        time.sleep(0.1)
+        time.sleep(0.5)
         sys.stdout.write('\b')
 
     sys.stdout.write('\b')
