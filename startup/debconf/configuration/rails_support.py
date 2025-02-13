@@ -3,9 +3,13 @@
 import os
 import shutil
 import re
+import subprocess
+import threading
 
 from pathlib import Path
-from .utilities import display_message, run_command,  run_long_command,  user_home, append_to_file
+from .utilities import display_message, run_command, run_long_command, \
+    user_home, append_to_file, spinner
+
 
 def setup_rails(username):
     """
@@ -71,18 +75,24 @@ def install_ruby(username):
 
     os.chdir(user_home(username))
     display_message(0, "Installing Ruby 3.2.2 from source (this will take a while)...")
-    run_long_command("ruby-install ruby 3.2.2", True, False, None, username)
+
+    stop_event = threading.Event()
+    spinner_thread = threading.Thread(target=spinner, args=(stop_event,))
+
+    spinner_thread.start()  # Start spinner
+    subprocess.run(["su", username, "-c", "ruby-install ruby 3.2.2"], check=True)
+    stop_event.set()  # Stop spinner
     display_message(0, "Ruby 3.2.2 from installed.")
 
     # Set up environment variables
     if os.path.exists(".profile"):
-        append_to_file(".profile",'export PATH=\"$HOME/.rubies/ruby-3.2.2/bin:$PATH\"')
+        append_to_file(".profile", 'export PATH=\"$HOME/.rubies/ruby-3.2.2/bin:$PATH\"')
 
     if os.path.exists(".bash_login"):
-        append_to_file(".bashrc",'export PATH=\"$HOME/.rubies/ruby-3.2.2/bin:$PATH\"')
+        append_to_file(".bashrc", 'export PATH=\"$HOME/.rubies/ruby-3.2.2/bin:$PATH\"')
 
     if os.path.exists(".bashrc"):
-        append_to_file(".bashrc",'export PATH=\"$HOME/.rubies/ruby-3.2.2/bin:$PATH\"')
+        append_to_file(".bashrc", 'export PATH=\"$HOME/.rubies/ruby-3.2.2/bin:$PATH\"')
 
     os.chdir(cwd)
 
