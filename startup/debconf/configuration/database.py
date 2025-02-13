@@ -132,9 +132,9 @@ class Database:
             display_message(125, f"Error: {e}")
 
         if results > 1:
-            return self.fetchall()
+            return self.db_cursor.fetchall()
         elif results == 1:
-            return self.fetchone()
+            return self.db_cursor.fetchone()
         return None
 
 
