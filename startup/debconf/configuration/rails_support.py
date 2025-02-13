@@ -59,17 +59,18 @@ def install_ruby(username):
     display_message(0, "Installed required packages.")
 
     # Download and install ruby-install
-    cwd = Path.cwd()
-
-    os.chdir(user_home(username))
     display_message(0, "Downloading and installing ruby-install...")
     run_command("curl -L https://github.com/postmodern/ruby-install/archive/refs/tags/v0.9.1.tar.gz | tar -xz", True,
                 False)
     run_command("cd ruby-install-0.9.1 && make install && cd .. && rm -rf ruby-install-0.9.1", True,
-                False, None, username)
+                False)
+    shutil.rmtree("ruby-install-0.9.1")
     display_message(0, "'ruby-install' installed.")
 
     # Install Ruby 3.2.2
+    cwd = Path.cwd()
+
+    os.chdir(user_home(username))
     display_message(0, "Installing Ruby 3.2.2 from source (this will take a while)...")
     run_long_command("ruby-install ruby 3.2.2", True, False, None, username)
     display_message(0, "Ruby 3.2.2 from installed.")
