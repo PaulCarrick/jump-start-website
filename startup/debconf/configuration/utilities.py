@@ -10,7 +10,6 @@ import subprocess
 import time
 import threading
 import itertools
-import shlex
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -70,12 +69,12 @@ def display_message(error_level, message):
             sys.exit(error_level - 19)
 
 
-def run_command(commands, flag_error=True, capture_output=True, timeout=None, as_user=None):
+def run_command(command, flag_error=True, capture_output=True, timeout=None, as_user=None):
     """
     Execute a shell command and return the output.
 
     Args:
-        commands (str|list): The commands to run.
+        command (str|list): The command to run.
         capture_output (bool): Capture the output.
         flag_error (bool): Flag whether to exit with an error.
         timeout (float|None): Optional timeout for command execution.
@@ -84,15 +83,13 @@ def run_command(commands, flag_error=True, capture_output=True, timeout=None, as
     Returns:
         A string or a boolean based on capture_output.
     """
-    if isinstance(commands, str):
-        command_str = commands
-        commands = shlex.split(commands)
+    if isinstance(command, list):
+        command_str = " ".join(command)
     else:
-        command_str = " ".join(commands)
+        command_str = command
 
     if as_user:
-        commands = [ "su", "-", as_user, "-c", command_str ]
-        command_str = " ".join(commands)
+        command_str = f"su - {as_user} -c '{command_str}'"
 
     try:
         if capture_output:
@@ -106,9 +103,8 @@ def run_command(commands, flag_error=True, capture_output=True, timeout=None, as
             )
         else:
             result = subprocess.run(
-                commands,
+                command_str,
                 timeout=timeout,
-                check=True,
                 env=os.environ
             )
 
@@ -125,55 +121,6 @@ def run_command(commands, flag_error=True, capture_output=True, timeout=None, as
     except subprocess.CalledProcessError as e:
         display_message(90, f"Error: Error running {command_str}. Error: {str(e)}")
         return "" if capture_output else False
-
-
-def run_long_command(command, flag_error=True, capture_output=True, timeout=None, as_user=None):
-    """
-    Execute a shell command and return the output.
-    This command displays a spinner and is used for long-running commands.
-
-    Args:
-        command (str): The command to run.
-        capture_output (bool=False): Capture the output.
-        flag_error (bool=False): Flag whether to exit with an error.
-        timeout (float|None): Optional timeout for command execution.
-        as_user (str|None): User to run the command as.
-
-    Returns:
-        A string or a boolean based on capture output.
-    """
-
-    stop_event = threading.Event()
-    spinner_thread = threading.Thread(target=spinner, args=(stop_event,))
-
-    spinner_thread.start()  # Start spinner
-
-    result = run_command(command, flag_error, capture_output, timeout, as_user)
-
-    stop_event.set()  # Stop spinner
-    spinner_thread.join()  # Wait for spinner to finish
-    sys.stdout.write('\n')  # Move to new line after completion
-
-    return result
-
-
-def spinner(stop_event):
-    """
-    Display a spinner on the command line.
-
-    Args:
-        stop_event (StopEvent): The event to stop the spinner.
-    """
-    spinner_symbols = itertools.cycle(['-', '\\', '|', '/'])
-
-    while not stop_event.is_set():  # Run until stop_event is set
-        sys.stdout.write(next(spinner_symbols))
-        sys.stdout.flush()
-        time.sleep(0.5)
-        sys.stdout.write('\b')
-
-    sys.stdout.write('\b')
-    sys.stdout.flush()
 
 
 def user_exists(username):
@@ -290,6 +237,55 @@ def create_user(username, password):
         display_message(94, f"Error setting password for {username}: {e}")
 
     display_message(0, f"User: {username} setup complete.")
+
+
+def spinner(stop_event):
+    """
+    Display a spinner on the command line.
+
+    Args:
+        stop_event (StopEvent): The event to stop the spinner.
+    """
+    spinner_symbols = itertools.cycle(['-', '\\', '|', '/'])
+
+    while not stop_event.is_set():  # Run until stop_event is set
+        sys.stdout.write(next(spinner_symbols))
+        sys.stdout.flush()
+        time.sleep(0.5)
+        sys.stdout.write('\b')
+
+    sys.stdout.write('\b')
+    sys.stdout.flush()
+
+
+def run_long_command(command, flag_error=True, capture_output=True, timeout=None, as_user=None):
+    """
+    Execute a shell command and return the output.
+    This command displays a spinner and is used for long-running commands.
+
+    Args:
+        command (str): The command to run.
+        capture_output (bool=False): Capture the output.
+        flag_error (bool=False): Flag whether to exit with an error.
+        timeout (float|None): Optional timeout for command execution.
+        as_user (str|None): User to run the command as.
+
+    Returns:
+        A string or a boolean based on capture output.
+    """
+
+    stop_event = threading.Event()
+    spinner_thread = threading.Thread(target=spinner, args=(stop_event,))
+
+    spinner_thread.start()  # Start spinner
+
+    result = run_command(command, flag_error, capture_output, timeout, as_user)
+
+    stop_event.set()  # Stop spinner
+    spinner_thread.join()  # Wait for spinner to finish
+    sys.stdout.write('\n')  # Move to new line after completion
+
+    return result
 
 
 def process_template(filename, params):
