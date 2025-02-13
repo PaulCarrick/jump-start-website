@@ -2,11 +2,9 @@
 
 import os
 import shutil
-import subprocess
 import re
 
 from pathlib import Path
-from shutil import rmtree
 
 from .utilities import display_message, run_command, run_long_command, \
     user_home, append_to_file, change_ownership_recursive
