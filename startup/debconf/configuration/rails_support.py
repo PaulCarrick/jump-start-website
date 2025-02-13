@@ -5,6 +5,8 @@ import shutil
 import re
 
 from pathlib import Path
+from shutil import rmtree
+
 from .utilities import display_message, run_command, run_long_command, \
     user_home, append_to_file, change_ownership_recursive
 
@@ -64,8 +66,14 @@ def install_ruby(username):
     display_message(0, "Downloading and installing ruby-install...")
     run_command("curl -L https://github.com/postmodern/ruby-install/archive/refs/tags/v0.9.1.tar.gz | tar -xz",
                 True,True)
-    run_command("cd ruby-install-0.9.1 && make install && cd .. && rm -rf ruby-install-0.9.1", True,
-                False)
+
+    cwd = os.getcwd()
+    ruby_install_dir="ruby-install-0.9.1"
+
+    os.chdir(ruby_install_dir)
+    run_command("make install")
+    os.chdir(cwd)
+    shutil.rmtree(ruby_install_dir)
     display_message(0, "'ruby-install' installed.")
 
     # Install Ruby 3.2.2
