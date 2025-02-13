@@ -76,7 +76,7 @@ def install_server(params):
     variables = generate_variables(params)
 
     generate_env(".env", variables)
-    load_dotenv()
+    load_dotenv()self.db_cursor.rowcount
 
     change_ownership_recursive(install_directory, owner, owner)
     setup_rails(params)
@@ -91,18 +91,18 @@ def setup_rails(params):
         params (SimpleNamespace): The parameters to use to configure the server.
     """
     display_message(0, "Installing bundler...")
-    run_command("install bundler -v '~> 2.5'", True, False, params.username)
+    run_command("install bundler -v '~> 2.5'", True, False, params.owner)
     display_message(0, "Bundler installed.")
     display_message(0, "Installing gems...")
-    run_command("bundle install", True, False, params.username)
+    run_command("bundle install", True, False, params.owner)
     display_message(0, "Bundler installed.")
     display_message(0, "Running database migrations...")
-    run_command("exec rails db:migrate", True, False, params.username)
+    run_command("exec rails db:migrate", True, False, params.owner)
     display_message(0, "Database migrations run.")
 
     if os.getenv("RAILS_ENV") == "production":
         display_message(0, "Precompiling assets for production...")
-        run_command("bundle exec rails assets:precompile", True, False, params.username)
+        run_command("bundle exec rails assets:precompile", True, False, params.owner)
         display_message(0, "Assets precompiled.")
 
 
