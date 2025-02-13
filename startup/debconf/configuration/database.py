@@ -40,7 +40,17 @@ class Database:
 
     def setup_connection_parameters(self, db_name, db_user, db_password,
                                     db_host, db_port, autocommit=None):
-        """Setup connection parameters and return a SimpleNamespace."""
+        """
+        Setup connection parameters and return a SimpleNamespace.
+
+        Args:
+            db_name (str): Database name
+            db_user (str): Database user
+            db_password (str): Database user password
+            db_host (str): Database host
+            db_port (str): Database port
+            autocommit (bool): Automatically commit changes
+        """
         self.connection_parameters = SimpleNamespace(db_name=db_name,
                                                      db_user=db_user,
                                                      db_password=db_password,
@@ -52,7 +62,19 @@ class Database:
 
     def establish_database_connection(self, db_name, db_user, db_password, db_host,
                                       db_port, autocommit=None):
-        """Establish database connection and return the connection object."""
+        """
+        Establish database connection and return the connection object.
+
+        Args:
+            db_name (str): Database name
+            db_user (str): Database user
+            db_password (str): Database user password
+            db_host (str): Database host
+            db_port (str): Database port
+            autocommit (bool): Automatically commit changes
+        Returns:
+            Connection object
+        """
         self.setup_connection_parameters(db_name, db_user, db_password, db_host, db_port, autocommit)
         return self.setup_database_connection()
 
@@ -100,23 +122,24 @@ class Database:
             display_message(121, "No database connection has been established.")
 
 
-    def fetch_one(self):
-        """Fetch a single row from the last executed query."""
-        return self.db_cursor.fetchone()
+    def get_results(self):
+        """Get the results of the last query."""
+        results = self.db_cursor.fetchall()
+
+        if len(results) > 1:
+            return results
+        elif len(results) == 1:
+            return results[0]
+        else:
+            return None
 
 
-    def fetch_all(self):
-        """Fetch all results from the last executed query."""
-        return self.db_cursor.fetchall()
-
-
-    def execute_sql_command(self, sql_command, results=0, commit=False):
+    def execute_sql_command(self, sql_command, commit=False):
         """
         Execute a single SQL query.
 
         Args:
             sql_command (str): The SQL command
-            results (int): 0 for no return, 1 for a single row, >1 for all rows.
             commit (bool): Commit changes after execution.
         """
         self.check_database_connection()
@@ -131,11 +154,7 @@ class Database:
         except Exception as e:
             display_message(125, f"Error: {e}")
 
-        if results > 1:
-            return self.db_cursor.fetchall()
-        elif results == 1:
-            return self.db_cursor.fetchone()
-        return None
+        return self.get_results()
 
 
     def execute_sql_commands(self, sql_lines, commit=False):
@@ -184,9 +203,9 @@ class Database:
         display_message(0, f"Checking if database {db_database} exists...")
         self.check_database_connection()
 
-        self.execute_sql_command(f"SELECT datname FROM pg_database WHERE datname = '{db_database}';", results=1)
+        self.execute_sql_command(f"SELECT datname FROM pg_database WHERE datname = '{db_database}';")
 
-        if not self.fetch_one():  # Database does not exist
+        if not self.get_results():  # Database does not exist
             display_message(0, f"Creating database {db_database}...")
 
             # Open a separate connection with autocommit enabled
