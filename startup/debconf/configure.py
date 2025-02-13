@@ -18,7 +18,9 @@ from configuration.utilities import display_message, run_command, present, \
     generate_env, create_user, run_long_command, change_ownership_recursive
 
 
-TEMPLATES = "./configuration/templates"
+CONFIGURATION_DIRECTORY = "./configuration"
+TEMPLATES = f"{CONFIGURATION_DIRECTORY}/templates"
+CREATE_DATABASE_USER = f"{CONFIGURATION_DIRECTORY}/create_database_user"
 
 
 def install_server(params):
@@ -170,7 +172,7 @@ def setup_database(params):
                         params.postgres_password, params.db_host,
                         params.db_port)
 
-    database.process_sql_template("./create_database_user", params, True)
+    database.process_sql_template(CREATE_DATABASE_USER, params, True)
     database.create_database_unless_exists(params.db_database, params.db_username)
     database.close_database_connection()
 
