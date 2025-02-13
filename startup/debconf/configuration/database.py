@@ -156,14 +156,13 @@ class Database:
         try:
             self.db_cursor.execute(sql.SQL(sql_command))
 
-            rows = self.db_cursor.fetchall()
+            if self.db_cursor.rowcount > 0:
+                rows = self.db_cursor.fetchall()
 
-            if len(rows) > 1:
-                results = rows
-            elif len(rows) == 1:
-                results = rows[0]
-            else:
-                results = None
+                if len(rows) > 1:
+                    results = rows
+                elif len(rows) == 1:
+                    results = rows[0]
 
             if commit:
                 self.db_connection.commit()
