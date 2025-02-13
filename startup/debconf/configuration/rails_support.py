@@ -3,6 +3,7 @@
 import os
 import shutil
 import re
+import subprocess
 
 from pathlib import Path
 
@@ -70,7 +71,7 @@ def install_ruby(username):
     ruby_install_dir="ruby-install-0.9.1"
 
     os.chdir(ruby_install_dir)
-    run_long_command("make install", True, True)
+    run_command("make install", True, True)
     os.chdir(cwd)
     shutil.rmtree(ruby_install_dir)
     display_message(0, "'ruby-install' installed.")
@@ -78,22 +79,26 @@ def install_ruby(username):
     # Install Ruby 3.2.2
     cwd = Path.cwd()
     home_dir = user_home(username)
+    rubies_dir = f"{home_dir}/.rubies"
+    install_dir = f"{rubies_dir}/ruby-3.2.2"
+    path_string = f"export PATH={install_dir}/bin:$PATH"
 
     os.chdir(home_dir)
     display_message(0, "Installing Ruby 3.2.2 from source (this will take a while)...")
-    run_command("ruby-install ruby 3.2.2")
-    change_ownership_recursive(f"{home_dir}/.rubies", username, username)
+    subprocess.run(["ruby-install", "-i", install_dir, "ruby", "3.2.2"], check=True)
+    print(results)
+    change_ownership_recursive(install_dir, username, username)
     display_message(0, "Ruby 3.2.2 installed.")
 
     # Set up environment variables
     if os.path.exists(".profile"):
-        append_to_file(".profile", 'export PATH=\"$HOME/.rubies/ruby-3.2.2/bin:$PATH\"')
+        append_to_file(".profile", path_string)
 
     if os.path.exists(".bash_login"):
-        append_to_file(".bashrc", 'export PATH=\"$HOME/.rubies/ruby-3.2.2/bin:$PATH\"')
+        append_to_file(".bash_login", path_string)
 
     if os.path.exists(".bashrc"):
-        append_to_file(".bashrc", 'export PATH=\"$HOME/.rubies/ruby-3.2.2/bin:$PATH\"')
+        append_to_file(".bashrc", path_string)
 
     os.chdir(cwd)
 
