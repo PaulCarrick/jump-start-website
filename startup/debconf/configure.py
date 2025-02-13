@@ -67,7 +67,7 @@ def install_server(params):
         display_message(20, "You cannot install into the package directory.")
 
     # Copy files to install directory
-    shutil.copytree(package_dir, install_directory)
+    shutil.copytree(package_dir, install_directory, dirs_exist_ok=True)
     os.chdir(install_directory)
 
     variables = generate_variables(params)
@@ -136,7 +136,7 @@ def install_ruby():
     display_message(0, "'ruby-install' installed.")
 
     # Install Ruby 3.2.2
-    display_message(0, "Installing Ruby 3.2.2 from source...")
+    display_message(0, "Installing Ruby 3.2.2 from source (this will take a while)...")
     run_long_command("ruby-install ruby 3.2.2", True, False)
     display_message(0, "Ruby 3.2.2 from installed.")
 

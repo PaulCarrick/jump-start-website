@@ -21,10 +21,13 @@ Description: Choose whether the server runs in SSL mode (https) or clear mode (h
 Template: jump-start-website/domain
 Type: string
 Description: Enter the public domain name for the website.
+ For Example: example.com
 
 Template: jump-start-website/hostname
 Type: string
 Description: Enter the public server name for the server.
+ This can be different from the domain or it can be the same.
+ For example the domain might be example.com and the server might be jumpstart.example.com.
 
 Template: jump-start-website/url
 Type: string
