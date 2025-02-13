@@ -116,6 +116,55 @@ def run_command(command, flag_error=True, capture_output=True, timeout=None, as_
         return "" if capture_output else False
 
 
+def run_long_command(command, flag_error=True, capture_output=True, timeout=None, as_user=None):
+    """
+    Execute a shell command and return the output.
+    This command displays a spinner and is used for long-running commands.
+
+    Args:
+        command (str): The command to run.
+        capture_output (bool=False): Capture the output.
+        flag_error (bool=False): Flag whether to exit with an error.
+        timeout (float|None): Optional timeout for command execution.
+        as_user (str|None): User to run the command as.
+
+    Returns:
+        A string or a boolean based on capture output.
+    """
+
+    stop_event = threading.Event()
+    spinner_thread = threading.Thread(target=spinner, args=(stop_event,))
+
+    spinner_thread.start()  # Start spinner
+
+    result = run_command(command, flag_error, capture_output, timeout, as_user)
+
+    stop_event.set()  # Stop spinner
+    spinner_thread.join()  # Wait for spinner to finish
+    sys.stdout.write('\n')  # Move to new line after completion
+
+    return result
+
+
+def spinner(stop_event):
+    """
+    Display a spinner on the command line.
+
+    Args:
+        stop_event (StopEvent): The event to stop the spinner.
+    """
+    spinner_symbols = itertools.cycle(['-', '\\', '|', '/'])
+
+    while not stop_event.is_set():  # Run until stop_event is set
+        sys.stdout.write(next(spinner_symbols))
+        sys.stdout.flush()
+        time.sleep(0.5)
+        sys.stdout.write('\b')
+
+    sys.stdout.write('\b')
+    sys.stdout.flush()
+
+
 def user_exists(username):
     """
     Check if a user exists in the system.
@@ -232,55 +281,6 @@ def create_user(username, password):
     display_message(0, f"User: {username} setup complete.")
 
 
-def spinner(stop_event):
-    """
-    Display a spinner on the command line.
-
-    Args:
-        stop_event (StopEvent): The event to stop the spinner.
-    """
-    spinner_symbols = itertools.cycle(['-', '\\', '|', '/'])
-
-    while not stop_event.is_set():  # Run until stop_event is set
-        sys.stdout.write(next(spinner_symbols))
-        sys.stdout.flush()
-        time.sleep(0.5)
-        sys.stdout.write('\b')
-
-    sys.stdout.write('\b')
-    sys.stdout.flush()
-
-
-def run_long_command(command, flag_error=True, capture_output=True, timeout=None, as_user=None):
-    """
-    Execute a shell command and return the output.
-    This command displays a spinner and is used for long-running commands.
-
-    Args:
-        command (str): The command to run.
-        capture_output (bool=False): Capture the output.
-        flag_error (bool=False): Flag whether to exit with an error.
-        timeout (float|None): Optional timeout for command execution.
-        as_user (str|None): User to run the command as.
-
-    Returns:
-        A string or a boolean based on capture output.
-    """
-
-    stop_event = threading.Event()
-    spinner_thread = threading.Thread(target=spinner, args=(stop_event,))
-
-    spinner_thread.start()  # Start spinner
-
-    result = run_command(command, flag_error, capture_output, timeout, as_user)
-
-    stop_event.set()  # Stop spinner
-    spinner_thread.join()  # Wait for spinner to finish
-    sys.stdout.write('\n')  # Move to new line after completion
-
-    return result
-
-
 def process_template(filename, params):
     """
     Read, and replace values in a template file.
@@ -332,6 +332,15 @@ def change_ownership_recursive(path, user, group):
 
 
 def append_to_file(filename, lines):
+    """
+    Append text to a text file
+    Args:
+        filename (str): Path to the file to append to
+        lines (str|list): The ext to append.
+    """
     with open(filename, "a") as file:
-        for line in lines:
-            file.write(f"{line}\n")
+        if isinstance(lines, list):
+            for line in lines:
+                file.write(f"{line}\n")
+        else:
+            file.write(f"{lines}\n")
