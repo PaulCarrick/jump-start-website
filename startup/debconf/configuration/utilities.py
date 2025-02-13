@@ -10,6 +10,7 @@ import subprocess
 import time
 import threading
 import itertools
+import shlex
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -69,12 +70,12 @@ def display_message(error_level, message):
             sys.exit(error_level - 19)
 
 
-def run_command(command, flag_error=True, capture_output=True, timeout=None, as_user=None):
+def run_command(commands, flag_error=True, capture_output=True, timeout=None, as_user=None):
     """
     Execute a shell command and return the output.
 
     Args:
-        command (str|list): The command to run.
+        commands (str|list): The commands to run.
         capture_output (bool): Capture the output.
         flag_error (bool): Flag whether to exit with an error.
         timeout (float|None): Optional timeout for command execution.
@@ -83,18 +84,19 @@ def run_command(command, flag_error=True, capture_output=True, timeout=None, as_
     Returns:
         A string or a boolean based on capture_output.
     """
-    if isinstance(command, list):
-        command_str = " ".join(command)
+    if isinstance(commands, str):
+        command_str = commands
+        commands = shlex.split(commands)
     else:
-        command_str = command
+        command_str = " ".join(commands)
 
     if as_user:
-        command_str = f"su - {as_user} -c '{command_str}'"
+        commands = [ "su", "-", as_user, "-c", command_str ]
 
     try:
         if capture_output:
             result = subprocess.run(
-                    command_str,
+                    commands,
                     timeout=timeout,
                     shell=True,
                     capture_output=True,
@@ -103,7 +105,7 @@ def run_command(command, flag_error=True, capture_output=True, timeout=None, as_
             )
         else:
             result = subprocess.run(
-                command_str,
+                commands,
                 timeout=timeout,
                 check=True,
                 env=os.environ
