@@ -64,7 +64,6 @@ def install_ruby(username):
                 False)
     run_command("cd ruby-install-0.9.1 && make install && cd .. && rm -rf ruby-install-0.9.1", True,
                 False)
-    shutil.rmtree("ruby-install-0.9.1")
     display_message(0, "'ruby-install' installed.")
 
     # Install Ruby 3.2.2
