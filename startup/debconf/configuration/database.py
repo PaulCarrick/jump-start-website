@@ -5,7 +5,7 @@
 import psycopg2
 from psycopg2 import sql
 from types import SimpleNamespace
-from utilities import display_message, process_template
+from .utilities import display_message, process_template
 
 
 class Database:
