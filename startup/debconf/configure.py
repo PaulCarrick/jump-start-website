@@ -76,7 +76,7 @@ def install_server(params):
     variables = generate_variables(params)
 
     generate_env(".env", variables)
-    load_dotenv()self.db_cursor.rowcount
+    load_dotenv()
 
     change_ownership_recursive(install_directory, owner, owner)
     setup_rails(params)
