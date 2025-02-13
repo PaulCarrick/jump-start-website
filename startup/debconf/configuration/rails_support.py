@@ -72,7 +72,7 @@ def install_ruby(username):
     ruby_install_dir="ruby-install-0.9.1"
 
     os.chdir(ruby_install_dir)
-    subprocess.run(["make", "install"], check=True)
+    run_long_command(["make", "install"], True, False)
     os.chdir(cwd)
     shutil.rmtree(ruby_install_dir)
     display_message(0, "'ruby-install' installed.")
