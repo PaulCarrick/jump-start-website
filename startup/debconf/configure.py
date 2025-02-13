@@ -6,16 +6,16 @@ import sys
 import validators
 import getpass
 import shutil
-import re
 
 from pathlib import Path
 from types import SimpleNamespace
 from dotenv import load_dotenv
 from configuration.debconf import DebConf
 from configuration.database import Database
+from configuration.rails_support import setup_rails, install_ruby, install_postgres
 from configuration.utilities import display_message, run_command, present, \
     valid_integer, user_exists, directory_exists, valid_boolean_response, \
-    generate_env, create_user, run_long_command, change_ownership_recursive
+    generate_env, create_user, change_ownership_recursive
 
 
 TEMPLATES = "./configuration/templates"
@@ -49,12 +49,12 @@ def install_server(params):
         os.makedirs(gem_dir)
 
     if params.install_postgres.upper() == "YES":
-        install_postgres(params)
+        install_postgres(params.postgres_password)
 
     setup_database(params)
 
     if params.install_ruby.upper() == "YES":
-        install_ruby()
+        install_ruby(params.owner)
 
     package_dir = run_command("dpkg-query -L jump-start-website | grep -E '^/usr/share/' | head -n 1",
                               capture_output=True)
@@ -80,92 +80,8 @@ def install_server(params):
     load_dotenv()
 
     change_ownership_recursive(install_directory, owner, owner)
-    setup_rails(params)
+    setup_rails(params.owner)
     display_message(0, "Jumpstart Server Installed.")
-
-
-def setup_rails(params):
-    """
-    Setup rails
-
-    Args:
-        params (SimpleNamespace): The parameters to use to configure the server.
-    """
-    display_message(0, "Installing bundler...")
-    run_command("install bundler -v '~> 2.5'", True, False, None, params.owner)
-    display_message(0, "Bundler installed.")
-    display_message(0, "Installing gems...")
-    run_command("bundle install", True, False, None, params.owner)
-    display_message(0, "Bundler installed.")
-    display_message(0, "Running database migrations...")
-    run_command("exec rails db:migrate", True, False, None, params.owner)
-    display_message(0, "Database migrations run.")
-
-    if os.getenv("RAILS_ENV") == "production":
-        display_message(0, "Precompiling assets for production...")
-        run_command("bundle exec rails assets:precompile", True, False, None, params.owner)
-        display_message(0, "Assets precompiled.")
-
-
-def install_ruby():
-    """
-    Install Ruby 3.2.2.
-    """
-    ruby_path = shutil.which("ruby")
-
-    if ruby_path:
-        results = run_command(["ruby", "-v"], True, True)
-        version_match = re.search(r"ruby (\d+)\.(\d+)\.(\d+)", results)
-
-        if version_match:
-            major, minor, patch = [int(version_match.group(1)), int(version_match.group(2)),
-                                   int(version_match.group(3))]
-
-            if (major >= 3) and (minor >= 2):
-                display_message(0, ("Ruby >= 3.2 is already installed."
-                                    "if you want to replace it remove it first."))
-                return
-
-    display_message(0, "Installing Ruby 3.2.2...")
-    display_message(0, "Getting required packages...")
-    run_command("apt-get update", True, False)
-    run_command("apt-get install -y curl build-essential libssl-dev libreadline-dev zlib1g-dev", True, False)
-    display_message(0, "Installed required packages.")
-
-    # Download and install ruby-install
-    display_message(0, "Downloading and installing ruby-install...")
-    run_command("curl -L https://github.com/postmodern/ruby-install/archive/refs/tags/v0.9.1.tar.gz | tar -xz", True,
-                False)
-    run_command("cd ruby-install-0.9.1 && make install && cd .. && rm -rf ruby-install-0.9.1", True, False)
-    display_message(0, "'ruby-install' installed.")
-
-    # Install Ruby 3.2.2
-    display_message(0, "Installing Ruby 3.2.2 from source (this will take a while)...")
-    run_long_command("ruby-install ruby 3.2.2", True, False)
-    display_message(0, "Ruby 3.2.2 from installed.")
-
-    # Set up environment variables
-    run_command("echo 'export PATH=\"$HOME/.rubies/ruby-3.2.2/bin:$PATH\"' >> /etc/profile.d/ruby.sh", True, False)
-    run_command(". /etc/profile.d/ruby.sh", True, False)
-
-
-def install_postgres(params):
-    postgres_path = shutil.which("postgres")
-
-    if postgres_path:
-        display_message(0, ("PostgreSQL is already installed."
-                            "if you want to replace it remove it first."))
-    else:
-        display_message(0, "Installing PostgreSQL...")
-        run_command("apt-get update", True, False)
-        run_long_command("apt install -y postgresql postgresql-contrib", True, False)
-        run_command("systemctl start postgresql", True, False)
-        run_command("systemctl enable postgresql", True, False)
-        display_message(0, "Installed PostgreSQL.")
-        display_message(0, "Setting up Postgres user...")
-        run_command(f"echo \"ALTER USER postgres WITH PASSWORD '{params.postgres_password}';\" | sudo -u postgres psql",
-                    True, False)
-        display_message(0, "Postgres user set up.")
 
 
 def setup_database(params):

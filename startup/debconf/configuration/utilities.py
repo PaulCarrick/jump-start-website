@@ -83,8 +83,6 @@ def run_command(command, flag_error=True, capture_output=True, timeout=None, as_
     Returns:
         A string or a boolean based on capture_output.
     """
-    result = None
-
     if isinstance(command, list):
         command_str = " ".join(command)
     else:
@@ -145,6 +143,10 @@ def directory_exists(path, parent=True):
         return Path(path).parent.exists()
     else:
         return Path(path).exists()
+
+
+def user_home(username):
+    return os.path.expanduser(f"~{username}")
 
 
 def present(value):
@@ -215,7 +217,7 @@ def create_user(username, password):
         display_message(92, f"Cannot create user: {username}...")
 
     try:
-        display_message(0, f"Setting passwod for user: {username}...")
+        display_message(0, f"Setting password for user: {username}...")
 
         process = subprocess.Popen(["sudo", "chpasswd"], stdin=subprocess.PIPE, text=True)
         process.communicate(input=f"{username}:{password}")
@@ -249,7 +251,7 @@ def spinner(stop_event):
     sys.stdout.flush()
 
 
-def run_long_command(command, flag_error=True, capture_output=True, timeout=None):
+def run_long_command(command, flag_error=True, capture_output=True, timeout=None, as_user=None):
     """
     Execute a shell command and return the output.
     This command displays a spinner and is used for long-running commands.
@@ -259,6 +261,7 @@ def run_long_command(command, flag_error=True, capture_output=True, timeout=None
         capture_output (bool=False): Capture the output.
         flag_error (bool=False): Flag whether to exit with an error.
         timeout (float|None): Optional timeout for command execution.
+        as_user (str|None): User to run the command as.
 
     Returns:
         A string or a boolean based on capture output.
@@ -269,7 +272,7 @@ def run_long_command(command, flag_error=True, capture_output=True, timeout=None
 
     spinner_thread.start()  # Start spinner
 
-    result = run_command(command, flag_error, capture_output, timeout)
+    result = run_command(command, flag_error, capture_output, timeout, as_user)
 
     stop_event.set()  # Stop spinner
     spinner_thread.join()  # Wait for spinner to finish
@@ -309,7 +312,7 @@ def change_ownership_recursive(path, user, group):
         user (str): The owner of the directory to change.
         group (str): The group of the directory to change.
     """
-    display_message(0, f"Recursivley changing owner to {user} for {path}...")
+    display_message(0, f"Recursively changing owner to {user} for {path}...")
 
     # Get user and group IDs
     uid = pwd.getpwnam(user).pw_uid
@@ -325,4 +328,10 @@ def change_ownership_recursive(path, user, group):
         for f in files:
             os.chown(os.path.join(root, f), uid, gid)
 
-    display_message(0, f"Recursivley changed owner to {user} for {path}.")
+    display_message(0, f"Recursively changed owner to {user} for {path}.")
+
+
+def append_to_file(filename, lines):
+    with open(filename, "a") as file:
+        for line in lines:
+            file.write(f"{line}\n")
