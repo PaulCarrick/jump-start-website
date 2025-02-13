@@ -57,7 +57,7 @@ def install_ruby(username):
                                    int(version_match.group(3))]
 
             if (major >= 3) and (minor >= 2):
-                rbuy_installed = True
+                ruby_installed = True
 
     if ruby_installed:
         display_message(0, ("Ruby >= 3.2 is already installed."
