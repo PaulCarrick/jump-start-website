@@ -63,8 +63,14 @@ Description: Enter the database user for Jump Start Server.
 
 Template: jump-start-website/db-password
 Type: password
-Description: Enter the database password for Jump Start Server.
+Description: Enter the database password for the database user.
  This password will be used for the database user.
+
+Template: jump-start-website/postgres-password
+Type: password
+Description: Enter the database password for the postgres user.
+ This password will be used for the postgres user.
+ If this is a new install the postgres password will be set to this.
 
 # Install Parameters
 Template: jump-start-website/owner

@@ -4,11 +4,14 @@
 
 import sys
 import os
+import pwd
+import grp
 import subprocess
 import time
 import threading
 import itertools
 from pathlib import Path
+from types import SimpleNamespace
 
 
 # ANSI color codes for terminal messages
@@ -16,6 +19,13 @@ GREEN = "\033[32m"
 ORANGE = "\033[38;5;214m"
 RED = "\033[31m"
 RESET = "\033[0m"
+
+display_output = True
+
+
+def no_output():
+    global display_output
+    display_output = False
 
 
 def display_message(error_level, message):
@@ -29,77 +39,83 @@ def display_message(error_level, message):
         message (str): The message to display.
 
     error_level contains the current error level.
+     If error level is negative then raise an error rather than exiting (use abs of error level).
      display_message considers any error level above 19 as a fatal error.
      It subtracts 19 so that the error exit starts at 1.
-    0-9 is not an error and displays in green.
-    10-19 is a warning and displays in orange.
-    > 19 is an error and display in red  then exits with an exit code
+     0-9 is not an error and displays in green.
+     10-19 is a warning and displays in orange.
+     > 19 is an error and display in red  then exits with an exit code
      of error_level - 19 (starts at 1 for 20).
     """
-    if error_level < 10:
-        print(f"{GREEN}{message}{RESET}")
-    elif error_level < 20:
-        print(f"{ORANGE}{message}{RESET}")
+    if error_level < 0:
+        error_level = abs(error_level)
+        raise_error = True
     else:
-        print(f"{RED}{message}{RESET}", file=sys.stderr)
-        sys.exit(error_level - 19)
+        raise_error = False
+
+    if error_level < 10:
+        if display_output:
+            print(f"{GREEN}{message}{RESET}")
+    elif error_level < 20:
+        if display_output:
+            print(f"{ORANGE}{message}{RESET}")
+    else:
+        if display_output:
+            print(f"{RED}{message}{RESET}", file=sys.stderr)
+
+        if raise_error:
+            raise Exception(message)
+        else:
+            sys.exit(error_level - 19)
 
 
-def run_command(command, flag_error=True, capture_output=True, timeout=None):
+def run_command(command, flag_error=True, capture_output=True, timeout=None, as_user=None):
     """
     Execute a shell command and return the output.
 
     Args:
-        command (str): The command to run.
-        capture_output (bool=False): Capture the output.
-        flag_error (bool=False): Flag whether to exit with an error.
+        command (str|list): The command to run.
+        capture_output (bool): Capture the output.
+        flag_error (bool): Flag whether to exit with an error.
         timeout (float|None): Optional timeout for command execution.
+        as_user (str|None): User to run the command as.
 
     Returns:
-        A string or a boolean based on capture output.
+        A string or a boolean based on capture_output.
     """
     result = None
 
+    if isinstance(command, list):
+        command_str = " ".join(command)
+    else:
+        command_str = command
+
+    if as_user:
+        command_str = f"su - {as_user} -c '{command_str}'"
+
     try:
-        if timeout:
-            result = subprocess.run(command,
-                                    timeout=timeout,
-                                    shell=True,
-                                    capture_output=True,
-                                    text=True,
-                                    env=os.environ)
-        else:
-            result = subprocess.run(command,
-                                    shell=True,
-                                    capture_output=True,
-                                    text=True,
-                                    env=os.environ)
+        result = subprocess.run(
+            command_str,
+            timeout=timeout,
+            shell=True,
+            capture_output=True,
+            text=True,
+            env=os.environ
+        )
 
         if result.returncode != 0:
             if flag_error:
-                display_message(89,
-                                f"Command '{command}' failed with exit code {result.returncode}.\n"
-                                f"{result.stderr}")
-            else:
-                if capture_output:
-                    result = ""
-                else:
-                    result = False
-        else:
-            if capture_output:
-                result = result.stdout
-            else:
-                result = True
-    except subprocess.TimeoutExpired:
-        if capture_output:
-            result = ""
-        else:
-            result = False
-    except subprocess.CalledProcessError as e:
-        display_message(90,
-                        f"Error: Error running {command}. Error: {str(e)}")
+                display_message(89, f"Command '{command_str}' failed with exit code {result.returncode}.")
+                display_message(89, f"Error: {result.stderr}")
+            return "" if capture_output else False
 
-    return result
+        return result.stdout if capture_output else True
+
+    except subprocess.TimeoutExpired:
+        return "" if capture_output else False
+    except subprocess.CalledProcessError as e:
+        display_message(90, f"Error: Error running {command_str}. Error: {str(e)}")
+        return "" if capture_output else False
 
 
 def user_exists(username):
@@ -132,14 +148,38 @@ def directory_exists(path, parent=True):
 
 
 def present(value):
+    """
+    Check if a value is present and populated.
+
+    Args:
+        value (str): The variable to check.
+    Returns:
+        bool: True if the value is present.
+    """
     return value is not None and value.strip() != ""
 
 
 def valid_integer(value):
+    """
+    Check if a value is present and is a string containing an integer.
+
+    Args:
+        value (str): The string to check.
+    Returns:
+        bool: True if the string contains a valid integer.
+    """
     return value.isdigit()
 
 
 def valid_boolean_response(response):
+    """
+    Check if a value is present and is a string containing Yes, No or Quit.
+
+    Args:
+        response (str): The string to check.
+    Returns:
+        bool: True if the string contains a valid response.
+    """
     return response in ["Yes", "No", "Quit"]
 
 
@@ -160,6 +200,15 @@ def generate_env(env_filename, variables):
 
 
 def create_user(username, password):
+    """
+    Create a user in the system and assign a password to the user.
+
+    Args:
+        username (str): The username to create.
+        password (str): The password for thw user.
+    Returns:
+        None
+    """
     display_message(0, f"Setting up user: {username}...")
 
     if not run_command(f"useradd -m -s /bin/bash {username}", True, False):
@@ -184,6 +233,9 @@ def create_user(username, password):
 def spinner(stop_event):
     """
     Display a spinner on the command line.
+
+    Args:
+        stop_event (StopEvent): The event to stop the spinner.
     """
     spinner_symbols = itertools.cycle(['-', '\\', '|', '/'])
     while not stop_event.is_set():  # Run until stop_event is set
@@ -192,9 +244,20 @@ def spinner(stop_event):
         time.sleep(0.1)
         sys.stdout.write('\b')
 
+
 def run_long_command(command, flag_error=True, capture_output=True, timeout=None):
     """
-    Run a command with a spinner
+    Execute a shell command and return the output.
+    This command displays a spinner and is used for long-running commands.
+
+    Args:
+        command (str): The command to run.
+        capture_output (bool=False): Capture the output.
+        flag_error (bool=False): Flag whether to exit with an error.
+        timeout (float|None): Optional timeout for command execution.
+
+    Returns:
+        A string or a boolean based on capture output.
     """
 
     stop_event = threading.Event()
@@ -209,3 +272,53 @@ def run_long_command(command, flag_error=True, capture_output=True, timeout=None
     sys.stdout.write('\n')  # Move to new line after completion
 
     return result
+
+
+def process_template(filename, params):
+    """
+    Read, and replace values in a template file.
+
+    Args:
+        filename (str): Path to the template file.
+        params (dict | SimpleNamespace): Parameters to format into the template.
+
+    Returns:
+        None
+    """
+    if isinstance(params, SimpleNamespace):
+        params = vars(params)
+
+    try:
+        with open(filename, "r") as file:
+            results = file.read().format(**params)  # Format entire script
+    except Exception as e:
+        display_message(95, f"Can't process template file {filename}. Error: {e}")
+
+    return results
+
+
+def change_ownership_recursive(path, user, group):
+    """
+    Recursively change owner and group of a directory and its contents.
+    Args:
+        path (str): Path to the directory to change.
+        user (str): The owner of the directory to change.
+        group (str): The group of the directory to change.
+    """
+    display_message(0, f"Recursivley changing owner to {user} for {path}...")
+
+    # Get user and group IDs
+    uid = pwd.getpwnam(user).pw_uid
+    gid = grp.getgrnam(group).gr_gid
+
+    # Change ownership of the root directory
+    os.chown(path, uid, gid)
+
+    # Walk through all files and subdirectories
+    for root, dirs, files in os.walk(path):
+        for d in dirs:
+            os.chown(os.path.join(root, d), uid, gid)
+        for f in files:
+            os.chown(os.path.join(root, f), uid, gid)
+
+    display_message(0, f"Recursivley changed owner to {user} for {path}.")

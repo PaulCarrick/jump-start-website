@@ -3,16 +3,209 @@
 import argparse
 import os
 import sys
-
 import validators
 import getpass
+import shutil
+
+from pathlib import Path
 from types import SimpleNamespace
+from dotenv import load_dotenv
 from configuration.debconf import DebConf
-from configuration.utilities import display_message, run_command, present,\
-    valid_integer, user_exists, directory_exists, valid_boolean_response,\
-    generate_env, create_user, run_long_command
+from configuration.database import Database
+from configuration.utilities import display_message, run_command, present, \
+    valid_integer, user_exists, directory_exists, valid_boolean_response, \
+    generate_env, create_user, run_long_command, change_ownership_recursive
+
 
 TEMPLATES = "./configuration/templates"
+
+
+def install_server(params):
+    """
+    Install the Server
+
+    Args:
+        params (SimpleNamespace): The parameters to use to configure the server.
+    """
+    display_message(0, "Installing Jumpstart Server...")
+    owner = params.owner
+
+    # Ensure the owner exists
+    if not user_exists(owner):
+        create_user(owner, params.owner_password)
+
+    install_directory = params.install_directory
+    install_path = Path(install_directory)
+
+    # Ensure the installation directory exists
+    if not os.path.exists(install_directory):
+        display_message(0, f"Creating installation directory: {install_directory}")
+        os.makedirs(install_directory)
+
+    os.makedirs(f"{install_directory}/gems")
+
+    if params.install_postgres.upper() == "YES":
+        install_postgres(params)
+
+    setup_database(params)
+
+    if params.install_ruby.upper() == "YES":
+        install_ruby()
+
+    package_dir = run_command("dpkg-query -L jump-start-website | grep -E '^/usr/share/' | head -n 1",
+                              capture_output=True)
+
+    if not package_dir:
+        package_dir = Path.cwd()
+
+    if not os.path.exists(package_dir):
+        display_message(19, "Error: Package directory not found.")
+
+    package_path = Path(package_dir)
+
+    if package_path.resolve() == install_path.resolve():
+        display_message(20, "You cannot install into the package directory.")
+
+    # Copy files to install directory
+    shutil.copytree(package_dir, install_directory)
+    os.chdir(install_directory)
+
+    variables = generate_variables(params)
+
+    generate_env(".env", variables)
+    load_dotenv()
+
+    change_ownership_recursive(install_directory, params.username, params.username)
+    setup_rails(params)
+    display_message(0, "Jumpstart Server Installed.")
+
+def setup_rails(params):
+    """
+    Setup rails
+
+    Args:
+        params (SimpleNamespace): The parameters to use to configure the server.
+    """
+    display_message(0, "Installing bundler...")
+    run_command("install bundler -v '~> 2.5'", True, False, params.username)
+    display_message(0, "Bundler installed.")
+    display_message(0, "Installing gems...")
+    run_command("bundle install", True, False, params.username)
+    display_message(0, "Bundler installed.")
+    display_message(0, "Running database migrations...")
+    run_command("exec rails db:migrate", True, False, params.username)
+    display_message(0, "Database migrations run.")
+
+    if os.getenv("RAILS_ENV") == "production":
+        display_message(0, "Precompiling assets for production...")
+        run_command("bundle exec rails assets:precompile", True, False, params.username)
+        display_message(0, "Assets precompiled.")
+
+def install_ruby():
+    """
+    Install Ruby 3.2.2.
+    """
+    display_message(0, "Installing Ruby 3.2.2...")
+    display_message(0, "Getting required packages...")
+    run_command("apt-get update", True, False)
+    run_command("apt-get install -y curl build-essential libssl-dev libreadline-dev zlib1g-dev", True, False)
+    display_message(0, "Installed required packages.")
+
+    # Download and install ruby-install
+    display_message(0, "Downloading and installing ruby-install...")
+    run_command("curl -L https://github.com/postmodern/ruby-install/archive/refs/tags/v0.9.1.tar.gz | tar -xz", True,
+                False)
+    run_command("cd ruby-install-0.9.1 && make install && cd .. && rm -rf ruby-install-0.9.1", True, False)
+    display_message(0, "'ruby-install' installed.")
+
+    # Install Ruby 3.2.2
+    display_message(0, "Installing Ruby 3.2.2 from source...")
+    run_long_command("ruby-install ruby 3.2.2", True, False)
+    display_message(0, "Ruby 3.2.2 from installed.")
+
+    # Set up environment variables
+    run_command("echo 'export PATH=\"$HOME/.rubies/ruby-3.2.2/bin:$PATH\"' >> /etc/profile.d/ruby.sh", True, False)
+    run_command(". /etc/profile.d/ruby.sh", True, False)
+
+
+def install_postgres(params):
+    postgres_path = shutil.which("postgres")
+
+    if postgres_path:
+        display_message(0, ("PostgreSQL is already installed."
+                            "if you want to replace it remove it first."))
+    else:
+        display_message(0, "Installing PostgreSQL...")
+        run_command("apt-get update", True, False)
+        run_long_command("apt install -y postgresql postgresql-contrib", True, False)
+        run_command("systemctl start postgresql", True, False)
+        run_command("systemctl enable postgresql", True, False)
+        display_message(0, "Installed PostgreSQL.")
+        display_message(0, "Setting up Postgres user...")
+        run_command(f"echo \"ALTER USER postgres WITH PASSWORD '{params.postgres_password}';\" | sudo -u postgres psql",
+                    True, False)
+        display_message(0, "Postgres user set up.")
+
+
+def setup_database(params):
+    database = Database("postgres", "postgres",
+                        params.postgres_password, params.db_host,
+                        params.db_port)
+
+    database.process_sql_template("./create_database_user", params, True)
+    database.create_database_unless_exists(params.db_database, params.db_username)
+    database.close_database_connection()
+
+
+def generate_variables(params):
+    """
+    Setup environmental variables.
+
+    Args:
+        params (SimpleNamespace): The parameters to use to configure the server.
+    """
+    results = {}
+
+    results.update({
+            "startup":                  "true",
+            "dockerized":               "false",
+            "project_name":             "jump_start_server",
+            "site_domain":              params.domain,
+            "site_host":                params.hostname,
+            "site_url":                 params.url,
+            "server_host":              params.host,
+            "server_mode":              params.mode,
+            "server_port":              params.port,
+            "internal_port":            params.port,
+            "external_port":            params.port,
+            "guest_user":               "Guest User",
+            "username":                 params.owner,
+            "user_password":            params.owner_password,
+            "db_host":                  params.db_host,
+            "db_port":                  params.db_port,
+            "db_database":              params.db_database,
+            "db_username":              params.db_username,
+            "db_password":              params.db_password,
+            "postgres_password":        params.postgres_password,
+            "pggssencmode":             "disable",
+            "db_url":                   f"postgres://{params.db_username}:{params.db_password}@{params.db_host}:{params.db_port}/{params.db_database}",
+            "rack_env":                 "production",
+            "rails_env":                "production",
+            "rails_master_key":         "31c4d6937460cb67802017edd2016b94",
+            "rails_serve_static_files": "enabled",
+            "gem_home":                 f"{params.install_directory}/gems",
+            "recaptcha_enabled":        "false",
+            "recaptcha_site_key":       "",
+            "recaptcha_secret_key":     "",
+            "sudo_available":           "false",
+            "ssh_port":                 "",
+            "ssh_public_key":           "",
+            "lang":                     "en_US.UTF - 8",
+            "language":                 "en_US.UTF - 8"
+    })
+
+    return results
+
 
 def parse_arguments():
     """
@@ -54,6 +247,9 @@ def parse_arguments():
                         default=os.getenv("DB_PORT"))
     parser.add_argument("-p", "--db-password",
                         help="Specify the database password.",
+                        default=os.getenv("DB_PASSWORD"))
+    parser.add_argument("-t", "--postgres-password",
+                        help="Specify the postgres user password.",
                         default=os.getenv("DB_PASSWORD"))
     parser.add_argument("-P", "--port", type=int,
                         help="Specify the port for the server.",
@@ -155,6 +351,13 @@ def get_parameters(args):
             "ERROR: You must enter a database password."
     )
 
+    debconf.set_debconf_value("jump-start-website/postgres-password", db_password)
+
+    postgres_password = args.postgres_password or debconf.get_validated_input(
+            "jump-start-website/postgres-password", present,
+            "ERROR: You must enter a postgres user password."
+    )
+
     # Installation information
     owner = args.owner or debconf.get_validated_input(
             "jump-start-website/owner", present,
@@ -215,6 +418,7 @@ def get_parameters(args):
                 "db_port":           db_port,
                 "db_database":       db_database,
                 "db_username":       db_username,
+                "postgres_password": postgres_password,
                 "db_password":       db_password,
                 "install_server":    True,
                 "owner":             owner,
@@ -235,6 +439,7 @@ def get_parameters(args):
                 "db_port":           db_port,
                 "db_database":       db_database,
                 "db_username":       db_username,
+                "postgres_password": postgres_password,
                 "db_password":       db_password,
                 "owner":             owner,
                 "owner_password":    owner_password,
@@ -243,136 +448,6 @@ def get_parameters(args):
         })
 
     return SimpleNamespace(**result)
-
-
-def install_ruby():
-    """
-    Install Ruby 3.2.2.
-    """
-    display_message(0, "Installing Ruby 3.2.2...")
-    display_message(0, "Getting required packages...")
-    run_command("apt-get update", True, False)
-    run_command("apt-get install -y curl build-essential libssl-dev libreadline-dev zlib1g-dev", True, False)
-    display_message(0, "Installed required packages.")
-
-    # Download and install ruby-install
-    display_message(0, "Downloading and installing ruby-install...")
-    run_command("curl -L https://github.com/postmodern/ruby-install/archive/refs/tags/v0.9.1.tar.gz | tar -xz", True,
-                False)
-    run_command("cd ruby-install-0.9.1 && make install && cd .. && rm -rf ruby-install-0.9.1", True, False)
-    display_message(0, "'ruby-install' installed.")
-
-    # Install Ruby 3.2.2
-    display_message(0, "Installing Ruby 3.2.2 from source...")
-    run_long_command("ruby-install ruby 3.2.2", True, False)
-    display_message(0, "Ruby 3.2.2 from installed.")
-
-    # Set up environment variables
-    run_command("echo 'export PATH=\"$HOME/.rubies/ruby-3.2.2/bin:$PATH\"' >> /etc/profile.d/ruby.sh", True, False)
-    run_command(". /etc/profile.d/ruby.sh", True, False)
-
-
-def install_server(params):
-    """
-    Install the Server
-
-    Args:
-        params (SimpleNamespace): The parameters to use to configure the server.
-    """
-    owner = params.owner
-
-    # Ensure the owner exists
-    if not user_exists(owner):
-        create_user(owner, params.owner_password)
-
-    install_directory = params.install_directory
-
-    # Ensure the installation directory exists
-    if not os.path.exists(install_directory):
-        display_message(0, f"Creating installation directory: {install_directory}")
-        os.makedirs(install_directory)
-
-    if params.install_postgres.upper() == "YES":
-        display_message(0, "Installing PostgreSQL...")
-        run_command("apt-get update", True, False)
-        run_long_command("apt install -y postgresql postgresql-contrib", True, False)
-        run_command("systemctl start postgresql", True, False)
-        run_command("systemctl enable postgresql", True, False)
-        display_message(0, "Installed PostgreSQL.")
-
-
-    # Install Ruby if required
-    if params.install_ruby.upper() == "YES":
-        install_ruby()
-
-    # Ensure the package directory exists
-    package_dir = run_command("dpkg-query -L jump-start-website | grep -E '^/usr/share/' | head -n 1",
-                              capture_output=True)
-
-    if not package_dir:
-        package_dir ="."
-
-    if not os.path.exists(package_dir):
-        display_message(23, "Error: Package directory not found.")
-        sys.exit(1)
-
-    # Copy files to install directory
-    run_command(f"cp -r \"{package_dir}/.\" \"{install_directory}\"")
-    run_command(f"cd {install_directory}")
-
-    variables = generate_variables(params)
-
-    generate_env(".env", variables)
-    run_command(f"chown -R \"{owner}:{owner} .")
-
-
-def generate_variables(params):
-    """
-    Setup environmental variables.
-
-    Args:
-        params (SimpleNamespace): The parameters to use to configure the server.
-    """
-    results = {}
-
-    results.update({
-            "startup":                  "true",
-            "dockerized":               "false",
-            "project_name":             "jump_start_server",
-            "site_domain":              params.domain,
-            "site_host":                params.hostname,
-            "site_url":                 params.url,
-            "server_host":              params.host,
-            "server_mode":              params.mode,
-            "server_port":              params.port,
-            "internal_port":            params.port,
-            "external_port":            params.port,
-            "guest_user":               "Guest User",
-            "username":                 params.owner,
-            "user_password":            params.owner_password,
-            "db_host":                  params.db_host,
-            "db_port":                  params.db_port,
-            "db_database":              params.db_database,
-            "db_username":              params.db_username,
-            "db_password":              params.db_password,
-            "pggssencmode":             "disable",
-            "db_url":                   f"postgres://{params.db_username}:{params.db_password}@{params.db_host}:{params.db_port}/{params.db_database}",
-            "rack_env":                 "production",
-            "rails_env":                "production",
-            "rails_master_key":         "31c4d6937460cb67802017edd2016b94",
-            "rails_serve_static_files": "enabled",
-            "gem_home":                 f"{params.install_directory}/gems",
-            "recaptcha_enabled":        "false",
-            "recaptcha_site_key":       "",
-            "recaptcha_secret_key":     "",
-            "sudo_available":           "false",
-            "ssh_port":                 "",
-            "ssh_public_key":           "",
-            "lang":                     "en_US.UTF - 8",
-            "language":                 "en_US.UTF - 8"
-    })
-
-    return results
 
 
 def main():
