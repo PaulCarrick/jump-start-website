@@ -41,9 +41,14 @@ def install_ruby(username):
     Args:
         username (str): The user to install ruby for.
     """
+    home_dir = user_home(username)
+    rubies_dir = f"{home_dir}/.rubies"
+    install_dir = f"{rubies_dir}/ruby-3.2.2"
+    path_string = f"PATH={install_dir}/bin:$PATH"
     ruby_path = shutil.which("ruby")
+    ruby_installed =  os.path.isdir(install_dir)
 
-    if ruby_path:
+    if not ruby_installed and ruby_path:
         results = run_command(["ruby", "-v"], True, True)
         version_match = re.search(r"ruby (\d+)\.(\d+)\.(\d+)", results)
 
@@ -52,9 +57,12 @@ def install_ruby(username):
                                    int(version_match.group(3))]
 
             if (major >= 3) and (minor >= 2):
-                display_message(0, ("Ruby >= 3.2 is already installed."
-                                    "if you want to replace it remove it first."))
-                return
+                rbuy_installed = True
+
+    if ruby_installed:
+        display_message(0, ("Ruby >= 3.2 is already installed."
+                            "if you want to replace it remove it first."))
+        return
 
     display_message(0, "Installing Ruby 3.2.2...")
     display_message(0, "Getting required packages...")
@@ -78,15 +86,10 @@ def install_ruby(username):
 
     # Install Ruby 3.2.2
     cwd = Path.cwd()
-    home_dir = user_home(username)
-    rubies_dir = f"{home_dir}/.rubies"
-    install_dir = f"{rubies_dir}/ruby-3.2.2"
-    path_string = f"export PATH={install_dir}/bin:$PATH"
 
     os.chdir(home_dir)
     display_message(0, "Installing Ruby 3.2.2 from source (this will take a while)...")
     subprocess.run(["ruby-install", "-i", install_dir, "ruby", "3.2.2"], check=True)
-    print(results)
     change_ownership_recursive(install_dir, username, username)
     display_message(0, "Ruby 3.2.2 installed.")
 
