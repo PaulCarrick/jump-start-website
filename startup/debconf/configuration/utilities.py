@@ -92,11 +92,12 @@ def run_command(commands, flag_error=True, capture_output=True, timeout=None, as
 
     if as_user:
         commands = [ "su", "-", as_user, "-c", command_str ]
+        command_str = " ".join(commands)
 
     try:
         if capture_output:
             result = subprocess.run(
-                    commands,
+                    command_str,
                     timeout=timeout,
                     shell=True,
                     capture_output=True,

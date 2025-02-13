@@ -62,8 +62,8 @@ def install_ruby(username):
 
     # Download and install ruby-install
     display_message(0, "Downloading and installing ruby-install...")
-    run_command("curl -L https://github.com/postmodern/ruby-install/archive/refs/tags/v0.9.1.tar.gz | tar -xz", True,
-                False)
+    run_command("curl -L https://github.com/postmodern/ruby-install/archive/refs/tags/v0.9.1.tar.gz | tar -xz",
+                True,True)
     run_command("cd ruby-install-0.9.1 && make install && cd .. && rm -rf ruby-install-0.9.1", True,
                 False)
     display_message(0, "'ruby-install' installed.")
