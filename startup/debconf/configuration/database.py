@@ -132,9 +132,9 @@ class Database:
             display_message(125, f"Error: {e}")
 
         if results > 1:
-            return self.fetch_all()
+            return self.fetchall()
         elif results == 1:
-            return self.fetch_one()
+            return self.fetchone()
         return None
 
 
