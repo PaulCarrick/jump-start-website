@@ -92,21 +92,14 @@ def run_command(command, flag_error=True, capture_output=True, timeout=None, as_
         command_str = f"su - {as_user} -c '{command_str}'"
 
     try:
-        if capture_output:
-            result = subprocess.run(
-                    command_str,
-                    timeout=timeout,
-                    shell=True,
-                    capture_output=True,
-                    text=True,
-                    env=os.environ
-            )
-        else:
-            result = subprocess.run(
-                command_str,
-                timeout=timeout,
-                env=os.environ
-            )
+        result = subprocess.run(
+            command_str,
+            timeout=timeout,
+            shell=True,
+            capture_output=True,
+            text=True,
+            env=os.environ
+        )
 
         if result.returncode != 0:
             if flag_error:
