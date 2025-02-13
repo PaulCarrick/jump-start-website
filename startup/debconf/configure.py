@@ -6,6 +6,7 @@ import sys
 import validators
 import getpass
 import shutil
+import re
 
 from pathlib import Path
 from types import SimpleNamespace
@@ -79,6 +80,7 @@ def install_server(params):
     setup_rails(params)
     display_message(0, "Jumpstart Server Installed.")
 
+
 def setup_rails(params):
     """
     Setup rails
@@ -101,10 +103,26 @@ def setup_rails(params):
         run_command("bundle exec rails assets:precompile", True, False, params.username)
         display_message(0, "Assets precompiled.")
 
+
 def install_ruby():
     """
     Install Ruby 3.2.2.
     """
+    ruby_path = shutil.which("ruby")
+
+    if ruby_path:
+        results = run_command(["ruby", "-v"], True, True)
+        version_match = re.search(r"ruby (\d+)\.(\d+)\.(\d+)", results)
+
+        if version_match:
+            major, minor, patch = [int(version_match.group(1)), int(version_match.group(2)),
+                                   int(version_match.group(3))]
+
+            if (major >= 3) and (minor >= 2):
+                display_message(0, ("Ruby >= 3.2 is already installed."
+                                    "if you want to replace it remove it first."))
+                return
+
     display_message(0, "Installing Ruby 3.2.2...")
     display_message(0, "Getting required packages...")
     run_command("apt-get update", True, False)
