@@ -2,6 +2,7 @@
 
 import os
 import shutil
+import subprocess
 import re
 
 from pathlib import Path
@@ -71,7 +72,7 @@ def install_ruby(username):
     ruby_install_dir="ruby-install-0.9.1"
 
     os.chdir(ruby_install_dir)
-    run_command("make install", True, False)
+    subprocess.run(["make", "install"], check=True)
     os.chdir(cwd)
     shutil.rmtree(ruby_install_dir)
     display_message(0, "'ruby-install' installed.")
