@@ -42,7 +42,10 @@ def install_server(params):
         display_message(0, f"Creating installation directory: {install_directory}")
         os.makedirs(install_directory)
 
-    os.makedirs(f"{install_directory}/gems")
+    gem_dir = f"{install_directory}/gems"
+
+    if not os.path.isdir(gem_dir):
+        os.makedirs(gem_dir)
 
     if params.install_postgres.upper() == "YES":
         install_postgres(params)
