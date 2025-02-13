@@ -169,7 +169,7 @@ def setup_database(params):
                         params.postgres_password, params.db_host,
                         params.db_port)
 
-    database.process_sql_template(f"{get_setup_directory()}/create_database_user", params, True)
+    database.process_sql_template(f"{get_setup_directory()}/create_database_user.sql", params, True)
     database.create_database_unless_exists(params.db_database, params.db_username)
     database.close_database_connection()
 
