@@ -3,12 +3,10 @@
 import os
 import shutil
 import re
-import subprocess
-import threading
 
 from pathlib import Path
 from .utilities import display_message, run_command, run_long_command, \
-    user_home, append_to_file, spinner
+    user_home, append_to_file, change_ownership_recursive
 
 
 def setup_rails(username):
@@ -72,17 +70,13 @@ def install_ruby(username):
 
     # Install Ruby 3.2.2
     cwd = Path.cwd()
+    home_dir = user_home(username)
 
-    os.chdir(user_home(username))
+    os.chdir(home_dir)
     display_message(0, "Installing Ruby 3.2.2 from source (this will take a while)...")
-
-    stop_event = threading.Event()
-    spinner_thread = threading.Thread(target=spinner, args=(stop_event,))
-
-    spinner_thread.start()  # Start spinner
-    subprocess.run(["su", username, "-c", "ruby-install ruby 3.2.2"], check=True)
-    stop_event.set()  # Stop spinner
-    display_message(0, "Ruby 3.2.2 from installed.")
+    run_command("ruby-install ruby 3.2.2")
+    change_ownership_recursive(f"{home_dir}/.rubies", username, username)
+    display_message(0, "Ruby 3.2.2 installed.")
 
     # Set up environment variables
     if os.path.exists(".profile"):
