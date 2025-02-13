@@ -124,7 +124,14 @@ class Database:
 
     def get_results(self):
         """Get the results of the last query."""
-        results = self.db_cursor.fetchall()
+        results = []
+
+        try:
+            results = self.db_cursor.fetchall()
+        except psycopg2.ProgrammingError:
+            return None
+        except Exception as e:
+            display_message(121, f"Failed to get results: {e}.")
 
         if len(results) > 1:
             return results
