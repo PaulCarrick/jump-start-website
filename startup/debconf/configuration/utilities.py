@@ -238,11 +238,15 @@ def spinner(stop_event):
         stop_event (StopEvent): The event to stop the spinner.
     """
     spinner_symbols = itertools.cycle(['-', '\\', '|', '/'])
+
     while not stop_event.is_set():  # Run until stop_event is set
         sys.stdout.write(next(spinner_symbols))
         sys.stdout.flush()
         time.sleep(0.1)
         sys.stdout.write('\b')
+
+    sys.stdout.write('\b')
+    sys.stdout.flush()
 
 
 def run_long_command(command, flag_error=True, capture_output=True, timeout=None):
