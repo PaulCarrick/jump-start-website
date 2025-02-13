@@ -20,6 +20,7 @@ from configuration.utilities import display_message, run_command, present, \
 
 TEMPLATES = "./configuration/templates"
 
+
 def install_server(params):
     """
     Install the Server
@@ -91,18 +92,18 @@ def setup_rails(params):
         params (SimpleNamespace): The parameters to use to configure the server.
     """
     display_message(0, "Installing bundler...")
-    run_command("install bundler -v '~> 2.5'", True, False, params.owner)
+    run_command("install bundler -v '~> 2.5'", True, False, None, params.owner)
     display_message(0, "Bundler installed.")
     display_message(0, "Installing gems...")
-    run_command("bundle install", True, False, params.owner)
+    run_command("bundle install", True, False, None, params.owner)
     display_message(0, "Bundler installed.")
     display_message(0, "Running database migrations...")
-    run_command("exec rails db:migrate", True, False, params.owner)
+    run_command("exec rails db:migrate", True, False, None, params.owner)
     display_message(0, "Database migrations run.")
 
     if os.getenv("RAILS_ENV") == "production":
         display_message(0, "Precompiling assets for production...")
-        run_command("bundle exec rails assets:precompile", True, False, params.owner)
+        run_command("bundle exec rails assets:precompile", True, False, None, params.owner)
         display_message(0, "Assets precompiled.")
 
 
@@ -469,8 +470,10 @@ def get_parameters(args):
 
     return SimpleNamespace(**result)
 
+
 def get_setup_directory():
     return Path(__file__).resolve().parent
+
 
 def main():
     args = parse_arguments()
