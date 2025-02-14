@@ -210,6 +210,8 @@ class Database:
         try:
             with open(sql_file, "r") as file:
                 for line in file:
+                    line = line.strip()
+
                     if not line or line.startswith("--"):
                         continue
 
