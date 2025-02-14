@@ -10,4 +10,4 @@ sudo pip install validators --break-system-packages
 sudo pip install psycopg2-binary --break-system-packages
 sudo pip install python-dotenv --break-system-packages
 
-cd "$(dirname $0)" && sudo python3 configure.py
+cd "$(dirname $0)" && sudo python3 install.py
