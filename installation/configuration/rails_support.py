@@ -20,7 +20,7 @@ def setup_rails(configuration, sql_file=None):
         configuration (SimpleNamespace): configuration to use.
         sql_file (str, optional): Seed the database.
     """
-    username = configuration.username
+    username = configuration.owner
     rails_dir = configuration.install_directory
 
     display_message(0, "Installing bundler...")
