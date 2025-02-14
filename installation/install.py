@@ -94,7 +94,7 @@ def install_server(params):
 
     if params.install_service.upper() == "YES":
         service_file="/etc/systemd/system/jumpstartserver.service"
-        template_file = f"{install_directory}/installation/jumpstartwebsite.service"
+        template_file = f"{install_directory}/installation/jumpstartwebsite.tpl"
 
         display_message(0, "Setting up service...")
 
