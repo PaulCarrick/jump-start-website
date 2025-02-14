@@ -209,18 +209,29 @@ class Database:
 
         try:
             with open(sql_file, "r") as file:
+                buffer = ""  # Store multi-line SQL statements
+
                 for line in file:
                     line = line.strip()
 
+                    # Skip empty lines and SQL comments
                     if not line or line.startswith("--"):
                         continue
 
-                    if verbose:
-                        display_message(0, line)
+                    buffer += line + " "  # Preserve spaces for readability
 
-                    self.execute_sql_command(line)
+                    # If the SQL statement is complete (ends with a semicolon), execute it
+                    if line.endswith(";"):
+                        if verbose:
+                            display_message(0, f"Executing SQL: {buffer.strip()}")
+
+                        self.execute_sql_command(buffer.strip())  # Execute full SQL command
+                        buffer = ""  # Reset buffer for next query
+
+            if buffer.strip():  # Catch any remaining statements that didn't end with ";"
+                display_message(125, "Warning: Incomplete SQL command found.")
         except Exception as e:
-            display_message(125, f"Can't process SQL file: {sql_file}. Error: {e}.")
+            display_message(126, f"Can't process SQL file: {sql_file}. Error: {e}.")
 
 
     def process_sql_template(self, sql_file, params, commit=False):
