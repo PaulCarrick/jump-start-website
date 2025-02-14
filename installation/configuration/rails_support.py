@@ -35,7 +35,8 @@ def setup_rails(rails_dir, username,  sql_file=None, configuration=None):
                           configuration.db_username,
                           configuration.db_password,
                           configuration.db_host,
-                          configuration.db_port)
+                          configuration.db_port,
+                          True)
 
         database.process_sql_file(sql_file, True)
         database.close_database_connection()
