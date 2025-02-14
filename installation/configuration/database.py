@@ -141,7 +141,7 @@ class Database:
             return None
 
 
-    def execute_sql_command(self, sql_command, commit=False):
+    def execute_sql_command(self, sql_command, commit=False, no_results=False):
         """
         Execute a single SQL query (the query can be multi-line).
 
@@ -156,7 +156,7 @@ class Database:
         try:
             self.db_cursor.execute(sql.SQL(sql_command))
 
-            if self.db_cursor.rowcount > 0:
+            if not no_results and self.db_cursor.rowcount > 0:
                 rows = self.db_cursor.fetchall()
 
                 if len(rows) > 1:
@@ -189,7 +189,7 @@ class Database:
         self.check_database_connection()
 
         for sql_line in sql_lines:
-            results = self.execute_sql_command(sql_line)
+            results = self.execute_sql_command(sql_line, False, True)
 
         if commit:
             self.db_cursor.connection.commit()
@@ -225,7 +225,7 @@ class Database:
                         if verbose:
                             display_message(0, f"Executing SQL: {buffer.strip()}")
 
-                        self.execute_sql_command(buffer.strip())  # Execute full SQL command
+                        self.execute_sql_command(buffer.strip(), False, True)  # Execute full SQL command
                         buffer = ""  # Reset buffer for next query
 
             if buffer.strip():  # Catch any remaining statements that didn't end with ";"
