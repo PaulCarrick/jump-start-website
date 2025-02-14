@@ -21,11 +21,17 @@ RED = "\033[31m"
 RESET = "\033[0m"
 
 display_output = True
+throw_error = False
 
 
 def no_output():
     global display_output
     display_output = False
+
+
+def raise_errors():
+    global throw_error
+    throw_error = True
 
 
 def display_message(error_level, message):
@@ -47,7 +53,7 @@ def display_message(error_level, message):
      > 19 is an error and display in red  then exits with an exit code
      of error_level - 19 (starts at 1 for 20).
     """
-    if error_level < 0:
+    if error_level < 0 or throw_error:
         error_level = abs(error_level)
         raise_error = True
     else:

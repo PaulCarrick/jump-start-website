@@ -116,10 +116,17 @@ class Database:
                 display_message(120, f"Failed to close database connection. Error: {e}.")
 
 
-    def check_database_connection(self):
+    def check_database_connection(self, parameters=None):
         """Check if a database connection exists. If not, error out."""
         if not self.db_cursor:
-            display_message(121, "No database connection has been established.")
+            if parameters:
+                self.establish_database_connection(parameters.db_database,
+                                                   parameters.db_username,
+                                                   parameters.db_password,
+                                                   parameters.db_host,
+                                                   parameters.db_port)
+            else:
+                display_message(121, "No database connection has been established.")
 
 
     def get_results(self):
@@ -148,6 +155,7 @@ class Database:
         Args:
             sql_command (str): The SQL command
             commit (bool): Commit changes after execution.
+            no_results (bool): Don't expect results.
         """
         results = None
 
@@ -197,15 +205,16 @@ class Database:
         return results
 
 
-    def process_sql_file(self, sql_file, verbose=False):
+    def process_sql_file(self, sql_file, verbose=False, parameters=None):
         """
         Read and execute an SQL script.
 
         Args:
             sql_file (str): Path to the SQL file.
             verbose (bool): Verbose output.
+            parameters (SimpleNamespace, optional): Parameters to use to log in to the database.
         """
-        self.check_database_connection()
+        self.check_database_connection(parameters)
 
         try:
             with open(sql_file, "r") as file:
@@ -234,30 +243,31 @@ class Database:
             display_message(126, f"Can't process SQL file: {sql_file}. Error: {e}.")
 
 
-    def process_sql_template(self, sql_file, params, commit=False):
+    def process_sql_template(self, sql_file, parameters, commit=False):
         """
         Read template replacing variables and execute an SQL script.
 
         Args:
             sql_file (str): Path to the SQL file.
-            params (dict | SimpleNamespace): Parameters to format into the SQL script.
+            parameters (dict | SimpleNamespace): Parameters to format into the SQL script.
             commit (bool): Commit changes after execution.
         """
-        self.check_database_connection()
-        sql_script = process_template(sql_file, params)
+        self.check_database_connection(parameters)
+        sql_script = process_template(sql_file, parameters)
         self.execute_sql_command(sql_script, commit)
 
 
-    def create_database_unless_exists(self, db_database, db_username):
+    def create_database_unless_exists(self, db_database, db_username, parameters=None):
         """
         Creates a PostgreSQL database if it does not exist.
 
         Args:
             db_database (str): Database name
             db_username (str): Database user
+            parameters (SimpleNamespace, optional): Parameters to use to log in to the database.
         """
         display_message(0, f"Checking if database {db_database} exists...")
-        self.check_database_connection()
+        self.check_database_connection(parameters)
 
         if not self.execute_sql_command(f"SELECT datname FROM pg_database WHERE datname = '{db_database}';"):
             display_message(0, f"Creating database {db_database}...")
@@ -281,3 +291,96 @@ class Database:
             self.execute_sql_command(f"ALTER DATABASE {db_database} OWNER TO {db_username};", commit=True)
 
         display_message(0, f"Database {db_database} setup complete.")
+
+
+    def table_exists(self, table_name, schema="public", parameters=None):
+        """
+        Check to see if a table exists.
+        Args:
+            table_name (str): Name of the table.
+            schema (str, optional): The schema of the table.
+            parameters (SimpleNamespace, optional): Parameters to use to log in to the database.
+        Returns:
+              bool: True if the table exists.
+        """
+        self.check_database_connection(parameters)
+
+        try:
+            with self.db_cursor as cur:
+                cur.execute("""
+                    SELECT EXISTS (
+                        SELECT 1 FROM pg_tables 
+                        WHERE tablename = %s AND schemaname = %s
+                    );
+                """, (table_name, schema))
+
+                return cur.fetchone()[0]  # Returns True if table exists, False otherwise
+        except psycopg2.Error as e:
+            display_message(127, f"Error executing SQL: {e}")
+
+
+    @staticmethod
+    def load_sql_file(parameters, sql_file, verbose=False):
+        """
+        Read and execute an SQL script.
+
+        Args:
+            parameters (SimpleNamespace): Parameters to use to log in to the database.
+            sql_file (str): Path to the SQL file.
+            verbose (bool. optional): Verbose output.
+        """
+        database = Database()
+
+        database.process_sql_file(sql_file, verbose, parameters)
+        database.close_database_connection()
+
+
+    @staticmethod
+    def load_sql_template(parameters, template_file, commit=False):
+        """
+        Read template replacing variables and execute an SQL script.
+
+        Args:
+            sql_file (str): Path to the SQL file.
+            parameters (dict | SimpleNamespace): Parameters to format into the SQL script.
+            commit (bool): Commit changes after execution.
+        """
+        database = Database()
+
+        database.process_sql_template(template_file, parameters, commit)
+        database.close_database_connection()
+
+
+    @staticmethod
+    def safe_create_database(parameters, db_database, db_username):
+        """
+        Creates a PostgreSQL database if it does not exist.
+
+        Args:
+            parameters (SimpleNamespace): Parameters to use to log in to the database.
+            db_database (str): Database name
+            db_username (str): Database user
+        """
+        database = Database()
+        result = database.create_database_unless_exists(db_database, db_username, parameters)
+
+        database.close_database_connection()
+        return result
+
+
+    @staticmethod
+    def does_table_exist(parameters, table_name, schema="public"):
+        """
+        Check to see if a table exists.
+        Args:
+            table_name (str): Name of the table.
+            schema (str, optional): The schema of the table.
+            parameters (SimpleNamespace): Parameters to use to log in to the database.
+        Returns:
+              bool: True if the table exists.
+        """
+        database = Database()
+        result = database.table_exists(table_name, schema, parameters)
+
+        database.close_database_connection()
+        return result

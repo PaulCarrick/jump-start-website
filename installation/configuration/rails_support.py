@@ -11,7 +11,7 @@ from .utilities import display_message, run_command, run_long_command, \
     user_home, append_to_file, change_ownership_recursive
 
 
-def setup_rails(configuration, sql_file=None):
+def setup_rails(configuration):
     """
     Setup rails
 
@@ -22,6 +22,7 @@ def setup_rails(configuration, sql_file=None):
     """
     username = configuration.owner
     rails_dir = configuration.install_directory
+    sql_file = configuration.dump_file
 
     display_message(0, "Installing bundler...")
     run_command(f"cd {rails_dir} && gem install bundler -v \"~> 2.5\"", True, False, None, username)

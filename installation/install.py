@@ -81,9 +81,13 @@ def install_server(params):
     generate_env(params.env_file, variables)
     load_dotenv()
 
+    if not Database.does_table_exist(params, 'sections'):
+        Database.load_sql_file(params,
+                               f"{install_directory}/installation/dump.sql'",
+                               True)
+
     change_ownership_recursive(install_directory, owner, owner)
-    setup_rails(params,
-                f"{install_directory}/installation/dump.sql")
+    setup_rails(params)
     display_message(0, "Jumpstart Server Installed.")
 
 
@@ -165,6 +169,8 @@ def parse_arguments():
     parser.add_argument("-e", "--env-file",
                         help="Specify the name for the .env file.",
                         default=".env")
+    parser.add_argument("-f", "--dump-file",
+                        help="Specify the name for the dump file to install (optional)")
     parser.add_argument("-H", "--db-host",
                         help="Specify the hostname for the database.",
                         default=os.getenv("DB_HOST"))
@@ -376,7 +382,8 @@ def get_parameters(args):
                 "install_ruby":      ruby,
                 "install_postgres":  postgres,
                 "env_file":          args.env_file,
-                "just_generate_env": args.just_generate_env
+                "just_generate_env": args.just_generate_env,
+                "dump_file":         args.dump_file
         })
     else:
         result.update({
@@ -397,7 +404,8 @@ def get_parameters(args):
                 "install_directory": install_directory,
                 "install_server":    False,
                 "env_file":          args.env_file,
-                "just_generate_env": args.just_generate_env
+                "just_generate_env": args.just_generate_env,
+                "dump_file":         args.dump_file
         })
 
     return SimpleNamespace(**result)
