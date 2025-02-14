@@ -3,7 +3,7 @@ Description=Jump Start Website
 After=network.target
 
 [Service]
-ExecStart="rails server -b {site_host} -p {server_port}
+ExecStart="rails server -b {host} -p {server_port}
 WorkingDirectory={install_directory}
 User={owner}
 Group={owner}
