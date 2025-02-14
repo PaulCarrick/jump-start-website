@@ -56,7 +56,7 @@ def install_server(params):
     if params.install_ruby.upper() == "YES":
         install_ruby(params.owner)
 
-    current_path = os.path.abspath(__file__)
+    current_path = Path(os.path.abspath(__file__))
 
     try:
         package_dir = next(p for p in current_path.parents if p.name == "jump-start-website")
