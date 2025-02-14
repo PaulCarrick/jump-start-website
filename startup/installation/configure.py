@@ -29,6 +29,7 @@ def install_server(params):
         params (SimpleNamespace): The parameters to use to configure the server.
     """
     display_message(0, "Installing Jumpstart Server...")
+    package_dir=None
     owner = params.owner
 
     # Ensure the owner exists
@@ -77,11 +78,14 @@ def install_server(params):
 
     variables = generate_variables(params)
 
-    generate_env(".env", variables)
+    generate_env(params.env_file, variables)
     load_dotenv()
 
     change_ownership_recursive(install_directory, owner, owner)
-    setup_rails(install_directory, params.owner)
+    setup_rails(install_directory,
+                params.owner,
+                f"{install_directory}/startup/debconf/dump.sql",
+                params)
     display_message(0, "Jumpstart Server Installed.")
 
 
@@ -160,6 +164,9 @@ def parse_arguments():
     parser.add_argument("-D", "--domain",
                         help="Specify the domain name.",
                         default=os.getenv("SITE_DOMAIN"))
+    parser.add_argument("-e", "--env-file",
+                        help="Specify the name for the .env file.",
+                        default=".env")
     parser.add_argument("-H", "--db-host",
                         help="Specify the hostname for the database.",
                         default=os.getenv("DB_HOST"))
@@ -168,6 +175,9 @@ def parse_arguments():
                         default=False)
     parser.add_argument("-i", "--installation-dir",
                         help="Specify the installation directory.")
+    parser.add_argument("-j", "--just-generate-env",
+                        action="store_true", help="Only generate .env file.",
+                        default=False)
     parser.add_argument("-m", "--mode", action="store_true",
                         help="Use HTTP for server",
                         default=os.getenv("SERVER_MODE") == "http")
@@ -216,6 +226,9 @@ def parse_arguments():
 def get_parameters(args):
     """
     Get parameters from user input.
+
+    Args:
+        args (Namespace): The parsed arguments.
 
     Returns:
         SimpleNamespace: the parameters from user input.
@@ -363,7 +376,9 @@ def get_parameters(args):
                 "owner_password":    owner_password,
                 "install_directory": install_directory,
                 "install_ruby":      ruby,
-                "install_postgres":  postgres
+                "install_postgres":  postgres,
+                "env_file":          args.env_file,
+                "just_generate_env": args.just_generate_env
         })
     else:
         result.update({
@@ -382,7 +397,9 @@ def get_parameters(args):
                 "owner":             owner,
                 "owner_password":    owner_password,
                 "install_directory": install_directory,
-                "install_server":    False
+                "install_server":    False,
+                "env_file":          args.env_file,
+                "just_generate_env": args.just_generate_env
         })
 
     return SimpleNamespace(**result)
@@ -397,6 +414,13 @@ def main():
     params = get_parameters(args)
 
     display_message(0, "Setting up  Jump Start Server...")
+
+    if params.env_file and params.just_generate_env:
+        variables = generate_variables(params)
+
+        generate_env( params.env_file, variables)
+        display_message(0, "Jump Start Server setup  successfully.")
+        return
 
     if params.install_server:
         install_server(params)

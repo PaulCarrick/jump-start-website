@@ -6,25 +6,41 @@ import re
 import subprocess
 
 from pathlib import Path
-
+from .database import Database
 from .utilities import display_message, run_command, run_long_command, \
     user_home, append_to_file, change_ownership_recursive
 
 
-def setup_rails(rails_dir, username):
+def setup_rails(rails_dir, username,  sql_file=None, configuration=None):
     """
     Setup rails
 
     Args:
-        rails_dir (str): The directory wheere rails is installed.
-        username (str): The user to set up rails for
+        rails_dir (str): The directory where rails is installed.
+        username (str): The username of the rails user.
+        sql_file (str, optional): Seed the database.
+        configuration (SimpleNamespace, optional): configuration to use.
     """
     display_message(0, "Installing bundler...")
     run_command(f"cd {rails_dir} && gem install bundler -v \"~> 2.5\"", True, False, None, username)
     display_message(0, "Bundler installed.")
     display_message(0, "Installing gems...")
-    run_command(f"cd {rails_dir} && bundle install", True, False, None, username)
+    run_long_command(f"cd {rails_dir} && bundle install", True, False, None, username)
     display_message(0, "Bundler installed.")
+
+    if sql_file:
+        display_message(0, f"Seeding the database from {sql_file}...")
+
+        database=Database(configuration.db_database,
+                          configuration.db_username,
+                          configuration.db_password,
+                          configuration.db_host,
+                          configuration.db_port)
+
+        database.process_sql_file(sql_file, True)
+        database.close_database_connection()
+        display_message(0, "Database Seeded.")
+
     display_message(0, "Running database migrations...")
     run_command(f"cd {rails_dir} && exec rails db:migrate", True, False, None, username)
     display_message(0, "Database migrations run.")

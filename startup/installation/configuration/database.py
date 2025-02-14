@@ -131,7 +131,7 @@ class Database:
         except psycopg2.ProgrammingError:
             return None
         except Exception as e:
-            display_message(121, f"Failed to get results: {e}.")
+            display_message(122, f"Failed to get results: {e}.")
 
         if len(results) > 1:
             return results
@@ -167,9 +167,9 @@ class Database:
             if commit:
                 self.db_connection.commit()
         except psycopg2.Error as e:
-            display_message(124, f"Error executing SQL: {e}")
+            display_message(123, f"Error executing SQL: {e}")
         except Exception as e:
-            display_message(125, f"Error: {e}")
+            display_message(124, f"Error: {e}")
 
         return results
 
@@ -197,9 +197,33 @@ class Database:
         return results
 
 
+    def process_sql_file(self, sql_file, verbose=False):
+        """
+        Read and execute an SQL script.
+
+        Args:
+            sql_file (str): Path to the SQL file.
+            verbose (bool): Verbose output.
+        """
+        self.check_database_connection()
+
+        try:
+            with open(sql_file, "r") as file:
+                for line in file:
+                    if not line or line.startswith("--"):
+                        continue
+
+                    if verbose:
+                        display_message(0, line)
+
+                    self.execute_sql_command(line)
+        except Exception as e:
+            display_message(125, f"Can't process SQL file: {sql_file}. Error: {e}.")
+
+
     def process_sql_template(self, sql_file, params, commit=False):
         """
-        Read, format, and execute an SQL script.
+        Read template replacing variables and execute an SQL script.
 
         Args:
             sql_file (str): Path to the SQL file.
