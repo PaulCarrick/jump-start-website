@@ -431,13 +431,6 @@ def main():
     if params.install_server:
         install_server(params)
 
-    if params.owner != getpass.getuser():
-        run_command(
-                f"su {params.owner} -c \"bin/setup_ruby.rb {params.db_host} {params.db_port} {params.db_database} {params.db_username} {params.db_password}\"")
-    else:
-        run_command(
-                f"bin/setup_ruby.rb {params.db_host} {params.db_port} {params.db_database} {params.db_username} {params.db_password}\"")
-
     display_message(0, "Jump Start Server setup  successfully.")
 
 
