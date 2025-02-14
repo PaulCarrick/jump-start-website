@@ -184,7 +184,7 @@ def parse_arguments():
     """
     parser = argparse.ArgumentParser(description="Application configuration and installation script.")
 
-    parser.add_argument("-c", "--generate-certificate",
+    parser.add_argument("-c", "--install-certificate",
                         action="store_true", help="Generate a Let's Encrypt certificate.")
     parser.add_argument("-d", "--db-database",
                         help="Specify the name for the database.",
