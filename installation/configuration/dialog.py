@@ -255,7 +255,7 @@ class Dialog:
             self.values[self.input_field] = value
             self.last_input_position = input_pos
         elif (key in {curses.KEY_BACKSPACE, 127}) and (self.current_field == self.input_field) and (
-                field_type == "input"):  # Backspace handling
+                field_type == "input") and (self.last_input_position > 0):  # Backspace handling
             value = self.values[self.input_field]
             input_pos = self.last_input_position
 

@@ -14,7 +14,6 @@ Description: Error: Invalid input detected. Please check your input and try agai
 Template: jump-start-website/mode
 Type: select
 Choices: http, https
-Default: https
 Description: Choose whether the server runs in SSL mode (https) or clear mode (http).
  HTTPS is strongly recommended unless a frontend proxy (e.g., Nginx) handles SSL.
 
