@@ -188,7 +188,7 @@ def generate_certificate(install_directory, server_domain, owner, direct_install
     run_command("sudo apt install certbot -y")
     subprocess.run(["certbot",
                     "certonly",
-                    "standalone",
+                    "--standalone",
                     "-d",
                     server_domain,
                     "-d",
