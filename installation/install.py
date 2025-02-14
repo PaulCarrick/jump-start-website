@@ -84,7 +84,7 @@ def install_server(params):
     change_ownership_recursive(install_directory, owner, owner)
     setup_rails(install_directory,
                 params.owner,
-                f"{install_directory}/startup/debconf/dump.sql",
+                f"{install_directory}/installation/dump.sql",
                 params)
     display_message(0, "Jumpstart Server Installed.")
 
