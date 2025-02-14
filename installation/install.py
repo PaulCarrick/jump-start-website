@@ -83,7 +83,7 @@ def install_server(params):
 
     if not Database.does_table_exist(params, 'sections'):
         Database.load_sql_file(params,
-                               f"{install_directory}/installation/dump.sql'",
+                               f"{install_directory}/installation/dump.sql",
                                True)
 
     change_ownership_recursive(install_directory, owner, owner)
