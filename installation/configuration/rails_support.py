@@ -11,16 +11,18 @@ from .utilities import display_message, run_command, run_long_command, \
     user_home, append_to_file, change_ownership_recursive
 
 
-def setup_rails(rails_dir, username,  sql_file=None, configuration=None):
+def setup_rails(configuration, sql_file=None):
     """
     Setup rails
 
     Args:
         rails_dir (str): The directory where rails is installed.
-        username (str): The username of the rails user.
+        configuration (SimpleNamespace): configuration to use.
         sql_file (str, optional): Seed the database.
-        configuration (SimpleNamespace, optional): configuration to use.
     """
+    username = configuration.username
+    rails_dir = configuration.install_directory
+
     display_message(0, "Installing bundler...")
     run_command(f"cd {rails_dir} && gem install bundler -v \"~> 2.5\"", True, False, None, username)
     display_message(0, "Bundler installed.")
@@ -43,12 +45,14 @@ def setup_rails(rails_dir, username,  sql_file=None, configuration=None):
         display_message(0, "Database Seeded.")
 
     display_message(0, "Running database migrations...")
-    run_command(f"cd {rails_dir} && exec rails db:migrate", True, False, None, username)
+    run_command(f"cd {rails_dir} && set -a && . {configuration.env_file} && set +a && exec rails db:migrate",
+                True, False, None, username)
     display_message(0, "Database migrations run.")
 
     if os.getenv("RAILS_ENV") == "production":
         display_message(0, "Precompiling assets for production...")
-        run_command(f"cd {rails_dir} && bundle exec rails assets:precompile", True, False, None, username)
+        run_command(f"cd {rails_dir} && bundle exec rails assets:precompile",
+                    True, False, None, username)
         display_message(0, "Assets precompiled.")
 
 

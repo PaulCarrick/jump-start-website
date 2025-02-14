@@ -29,7 +29,7 @@ def install_server(params):
         params (SimpleNamespace): The parameters to use to configure the server.
     """
     display_message(0, "Installing Jumpstart Server...")
-    package_dir=None
+    package_dir = None
     owner = params.owner
 
     # Ensure the owner exists
@@ -82,10 +82,8 @@ def install_server(params):
     load_dotenv()
 
     change_ownership_recursive(install_directory, owner, owner)
-    setup_rails(install_directory,
-                params.owner,
-                f"{install_directory}/installation/dump.sql",
-                params)
+    setup_rails(params,
+                f"{install_directory}/installation/dump.sql")
     display_message(0, "Jumpstart Server Installed.")
 
 
@@ -418,7 +416,7 @@ def main():
     if params.env_file and params.just_generate_env:
         variables = generate_variables(params)
 
-        generate_env( params.env_file, variables)
+        generate_env(params.env_file, variables)
         display_message(0, "Jump Start Server setup  successfully.")
         return
 
