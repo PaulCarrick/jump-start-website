@@ -185,7 +185,7 @@ def generate_certificate(install_directory, server_domain, owner, direct_install
 
     run_command("apt update")
     run_command("sudo apt install certbot -y")
-    run_command(f"certbot certonly --standalone -d {server_domain} -d www. {server_domain}")
+    run_command(f"certbot certonly --standalone -d {server_domain} -d www.{server_domain}")
     os.makedirs(secrets_dir, exist_ok=True)
     shutil.copy(lets_encrypt_cert_file, cert_file)
     shutil.copy(lets_encrypt_key_file, key_file)
