@@ -92,7 +92,7 @@ def install_server(params):
     if params.install_certificate.upper() == "YES":
         generate_certificate(params.install_directory, params.domain, params.owner)
 
-    if params.setup_service.upper() == "YES":
+    if params.install_service.upper() == "YES":
         service_file="/etc/systemd/system/jumpstartserver.service"
         template_file = f"{install_directory}/installation/jumpstartwebsite.service"
 
