@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import sys
 import os
 import shutil
 import re
@@ -32,12 +33,12 @@ def setup_rails(configuration):
     if sql_file:
         display_message(0, f"Seeding the database from {sql_file}...")
 
-        database=Database(configuration.db_database,
-                          configuration.db_username,
-                          configuration.db_password,
-                          configuration.db_host,
-                          configuration.db_port,
-                          True)
+        database = Database(configuration.db_database,
+                            configuration.db_username,
+                            configuration.db_password,
+                            configuration.db_host,
+                            configuration.db_port,
+                            True)
 
         database.process_sql_file(sql_file, True)
         database.close_database_connection()
@@ -67,7 +68,7 @@ def install_ruby(username):
     install_dir = f"{rubies_dir}/ruby-3.2.2"
     path_string = f"PATH={install_dir}/bin:$PATH"
     ruby_path = shutil.which("ruby")
-    ruby_installed =  os.path.isdir(install_dir)
+    ruby_installed = os.path.isdir(install_dir)
 
     if not ruby_installed and ruby_path:
         results = run_command(["ruby", "-v"], True, True)
@@ -94,10 +95,10 @@ def install_ruby(username):
     # Download and install ruby-install
     display_message(0, "Downloading and installing ruby-install...")
     run_command("curl -L https://github.com/postmodern/ruby-install/archive/refs/tags/v0.9.1.tar.gz | tar -xz",
-                True,True)
+                True, True)
 
     cwd = os.getcwd()
-    ruby_install_dir="ruby-install-0.9.1"
+    ruby_install_dir = "ruby-install-0.9.1"
 
     os.chdir(ruby_install_dir)
     run_command("make install", True, True)
@@ -134,7 +135,7 @@ def install_postgres(postgres_password):
     Args:
         postgres_password (str): The password for the postgres user.
     """
-    if os.path.exists( "/etc/postgresql/15"):
+    if os.path.exists("/etc/postgresql/15"):
         display_message(0, ("PostgreSQL is already installed. "
                             "if you want to replace it remove it first."))
 
@@ -170,7 +171,7 @@ def generate_certificate(install_directory, server_domain, owner, direct_install
     if direct_install:
         secrets_dir = install_directory
     else:
-        secrets_dir =  f"{install_directory}/secrets"
+        secrets_dir = f"{install_directory}/secrets"
 
     lets_encrypt_dir = f"/etc/letsencrypt/live/{server_domain}"
     lets_encrypt_cert_file = f"{lets_encrypt_dir}/fullchain.pem"
@@ -185,7 +186,15 @@ def generate_certificate(install_directory, server_domain, owner, direct_install
 
     run_command("apt update")
     run_command("sudo apt install certbot -y")
-    run_command(f"certbot certonly --standalone -d {server_domain} -d www.{server_domain}")
+    subprocess.run(["certbot",
+                    "certonly",
+                    "standalone",
+                    "-d",
+                    server_domain,
+                    "-d",
+                    f"www.{server_domain}"],
+                   check=True,
+                   stdin=sys.stdin)
     os.makedirs(secrets_dir, exist_ok=True)
     shutil.copy(lets_encrypt_cert_file, cert_file)
     shutil.copy(lets_encrypt_key_file, key_file)
