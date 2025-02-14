@@ -11,26 +11,27 @@ from .utilities import display_message, run_command, run_long_command, \
     user_home, append_to_file, change_ownership_recursive
 
 
-def setup_rails(username):
+def setup_rails(rails_dir, username):
     """
     Setup rails
 
     Args:
+        rails_dir (str): The directory wheere rails is installed.
         username (str): The user to set up rails for
     """
     display_message(0, "Installing bundler...")
-    run_command("gem install bundler -v \"~> 2.5\"", True, False, None, username)
+    run_command(f"cd {rails_dir} && gem install bundler -v \"~> 2.5\"", True, False, None, username)
     display_message(0, "Bundler installed.")
     display_message(0, "Installing gems...")
-    run_command("bundle install", True, False, None, username)
+    run_command(f"cd {rails_dir} && bundle install", True, False, None, username)
     display_message(0, "Bundler installed.")
     display_message(0, "Running database migrations...")
-    run_command("exec rails db:migrate", True, False, None, username)
+    run_command(f"cd {rails_dir} && exec rails db:migrate", True, False, None, username)
     display_message(0, "Database migrations run.")
 
     if os.getenv("RAILS_ENV") == "production":
         display_message(0, "Precompiling assets for production...")
-        run_command("bundle exec rails assets:precompile", True, False, None, username)
+        run_command(f"cd {rails_dir} && bundle exec rails assets:precompile", True, False, None, username)
         display_message(0, "Assets precompiled.")
 
 
@@ -66,8 +67,8 @@ def install_ruby(username):
 
     display_message(0, "Installing Ruby 3.2.2...")
     display_message(0, "Getting required packages...")
-    run_command("apt-get update", True, False)
-    run_command("apt-get install -y curl build-essential libssl-dev libreadline-dev zlib1g-dev", True, False)
+    run_command("apt update", True, False)
+    run_command("apt install -y curl build-essential libssl-dev libreadline-dev zlib1g-dev", True, False)
     display_message(0, "Installed required packages.")
 
     # Download and install ruby-install
@@ -113,15 +114,17 @@ def install_postgres(postgres_password):
     Args:
         postgres_password (str): The password for the postgres user.
     """
-    postgres_path = shutil.which("postgres")
-
-    if postgres_path:
-        display_message(0, ("PostgreSQL is already installed."
+    if os.path.exists( "/etc/postgresql/15"):
+        display_message(0, ("PostgreSQL is already installed. "
                             "if you want to replace it remove it first."))
+
+        # Even if they have postgres already installed make sure that have the dev package for the pg gem
+        run_command("apt update", True, False)
+        run_command("apt install -y libpq-dev", True, False)
     else:
         display_message(0, "Installing PostgreSQL...")
-        run_command("apt-get update", True, False)
-        run_long_command("apt install -y postgresql postgresql-contrib", True, False)
+        run_command("apt update", True, False)
+        run_long_command("apt install -y postgresql postgresql-contrib libpq-dev", True, False)
         run_command("systemctl start postgresql", True, False)
         run_command("systemctl enable postgresql", True, False)
         display_message(0, "Installed PostgreSQL.")

@@ -81,7 +81,7 @@ def install_server(params):
     load_dotenv()
 
     change_ownership_recursive(install_directory, owner, owner)
-    setup_rails(params.owner)
+    setup_rails(install_directory, params.owner)
     display_message(0, "Jumpstart Server Installed.")
 
 
