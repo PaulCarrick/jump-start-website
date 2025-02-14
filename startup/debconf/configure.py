@@ -56,11 +56,12 @@ def install_server(params):
     if params.install_ruby.upper() == "YES":
         install_ruby(params.owner)
 
-    package_dir = run_command("dpkg-query -L jump-start-website | grep -E '^/usr/share/' | head -n 1",
-                              capture_output=True)
+    current_path = os.path.abspath(__file__)
 
-    if not package_dir:
-        package_dir = Path.cwd()
+    try:
+        package_dir = next(p for p in current_path.parents if p.name == "jump-start-website")
+    except StopIteration:
+        display_message(21, "Code directory not found")
 
     if not os.path.exists(package_dir):
         display_message(19, "Error: Package directory not found.")
