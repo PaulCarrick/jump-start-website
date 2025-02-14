@@ -16,9 +16,7 @@ def setup_rails(configuration):
     Setup rails
 
     Args:
-        rails_dir (str): The directory where rails is installed.
         configuration (SimpleNamespace): configuration to use.
-        sql_file (str, optional): Seed the database.
     """
     username = configuration.owner
     rails_dir = configuration.install_directory
@@ -154,3 +152,42 @@ def install_postgres(postgres_password):
         run_command(f"echo \"ALTER USER postgres WITH PASSWORD '{postgres_password}';\" | sudo -u postgres psql",
                     True, False)
         display_message(0, "Postgres user set up.")
+
+
+def generate_certificate(install_directory, server_domain, owner, direct_install=False):
+    """
+    Generate and install a Let's Encrypt Certificate.
+
+    Args:
+        install_directory (str): The directory where the server is installed.
+        server_domain (str): The domain the certificate is for.
+        owner (str): The name of the user that owns the certificates.
+        direct_install (bool, optional): Whether the certificate should be installed directly or put in secrets.
+    """
+
+    display_message(0, "Installing Let's Encrypt certificate...")
+
+    if direct_install:
+        secrets_dir = install_directory
+    else:
+        secrets_dir =  f"{install_directory}/secrets"
+
+    lets_encrypt_dir = f"/etc/letsencrypt/live/{server_domain}"
+    lets_encrypt_cert_file = f"{lets_encrypt_dir}/fullchain.pem"
+    lets_encrypt_key_file = f"{lets_encrypt_dir}/privkey.pem"
+    cert_file = f"{secrets_dir}/ssl.crt"
+    key_file = f"{secrets_dir}/ssl.key"
+
+    if os.path.exists(cert_file):
+        display_message(0, ("A certificate is already installed. "
+                            "if you want to replace it remove it first."))
+        return
+
+    run_command("apt update")
+    run_command("sudo apt install certbot -y")
+    run_command(f"certbot certonly --standalone -d {server_domain} -d www. {server_domain}")
+    os.makedirs(secrets_dir, exist_ok=True)
+    shutil.copy(lets_encrypt_cert_file, cert_file)
+    shutil.copy(lets_encrypt_key_file, key_file)
+    change_ownership_recursive(secrets_dir, owner, owner)
+    display_message(0, "Let's Encrypt certificate installed.")

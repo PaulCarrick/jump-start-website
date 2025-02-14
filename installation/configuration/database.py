@@ -341,7 +341,7 @@ class Database:
         Read template replacing variables and execute an SQL script.
 
         Args:
-            sql_file (str): Path to the SQL file.
+            template_file (str): Path to the SQL file.
             parameters (dict | SimpleNamespace): Parameters to format into the SQL script.
             commit (bool): Commit changes after execution.
         """
@@ -362,10 +362,9 @@ class Database:
             db_username (str): Database user
         """
         database = Database()
-        result = database.create_database_unless_exists(db_database, db_username, parameters)
 
+        database.create_database_unless_exists(db_database, db_username, parameters)
         database.close_database_connection()
-        return result
 
 
     @staticmethod

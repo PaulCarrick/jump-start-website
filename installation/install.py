@@ -4,7 +4,6 @@ import argparse
 import os
 import sys
 import validators
-import getpass
 import shutil
 
 from pathlib import Path
@@ -12,10 +11,11 @@ from types import SimpleNamespace
 from dotenv import load_dotenv
 from configuration.debconf import DebConf
 from configuration.database import Database
-from configuration.rails_support import setup_rails, install_ruby, install_postgres
+from configuration.rails_support import setup_rails, install_ruby, install_postgres, \
+    generate_certificate
 from configuration.utilities import display_message, run_command, present, \
     valid_integer, user_exists, directory_exists, valid_boolean_response, \
-    generate_env, create_user, change_ownership_recursive
+    generate_env, create_user, change_ownership_recursive, process_template
 
 
 TEMPLATES = "./configuration/templates"
@@ -88,6 +88,30 @@ def install_server(params):
 
     change_ownership_recursive(install_directory, owner, owner)
     setup_rails(params)
+
+    if params.install_certificate.upper() == "YES":
+        generate_certificate(params.install_directory, params.site_domain, params.owner)
+
+    if params.setup_service.upper() == "YES":
+        service_file="/etc/systemd/system/jumpstartserver.service"
+        template_file = f"{install_directory}/installation/jumpstartwebsite.service"
+
+        display_message(0, "Setting up service...")
+
+        if os.path.exists(service_file):
+            display_message(0, ("Service is already installed. "
+                                "if you want to replace it remove it first."))
+        else:
+            results = process_template(template_file, params)
+
+            try:
+                with open(service_file, "w") as file:
+                    file.write(results)
+            except Exception as e:
+                display_message(21, f"Cannot write service file {service_file}: {e}")
+
+            display_message(0, "Service setup complete.")
+
     display_message(0, "Jumpstart Server Installed.")
 
 
@@ -160,6 +184,8 @@ def parse_arguments():
     """
     parser = argparse.ArgumentParser(description="Application configuration and installation script.")
 
+    parser.add_argument("-c", "--generate-certificate",
+                        action="store_true", help="Generate a Let's Encrypt certificate.")
     parser.add_argument("-d", "--db-database",
                         help="Specify the name for the database.",
                         default=os.getenv("DB_DATABASE"))
@@ -179,6 +205,8 @@ def parse_arguments():
                         default=False)
     parser.add_argument("-i", "--installation-dir",
                         help="Specify the installation directory.")
+    parser.add_argument("-I", "--install-service",
+                        action="store_true", help="Install Service")
     parser.add_argument("-j", "--just-generate-env",
                         action="store_true", help="Only generate .env file.",
                         default=False)
@@ -327,7 +355,7 @@ def get_parameters(args):
     if user_exists(owner):
         home_dir = run_command(f"eval echo ~{owner}", capture_output=True)
         home_dir = home_dir.strip()
-        default_install_dir = f"{home_dir}/rails"
+        default_install_dir = f"{home_dir}/jump-start-website"
         debconf.set_debconf_value("jump-start-website/install-dir", default_install_dir)
 
         install_directory = args.installation_dir or debconf.get_validated_input(
@@ -353,6 +381,16 @@ def get_parameters(args):
                 "ERROR: Invalid choice. Select Yes or No."
         )
 
+        certificate = args.install_certificate or debconf.get_validated_input(
+                "jump-start-website/install-certificate", valid_boolean_response,
+                "ERROR: Invalid choice. Select Yes or No."
+        )
+
+        service = args.install_service or debconf.get_validated_input(
+                "jump-start-website/install-service", valid_boolean_response,
+                "ERROR: Invalid choice. Select Yes or No."
+        )
+
         confirm_install = debconf.get_validated_input(
                 "jump-start-website/confirm-install", valid_boolean_response,
                 "ERROR: You must confirm installation."
@@ -363,27 +401,29 @@ def get_parameters(args):
             sys.exit(0)
 
         result.update({
-                "mode":              mode,
-                "domain":            domain,
-                "hostname":          hostname,
-                "url":               url,
-                "host":              host,
-                "port":              port,
-                "db_host":           db_host,
-                "db_port":           db_port,
-                "db_database":       db_database,
-                "db_username":       db_username,
-                "postgres_password": postgres_password,
-                "db_password":       db_password,
-                "install_server":    True,
-                "owner":             owner,
-                "owner_password":    owner_password,
-                "install_directory": install_directory,
-                "install_ruby":      ruby,
-                "install_postgres":  postgres,
-                "env_file":          args.env_file,
-                "just_generate_env": args.just_generate_env,
-                "dump_file":         args.dump_file
+                "mode":                mode,
+                "domain":              domain,
+                "hostname":            hostname,
+                "url":                 url,
+                "host":                host,
+                "port":                port,
+                "db_host":             db_host,
+                "db_port":             db_port,
+                "db_database":         db_database,
+                "db_username":         db_username,
+                "postgres_password":   postgres_password,
+                "db_password":         db_password,
+                "install_server":      True,
+                "owner":               owner,
+                "owner_password":      owner_password,
+                "install_directory":   install_directory,
+                "install_ruby":        ruby,
+                "install_postgres":    postgres,
+                "install_certificate": certificate,
+                "install_service":     service,
+                "env_file":            args.env_file,
+                "just_generate_env":   args.just_generate_env,
+                "dump_file":           args.dump_file
         })
     else:
         result.update({
