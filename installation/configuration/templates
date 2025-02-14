@@ -56,7 +56,7 @@ Description: Enter the port number for the database.
 
 Template: jump-start-website/db-name
 Type: string
-Default: rails
+Default: jump_start
 Description: Enter the database name for Jump Start Server.
 
 Template: jump-start-website/db-user
@@ -78,6 +78,7 @@ Description: Enter the database password for the postgres user.
 # Install Parameters
 Template: jump-start-website/owner
 Type: string
+Default: jump_start
 Description: Enter the username that the code should run as.
  Rails code should not normally be run as root.
  Please enter the username that should own and run the Rails code.
@@ -113,7 +114,6 @@ Default: Yes
 Description: Should a Let's Encrypt certificate be generated?
  In order to do this you must already have a domain name established (registered and public).
  You must also have your domain DNS pointing to this server. Also port 80 must be accessable.
- If you don't understand this then answer No and ask someone for help.
 
 Template: jump-start-website/install-service
 Type: select

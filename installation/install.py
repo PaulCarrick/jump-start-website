@@ -303,6 +303,9 @@ def get_parameters(args):
             "ERROR: You must enter a server name."
     )
 
+    if mode == "https":
+        debconf.set_debconf_value("jump-start-website/port", "443")
+
     port = int(args.port or debconf.get_validated_input(
             "jump-start-website/port", valid_integer,
             "ERROR: You must enter a valid port number."
