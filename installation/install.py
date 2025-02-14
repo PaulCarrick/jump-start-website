@@ -90,7 +90,7 @@ def install_server(params):
     setup_rails(params)
 
     if params.install_certificate.upper() == "YES":
-        generate_certificate(params.install_directory, params.site_domain, params.owner)
+        generate_certificate(params.install_directory, params.domain, params.owner)
 
     if params.setup_service.upper() == "YES":
         service_file="/etc/systemd/system/jumpstartserver.service"
