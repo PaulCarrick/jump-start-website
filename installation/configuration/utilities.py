@@ -374,12 +374,16 @@ def replace_values_in_file(filename, values):
         with open(filename, "r") as file:
             lines = file.readlines()
 
+        results = []
+
         for line in lines:
             for key, value in iterator:
                 line = line.replace(key, value)
 
+            results.append(line)
+
         with open(filename, "w") as file:
-            for line in lines:
+            for line in results:
                 file.write(line)
     except Exception as e:
         display_message(96, f"Can't process file {filename}. Error: {e}")
