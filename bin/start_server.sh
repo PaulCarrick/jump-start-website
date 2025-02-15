@@ -3,17 +3,19 @@
 # Setup the environment
 
 if [ -z "${SERVER_HOST}" ]; then
-    if [ -f "./.env" ]; then
+    parent_directory="$(cd "$(dirname "$0")" && pwd)/.."
+
+    if [ -f "${parent_directory}/.env" ]; then
       set -a
-        . ./.env
+        . "${parent_directory}/.env"
 
         if [ $? -ne 0 ]; then
-          echo "*** Cannot load environment file ./.env ***"
+          echo "*** Cannot load environment file ${parent_directory}/.env ***" >&2
           exit 2
         fi
       set +a
     else
-      echo "*** Cannot find environment file ./.env ***"
+      echo "*** Cannot find environment file ${parent_directory}/.env ***" >&2
       exit 1
     fi
 fi
@@ -45,7 +47,7 @@ fi
 cd "${RAILS_DIRECTORY}"
 
 if [ $? -ne 0 ]; then
-    echo "Can't change to ${RAILS_DIRECTORY} directory."
+    echo "Can't change to ${RAILS_DIRECTORY} directory." >&2
     exit 3
 fi
 
@@ -56,10 +58,14 @@ if [ "${NOHUP}" == "true" ]; then
   nohup "${RAILS_DIRECTORY}/bin/bundle" exec rails s > log/server.log 2>&1 &
   sleep 3
 else
+  echo "Running... ${RAILS_DIRECTORY}/bin/bundle" exec rails s -b 0.0.0.0 -p ${SERVER_PORT}" >%2
+
   "${RAILS_DIRECTORY}/bin/bundle" exec rails s -b 0.0.0.0 -p "${SERVER_PORT}"
 
   if [ $? -ne 0 ]; then
     echo "Can't run ${RAILS_DIRECTORY}/bin/bundle exec rails s -b 0.0.0.0 -p ${SERVER_PORT}."
-    exit 3
+    exit 4
   fi
 fi
+
+exit 0
