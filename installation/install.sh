@@ -16,9 +16,9 @@ if [ -z "${pip_installed}" ]; then
 fi
 
 pip_list=`pip list`
-validators=`echo ${pip_list} | grep "validators"`
-psychopg=`echo ${pip_list} | grep "psycopg2-binary"`
-dotenv=`echo ${pip_list} | grep "python-dotenv"`
+validators="$(echo ${pip_list} | grep validators)"
+psychopg="$(echo ${pip_list} | grep 'psycopg2\-binary')"
+dotenv="$(echo ${pip_list} | grep 'python\-dotenv')"
 
 if [ -z "${validators}" ]; then
   sudo pip install validators --break-system-packages > /dev/null 2>&1
