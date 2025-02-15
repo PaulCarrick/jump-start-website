@@ -161,6 +161,7 @@ def generate_variables(params):
             "rails_env":                "production",
             "rails_master_key":         "31c4d6937460cb67802017edd2016b94",
             "rails_serve_static_files": "enabled",
+            "rails_directory":          params.install_directory,
             "gem_home":                 f"{params.install_directory}/gems",
             "recaptcha_enabled":        "false",
             "recaptcha_site_key":       "",

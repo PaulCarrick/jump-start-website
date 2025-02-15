@@ -3,9 +3,9 @@ Description=Jump Start Website
 After=network.target
 
 [Service]
-EnvironmentFile={install_directory}/.env
-ExecStart="bin/rails server -b {host} -p {port}"
 WorkingDirectory={install_directory}
+EnvironmentFile={install_directory}/.env
+ExecStart="{install_directory}/bin/start_server.sh"
 User={owner}
 Group={owner}
 Restart=always
