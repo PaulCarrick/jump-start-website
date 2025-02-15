@@ -1,5 +1,8 @@
 #!/bin/sh
 
+USER_HOME=$(eval echo ~)
+export PATH="${USER_HOME}/.rubies/ruby-3.2.2/bin:${PATH}"
+
 # Setup the environment
 if [ -z "${SERVER_HOST}" ]; then
     parent_directory="$(cd "$(dirname "$0")" && pwd)/.."
