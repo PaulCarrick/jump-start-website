@@ -7,7 +7,7 @@ set -e
 sudo apt update
 sudo apt install -y pip
 
-pip_list=`pip List`
+pip_list=`pip list`
 validators=`echo ${pip_list} | grep -q "^validators "`
 psychopg=`echo ${pip_list} | grep -q "^psycopg2-binary "`
 dotenv=`echo ${pip_list} | grep -q "^"^python-dotenv "`
