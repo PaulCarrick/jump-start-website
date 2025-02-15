@@ -113,7 +113,7 @@ class DebConf:
             try:
                 debconf_env = subprocess.check_output(
                         ". /usr/share/debconf/confmodule && env",
-                        timeout=3,
+                        timeout=2,
                         shell=True,
                         text=True,
                         executable="/bin/bash"
