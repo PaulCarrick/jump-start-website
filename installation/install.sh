@@ -15,10 +15,22 @@ if [ -z "${pip_installed}" ]; then
   sudo apt install -y pip
 fi
 
-pip_list=`pip list`
-validators="$(echo ${pip_list} | grep validators)"
-psychopg="$(echo ${pip_list} | grep 'psycopg2\-binary')"
-dotenv="$(echo ${pip_list} | grep 'python\-dotenv')"
+validators=""
+psychopg=""
+dotenv=""
+pip_list=$(pip list)
+
+if [ -n "$(echo ${pip_list} | grep validators)" ]; then
+  validators="Installed"
+fi
+
+if [ -n "$(echo ${pip_list} | grep 'psycopg2\-binary')" ]; then
+  psychopg="Installed"
+fi
+
+if [ -n "$(echo ${pip_list} | grep 'python\-dotenv')" ]; then
+  dotenv="Installed"
+fi
 
 if [ -z "${validators}" ]; then
   sudo pip install validators --break-system-packages > /dev/null 2>&1
