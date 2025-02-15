@@ -21,7 +21,7 @@ class PagesController < ApplicationController
 
       process_video_images
     else
-      redirect_to root_path, turbo: false, alert: "Can't find page for: #{params[:id]}."
+      flash[:alert] = "Can't find page for: #{params[:id]}."
     end
   end
 
