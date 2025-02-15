@@ -7,21 +7,20 @@ set -e
 sudo apt update
 sudo apt install -y pip
 
-if pip list | grep -q "^validators "; then
-  echo "validators package already installed."
-else
+pip_list=`pip List`
+validators=`echo ${pip_list} | grep -q "^validators "`
+psychopg=`echo ${pip_list} | grep -q "^psycopg2-binary "`
+dotenv=`echo ${pip_list} | grep -q "^"^python-dotenv "`
+
+if [ -z "${validators}"]; then
   sudo pip install validators --break-system-packages
 fi
 
-if pip list | grep -q "^psycopg2-binary "; then
-  echo "psycopg2 package already installed."
-else
+if [ -z "${psychopg}"]; then
   sudo pip install psycopg2-binary --break-system-packages
 fi
 
-if pip list | grep -q "^python-dotenv "; then
-  echo "dotenv package already installed."
-else
+if [ -z "${dotenv}"]; then
   sudo pip install python-dotenv --break-system-packages
 fi
 
