@@ -21,7 +21,7 @@ fi
 PROCESS_NAME="puma"
 
 if [ -z "${RAILS_DIRECTORY}" ]; then
-    RAILS_DIRECTORY="."
+    export RAILS_DIRECTORY="$(cd "$(dirname "$0")" && pwd)/.."
 fi
 
 echo "Checking for $PROCESS_NAME process running already..."
