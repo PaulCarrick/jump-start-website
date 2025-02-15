@@ -15,7 +15,7 @@ from .utilities import display_message, run_command, \
     change_ownership_recursive, replace_values_in_file
 
 
-def setup_rails(configuration):
+def setup_rails(configuration, variables):
     """
     Setup rails
 
@@ -35,7 +35,7 @@ def setup_rails(configuration):
                 "https": "http"
         }
 
-        if configuration.rails_env == "production":
+        if variables["rails_env"] == "production":
             configuration_file = f"{rails_dir}/config/environments/production.rb"
         else:
             configuration_file = f"{rails_dir}/config/environments/development.rb"

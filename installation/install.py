@@ -465,15 +465,15 @@ def main():
 
     display_message(0, "Setting up  Jump Start Server...")
 
-    if params.env_file and params.just_generate_env:
-        variables = generate_variables(params)
+    variables = generate_variables(params)
 
+    if params.env_file and params.just_generate_env:
         generate_env(params.env_file, variables)
         display_message(0, "Jump Start Server setup  successfully.")
         return
 
     if params.install_server:
-        install_server(params)
+        install_server(params, variables)
 
     display_message(0, "Jump Start Server setup  successfully.")
 
