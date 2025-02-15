@@ -473,7 +473,7 @@ def main():
         return
 
     if params.install_server:
-        install_server(params, variables)
+        install_server(params)
 
     display_message(0, "Jump Start Server setup  successfully.")
 

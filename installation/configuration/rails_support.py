@@ -15,7 +15,7 @@ from .utilities import display_message, run_command, \
     change_ownership_recursive, replace_values_in_file
 
 
-def setup_rails(configuration, variables):
+def setup_rails(configuration):
     """
     Setup rails
 
@@ -25,21 +25,15 @@ def setup_rails(configuration, variables):
     username = configuration.owner
     rails_dir = configuration.install_directory
     sql_file = configuration.dump_file
+    configuration_file = f"{rails_dir}/config/environments/production.rb"
+    replacements = {
+            "config.assume_ssl = true": "config.assume_ssl = false",
+            "config.force_ssl = true":  "config.force_ssl = false",
+            "https":                    "http"
+    }
 
     if configuration.mode == "http":
         display_message(0, "Setting configuration to use http...")
-
-        replacements = {
-                "config.assume_ssl = true": "config.assume_ssl = false",
-                "config.force_ssl = true":  "config.force_ssl = false",
-                "https": "http"
-        }
-
-        if variables["rails_env"] == "production":
-            configuration_file = f"{rails_dir}/config/environments/production.rb"
-        else:
-            configuration_file = f"{rails_dir}/config/environments/development.rb"
-
         replace_values_in_file(configuration_file, replacements)
         display_message(0, "Configuration set to use http.")
 
