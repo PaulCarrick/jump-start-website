@@ -7,9 +7,12 @@ import re
 import subprocess
 
 from pathlib import Path
+from types import SimpleNamespace
+
 from .database import Database
-from .utilities import display_message, run_command, run_long_command, \
-    user_home, append_to_file, change_ownership_recursive
+from .utilities import display_message, run_command, \
+    run_long_command, user_home, append_to_file, \
+    change_ownership_recursive, replace_values_in_file
 
 
 def setup_rails(configuration):
@@ -22,6 +25,23 @@ def setup_rails(configuration):
     username = configuration.owner
     rails_dir = configuration.install_directory
     sql_file = configuration.dump_file
+
+    if configuration.mode == "http":
+        display_message(0, "Setting configuration to use http...")
+
+        replacements = {
+                "config.assume_ssl = true": "config.assume_ssl = false",
+                "config.force_ssl = true":  "config.force_ssl = false",
+                "https": "http"
+        }
+
+        if configuration.rails_env == "production":
+            configuration_file = f"{rails_dir}/config/environments/production.rb"
+        else:
+            configuration_file = f"{rails_dir}/config/environments/development.rb"
+
+        replace_values_in_file(configuration_file, replacements)
+        display_message(0, "Configuration set to use http.")
 
     display_message(0, "Installing bundler...")
     run_command(f"cd {rails_dir} && gem install bundler -v \"~> 2.5\"", True, False, None, username)

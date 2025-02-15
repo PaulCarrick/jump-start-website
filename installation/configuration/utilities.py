@@ -296,7 +296,7 @@ def process_template(filename, params):
         params (dict | SimpleNamespace): Parameters to format into the template.
 
     Returns:
-        None
+        str: The results of the replacement.
     """
     if isinstance(params, SimpleNamespace):
         params = vars(params)
@@ -350,3 +350,36 @@ def append_to_file(filename, lines):
                 file.write(f"{line}\n")
         else:
             file.write(f"{lines}\n")
+
+
+def replace_values_in_file(filename, values):
+    """
+    Read, and replace values in a file.
+
+    Args:
+        filename (str): Path to the file.
+        values (dict | SimpleNamespace | array of dicts): values to replace in the file.
+
+    Returns:
+        None
+    """
+    try:
+        if isinstance(values, dict):
+            iterator = values.items()
+        elif isinstance(values, SimpleNamespace):
+            iterator = vars(values).items()
+        else:
+            iterator = values
+
+        with open(filename, "r") as file:
+            lines = file.readlines()
+
+        for line in lines:
+            for key, value in iterator:
+                line = line.replace(key, value)
+
+        with open(filename, "w") as file:
+            for line in lines:
+                file.write(line)
+    except Exception as e:
+        display_message(96, f"Can't process file {filename}. Error: {e}")
