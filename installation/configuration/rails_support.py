@@ -37,8 +37,11 @@ def setup_rails(configuration):
         replace_values_in_file(configuration_file, replacements)
         display_message(0, "Configuration set to use http.")
 
+    display_message(0, "Installing nodejs and npm...")
     run_command("apt update", True, False)
-    run_command("apt install -y nodejs npm", True, False)
+    run_long_command("apt install -y nodejs npm", True, False)
+    display_message(0, "nodejs and npm installed.")
+    display_message(0, "Setting configuration to use http...")
     display_message(0, "Installing bundler...")
     run_command(f"cd {rails_dir} && gem install bundler -v \"~> 2.5\"", True, False, None, username)
     display_message(0, "Bundler installed.")
@@ -64,12 +67,10 @@ def setup_rails(configuration):
     run_command(f"cd {rails_dir} && set -a && . {configuration.env_file} && set +a && exec rails db:migrate",
                 True, False, None, username)
     display_message(0, "Database migrations run.")
-
-    if os.getenv("RAILS_ENV") == "production":
-        display_message(0, "Precompiling assets for production...")
-        run_command(f"cd {rails_dir} && bundle exec rails assets:precompile",
-                    True, False, None, username)
-        display_message(0, "Assets precompiled.")
+    display_message(0, "Precompiling assets for production...")
+    run_command(f"cd {rails_dir} && bundle exec rails assets:precompile",
+                True, False, None, username)
+    display_message(0, "Assets precompiled.")
 
 
 def install_ruby(username):
