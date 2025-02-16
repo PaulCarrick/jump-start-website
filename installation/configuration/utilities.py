@@ -6,7 +6,6 @@ import sys
 import os
 import pwd
 import grp
-import re
 import subprocess
 import time
 import threading
@@ -308,17 +307,9 @@ def process_template(filename, params):
 
     try:
         with open(filename, "r") as file:
-            content = file.read()
-
-        # Escape `{` and `}` that are not part of {placeholders}
-        escaped_content = re.sub(r"(?<!{){(?!{)", "{{", content)
-        escaped_content = re.sub(r"(?<!})}(?!})", "}}", escaped_content)
-
-        # Apply replacements
-        results = escaped_content.format(**params)
+            results = file.read().format(**params)  # Format entire script
     except Exception as e:
         display_message(95, f"Can't process template file {filename}. Error: {e}")
-        return None
 
     return results
 
