@@ -288,6 +288,8 @@ def parse_arguments():
     parser.add_argument("-w", "--owner-password",
                         help="Specify the owner password for the installation.",
                         default=os.getenv("USER_PASSWORD"))
+    parser.add_argument("-x", "--install-nginx",
+                        action="store_true", help="Install Nginx")
 
     args = parser.parse_args()
 
