@@ -18,6 +18,7 @@ from configuration.utilities import display_message, run_command, present, \
     valid_integer, user_exists, directory_exists, valid_boolean_response, \
     generate_env, create_user, change_ownership_recursive, process_template
 
+
 TEMPLATES = "./configuration/templates"
 CONFIGURATION_FILE = "/etc/jump-start-website/config.json"
 
@@ -64,6 +65,7 @@ def update_server(params):
         json.dump(vars(params), file, indent=4)
 
     display_message(0, "Jump Start Website Updated.")
+
 
 def install_server(params):
     """
@@ -439,26 +441,26 @@ def get_parameters(args):
                                                                    default_install_dir))
 
     if not args.no_install:
-        params.postgres = debconf.get_validated_input("jump-start-website/install-postgres",
-                                                      valid_boolean_response,
-                                                      "ERROR: Invalid choice. Select Yes or No.",
-                                                      args.install_postgres,
-                                                      getattr(params, "postgres", None))
-        params.ruby = debconf.get_validated_input("jump-start-website/install-ruby",
-                                                  valid_boolean_response,
-                                                  "ERROR: Invalid choice. Select Yes or No.",
-                                                  args.install_ruby,
-                                                  getattr(params, "ruby", None))
-        params.certificate = debconf.get_validated_input("jump-start-website/install-certificate",
-                                                         valid_boolean_response,
-                                                         "ERROR: Invalid choice. Select Yes or No.",
-                                                         args.install_certificate,
-                                                         getattr(params, "certificate", None))
-        params.service = debconf.get_validated_input("jump-start-website/install-service",
-                                                     valid_boolean_response,
-                                                     "ERROR: Invalid choice. Select Yes or No.",
-                                                     args.install_service,
-                                                     getattr(params, "service", None))
+        params.install_postgres = debconf.get_validated_input("jump-start-website/install-postgres",
+                                                              valid_boolean_response,
+                                                              "ERROR: Invalid choice. Select Yes or No.",
+                                                              args.install_postgres,
+                                                              getattr(params, "postgres", None))
+        params.install_ruby = debconf.get_validated_input("jump-start-website/install-ruby",
+                                                          valid_boolean_response,
+                                                          "ERROR: Invalid choice. Select Yes or No.",
+                                                          args.install_ruby,
+                                                          getattr(params, "ruby", None))
+        params.install_certificate = debconf.get_validated_input("jump-start-website/install-certificate",
+                                                                 valid_boolean_response,
+                                                                 "ERROR: Invalid choice. Select Yes or No.",
+                                                                 args.install_certificate,
+                                                                 getattr(params, "certificate", None))
+        params.install_service = debconf.get_validated_input("jump-start-website/install-service",
+                                                             valid_boolean_response,
+                                                             "ERROR: Invalid choice. Select Yes or No.",
+                                                             args.install_service,
+                                                             getattr(params, "service", None))
         params.confirm_install = debconf.get_validated_input("jump-start-website/confirm-install",
                                                              valid_boolean_response,
                                                              "ERROR: You must confirm installation.",
