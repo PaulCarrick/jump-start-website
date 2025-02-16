@@ -339,8 +339,8 @@ def get_parameters(args):
                                                 "ERROR: You must confirm reinstallation.")
 
         if reinstall == "Update":
-            update_server(params)
-            return
+            params.update_server = True
+            return params
 
         if reinstall != "Yes":
             display_message(11, "Installation aborted by user.")
@@ -486,15 +486,14 @@ def main():
 
     display_message(0, "Setting up  Jump Start Website...")
 
-    variables = generate_variables(params)
-
     if params.env_file and params.just_generate_env:
-        generate_env(params.env_file, variables)
-        display_message(0, "Jump Start Website setup  successfully.")
-        return
+        variables = generate_variables(params)
 
-    if params.install_server:
+        generate_env(params.env_file, variables)
+    elif params.install_server:
         install_server(params)
+    elif params.update_server:
+        update_server(params)
 
     display_message(0, "Jump Start Website setup  successfully.")
 
