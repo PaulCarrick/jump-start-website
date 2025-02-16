@@ -68,7 +68,7 @@ def setup_rails(configuration):
                 True, False, None, username)
     display_message(0, "Database migrations run.")
     display_message(0, "Precompiling assets for production...")
-    run_command(f"cd {rails_dir} && bundle exec rails assets:precompile",
+    run_command(f"cd {rails_dir} && set -a && . ./.env && set +a && bundle exec rails assets:precompile",
                 True, False, None, username)
     display_message(0, "Assets precompiled.")
 
