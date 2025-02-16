@@ -237,7 +237,7 @@ class DebConf:
             return value
 
         if default:
-            debconf.set_debconf_value(key, default)
+            self.set_debconf_value(key, default)
 
         while True:
             value = self.__get_debconf_value(key)
