@@ -378,8 +378,10 @@ def get_parameters(args):
     params.port = int(debconf.get_validated_input("jump-start-website/port",
                                                   valid_integer,
                                                   "ERROR: You must enter a valid port number.",
-                                                  args.port,
-                                                  getattr(params, "port", 443 if params.mode == "https" else None)))
+                                                  str(args.port),
+                                                  str(getattr(params,
+                                                              "port",
+                                                              "443" if params.mode == "https" else None))))
 
     # Get database details
     params.db_host = debconf.get_validated_input("jump-start-website/db-host",
@@ -390,8 +392,8 @@ def get_parameters(args):
     params.db_port = int(debconf.get_validated_input("jump-start-website/db-port",
                                                      valid_integer,
                                                      "ERROR: You must enter a database port.",
-                                                     args.db_port,
-                                                     getattr(params, "db_port", None)))
+                                                     str(args.db_port),
+                                                     str(getattr(params, "db_port", None))))
     params.db_database = debconf.get_validated_input("jump-start-website/db-name",
                                                      present,
                                                      "ERROR: You must enter a database name.",
