@@ -22,6 +22,10 @@ class Dialog:
 
     @staticmethod
     def select(description, values, default=None):
+        if default and default in values:
+            values.remove(default)
+            values.insert(0, default)
+
         dialog = Dialog(description, values, default)
         result = Dialog._process_select(dialog)
 

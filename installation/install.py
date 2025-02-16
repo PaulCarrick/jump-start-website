@@ -376,9 +376,9 @@ def get_parameters(args):
                                               args.host,
                                               getattr(params, "host", None))
     if params.port:
-        default_port = params.port
+        default_port = str(params.port)
     else:
-        default_port = 443 if params.mode == "https" else None
+        default_port = 443 if params.mode == "https" else "3000"
 
     params.port = int(debconf.get_validated_input("jump-start-website/port",
                                                   valid_integer,
@@ -394,9 +394,9 @@ def get_parameters(args):
                                                  getattr(params, "db_host", None))
 
     if params.db_port:
-        default_port = params.db_port
+        default_port = str(params.db_port)
     else:
-        default_port = None
+        default_port = "5432"
 
     params.db_port = int(debconf.get_validated_input("jump-start-website/db-port",
                                                      valid_integer,
