@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import json
 import os
 import sys
 import validators
@@ -17,9 +18,52 @@ from configuration.utilities import display_message, run_command, present, \
     valid_integer, user_exists, directory_exists, valid_boolean_response, \
     generate_env, create_user, change_ownership_recursive, process_template
 
-
 TEMPLATES = "./configuration/templates"
+CONFIGURATION_FILE = "/etc/jump-start-website/config.json"
 
+
+def update_server(params):
+    """
+    Update the server code but don't reinstall it.
+
+    Args:
+        params (SimpleNamespace): The previous parameters for the server.
+    """
+    display_message(0, "Updating Jump Start Website...")
+    package_dir = None
+    install_directory = params.install_directory
+    install_path = Path(install_directory)
+
+    # Ensure the installation directory exists
+    if not os.path.exists(install_directory):
+        display_message(19, "Installation directory does not exist!")
+
+    current_path = Path(os.path.abspath(__file__))
+
+    try:
+        package_dir = next(p for p in current_path.parents if p.name == "jump-start-website")
+    except StopIteration:
+        display_message(21, "Code directory not found")
+
+    if not os.path.exists(package_dir):
+        display_message(19, "Error: Package directory not found.")
+
+    package_path = Path(package_dir)
+
+    if package_path.resolve() == install_path.resolve():
+        display_message(20, "You cannot install into the package directory.")
+
+    # Copy files to install directory
+    shutil.copytree(package_dir, install_directory, dirs_exist_ok=True)
+    os.chdir(install_directory)
+    change_ownership_recursive(install_directory, params.owner, params.owner)
+    setup_rails(params)
+    os.makedirs("/etc/jump-start-website", exist_ok=True)
+
+    with open(CONFIGURATION_FILE, "w") as file:
+        json.dump(vars(params), file, indent=4)
+
+    display_message(0, "Jump Start Website Updated.")
 
 def install_server(params):
     """
@@ -28,7 +72,7 @@ def install_server(params):
     Args:
         params (SimpleNamespace): The parameters to use to configure the server.
     """
-    display_message(0, "Installing Jumpstart Server...")
+    display_message(0, "Installing Jump Start Website...")
     package_dir = None
     owner = params.owner
 
@@ -93,7 +137,7 @@ def install_server(params):
         generate_certificate(params.install_directory, params.domain, params.owner)
 
     if params.install_service.upper() == "YES":
-        service_file="/etc/systemd/system/jumpstartwebsite.service"
+        service_file = "/etc/systemd/system/jumpstartwebsite.service"
         template_file = f"{install_directory}/installation/jumpstartwebsite.service"
 
         display_message(0, "Setting up service...")
@@ -112,7 +156,12 @@ def install_server(params):
 
             display_message(0, "Service setup complete.")
 
-    display_message(0, "Jumpstart Server Installed.")
+    os.makedirs("/etc/jump-start-website", exist_ok=True)
+
+    with open(CONFIGURATION_FILE, "w") as file:
+        json.dump(vars(params), file, indent=4)
+
+    display_message(0, "Jump Start Website Installed.")
 
 
 def setup_database(params):
@@ -253,6 +302,9 @@ def parse_arguments():
 
     args = parser.parse_args()
 
+    if args.mode:
+        args.mode = "http"
+
     return args
 
 
@@ -266,193 +318,154 @@ def get_parameters(args):
     Returns:
         SimpleNamespace: the parameters from user input.
     """
-    result = {}
+    params = SimpleNamespace()
 
     # Initialize Debconf environment
     debconf = DebConf(TEMPLATES)
 
     debconf.initialize_debconf_environment()
 
+    if os.path.exists(CONFIGURATION_FILE):
+        with open(CONFIGURATION_FILE, "r") as file:
+            params = json.load(file, object_hook=lambda d: SimpleNamespace(**d))
+
+        reinstall = debconf.get_validated_input("jump-start-website/reinstall",
+                                                valid_boolean_response,
+                                                "ERROR: You must confirm reinstallation.")
+
+        if reinstall == "Update":
+            update_server(params)
+            return
+
+        if reinstall != "Yes":
+            display_message(11, "Installation aborted by user.")
+            sys.exit(0)
+
     # Display the introduction
     debconf.show_debconf_message("jump-start-website/introduction", "")
 
     # Get server parameters
-    mode = "http" if args.mode else debconf.get_validated_input("jump-start-website/mode",
-                                                                present,
-                                                                "ERROR: You must enter a valid mode (http or https)."
-                                                                )
-
-    domain = args.domain or debconf.get_validated_input(
-            "jump-start-website/domain", validators.domain,
-            "ERROR: You must enter a domain name."
-    )
-
-    debconf.set_debconf_value("jump-start-website/hostname", domain)
-    hostname = args.hostname or debconf.get_validated_input(
-            "jump-start-website/hostname", validators.hostname,
-            "ERROR: You must enter a server name."
-    )
-
-    debconf.set_debconf_value("jump-start-website/url", f"{mode}://{hostname}")
-    url = args.url or debconf.get_validated_input(
-            "jump-start-website/url", validators.url,
-            "ERROR: You must enter a valid URL."
-    )
-
-    host = args.host or debconf.get_validated_input(
-            "jump-start-website/host", validators.hostname,
-            "ERROR: You must enter a server name."
-    )
-
-    if mode == "https":
-        debconf.set_debconf_value("jump-start-website/port", "443")
-
-    port = int(args.port or debconf.get_validated_input(
-            "jump-start-website/port", valid_integer,
-            "ERROR: You must enter a valid port number."
-    ))
+    params.mode = debconf.get_validated_input("jump-start-website/mode",
+                                              lambda mode: mode in {"http", "https"},
+                                              "ERROR: You must enter a valid mode (http or https).",
+                                              args.mode,
+                                              getattr(params, "mode", None))
+    params.domain = debconf.get_validated_input("jump-start-website/domain",
+                                                validators.domain,
+                                                "ERROR: You must enter a domain name.",
+                                                args.domain,
+                                                getattr(params, "domain", None))
+    params.hostname = debconf.get_validated_input("jump-start-website/hostname",
+                                                  validators.hostname,
+                                                  "ERROR: You must enter a server name.",
+                                                  args.hostname,
+                                                  getattr(params, "hostname", params.domain))
+    params.url = debconf.get_validated_input("jump-start-website/url",
+                                             validators.url,
+                                             "ERROR: You must enter a valid URL.",
+                                             args.url,
+                                             getattr(params, "url", f"{params.mode}://{params.hostname}"))
+    params.host = debconf.get_validated_input("jump-start-website/host",
+                                              validators.hostname,
+                                              "ERROR: You must enter a server name.",
+                                              args.host,
+                                              getattr(params, "host", None))
+    params.port = int(debconf.get_validated_input("jump-start-website/port",
+                                                  valid_integer,
+                                                  "ERROR: You must enter a valid port number.",
+                                                  args.port,
+                                                  getattr(params, "port", 443 if params.mode == "https" else None)))
 
     # Get database details
-    db_host = args.db_host or debconf.get_validated_input(
-            "jump-start-website/db-host", validators.hostname,
-            "ERROR: You must enter a database host."
-    )
-
-    db_port = int(args.db_port or debconf.get_validated_input(
-            "jump-start-website/db-port", valid_integer,
-            "ERROR: You must enter a database port."
-    ))
-
-    db_database = args.db_database or debconf.get_validated_input(
-            "jump-start-website/db-name", present,
-            "ERROR: You must enter a database name."
-    )
-
-    db_username = args.db_username or debconf.get_validated_input(
-            "jump-start-website/db-user", present,
-            "ERROR: You must enter a database user."
-    )
-
-    db_password = args.db_password or debconf.get_validated_input(
-            "jump-start-website/db-password", present,
-            "ERROR: You must enter a database password."
-    )
-
-    debconf.set_debconf_value("jump-start-website/postgres-password", db_password)
-
-    postgres_password = args.postgres_password or debconf.get_validated_input(
-            "jump-start-website/postgres-password", present,
-            "ERROR: You must enter a postgres user password."
-    )
+    params.db_host = debconf.get_validated_input("jump-start-website/db-host",
+                                                 validators.hostname,
+                                                 "ERROR: You must enter a database host.",
+                                                 args.db_host,
+                                                 getattr(params, "db_host", None))
+    params.db_port = int(debconf.get_validated_input("jump-start-website/db-port",
+                                                     valid_integer,
+                                                     "ERROR: You must enter a database port.",
+                                                     args.db_port,
+                                                     getattr(params, "db_port", None)))
+    params.db_database = debconf.get_validated_input("jump-start-website/db-name",
+                                                     present,
+                                                     "ERROR: You must enter a database name.",
+                                                     args.db_database,
+                                                     getattr(params, "db_database", None))
+    params.db_username = debconf.get_validated_input("jump-start-website/db-user",
+                                                     present,
+                                                     "ERROR: You must enter a database user.",
+                                                     args.db_username,
+                                                     getattr(params, "db_username", None))
+    params.db_password = debconf.get_validated_input("jump-start-website/db-password",
+                                                     present,
+                                                     "ERROR: You must enter a database password.",
+                                                     args.db_password,
+                                                     getattr(params, "db_password", None))
+    params.postgres_password = debconf.get_validated_input("jump-start-website/postgres-password",
+                                                           present,
+                                                           "ERROR: You must enter a postgres user password.",
+                                                           args.db_password,
+                                                           getattr(params, "db_password", params.db_password))
 
     # Installation information
-    owner = args.owner or debconf.get_validated_input(
-            "jump-start-website/owner", present,
-            "ERROR: You must enter a valid owner."
-    )
+    params.owner = debconf.get_validated_input("jump-start-website/owner",
+                                               present,
+                                               "ERROR: You must enter a valid owner.",
+                                               args.owner,
+                                               getattr(params, "owner", None))
+    params.owner_password = debconf.get_validated_input("jump-start-website/owner-password",
+                                                        present,
+                                                        "ERROR: You must enter a valid owner password.",
+                                                        args.owner_password,
+                                                        getattr(params, "owner_password", None))
 
-    owner_password = args.owner_password or debconf.get_validated_input(
-            "jump-start-website/owner-password", present,
-            "ERROR: You must enter a valid owner password."
-    )
-
-    if user_exists(owner):
-        home_dir = run_command(f"eval echo ~{owner}", capture_output=True)
+    if user_exists(params.owner):
+        home_dir = run_command(f"eval echo ~{params.owner}", capture_output=True)
         home_dir = home_dir.strip()
         default_install_dir = f"{home_dir}/jump-start-website"
-        debconf.set_debconf_value("jump-start-website/install-dir", default_install_dir)
-
-        install_directory = args.installation_dir or debconf.get_validated_input(
-                "jump-start-website/install-dir", directory_exists,
-                "ERROR: You must enter a valid install directory."
-        )
     else:
-        debconf.set_debconf_value("jump-start-website/install-dir", f"/home/{owner}/rails")
+        default_install_dir = f"/home/{params.owner}/rails"
 
-        install_directory = args.installation_dir or debconf.get_validated_input(
-                "jump-start-website/install-dir", present,
-                "ERROR: You must enter a valid install directory."
-        )
+    params.install_directory = debconf.get_validated_input("jump-start-website/install-dir",
+                                                           directory_exists,
+                                                           "ERROR: You must enter a valid install directory.",
+                                                           args.installation_dir,
+                                                           getattr(params,
+                                                                   "install_directory",
+                                                                   default_install_dir))
 
     if not args.no_install:
-        postgres = args.install_postgres or debconf.get_validated_input(
-                "jump-start-website/install-postgres", valid_boolean_response,
-                "ERROR: Invalid choice. Select Yes or No."
-        )
+        params.postgres = debconf.get_validated_input("jump-start-website/install-postgres",
+                                                      valid_boolean_response,
+                                                      "ERROR: Invalid choice. Select Yes or No.",
+                                                      args.install_postgres,
+                                                      getattr(params, "postgres", None))
+        params.ruby = debconf.get_validated_input("jump-start-website/install-ruby",
+                                                  valid_boolean_response,
+                                                  "ERROR: Invalid choice. Select Yes or No.",
+                                                  args.install_ruby,
+                                                  getattr(params, "ruby", None))
+        params.certificate = debconf.get_validated_input("jump-start-website/install-certificate",
+                                                         valid_boolean_response,
+                                                         "ERROR: Invalid choice. Select Yes or No.",
+                                                         args.install_certificate,
+                                                         getattr(params, "certificate", None))
+        params.service = debconf.get_validated_input("jump-start-website/install-service",
+                                                     valid_boolean_response,
+                                                     "ERROR: Invalid choice. Select Yes or No.",
+                                                     args.install_service,
+                                                     getattr(params, "service", None))
+        params.confirm_install = debconf.get_validated_input("jump-start-website/confirm-install",
+                                                             valid_boolean_response,
+                                                             "ERROR: You must confirm installation.",
+                                                             getattr(params, "confirm_install", None))
 
-        ruby = args.install_ruby or debconf.get_validated_input(
-                "jump-start-website/install-ruby", valid_boolean_response,
-                "ERROR: Invalid choice. Select Yes or No."
-        )
-
-        certificate = args.install_certificate or debconf.get_validated_input(
-                "jump-start-website/install-certificate", valid_boolean_response,
-                "ERROR: Invalid choice. Select Yes or No."
-        )
-
-        service = args.install_service or debconf.get_validated_input(
-                "jump-start-website/install-service", valid_boolean_response,
-                "ERROR: Invalid choice. Select Yes or No."
-        )
-
-        confirm_install = debconf.get_validated_input(
-                "jump-start-website/confirm-install", valid_boolean_response,
-                "ERROR: You must confirm installation."
-        )
-
-        if confirm_install != "Yes":
+        if params.confirm_install != "Yes":
             display_message(11, "Installation aborted by user.")
             sys.exit(0)
 
-        result.update({
-                "mode":                mode,
-                "domain":              domain,
-                "hostname":            hostname,
-                "url":                 url,
-                "host":                host,
-                "port":                port,
-                "db_host":             db_host,
-                "db_port":             db_port,
-                "db_database":         db_database,
-                "db_username":         db_username,
-                "postgres_password":   postgres_password,
-                "db_password":         db_password,
-                "install_server":      True,
-                "owner":               owner,
-                "owner_password":      owner_password,
-                "install_directory":   install_directory,
-                "install_ruby":        ruby,
-                "install_postgres":    postgres,
-                "install_certificate": certificate,
-                "install_service":     service,
-                "env_file":            args.env_file,
-                "just_generate_env":   args.just_generate_env,
-                "dump_file":           args.dump_file
-        })
-    else:
-        result.update({
-                "mode":              mode,
-                "domain":            domain,
-                "hostname":          hostname,
-                "url":               url,
-                "host":              host,
-                "port":              port,
-                "db_host":           db_host,
-                "db_port":           db_port,
-                "db_database":       db_database,
-                "db_username":       db_username,
-                "postgres_password": postgres_password,
-                "db_password":       db_password,
-                "owner":             owner,
-                "owner_password":    owner_password,
-                "install_directory": install_directory,
-                "install_server":    False,
-                "env_file":          args.env_file,
-                "just_generate_env": args.just_generate_env,
-                "dump_file":         args.dump_file
-        })
-
-    return SimpleNamespace(**result)
+    return params
 
 
 def get_setup_directory():
@@ -463,19 +476,19 @@ def main():
     args = parse_arguments()
     params = get_parameters(args)
 
-    display_message(0, "Setting up  Jump Start Server...")
+    display_message(0, "Setting up  Jump Start Website...")
 
     variables = generate_variables(params)
 
     if params.env_file and params.just_generate_env:
         generate_env(params.env_file, variables)
-        display_message(0, "Jump Start Server setup  successfully.")
+        display_message(0, "Jump Start Website setup  successfully.")
         return
 
     if params.install_server:
         install_server(params)
 
-    display_message(0, "Jump Start Server setup  successfully.")
+    display_message(0, "Jump Start Website setup  successfully.")
 
 
 if __name__ == "__main__":

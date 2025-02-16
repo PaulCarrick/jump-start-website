@@ -218,10 +218,27 @@ class DebConf:
         self.template_filename = template_filename
 
 
-    def get_validated_input(self, key, validation_func=None, error_message="Invalid input"):
+    def get_validated_input(self, key, validation_func=None,
+                            error_message="Invalid input", value=None, default=None):
         """
         Retrieve a valid input from debconf, validating it if needed.
+
+        Args:
+            key (str): The name of the template.
+            validation_func (function, optional): A function the validates the input.
+            error_message (str, optional): The error message to display if invalid.
+            value (str, optional): The value to return, if this exissts. It will be returned without input
+            default (str).THe default value for the input.
+
+        Returns:
+            str: The input
         """
+        if value:
+            return value
+
+        if default:
+            debconf.set_debconf_value(key, default)
+
         while True:
             value = self.__get_debconf_value(key)
 
