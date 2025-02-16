@@ -376,7 +376,7 @@ def get_parameters(args):
                                               args.host,
                                               getattr(params, "host", None))
 
-    if params.port:
+    if getattr(params, "port"):
         default_port = str(params.port)
     elif args.port:
         default_port = str(args.port)
@@ -396,7 +396,7 @@ def get_parameters(args):
                                                  args.db_host,
                                                  getattr(params, "db_host", None))
 
-    if params.db_port:
+    if getattr(params, "db_port"):
         default_port = str(params.db_port)
     elif args.db_port:
         default_port = str(args.db_port)
