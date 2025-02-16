@@ -151,8 +151,8 @@ def install_server(params):
         json.dump(vars(params), file, indent=4)
 
     if params.install_service.upper() == "YES":
-        run_command("systemctl start jump-start-server.service", True, False)
-        run_command("systemctl enable jump-start-server.service", True, False)
+        run_command("systemctl start jump-start-website.service", True, False)
+        run_command("systemctl enable jump-start-website.service", True, False)
 
     display_message(0, "Jump Start Website Installed.")
 
