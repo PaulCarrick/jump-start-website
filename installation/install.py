@@ -335,7 +335,7 @@ def get_parameters(args):
             params = json.load(file, object_hook=lambda d: SimpleNamespace(**d))
 
         reinstall = debconf.get_validated_input("jump-start-website/reinstall",
-                                                valid_boolean_response,
+                                                lambda mode: mode in {"Yes", "No", "Quit", "Update"},
                                                 "ERROR: You must confirm reinstallation.")
 
         if reinstall == "Update":
