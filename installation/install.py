@@ -128,6 +128,7 @@ def install_server(params):
     load_dotenv()
 
     if not Database.is_table_populated(params, 'sections'):
+        Database.empty_database(params, params.db_database)
         Database.load_sql_file(params,
                                f"{install_directory}/installation/dump.sql",
                                True)

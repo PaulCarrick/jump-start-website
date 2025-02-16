@@ -393,12 +393,13 @@ class Database:
         Check to see if a table has any rows in it.
 
         Args:
+            parameters (SimpleNamespace): Parameters to use to log in to the database.
             table_name (str): Name of the table to check.
+            schema (str, optional): The schema of the table.
 
         Returns:
             bool: True if the table exists and has any rows in it.
         """
-
         database = Database()
         result = database.table_exists(table_name, schema, parameters)
 
@@ -407,9 +408,49 @@ class Database:
                 database.db_cursor.execute(f"SELECT EXISTS(SELECT 1 FROM {table_name})")
 
                 result = database.db_cursor.fetchone()[0]
-            except psycopg2.Error as e:
+            except psycopg2.Error:
                 result = False
 
         database.close_database_connection()
 
         return result
+
+
+    @staticmethod
+    def empty_database(parameters, database):
+        """
+        Delete all tables in a database.
+
+        Args:
+            parameters (SimpleNamespace): Parameters to use to log in to the database.
+            database (str): Name of the database to empty.
+
+        Returns:
+           None
+        """
+        display_message(0, f"Emptying {database}...")
+
+        try:
+            temp_connection = psycopg2.connect(dbname=parameters.db_database,
+                                               user=parameters.db_username,
+                                               password=parameters.db_password,
+                                               host=parameters.db_host,
+                                               port=parameters.db_port)
+            temp_connection.autocommit = True
+            temp_cursor = temp_connection.cursor()
+
+            temp_cursor.execute("SELECT tablename FROM pg_tables WHERE schemaname = 'public'")
+
+            tables = temp_cursor.fetchall()
+
+            # Truncate all tables
+            for table in tables:
+                table_name = table[0]
+
+                display_message(0, "Deleting {table_name}...")
+                temp_cursor.execute(f"DROP TABLE IF EXISTS {table_name} CASCADE")
+                display_message(0, "Deleted {table_name}.")
+        except Exception as e:
+            display_message(128, f"Error emptying {database}: {e}")
+
+        display_message(0, f"{database} emptied successfully.")
