@@ -319,8 +319,8 @@ def get_parameters(args):
         SimpleNamespace: the parameters from user input.
     """
     params = SimpleNamespace()
-    params.env_file = args.env_file,
-    params.just_generate_env = args.just_generate_env,
+    params.env_file = args.env_file
+    params.just_generate_env = args.just_generate_env
     params.dump_file = args.dump_file
 
     # Initialize Debconf environment
