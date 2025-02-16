@@ -132,8 +132,8 @@ class Dialog:
         self.color_normal_button = curses.color_pair(3)
         self.color_highlighted_button = curses.color_pair(4)
         self.term_height, self.term_width = stdscr.getmaxyx()
-        self.height = min(10, self.term_height - 2)
-        self.width = min(50, self.term_width - 2)
+        self.height = min(15, self.term_height - 2)
+        self.width = min(70, self.term_width - 2)
         self.start_y = max((self.term_height // 2) - (self.height // 2), 0)
         self.start_x = max((self.term_width // 2) - (self.width // 2), 0)  # ✅ Fixed Incorrect Calculation
         self.win = curses.newwin(self.height, self.width, self.start_y, self.start_x)
