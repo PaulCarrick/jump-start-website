@@ -127,7 +127,7 @@ def install_server(params):
     generate_env(params.env_file, variables)
     load_dotenv()
 
-    if not Database.does_table_exist(params, 'sections'):
+    if not Database.is_table_populated(params, 'sections'):
         Database.load_sql_file(params,
                                f"{install_directory}/installation/dump.sql",
                                True)
@@ -451,7 +451,7 @@ def get_parameters(args):
         default_install_dir = f"/home/{params.owner}/rails"
 
     params.install_directory = debconf.get_validated_input("jump-start-website/install-dir",
-                                                           lambda dir: directory_exists(dir, level),
+                                                           lambda directory: directory_exists(directory, level),
                                                            "ERROR: You must enter a valid install directory.",
                                                            args.installation_dir,
                                                            getattr(params,

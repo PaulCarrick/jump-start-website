@@ -234,13 +234,15 @@ class Database:
                         if verbose:
                             display_message(0, f"Executing SQL: {buffer.strip()}")
 
-                        self.execute_sql_command(buffer.strip(), False, True)  # Execute full SQL command
+                        self.execute_sql_command(buffer.strip(), True, True)  # Execute full SQL command
                         buffer = ""  # Reset buffer for next query
 
             if buffer.strip():  # Catch any remaining statements that didn't end with ";"
                 display_message(125, "Warning: Incomplete SQL command found.")
         except Exception as e:
             display_message(126, f"Can't process SQL file: {sql_file}. Error: {e}.")
+
+        self.db_connection.commit()
 
 
     def process_sql_template(self, sql_file, parameters, commit=False):
@@ -382,4 +384,32 @@ class Database:
         result = database.table_exists(table_name, schema, parameters)
 
         database.close_database_connection()
+        return result
+
+
+    @staticmethod
+    def is_table_populated(parameters, table_name, schema="public"):
+        """
+        Check to see if a table has any rows in it.
+
+        Args:
+            table_name (str): Name of the table to check.
+
+        Returns:
+            bool: True if the table exists and has any rows in it.
+        """
+
+        database = Database()
+        result = database.table_exists(table_name, schema, parameters)
+
+        if result: # Table exists now let's check if it has any rows
+            try:
+                database.db_cursor.execute(f"SELECT EXISTS(SELECT 1 FROM {table_name})")
+
+                result = database.db_cursor.fetchone()[0]
+            except psycopg2.Error as e:
+                result = False
+
+        database.close_database_connection()
+
         return result
