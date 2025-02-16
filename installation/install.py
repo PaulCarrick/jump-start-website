@@ -375,11 +375,16 @@ def get_parameters(args):
                                               "ERROR: You must enter a server name.",
                                               args.host,
                                               getattr(params, "host", None))
+    if params.port:
+        default_port = params.port
+    else:
+        default_port = 443 if params.mode == "https" else None
+
     params.port = int(debconf.get_validated_input("jump-start-website/port",
                                                   valid_integer,
                                                   "ERROR: You must enter a valid port number.",
                                                   args.port,
-                                                  str(getattr(params, "port", "443" if params.mode == "https" else None))))
+                                                  default_port))
 
     # Get database details
     params.db_host = debconf.get_validated_input("jump-start-website/db-host",
@@ -387,11 +392,17 @@ def get_parameters(args):
                                                  "ERROR: You must enter a database host.",
                                                  args.db_host,
                                                  getattr(params, "db_host", None))
+
+    if params.db_port:
+        default_port = params.db_port
+    else:
+        default_port = None
+
     params.db_port = int(debconf.get_validated_input("jump-start-website/db-port",
                                                      valid_integer,
                                                      "ERROR: You must enter a database port.",
                                                      str(args.db_port),
-                                                     str(getattr(params, "db_port", None))))
+                                                     default_port))
     params.db_database = debconf.get_validated_input("jump-start-website/db-name",
                                                      present,
                                                      "ERROR: You must enter a database name.",
