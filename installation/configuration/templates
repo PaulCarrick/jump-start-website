@@ -15,7 +15,7 @@ Template: jump-start-website/reinstall
 Type: select
 Choices: Yes, No, Quit, Update
 Default: Yes
-Description: It appears that Jump Start Website is already insttaled do you want to reinstall it?
+Description: It appears that Jump Start Website is already installed do you want to reinstall it?
  Update will only copy the server files with no configuration changes.
 
 # Server Parameters
@@ -122,6 +122,12 @@ Default: Yes
 Description: Should a Let's Encrypt certificate be generated?
  In order to do this you must already have a domain name established (registered and public).
  You must also have your domain DNS pointing to this server. Also port 80 must be accessable.
+
+Template: jump-start-website/install-nginx
+Type: select
+Choices: Yes, No, Quit
+Default: Yes
+Description: Should Nginx be installed?
 
 Template: jump-start-website/install-service
 Type: select

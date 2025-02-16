@@ -12,7 +12,8 @@ from types import SimpleNamespace
 from .database import Database
 from .utilities import display_message, run_command, \
     run_long_command, user_home, append_to_file, \
-    change_ownership_recursive, replace_values_in_file
+    change_ownership_recursive, replace_values_in_file, \
+    process_template
 
 
 def setup_rails(configuration):
@@ -173,6 +174,47 @@ def install_postgres(postgres_password):
         display_message(0, "Postgres user set up.")
 
 
+def install_nginx(params):
+    """
+    Install Nginx.
+
+    Args:
+        params (SimpleNamespace): THe parameters for the installation.
+    """
+    nginx_config_dir="/etc/nginx"
+    sites_available=f"{nginx_config_dir}/sites-available"
+    sites_enabled=f"{nginx_config_dir}/sites-enabled"
+    nginx_available_file = f"{sites_available}/jump-start-website"
+    nginx_enabled_file = f"{sites_enabled}/jump-start-website"
+    nginx_default_file = f"{sites_enabled}/default"
+    template_file = f"{params.install_directory}/installation/nginx.conf"
+
+    if os.path.exists(nginx_enabled_file):
+        display_message(0, ("Nginx is already installed. "
+                            "if you want to replace it remove it first."))
+    else:
+        display_message(0, "Installing Nginx...")
+        run_command("apt update", True, False)
+        run_long_command("apt install -y nginx", True, False)
+
+        results = process_template(template_file, params)
+
+        try:
+            with open(nginx_available_file, "w") as file:
+                file.write(results)
+        except Exception as e:
+            display_message(219, f"Cannot write nginx file {nginx_available_file}: {e}")
+
+        os.symlink(nginx_available_file, nginx_enabled_file)
+
+        if os.path.exists(nginx_default_file):
+            os.remove(nginx_default_file)
+
+        run_command("systemctl start nginx", True, False)
+        run_command("systemctl enable nginx", True, False)
+        display_message(0, "Installed Nginx.")
+
+
 def generate_certificate(install_directory, server_domain, owner, direct_install=False):
     """
     Generate and install a Let's Encrypt Certificate.
@@ -218,3 +260,30 @@ def generate_certificate(install_directory, server_domain, owner, direct_install
     shutil.copy(lets_encrypt_key_file, key_file)
     change_ownership_recursive(secrets_dir, owner, owner)
     display_message(0, "Let's Encrypt certificate installed.")
+
+
+def install_service(params):
+    """
+        Install Jump Start Website as a service.
+
+        Args:
+            params (SimpleNamespace): THe parameters for the installation.
+    """
+    service_file = "/etc/systemd/system/jumpstartwebsite.service"
+    template_file = f"{params.install_directory}/installation/jumpstartwebsite.service"
+
+    display_message(0, "Setting up service...")
+
+    if os.path.exists(service_file):
+        display_message(0, ("Service is already installed. "
+                            "if you want to replace it remove it first."))
+    else:
+        results = process_template(template_file, params)
+
+        try:
+            with open(service_file, "w") as file:
+                file.write(results)
+        except Exception as e:
+            display_message(219, f"Cannot write service file {service_file}: {e}")
+
+        display_message(0, "Service setup complete.")
