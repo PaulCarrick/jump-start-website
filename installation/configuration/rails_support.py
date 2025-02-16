@@ -37,6 +37,8 @@ def setup_rails(configuration):
         replace_values_in_file(configuration_file, replacements)
         display_message(0, "Configuration set to use http.")
 
+    run_command("apt update", True, False)
+    run_command("apt install -y nodejs npm", True, False)
     display_message(0, "Installing bundler...")
     run_command(f"cd {rails_dir} && gem install bundler -v \"~> 2.5\"", True, False, None, username)
     display_message(0, "Bundler installed.")

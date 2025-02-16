@@ -449,7 +449,7 @@ def get_parameters(args):
         level=1
     else:
         level=2
-        default_install_dir = f"/home/{params.owner}/rails"
+        default_install_dir = f"/home/{params.owner}/jump-start-website"
 
     params.install_directory = debconf.get_validated_input("jump-start-website/install-dir",
                                                            lambda directory: directory_exists(directory, level),

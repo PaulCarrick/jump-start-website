@@ -9,7 +9,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
-      <change beforePath="$PROJECT_DIR$/installation/configuration/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/installation/configuration/database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/installation/configuration/rails_support.py" beforeDir="false" afterPath="$PROJECT_DIR$/installation/configuration/rails_support.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/installation/install.py" beforeDir="false" afterPath="$PROJECT_DIR$/installation/install.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
