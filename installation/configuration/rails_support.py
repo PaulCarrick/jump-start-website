@@ -71,7 +71,8 @@ def setup_rails(configuration):
     run_command(f"cd {rails_dir} && set -a && . ./.env && set +a && bundle exec rails assets:precompile",
                 True, False, None, username)
     display_message(0, "Assets precompiled.")
-
+    run_command(f"cd {rails_dir} && set -a && . ./.env && set +a && bundle exec rake html:clean",
+                True, False, None, username)
 
 def install_ruby(username):
     """
