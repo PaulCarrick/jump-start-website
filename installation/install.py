@@ -463,10 +463,13 @@ def get_parameters(args):
                                                              valid_boolean_response,
                                                              "ERROR: You must confirm installation.",
                                                              getattr(params, "confirm_install", None))
+        params.install_server = (params.confirm_install == "Yes")
 
         if params.confirm_install != "Yes":
             display_message(11, "Installation aborted by user.")
             sys.exit(0)
+    else:
+        params.install_server = False
 
     return params
 
