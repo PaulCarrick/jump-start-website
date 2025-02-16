@@ -381,7 +381,7 @@ def get_parameters(args):
                                                   str(args.port),
                                                   str(getattr(params,
                                                               "port",
-                                                              "443" if params.mode == "https" else None))))
+                                                              443 if params.mode == "https" else None))))
 
     # Get database details
     params.db_host = debconf.get_validated_input("jump-start-website/db-host",
