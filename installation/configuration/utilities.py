@@ -184,20 +184,24 @@ def user_exists(username):
     return bool(run_command(f"id {username}", flag_error=False))
 
 
-def directory_exists(path, parent=True):
+def directory_exists(path, level=0):
     """
     Check if a directory exists in the system.
 
     Args:
         path (str): The path to check.
-        parent(boll=False): If True, check if the parent directory exists.
+        level(int=0): If greater than zero check "level" levels up.
+
     Returns:
         bool: True if the directory exists in the system.
     """
-    if parent:
-        return Path(path).parent.exists()
-    else:
-        return Path(path).exists()
+    check_path = Path(path)
+
+    if level > 0:
+        for i in range(level + 1):
+            check_path = check_path.parent
+
+    return check_path.exists()
 
 
 def user_home(username):

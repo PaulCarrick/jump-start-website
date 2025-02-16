@@ -445,11 +445,13 @@ def get_parameters(args):
         home_dir = run_command(f"eval echo ~{params.owner}", capture_output=True)
         home_dir = home_dir.strip()
         default_install_dir = f"{home_dir}/jump-start-website"
+        level=1
     else:
+        level=2
         default_install_dir = f"/home/{params.owner}/rails"
 
     params.install_directory = debconf.get_validated_input("jump-start-website/install-dir",
-                                                           directory_exists,
+                                                           lambda dir: directory_exists(dir, level),
                                                            "ERROR: You must enter a valid install directory.",
                                                            args.installation_dir,
                                                            getattr(params,
