@@ -257,8 +257,13 @@ def generate_certificate(install_directory, server_domain, owner, direct_install
                    stdin=sys.stdin)
     os.makedirs(secrets_dir, exist_ok=True)
     shutil.copy(lets_encrypt_cert_file, cert_file)
+    os.chmod(cert_file, 0o644)
     shutil.copy(lets_encrypt_key_file, key_file)
+    os.chmod(key_file, 0o644) # I do not like this but nginx needs it.
     change_ownership_recursive(secrets_dir, owner, owner)
+
+    print("File permissions changed successfully!")
+
     display_message(0, "Let's Encrypt certificate installed.")
 
 
