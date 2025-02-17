@@ -20,6 +20,7 @@
         <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
         <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
         <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
+        <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov" />
         <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
         <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="SCRIPT_ARGS" VALUE="" />
         <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="PORT" VALUE="3000" />
@@ -47,7 +48,7 @@
       <excludeFolder url="file://$MODULE_DIR$/public/system" />
       <excludeFolder url="file://$MODULE_DIR$/components" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.12" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="ruby-3.2.6-p234" jdkType="RUBY_SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="actioncable (v8.0.0, ruby-3.2.6-p234) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="actionmailbox (v8.0.0, ruby-3.2.6-p234) [gem]" level="application" />
@@ -209,7 +210,6 @@
   <component name="RailsGeneratorsCache">
     <option name="generators">
       <list>
-        <option value="FLEX_ERROR" />
         <option value="active_record:application_record" />
         <option value="active_record:devise" />
         <option value="active_record:multi_db" />
@@ -234,7 +234,6 @@
         <option value="migration" />
         <option value="model" />
         <option value="mongoid:devise" />
-        <option value="rails" />
         <option value="react:component" />
         <option value="react:install" />
         <option value="resource" />
@@ -283,7 +282,6 @@
     </option>
     <option name="myGenerators">
       <list>
-        <option value="FLEX_ERROR" />
         <option value="active_record:application_record" />
         <option value="active_record:devise" />
         <option value="active_record:multi_db" />
@@ -308,7 +306,6 @@
         <option value="migration" />
         <option value="model" />
         <option value="mongoid:devise" />
-        <option value="rails" />
         <option value="react:component" />
         <option value="react:install" />
         <option value="resource" />
@@ -467,8 +464,7 @@
       <RakeTaskImpl id="rake" />
     </option>
   </component>
-  <component name="RakeTasksCache-v2" failedReloadsCounter="1">
-    <option name="failedReloadsCounter" value="1" />
+  <component name="RakeTasksCache-v2">
     <option name="myRootTask">
       <RakeTaskImpl id="rake">
         <subtasks>
