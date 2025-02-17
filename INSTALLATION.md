@@ -52,7 +52,7 @@ directly or install it from the repository.
    \
    After setting up the .env file you can run **bin/start_server.sh**.\
    \
-   You can also run the server as a service edit **installation/jumpstartwebsite.service**
+   You can also run the server as a service. Edit **installation/jumpstartwebsite.service**
    replacing the values in brackets with your configuration then copy the file to
    **/etc/systemd/system/** and start and enable the service.
 
