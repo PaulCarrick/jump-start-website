@@ -7,6 +7,7 @@
         <language minSize="210" name="Python" />
       </Languages>
     </inspection_tool>
+    <inspection_tool class="PyTypeCheckerInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="RubyLiteralArrayInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="RubyTooManyInstanceVariablesInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="m_limit" value="15" />

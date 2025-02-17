@@ -16,7 +16,7 @@ from configuration.rails_support import setup_rails, install_ruby, install_postg
     generate_certificate, install_nginx, install_service
 from configuration.utilities import display_message, run_command, present, \
     valid_integer, user_exists, directory_exists, valid_boolean_response, \
-    generate_env, create_user, change_ownership_recursive
+    generate_env, create_user, change_ownership_recursive, is_port_open
 
 
 TEMPLATES = "./configuration/templates"
@@ -154,6 +154,12 @@ def install_server(params):
         run_command("systemctl start jumpstartwebsite.service", True, False)
         run_command("systemctl enable jumpstartwebsite.service", True, False)
 
+    if params.install_nginx.upper() == "YES" and not is_port_open("localhost", params.port):
+        run_command("systemctl restart nginx.service", True, False)
+
+    if params.install_service.upper() == "YES" and not is_port_open("localhost", params.local_port):
+        display_message(21, "Jump Start Website Service is not running.")
+
     display_message(0, "Jump Start Website Installed.")
 
 
@@ -186,7 +192,7 @@ def generate_variables(params):
             "server_host":              params.host,
             "server_mode":              params.mode,
             "server_port":              params.port,
-            "internal_port":            params.port,
+            "internal_port":            params.local_port,
             "external_port":            params.port,
             "guest_user":               "Guest User",
             "username":                 params.owner,
@@ -253,6 +259,9 @@ def parse_arguments():
     parser.add_argument("-j", "--just-generate-env",
                         action="store_true", help="Only generate .env file.",
                         default=False)
+    parser.add_argument("-l", "--local-port", type=int,
+                        help="Specify the internal port for the server.",
+                        default=os.getenv("INTERNAL_PORT"))
     parser.add_argument("-m", "--mode", action="store_true",
                         help="Use HTTP for server",
                         default=os.getenv("SERVER_MODE") == "http")
@@ -374,13 +383,26 @@ def get_parameters(args):
     elif args.port:
         default_port = str(args.port)
     else:
-        default_port = "443" if params.mode == "https" else "3000"
+        default_port = "3000"
 
     params.port = int(debconf.get_validated_input("jump-start-website/port",
                                                   valid_integer,
                                                   "ERROR: You must enter a valid port number.",
                                                   None,
                                                   default_port))
+
+    if getattr(params, "local_port", None):
+        default_port = str(params.local_port)
+    elif args.port:
+        default_port = str(args.local_port)
+    else:
+        default_port = "3000"
+
+    params.local_port = int(debconf.get_validated_input("jump-start-website/local-port",
+                                                        valid_integer,
+                                                        "ERROR: You must enter a valid port number.",
+                                                        None,
+                                                        default_port))
 
     # Get database details
     params.db_host = debconf.get_validated_input("jump-start-website/db-host",
@@ -438,9 +460,9 @@ def get_parameters(args):
         home_dir = run_command(f"eval echo ~{params.owner}", capture_output=True)
         home_dir = home_dir.strip()
         default_install_dir = f"{home_dir}/jump-start-website"
-        level=1
+        level = 1
     else:
-        level=2
+        level = 2
         default_install_dir = f"/home/{params.owner}/jump-start-website"
 
     params.install_directory = debconf.get_validated_input("jump-start-website/install-dir",
@@ -468,10 +490,10 @@ def get_parameters(args):
                                                                  args.install_certificate,
                                                                  getattr(params, "install_certificate", None))
         params.install_nginx = debconf.get_validated_input("jump-start-website/install-nginx",
-                                                              valid_boolean_response,
-                                                              "ERROR: Invalid choice. Select Yes or No.",
-                                                              args.install_nginx,
-                                                              getattr(params, "install_nginx", None))
+                                                           valid_boolean_response,
+                                                           "ERROR: Invalid choice. Select Yes or No.",
+                                                           args.install_nginx,
+                                                           getattr(params, "install_nginx", None))
         params.install_service = debconf.get_validated_input("jump-start-website/install-service",
                                                              valid_boolean_response,
                                                              "ERROR: Invalid choice. Select Yes or No.",

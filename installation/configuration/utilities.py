@@ -10,6 +10,8 @@ import subprocess
 import time
 import threading
 import itertools
+import socket
+
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -391,3 +393,20 @@ def replace_values_in_file(filename, values):
                 file.write(line)
     except Exception as e:
         display_message(96, f"Can't process file {filename}. Error: {e}")
+
+
+def is_port_open(host, port, timeout=3):
+    """
+    Check to see if a port is open.
+
+    Args:
+        host (str): The host to check.
+        port: (int) The port to check.
+        timeout: (int=3) The timeout in seconds.
+    Returns:
+        True if the port is open, False otherwise.
+    """
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(timeout)  # Timeout to avoid long waits
+        result = s.connect_ex((host, port))
+        return result == 0  # Returns True if the port is open, False otherwise

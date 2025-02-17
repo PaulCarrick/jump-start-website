@@ -3,7 +3,8 @@ Template: jump-start-website/introduction
 Type: note
 Description: This program will help you set up the Jump Start Website.
  Unless otherwise specified, all fields are required. Many fields do have reasonable defaults,
- in which case you can just choose <OK>.
+ in which case you can just choose <OK>. The only fields that must be filled where there is no default
+ are passwords and the domain name. Otherwise the default values should work.
 
 # Error Template
 Template: jump-start-website/error
@@ -25,6 +26,8 @@ Choices: https, http
 Default: https
 Description: Choose whether the server runs in SSL mode (https) or clear mode (http).
  HTTPS is strongly recommended unless a frontend proxy (e.g., Nginx) handles SSL.
+ Later you will be asked if you want to install Nginx. If you do use nginx choose HTTP
+ as Nginx will handle the HTTPS traffic.
 
 Template: jump-start-website/domain
 Type: string
@@ -48,8 +51,17 @@ Description: Enter the local hostname for the server.
 
 Template: jump-start-website/port
 Type: string
+Default: 443
+Description: Enter the public port for the server.
+ If you are choosing to use Nginx or another HTTPS front end (like apache) enter 443.
+ Otherwise use 3000.
+
+Template: jump-start-website/local-port
+Type: string
 Default: 3000
-Description: Enter the local port for the server.
+Description: Enter the local port for the server running on localhost.
+ It should probably be 3000.
+ There is no problem if the public and the internal port are the same.
 
 # Database Parameters
 Template: jump-start-website/db-host
@@ -70,7 +82,7 @@ Description: Enter the database name for Jump Start Website.
 Template: jump-start-website/db-user
 Type: string
 Default: jump_start
-Description: Enter the database user for Jump Start Website.
+Description: Enter the user name for the database user.
 
 Template: jump-start-website/db-password
 Type: password
