@@ -31,7 +31,7 @@ directly or install it from the repository.
 ## Source Code
 - **GitHub (source code):** This repository.
 1) Clone the repository\
-   **git clone git@github.com:PaulCarrick/jump-start-website.git**\
+   **git clone git@github.com:PaulCarrick/jump-start-website.git**
 2) Change to the repository directory\
    **cd jump-start-website**
 3) Configure or install
