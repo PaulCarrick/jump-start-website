@@ -41,7 +41,7 @@ directly or install it from the repository.
    It can take quite a bit if you need to install ruby. If you are on Debian 12,
    currently you need to choose yes on the ruby install as ruby >= 3.2.0
    is not available yet. Otherwise, if you already have ruby >= 3.2.0
-   skip installing ruby it will save you a lot of time.\
+   skip installing ruby it will save you a lot of time.
    * Configuration is a little more difficult.\
    You need to set up a .env file in the root of the repository.\
    \
