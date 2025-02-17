@@ -16,7 +16,7 @@ directly or install it from the repository.
 1) Install they public key for the jump-start-website repository:\
    **curl -fsSL https://jump-start-website.com:8443/distributions/jump-start-website.gpg | sudo tee /usr/share/keyrings/jump-start-website.gpg > /dev/null**
 2) Add the repository to the apt source file:\
-   **echo "deb [signed-by=/usr/share/keyrings/jump-start-website.gpg] https://jump-start-website.com:8443/distributions/ stable main" | sudo tee /etc/apt/sources.list.d/jump-start-website.list**
+   **echo "deb [signed-by=/usr/share/keyrings/jump-start-website.gpg] https://jump-start-website.com:8443/distributions/debian/ stable main" | sudo tee /etc/apt/sources.list.d/jump-start-website.list**
 3) Install the package:\
    **sudo apt update**\
    **sudo apt install jump-start-website**
