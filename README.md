@@ -50,8 +50,14 @@ Distributions are available via:
 - **DockerHub (containerized version):** [Jump Start Website Docker Image](https://hub.docker.com/repository/docker/paulcarrick/jump-start-website-server/tags/latest/sha256-a847743b1016adf7dd1a3ff369f032fa3a7dac97ef226924e08f5e28e5a2faa4)  
 - **Debian Package** for easy installation  
 
-## Documentation & Support  
-Documentation is available on this site to help you install and use **Jump Start Website**.
+## Installation
+[Installation Guide](INSTALLATION.md)
+
+## Documentation & Support
+Documentation is available at [jump-start-website.com](https://jump-start-website.com) to help you install and use **Jump Start Website**.\
+\
+If you get stuck, you can request help throught the contact form:\
+[jump-start-website.com/contact](https://jump-start-website.com/contact)
 
 ---
 
