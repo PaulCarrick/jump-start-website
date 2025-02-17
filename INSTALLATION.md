@@ -36,7 +36,7 @@ directly or install it from the repository.
    **cd jump-start-website**
 3) Configure or install
    * To install simply run: **installation/install.sh**\
-   Answer the questions and **jump-start-website*** will be installed.\
+   Answer the questions and **jump-start-website** will be installed.\
    \
    It can take quite a bit if you need to install ruby. If you are on Debian 12,
    currently you need to choose yes on the ruby install as ruby >= 3.2.0
