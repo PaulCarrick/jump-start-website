@@ -110,8 +110,15 @@ def install_ruby(username):
 
     if platform.machine() == "x86_64":
         run_command("apt update", True, False)
-        run_long_command("apt install -y ruby3.2", True, False)
-        return
+
+        result = run_command("apt install -y ruby3.2", False, False)
+
+        if not result:
+            result = run_long_command("dpkg -i --force-overwrite /var/cache/apt/archives/ruby3.2_3.2.0-1_amd64.deb",
+                                      False, False)
+
+        if result:
+            return
 
     display_message(0, "Getting required packages...")
     run_command("apt update", True, False)
