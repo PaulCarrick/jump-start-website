@@ -17,9 +17,11 @@ directly or install it from the repository.
    **curl -fsSL https://jump-start-website.com:8443/distributions/jump-start-website.gpg | sudo tee /usr/share/keyrings/jump-start-website.gpg > /dev/null**
 2) Add the repository to the apt source file:\
    **echo "deb [signed-by=/usr/share/keyrings/jump-start-website.gpg] https://jump-start-website.com:8443/distributions/debian/ stable main" | sudo tee /etc/apt/sources.list.d/jump-start-website.list**
-3) Install the package:\
+3) Install the apt package:\
    **sudo apt update**\
    **sudo apt install jump-start-website**
+4) Configure/Install **Jump Start Website**\
+   **sudo sudo /usr/local/jump-start-website/installation/install**
 
 ## Docker
 - **DockerHub (containerized version):** [Jump Start Website Docker Image](https://hub.docker.com/repository/docker/paulcarrick/jump-start-website-server/tags/latest/sha256-a847743b1016adf7dd1a3ff369f032fa3a7dac97ef226924e08f5e28e5a2faa4)
