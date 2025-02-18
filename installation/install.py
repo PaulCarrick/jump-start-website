@@ -474,12 +474,6 @@ def install_server(params):
         run_command("systemctl start jumpstartwebsite.service", True, False)
         run_command("systemctl enable jumpstartwebsite.service", True, False)
 
-    if params.install_nginx.upper() == "YES" and not is_port_open("localhost", params.port):
-        run_command("systemctl restart nginx.service", True, False)
-
-    if params.install_service.upper() == "YES" and not is_port_open("localhost", params.local_port):
-        display_message(21, "Jump Start Website Service is not running.")
-
     if params.remove_install:
         shutil.rmtree(package_dir)
 
