@@ -46,10 +46,10 @@ else
     echo "No $PROCESS_NAME process found running."
 fi
 
-# Ensure SERVER_PORT is set
-if [ -z "$SERVER_PORT" ]; then
-    echo "SERVER_PORT is not set. Using default port 3000."
-    SERVER_PORT=3000
+# Ensure INTERNAL_PORT is set
+if [ -z "$INTERNAL_PORT" ]; then
+    echo "INTERNAL_PORT is not set. Using default port 3000."
+    INTERNAL_PORT=3000
 fi
 
 cd "${RAILS_DIRECTORY}" || { echo "Can't change to ${RAILS_DIRECTORY} directory." >&2; exit 3; }
@@ -58,14 +58,14 @@ cd "${RAILS_DIRECTORY}" || { echo "Can't change to ${RAILS_DIRECTORY} directory.
 echo "Starting the server..."
 
 if [ "$NOHUP" = "true" ]; then
-    nohup "${RAILS_DIRECTORY}/bin/bundle" exec rails s -b 0.0.0.0 -p "$SERVER_PORT" > log/server.log 2>&1 &
+    nohup "${RAILS_DIRECTORY}/bin/bundle" exec rails s -b 0.0.0.0 -p "$INTERNAL_PORT" > log/server.log 2>&1 &
     sleep 3
 else
-    echo "Running: ${RAILS_DIRECTORY}/bin/bundle exec rails s -b 0.0.0.0 -p $SERVER_PORT"
-    "${RAILS_DIRECTORY}/bin/bundle" exec rails s -b 0.0.0.0 -p "$SERVER_PORT"
+    echo "Running: ${RAILS_DIRECTORY}/bin/bundle exec rails s -b 0.0.0.0 -p $INTERNAL_PORT"
+    "${RAILS_DIRECTORY}/bin/bundle" exec rails s -b 0.0.0.0 -p "$INTERNAL_PORT"
 
     if [ $? -ne 0 ]; then
-        echo "Can't run ${RAILS_DIRECTORY}/bin/bundle exec rails s -b 0.0.0.0 -p $SERVER_PORT." >&2
+        echo "Can't run ${RAILS_DIRECTORY}/bin/bundle exec rails s -b 0.0.0.0 -p $INTERNAL_PORT." >&2
         exit 4
     fi
 fi

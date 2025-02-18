@@ -34,8 +34,18 @@ def main():
 
         generate_env(params.env_file, variables)
     elif params.install_server:
+        os.makedirs("/etc/jump-start-website", exist_ok=True)
+
+        with open(CONFIGURATION_FILE, "w") as file:
+            json.dump(vars(params), file, indent=4)
+
         install_server(params)
     elif params.update_server:
+        os.makedirs("/etc/jump-start-website", exist_ok=True)
+
+        with open(CONFIGURATION_FILE, "w") as file:
+            json.dump(vars(params), file, indent=4)
+
         update_server(params)
 
     display_message(0, "Jump Start Website setup  successfully.")
@@ -375,10 +385,6 @@ def update_server(params):
     os.chdir(install_directory)
     change_ownership_recursive(install_directory, params.owner, params.owner)
     setup_rails(params)
-    os.makedirs("/etc/jump-start-website", exist_ok=True)
-
-    with open(CONFIGURATION_FILE, "w") as file:
-        json.dump(vars(params), file, indent=4)
 
     if params.remove_install:
         shutil.rmtree(package_dir)
@@ -463,11 +469,6 @@ def install_server(params):
 
     if params.install_service.upper() == "YES":
         install_service(params)
-
-    os.makedirs("/etc/jump-start-website", exist_ok=True)
-
-    with open(CONFIGURATION_FILE, "w") as file:
-        json.dump(vars(params), file, indent=4)
 
     if params.install_service.upper() == "YES":
         run_command("systemctl start jumpstartwebsite.service", True, False)
