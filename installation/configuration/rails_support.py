@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-
+import stat
 import sys
 import os
 import shutil
 import re
 import subprocess
 import platform
+import grp
 
 from pathlib import Path
 from types import SimpleNamespace
@@ -116,6 +117,28 @@ def install_ruby(username):
         if not result:
             result = run_long_command("dpkg -i --force-overwrite /var/cache/apt/archives/ruby3.2_3.2.0-1_amd64.deb",
                                       False, False)
+
+        if result:
+            gem_path = "/var/lib/gems/3.2.0"
+            gid = grp.getgrnam(username).gr_gid
+
+            for root, dirs, files in os.walk(gem_path):
+                for name in dirs + files:
+                    path = os.path.join(root, name)
+
+                    os.chown(path, -1, gid)
+
+                    current_permissions = os.stat(path).st_mode
+                    new_permissions = current_permissions | stat.S_IWGRP
+
+                    os.chmod(path, new_permissions)
+
+            os.chown(gem_path, -1, gid)
+
+            current_permissions = os.stat(gem_path).st_mode
+            new_permissions = current_permissions | stat.S_IWGRP
+
+            os.chmod(gem_path, new_permissions)
 
         if result:
             return
