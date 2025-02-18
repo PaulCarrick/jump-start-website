@@ -108,41 +108,6 @@ def install_ruby(username):
         return
 
     display_message(0, "Installing Ruby 3.2.2...")
-
-    if platform.machine() == "x86_64":
-        run_command("apt update", True, False)
-
-        result = run_command("apt install -y ruby3.2", False, False)
-
-        if not result:
-            result = run_long_command("dpkg -i --force-overwrite /var/cache/apt/archives/ruby3.2_3.2.0-1_amd64.deb",
-                                      False, False)
-
-        if result:
-            gem_path = "/var/lib/gems/3.2.0"
-            gid = grp.getgrnam(username).gr_gid
-
-            for root, dirs, files in os.walk(gem_path):
-                for name in dirs + files:
-                    path = os.path.join(root, name)
-
-                    os.chown(path, -1, gid)
-
-                    current_permissions = os.stat(path).st_mode
-                    new_permissions = current_permissions | stat.S_IWGRP
-
-                    os.chmod(path, new_permissions)
-
-            os.chown(gem_path, -1, gid)
-
-            current_permissions = os.stat(gem_path).st_mode
-            new_permissions = current_permissions | stat.S_IWGRP
-
-            os.chmod(gem_path, new_permissions)
-
-        if result:
-            return
-
     display_message(0, "Getting required packages...")
     run_command("apt update", True, False)
     run_command("apt install -y curl build-essential libssl-dev libreadline-dev zlib1g-dev", True, False)
