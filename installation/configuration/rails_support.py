@@ -5,6 +5,7 @@ import os
 import shutil
 import re
 import subprocess
+import platform
 
 from pathlib import Path
 from types import SimpleNamespace
@@ -106,6 +107,12 @@ def install_ruby(username):
         return
 
     display_message(0, "Installing Ruby 3.2.2...")
+
+    if platform.machine() == "x86_64":
+        run_command("apt update", True, False)
+        run_long_command("apt install -y ruby3.2", True, False)
+        return
+
     display_message(0, "Getting required packages...")
     run_command("apt update", True, False)
     run_command("apt install -y curl build-essential libssl-dev libreadline-dev zlib1g-dev", True, False)
