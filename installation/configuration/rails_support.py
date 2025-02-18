@@ -130,7 +130,16 @@ def install_ruby(username):
 
     os.chdir(home_dir)
     display_message(0, "Installing Ruby 3.2.2 from source (this will take a while)...")
-    subprocess.run(["ruby-install", "-i", install_dir, "ruby", "3.2.2"], check=True)
+    subprocess.run(["ruby-install",
+                    "-i",
+                    install_dir,
+                    "-j",
+                    "2",
+                    "ruby",
+                    "3.2.2",
+                    "--",
+                    "--disable-install-rdoc"],
+                   check=True)
     change_ownership_recursive(install_dir, username, username)
     display_message(0, "Ruby 3.2.2 installed.")
 
