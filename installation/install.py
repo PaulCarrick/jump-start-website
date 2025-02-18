@@ -23,205 +23,22 @@ TEMPLATES = "./configuration/templates"
 CONFIGURATION_FILE = "/etc/jump-start-website/config.json"
 
 
-def update_server(params):
-    """
-    Update the server code but don't reinstall it.
+def main():
+    args = parse_arguments()
+    params = get_parameters(args)
 
-    Args:
-        params (SimpleNamespace): The previous parameters for the server.
-    """
-    display_message(0, "Updating Jump Start Website...")
-    package_dir = None
-    install_directory = params.install_directory
-    install_path = Path(install_directory)
+    display_message(0, "Setting up  Jump Start Website...")
 
-    # Ensure the installation directory exists
-    if not os.path.exists(install_directory):
-        display_message(19, "Installation directory does not exist!")
+    if params.env_file and params.just_generate_env:
+        variables = generate_variables(params)
 
-    current_path = Path(os.path.abspath(__file__))
+        generate_env(params.env_file, variables)
+    elif params.install_server:
+        install_server(params)
+    elif params.update_server:
+        update_server(params)
 
-    try:
-        package_dir = next(p for p in current_path.parents if p.name == "jump-start-website")
-    except StopIteration:
-        display_message(21, "Code directory not found")
-
-    if not os.path.exists(package_dir):
-        display_message(19, "Error: Package directory not found.")
-
-    package_path = Path(package_dir)
-
-    if package_path.resolve() == install_path.resolve():
-        display_message(20, "You cannot install into the package directory.")
-
-    # Copy files to install directory
-    shutil.copytree(package_dir, install_directory, dirs_exist_ok=True)
-    os.chdir(install_directory)
-    change_ownership_recursive(install_directory, params.owner, params.owner)
-    setup_rails(params)
-    os.makedirs("/etc/jump-start-website", exist_ok=True)
-
-    with open(CONFIGURATION_FILE, "w") as file:
-        json.dump(vars(params), file, indent=4)
-
-    display_message(0, "Jump Start Website Updated.")
-
-
-def install_server(params):
-    """
-    Install the Server
-
-    Args:
-        params (SimpleNamespace): The parameters to use to configure the server.
-    """
-    display_message(0, "Installing Jump Start Website...")
-    package_dir = None
-    owner = params.owner
-
-    # Ensure the owner exists
-    if not user_exists(owner):
-        create_user(owner, params.owner_password)
-
-    install_directory = params.install_directory
-    install_path = Path(install_directory)
-
-    # Ensure the installation directory exists
-    if not os.path.exists(install_directory):
-        display_message(0, f"Creating installation directory: {install_directory}")
-        os.makedirs(install_directory)
-
-    gem_dir = f"{install_directory}/gems"
-
-    if not os.path.isdir(gem_dir):
-        os.makedirs(gem_dir)
-
-    if params.install_postgres.upper() == "YES":
-        install_postgres(params.postgres_password)
-
-    setup_database(params)
-
-    if params.install_ruby.upper() == "YES":
-        install_ruby(params.owner)
-
-    current_path = Path(os.path.abspath(__file__))
-
-    try:
-        package_dir = next(p for p in current_path.parents if p.name == "jump-start-website")
-    except StopIteration:
-        display_message(21, "Code directory not found")
-
-    if not os.path.exists(package_dir):
-        display_message(19, "Error: Package directory not found.")
-
-    package_path = Path(package_dir)
-
-    if package_path.resolve() == install_path.resolve():
-        display_message(20, "You cannot install into the package directory.")
-
-    # Copy files to install directory
-    shutil.copytree(package_dir, install_directory, dirs_exist_ok=True)
-    os.chdir(install_directory)
-
-    variables = generate_variables(params)
-
-    generate_env(params.env_file, variables)
-    load_dotenv()
-
-    if not Database.is_table_populated(params, 'sections'):
-        Database.empty_database(params, params.db_database)
-        Database.load_sql_file(params,
-                               f"{install_directory}/installation/dump.sql",
-                               True)
-
-    change_ownership_recursive(install_directory, owner, owner)
-    setup_rails(params)
-
-    if params.install_certificate.upper() == "YES":
-        generate_certificate(params.install_directory, params.domain, params.owner)
-
-    if params.install_nginx.upper() == "YES":
-        install_nginx(params)
-
-    if params.install_service.upper() == "YES":
-        install_service(params)
-
-    os.makedirs("/etc/jump-start-website", exist_ok=True)
-
-    with open(CONFIGURATION_FILE, "w") as file:
-        json.dump(vars(params), file, indent=4)
-
-    if params.install_service.upper() == "YES":
-        run_command("systemctl start jumpstartwebsite.service", True, False)
-        run_command("systemctl enable jumpstartwebsite.service", True, False)
-
-    if params.install_nginx.upper() == "YES" and not is_port_open("localhost", params.port):
-        run_command("systemctl restart nginx.service", True, False)
-
-    if params.install_service.upper() == "YES" and not is_port_open("localhost", params.local_port):
-        display_message(21, "Jump Start Website Service is not running.")
-
-    display_message(0, "Jump Start Website Installed.")
-
-
-def setup_database(params):
-    database = Database("postgres", "postgres",
-                        params.postgres_password, params.db_host,
-                        params.db_port)
-
-    database.process_sql_template(f"{get_setup_directory()}/create_database_user.sql", params, True)
-    database.create_database_unless_exists(params.db_database, params.db_username)
-    database.close_database_connection()
-
-
-def generate_variables(params):
-    """
-    Setup environmental variables.
-
-    Args:
-        params (SimpleNamespace): The parameters to use to configure the server.
-    """
-    results = {}
-
-    results.update({
-            "startup":                  "true",
-            "dockerized":               "false",
-            "project_name":             "jump_start_server",
-            "site_domain":              params.domain,
-            "site_host":                params.hostname,
-            "site_url":                 params.url,
-            "server_host":              params.host,
-            "server_mode":              params.mode,
-            "server_port":              params.port,
-            "internal_port":            params.local_port,
-            "external_port":            params.port,
-            "guest_user":               "Guest User",
-            "username":                 params.owner,
-            "user_password":            params.owner_password,
-            "db_host":                  params.db_host,
-            "db_port":                  params.db_port,
-            "db_database":              params.db_database,
-            "db_username":              params.db_username,
-            "db_password":              params.db_password,
-            "postgres_password":        params.postgres_password,
-            "pggssencmode":             "disable",
-            "db_url":                   f"postgres://{params.db_username}:{params.db_password}@{params.db_host}:{params.db_port}/{params.db_database}",
-            "rack_env":                 "production",
-            "rails_env":                "production",
-            "rails_master_key":         "31c4d6937460cb67802017edd2016b94",
-            "rails_serve_static_files": "enabled",
-            "rails_directory":          params.install_directory,
-            "gem_home":                 f"{params.install_directory}/gems",
-            "recaptcha_enabled":        "false",
-            "recaptcha_site_key":       "",
-            "recaptcha_secret_key":     "",
-            "sudo_available":           "false",
-            "ssh_port":                 "",
-            "ssh_public_key":           "",
-            "lang":                     "en_US.UTF - 8",
-            "language":                 "en_US.UTF - 8"
-    })
-
-    return results
+    display_message(0, "Jump Start Website setup  successfully.")
 
 
 def parse_arguments():
@@ -289,6 +106,8 @@ def parse_arguments():
     parser.add_argument("-r", "--install-ruby",
                         action="store_true", help="Install Ruby 3.2",
                         default=False)
+    parser.add_argument("-R", "--remove-install",
+                        action="store_true", help="Remove installation files.")
     parser.add_argument("-s", "--host",
                         help="Specify the local hostname of the server.",
                         default=os.getenv("SERVER_HOST"))
@@ -499,9 +318,15 @@ def get_parameters(args):
                                                              "ERROR: Invalid choice. Select Yes or No.",
                                                              args.install_service,
                                                              getattr(params, "install_service", None))
+        params.remove_install = debconf.get_validated_input("jump-start-website/remove-install",
+                                                            valid_boolean_response,
+                                                            "ERROR: You must confirm removal.",
+                                                            args.remove_install,
+                                                            getattr(params, "remove_install", None))
         params.confirm_install = debconf.get_validated_input("jump-start-website/confirm-install",
                                                              valid_boolean_response,
                                                              "ERROR: You must confirm installation.",
+                                                             None,
                                                              getattr(params, "confirm_install", None))
         params.install_server = (params.confirm_install == "Yes")
 
@@ -514,26 +339,215 @@ def get_parameters(args):
     return params
 
 
+def update_server(params):
+    """
+    Update the server code but don't reinstall it.
+
+    Args:
+        params (SimpleNamespace): The previous parameters for the server.
+    """
+    display_message(0, "Updating Jump Start Website...")
+    package_dir = None
+    install_directory = params.install_directory
+    install_path = Path(install_directory)
+
+    # Ensure the installation directory exists
+    if not os.path.exists(install_directory):
+        display_message(19, "Installation directory does not exist!")
+
+    current_path = Path(os.path.abspath(__file__))
+
+    try:
+        package_dir = next(p for p in current_path.parents if p.name == "jump-start-website")
+    except StopIteration:
+        display_message(21, "Code directory not found")
+
+    if not os.path.exists(package_dir):
+        display_message(19, "Error: Package directory not found.")
+
+    package_path = Path(package_dir)
+
+    if package_path.resolve() == install_path.resolve():
+        display_message(20, "You cannot install into the package directory.")
+
+    # Copy files to install directory
+    shutil.copytree(package_dir, install_directory, dirs_exist_ok=True)
+    os.chdir(install_directory)
+    change_ownership_recursive(install_directory, params.owner, params.owner)
+    setup_rails(params)
+    os.makedirs("/etc/jump-start-website", exist_ok=True)
+
+    with open(CONFIGURATION_FILE, "w") as file:
+        json.dump(vars(params), file, indent=4)
+
+    if params.remove_install:
+        shutil.rmtree(package_dir)
+
+    display_message(0, "Jump Start Website Updated.")
+
+
+def install_server(params):
+    """
+    Install the Server
+
+    Args:
+        params (SimpleNamespace): The parameters to use to configure the server.
+    """
+    display_message(0, "Installing Jump Start Website...")
+    package_dir = None
+    owner = params.owner
+
+    # Ensure the owner exists
+    if not user_exists(owner):
+        create_user(owner, params.owner_password)
+
+    install_directory = params.install_directory
+    install_path = Path(install_directory)
+
+    # Ensure the installation directory exists
+    if not os.path.exists(install_directory):
+        display_message(0, f"Creating installation directory: {install_directory}")
+        os.makedirs(install_directory)
+
+    gem_dir = f"{install_directory}/gems"
+
+    if not os.path.isdir(gem_dir):
+        os.makedirs(gem_dir)
+
+    if params.install_postgres.upper() == "YES":
+        install_postgres(params.postgres_password)
+
+    setup_database(params)
+
+    if params.install_ruby.upper() == "YES":
+        install_ruby(params.owner)
+
+    current_path = Path(os.path.abspath(__file__))
+
+    try:
+        package_dir = next(p for p in current_path.parents if p.name == "jump-start-website")
+    except StopIteration:
+        display_message(21, "Code directory not found")
+
+    if not os.path.exists(package_dir):
+        display_message(19, "Error: Package directory not found.")
+
+    package_path = Path(package_dir)
+
+    if package_path.resolve() == install_path.resolve():
+        display_message(20, "You cannot install into the package directory.")
+
+    # Copy files to install directory
+    shutil.copytree(package_dir, install_directory, dirs_exist_ok=True)
+    os.chdir(install_directory)
+
+    variables = generate_variables(params)
+
+    generate_env(params.env_file, variables)
+    load_dotenv()
+
+    if not Database.is_table_populated(params, 'sections'):
+        Database.empty_database(params, params.db_database)
+        Database.load_sql_file(params,
+                               f"{install_directory}/installation/dump.sql",
+                               True)
+
+    change_ownership_recursive(install_directory, owner, owner)
+    setup_rails(params)
+
+    if params.install_certificate.upper() == "YES":
+        generate_certificate(params.install_directory, params.domain, params.owner)
+
+    if params.install_nginx.upper() == "YES":
+        install_nginx(params)
+
+    if params.install_service.upper() == "YES":
+        install_service(params)
+
+    os.makedirs("/etc/jump-start-website", exist_ok=True)
+
+    with open(CONFIGURATION_FILE, "w") as file:
+        json.dump(vars(params), file, indent=4)
+
+    if params.install_service.upper() == "YES":
+        run_command("systemctl start jumpstartwebsite.service", True, False)
+        run_command("systemctl enable jumpstartwebsite.service", True, False)
+
+    if params.install_nginx.upper() == "YES" and not is_port_open("localhost", params.port):
+        run_command("systemctl restart nginx.service", True, False)
+
+    if params.install_service.upper() == "YES" and not is_port_open("localhost", params.local_port):
+        display_message(21, "Jump Start Website Service is not running.")
+
+    if params.remove_install:
+        shutil.rmtree(package_dir)
+
+    display_message(0, "Jump Start Website Installed.")
+
+
+def setup_database(params):
+    database = Database("postgres", "postgres",
+                        params.postgres_password, params.db_host,
+                        params.db_port)
+
+    database.process_sql_template(f"{get_setup_directory()}/create_database_user.sql", params, True)
+    database.create_database_unless_exists(params.db_database, params.db_username)
+    database.close_database_connection()
+
+
+def generate_variables(params):
+    """
+    Setup environmental variables.
+
+    Args:
+        params (SimpleNamespace): The parameters to use to configure the server.
+    """
+    results = {}
+
+    results.update({
+            "startup":                  "true",
+            "dockerized":               "false",
+            "project_name":             "jump_start_server",
+            "site_domain":              params.domain,
+            "site_host":                params.hostname,
+            "site_url":                 params.url,
+            "server_host":              params.host,
+            "server_mode":              params.mode,
+            "server_port":              params.port,
+            "internal_port":            params.local_port,
+            "external_port":            params.port,
+            "guest_user":               "Guest User",
+            "username":                 params.owner,
+            "user_password":            params.owner_password,
+            "db_host":                  params.db_host,
+            "db_port":                  params.db_port,
+            "db_database":              params.db_database,
+            "db_username":              params.db_username,
+            "db_password":              params.db_password,
+            "postgres_password":        params.postgres_password,
+            "pggssencmode":             "disable",
+            "db_url":                   f"postgres://{params.db_username}:{params.db_password}@{params.db_host}:{params.db_port}/{params.db_database}",
+            "rack_env":                 "production",
+            "rails_env":                "production",
+            "rails_master_key":         "31c4d6937460cb67802017edd2016b94",
+            "rails_serve_static_files": "enabled",
+            "rails_directory":          params.install_directory,
+            "gem_home":                 f"{params.install_directory}/gems",
+            "recaptcha_enabled":        "false",
+            "recaptcha_site_key":       "",
+            "recaptcha_secret_key":     "",
+            "sudo_available":           "false",
+            "ssh_port":                 "",
+            "ssh_public_key":           "",
+            "lang":                     "en_US.UTF - 8",
+            "language":                 "en_US.UTF - 8"
+    })
+
+    return results
+
+
 def get_setup_directory():
     return Path(__file__).resolve().parent
-
-
-def main():
-    args = parse_arguments()
-    params = get_parameters(args)
-
-    display_message(0, "Setting up  Jump Start Website...")
-
-    if params.env_file and params.just_generate_env:
-        variables = generate_variables(params)
-
-        generate_env(params.env_file, variables)
-    elif params.install_server:
-        install_server(params)
-    elif params.update_server:
-        update_server(params)
-
-    display_message(0, "Jump Start Website setup  successfully.")
 
 
 if __name__ == "__main__":

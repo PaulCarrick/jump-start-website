@@ -147,6 +147,12 @@ Choices: Yes, No, Quit
 Default: Yes
 Description: Install Jump Start Website Service?
 
+Template: jump-start-website/remove-install
+Type: select
+Choices: Yes, No, Quit
+Default: Yes
+Description: Do you want to remove installation files after the install.
+
 Template: jump-start-website/confirm-install
 Type: select
 Choices: Yes, No, Quit

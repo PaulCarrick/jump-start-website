@@ -48,7 +48,7 @@
       <excludeFolder url="file://$MODULE_DIR$/public/system" />
       <excludeFolder url="file://$MODULE_DIR$/components" />
     </content>
-    <orderEntry type="jdk" jdkName="ruby-3.2.6-p234" jdkType="RUBY_SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.12" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="actioncable (v8.0.0, ruby-3.2.6-p234) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="actionmailbox (v8.0.0, ruby-3.2.6-p234) [gem]" level="application" />
