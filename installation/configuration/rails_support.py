@@ -310,15 +310,17 @@ def ruby_installed(username):
     ruby_path = get_ruby_path(username)
 
     if ruby_path:
-        results = run_command(f"{ruby_path} -v", False, True)
-        version_match = re.search(r"ruby (\d+)\.(\d+)\.(\d+)", results)
+        results = run_command(f"{ruby_path} -v", False, True, 5, username)
 
-        if version_match:
-            major, minor, patch = [int(version_match.group(1)), int(version_match.group(2)),
-                                   int(version_match.group(3))]
+        if results:
+            version_match = re.search(r"ruby (\d+)\.(\d+)\.(\d+)", results)
 
-            if (major >= 3) and (minor >= 2):
-                result = True
+            if version_match:
+                major, minor, patch = [int(version_match.group(1)), int(version_match.group(2)),
+                                       int(version_match.group(3))]
+
+                if (major >= 3) and (minor >= 2):
+                    result = True
 
     return result
 
@@ -332,25 +334,25 @@ def get_ruby_path(username):
         str: Path to the Ruby binary or none if not installed.
     """
     # Check if rbenv is installed
-    rbenv_version = run_command("rbenv --version", False, True, None, username)
+    rbenv_version = run_command("rbenv --version", False, True, 5, username)
 
     if rbenv_version:
-        ruby_path = run_command("rbenv which ruby", False, True, None, username)
+        ruby_path = run_command("rbenv which ruby", False, True, 5, username)
 
         if ruby_path:
             return ruby_path.stdout.strip()
 
     # Check if RVM is installed
-    rvm_version = run_command("rvm --version", False, True, None, username)
+    rvm_version = run_command("rvm --version", False, True, 5, username)
 
     if rvm_version:
-        ruby_path = run_command("rvm default exec which ruby", False, True, None, username)
+        ruby_path = run_command("rvm default exec which ruby", False, True, 5, username)
 
         if ruby_path:
             return ruby_path.stdout.strip()
 
     # Finally, check for system-wide Ruby
-    system_ruby_path = run_command("which ruby", False, True, None, username)
+    system_ruby_path = run_command("which ruby", False, True, 5, username)
 
     if system_ruby_path:
         return system_ruby_path
