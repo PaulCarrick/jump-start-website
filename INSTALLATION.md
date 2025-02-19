@@ -29,10 +29,14 @@ directly or install it from the repository.
    **docker pull paulcarrick/jump-start-website-database:latest**
 2) Pull the Server image:\
    **docker pull paulcarrick/jump-start-website-server:latest**
-3) Run the Database container:\
-   **docker run -d -p 5432:5432 --name jump-start-server-database paulcarrick/jump-start-website-database:latest**
-4) Run the Server container:\
-   **docker run -d -p 3000:3000 --name jump-start-server-rails paulcarrick/jump-start-website-server:latest**
+3) Create the needed volumes:\
+   **docker volume create jump_start_server_postgres_data** \
+   **docker volume create jump_start_server_storage** \
+   **docker volume create jump_start_server_user_home**
+4) Run the Database container:\
+   **docker run -d -p 5432:5432 --name jump_start_server_database paulcarrick/jump-start-website-database:latest**
+5) Run the Server container:\
+   **docker run -d -p 3000:3000 --name jump_start_server_rails paulcarrick/jump-start-website-server:latest**
 
 ## Source Code
 - **GitHub (source code):** This repository.
