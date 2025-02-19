@@ -33,9 +33,11 @@ directly or install it from the repository.
    **docker volume create jump_start_server_postgres_data** \
    **docker volume create jump_start_server_storage** \
    **docker volume create jump_start_server_user_home**
-4) Run the Database container:\
+4) Create the needed network:\
+   **sudo docker network create jump_start_server_network**
+5) Run the Database container:\
    **docker run -d -p 5432:5432 --name jump_start_server_database paulcarrick/jump-start-website-database:latest**
-5) Run the Server container:\
+6) Run the Server container:\
    **docker run -d -p 3000:3000 --name jump_start_server_rails paulcarrick/jump-start-website-server:latest**
 
 ## Source Code
