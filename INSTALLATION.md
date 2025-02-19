@@ -36,9 +36,10 @@ directly or install it from the repository.
 4) Create the needed network:\
    **sudo docker network create jump_start_server_network**
 5) Run the Database container:\
-   **docker run -d -p 5432:5432 --name jump_start_server_database paulcarrick/jump-start-website-database:latest**
+   **docker run -d -p 5432:5432 --name jump_start_server_database --network=jump_start_server_network
+ paulcarrick/jump-start-website-database:latest**
 6) Run the Server container:\
-   **docker run -d -p 3000:3000 --name jump_start_server_rails paulcarrick/jump-start-website-server:latest**
+   **docker run -d -p 3000:3000 --name jump_start_server_rails --network=jump_start_server_network paulcarrick/jump-start-website-server:latest**
 
 ## Source Code
 - **GitHub (source code):** This repository.
