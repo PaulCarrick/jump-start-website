@@ -25,10 +25,14 @@ directly or install it from the repository.
 
 ## Docker
 - **DockerHub (containerized version):** [Jump Start Website Docker Image](https://hub.docker.com/repository/docker/paulcarrick/jump-start-website-server/tags/latest/sha256-a847743b1016adf7dd1a3ff369f032fa3a7dac97ef226924e08f5e28e5a2faa4)
-1) Pull the docker image:\
+1) Pull the Database image:\
+   **docker pull paulcarrick/jump-start-website-database:latest**
+2) Pull the Server image:\
    **docker pull paulcarrick/jump-start-website-server:latest**
-2) Run the docker container:\
-   **docker run -d -p 80:3000 --name jump-start-server paulcarrick/jump-start-website-server:latest**
+3) Run the docker container:\
+   **docker run -d -p 5432:5432 --name jump-start-server-database paulcarrick/jump-start-website-database:latest**
+4) Run the docker container:\
+   **docker run -d -p 3000:3000 --name jump-start-server paulcarrick/jump-start-website-server:latest**
 
 ## Source Code
 - **GitHub (source code):** This repository.
@@ -44,7 +48,7 @@ directly or install it from the repository.
    currently you need to choose yes on the ruby install as ruby >= 3.2.0
    is not available yet. Otherwise, if you already have ruby >= 3.2.0
    skip installing ruby it will save you a lot of time.
-   * Configuration is a little more difficult.\
+   * If you want to configure rather than install it is a little more difficult.\
    You need to set up a .env file in the root of the repository.\
    \
    There are two examples provided **example.env** and **docker-example.env**.
