@@ -310,6 +310,8 @@ def ruby_installed(username):
     ruby_path = get_ruby_path(username)
 
     if ruby_path:
+        display_message(0, f"Checking to see if Ruby >= 3.2 is installed at {ruby_path}...")
+
         results = run_command(f"{ruby_path} -v", False, True, 5, username)
 
         if results:
@@ -321,6 +323,11 @@ def ruby_installed(username):
 
                 if (major >= 3) and (minor >= 2):
                     result = True
+
+    if result:
+        display_message(0, "Ruby >= 3.2 is installed.")
+    else:
+        display_message(0, "Ruby >= 3.2 is not installed.")
 
     return result
 
@@ -334,12 +341,15 @@ def get_ruby_path(username):
         str: Path to the Ruby binary or none if not installed.
     """
     # Check if rbenv is installed
+    display_message(0, "Trying to find the path for ruby...")
+
     rbenv_version = run_command("rbenv --version", False, True, 5, username)
 
     if rbenv_version:
         ruby_path = run_command("rbenv which ruby", False, True, 5, username)
 
         if ruby_path:
+            display_message(0, f"Found ruby at {ruby_path}.")
             return ruby_path.stdout.strip()
 
     # Check if RVM is installed
@@ -349,12 +359,16 @@ def get_ruby_path(username):
         ruby_path = run_command("rvm default exec which ruby", False, True, 5, username)
 
         if ruby_path:
+            display_message(0, f"Found ruby at {ruby_path}.")
             return ruby_path.stdout.strip()
 
     # Finally, check for system-wide Ruby
     system_ruby_path = run_command("which ruby", False, True, 5, username)
 
     if system_ruby_path:
+        display_message(0, f"Found ruby at {system_ruby_path}.")
         return system_ruby_path
+
+    display_message(0, "Didn't find any ruby installs.")
 
     return None  # No Ruby found
