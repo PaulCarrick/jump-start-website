@@ -45,7 +45,7 @@ def setup_rails(configuration):
     run_command(f"cd {rails_dir} && gem install bundler -v \"~> 2.5\"", True, False, None, username)
     display_message(0, "Bundler installed.")
     display_message(0, "Installing gems...")
-    run_long_command(f"cd {rails_dir} && bundle install", True, False, None, username)
+    run_long_command(f"cd {rails_dir} && BUNDLE_TIMEOUT=600 bundle install --jobs=2", True, False, None, username)
     display_message(0, "Bundler installed.")
 
     if sql_file:
@@ -85,21 +85,8 @@ def install_ruby(username):
     rubies_dir = f"{home_dir}/.rubies"
     install_dir = f"{rubies_dir}/ruby-3.2.2"
     path_string = f"PATH={install_dir}/bin:$PATH"
-    ruby_path = shutil.which("ruby")
-    ruby_installed = os.path.isdir(install_dir)
 
-    if not ruby_installed and ruby_path:
-        results = run_command(["ruby", "-v"], True, True)
-        version_match = re.search(r"ruby (\d+)\.(\d+)\.(\d+)", results)
-
-        if version_match:
-            major, minor, patch = [int(version_match.group(1)), int(version_match.group(2)),
-                                   int(version_match.group(3))]
-
-            if (major >= 3) and (minor >= 2):
-                ruby_installed = True
-
-    if ruby_installed:
+    if ruby_installed(username):
         choice = input("Ruby >= 3.2 is already installed. "
                        "Do you want to install it locally anyway "
                        "(this will take a while) (Y/n/q)?: ").strip().lower()
@@ -308,3 +295,64 @@ def install_service(params):
             display_message(219, f"Cannot write service file {service_file}: {e}")
 
         display_message(0, "Service setup complete.")
+
+
+def ruby_installed(username):
+    """
+    Check to see if the Ruby binary is installed and is at version 3.2 or greater
+
+    Args:
+        username (str): The username of the user to check for Ruby.
+    Returns:
+        bool: True if the Ruby binary >= 3.2 is installed, False otherwise.
+    """
+    result = False
+    ruby_path = get_ruby_path(username)
+
+    if ruby_path:
+        results = run_command(f"{ruby_path} -v", False, True)
+        version_match = re.search(r"ruby (\d+)\.(\d+)\.(\d+)", results)
+
+        if version_match:
+            major, minor, patch = [int(version_match.group(1)), int(version_match.group(2)),
+                                   int(version_match.group(3))]
+
+            if (major >= 3) and (minor >= 2):
+                result = True
+
+    return result
+
+def get_ruby_path(username):
+    """
+    Find the actual path to the Ruby binary, considering rbenv, RVM, or system Ruby.
+
+    Args:
+        username (str): The username of the user to check for Ruby.
+    Returns:
+        str: Path to the Ruby binary or none if not installed.
+    """
+    # Check if rbenv is installed
+    rbenv_version = run_command("rbenv --version", False, True, None, username)
+
+    if rbenv_version:
+        ruby_path = run_command("rbenv which ruby", False, True, None, username)
+
+        if ruby_path:
+            return ruby_path.stdout.strip()
+
+    # Check if RVM is installed
+    rvm_version = run_command("rvm --version", False, True, None, username)
+
+    if rvm_version:
+        ruby_path = run_command("rvm default exec which ruby", False, True, None, username)
+
+        if ruby_path:
+            return ruby_path.stdout.strip()
+
+    # Finally, check for system-wide Ruby
+    system_ruby_path = run_command("which ruby", False, True, None, username)
+
+    if system_ruby_path:
+        return system_ruby_path
+
+    return None  # No Ruby found
