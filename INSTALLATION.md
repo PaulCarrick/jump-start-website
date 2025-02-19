@@ -3,14 +3,11 @@
 ## Installing Jump Start Website
 There are several options for installing **Jump Start Website**.\
 \
-If you are hosting on a debian compatible server you can install
-the debian package.\
+The first option is using debain packages (apt or apt-get). This is by far the easiest as it asks you all the questions and preconfigures the install for you. This is also fairly flexiable as you can choose all the setup parameters. However, this is also the slowest as it needs to compile Ruby 3.2 for Debain 12. \
 \
-If you prefer Docker there are docker images for both the website
-and the database on dockerhub.\
+The next option are docker images. This is also fairly easy and it is the quickest of the three options. however this is the least flexiable as it is preconfiured and somewhat difficult to change. \
 \
-If you are a DIY person, you can clone this repository, and use it
-directly or install it from the repository.
+The final option is to install from source. This is fairly quick to load the repo but does require some work to install. If you do not need to change the code and debian doesn't work for you then you can download the repository and run the install script. If you want you can change the code (at you own risk ;) and then deploy it as you like. This is the most difficult option to use.
 
 ## Debian Package
 1) Install the public key for the jump-start-website repository:\
@@ -24,7 +21,6 @@ directly or install it from the repository.
    **sudo /usr/local/jump-start-website/installation/install**
 
 ## Docker
-- **DockerHub (containerized version):** [Jump Start Website Docker Image](https://hub.docker.com/repository/docker/paulcarrick/jump-start-website-server/tags/latest/sha256-a847743b1016adf7dd1a3ff369f032fa3a7dac97ef226924e08f5e28e5a2faa4)
 1) Pull the Database image:\
    **docker pull paulcarrick/jump-start-website-database:latest**
 2) Pull the Server image:\
@@ -38,10 +34,13 @@ directly or install it from the repository.
 5) Run the Database container:\
    **docker run -d -p 5432:5432 --name jump_start_server_database --volume jump_start_server_postgres_data:/var/lib/postgresql/data --volume jump_start_server_storage:/rails/storage --volume jump_start_server_user_home:/home/jump_start --network jump_start_server_network --network-alias db paulcarrick/jump-start-website-database:latest**
 6) Run the Server container:\
-   **docker run -d -p 3000:3000 --name jump_start_server_rails --volume jump_start_server_storage:/rails/storage --volume jump_start_server_user_home:/home/jump_start --network jump_start_server_network paulcarrick/jump-start-website-server:latest**
+   **docker run -d -p 3000:3000 --name jump_start_server_rails --volume jump_start_server_storage:/rails/storage --volume jump_start_server_user_home:/home/jump_start --network jump_start_server_network paulcarrick/jump-start-website-server:latest**\
+\
+After the conatiners are running you will have an http server available running on port 3000 locally.
+The containers are designed to be used behind a reverse proxy (NGINX or Apache). You can change the parameters to use port 80 easily if you simply want an http server. If you want an ssl server you can change the port to 443 and set the mode to https (see the documentation), however there is no way to
+install the certificates (which is why it's normally behind a proxy). If you need this you can use the 3rd option source code to regenerate the containers with your certificates.   
 
 ## Source Code
-- **GitHub (source code):** This repository.
 1) Clone the repository\
    **git clone git@github.com:PaulCarrick/jump-start-website.git**
 2) Change to the repository directory\
@@ -60,8 +59,7 @@ directly or install it from the repository.
    There are two examples provided **example.env** and **docker-example.env**.
    Use **example.env** if you are running the rails app locally on the server.
    Use **docker-example.env** if you are going to build your own docker image
-   (note there is a pre-built image on docker hub; see above) use **docker-example.env**.\
-   \
+   (note there is a pre-built image on docker hub; see above).
    After setting up the .env file you can run **bin/start_server.sh**.\
    \
    You can also run the server as a service. Edit **installation/jumpstartwebsite.service**
