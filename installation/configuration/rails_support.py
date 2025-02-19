@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
-import stat
-import sys
 import os
-import shutil
 import re
+import shutil
 import subprocess
-import platform
-import grp
-
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -77,6 +73,7 @@ def setup_rails(configuration):
     run_command(f"cd {rails_dir} && set -a && . ./.env && set +a && bundle exec rake html:clean",
                 True, False, None, username)
 
+
 def install_ruby(username):
     """
     Install Ruby 3.2.2.
@@ -103,9 +100,17 @@ def install_ruby(username):
                 ruby_installed = True
 
     if ruby_installed:
-        display_message(0, ("Ruby >= 3.2 is already installed."
-                            "if you want to replace it remove it first."))
-        return
+        choice = input("Ruby >= 3.2 is already installed. "
+                       "Do you want to install it locally anyway "
+                       "(this will take a while) (Y/n/q)?: ").strip().lower()
+
+        if len(choice) > 1:
+            choice = choice[0]
+
+        if choice == "q":
+            sys.exit(1)
+        elif choice == "n":
+            return
 
     display_message(0, "Installing Ruby 3.2.2...")
     display_message(0, "Getting required packages...")
@@ -192,9 +197,9 @@ def install_nginx(params):
     Args:
         params (SimpleNamespace): THe parameters for the installation.
     """
-    nginx_config_dir="/etc/nginx"
-    sites_available=f"{nginx_config_dir}/sites-available"
-    sites_enabled=f"{nginx_config_dir}/sites-enabled"
+    nginx_config_dir = "/etc/nginx"
+    sites_available = f"{nginx_config_dir}/sites-available"
+    sites_enabled = f"{nginx_config_dir}/sites-enabled"
     nginx_available_file = f"{sites_available}/jump-start-website"
     nginx_enabled_file = f"{sites_enabled}/jump-start-website"
     nginx_default_file = f"{sites_enabled}/default"
@@ -270,7 +275,7 @@ def generate_certificate(install_directory, server_domain, owner, direct_install
     shutil.copy(lets_encrypt_cert_file, cert_file)
     os.chmod(cert_file, 0o644)
     shutil.copy(lets_encrypt_key_file, key_file)
-    os.chmod(key_file, 0o644) # I do not like this but nginx needs it.
+    os.chmod(key_file, 0o644)  # I do not like this but nginx needs it.
     change_ownership_recursive(secrets_dir, owner, owner)
 
     print("File permissions changed successfully!")
