@@ -24,10 +24,12 @@ module ApplicationHelper
       link_to("View",
               show_path,
               class: "btn-link me-2",
+              accesskey: "v",
               target: "_self"),
       link_to("Edit",
               edit_path,
               class: "btn-link me-2",
+              accesskey: "e",
               target: "_self")
     ]
 

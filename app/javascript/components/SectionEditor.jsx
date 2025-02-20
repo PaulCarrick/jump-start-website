@@ -247,18 +247,6 @@ const SectionEditor = ({
               </div>
             </div>
         )}
-        <div className="row mb-2 display-6 center-item text-center">
-          <center>Preview</center>
-        </div>
-        <div className="row mb-2">
-          <div id="sectionAttributes" className="w-100 border border-danger border-width-8">
-            {!isPresent(image) && !isPresent(description) ? (
-                <center><h1>No Contents</h1></center>
-            ) : (
-                 <RenderSection section={sectionData}/>
-             )}
-          </div>
-        </div>
         {
           renderContentType(contentType, availableContentTypesData, setValue, readOnlyContentType)
         }
@@ -266,7 +254,7 @@ const SectionEditor = ({
           renderSectionName(sectionName, setValue)
         }
         {
-          renderSectionOrder(sectionOrder, setValue)
+          renderDescription(description, setValue)
         }
         {
           renderImage(
@@ -282,7 +270,7 @@ const SectionEditor = ({
           renderLink(link, setValue)
         }
         {
-          renderDescription(description, setValue)
+          renderSectionOrder(sectionOrder, setValue)
         }
         {
           formattingMode === 'danger' ? (
@@ -318,7 +306,7 @@ const SectionEditor = ({
                     Switch to Normal Mode
                   </button>
               ) : (
-                   <button type="button" className="btn btn-bad mb-2 mt-2" onClick={toggleFormatting} >
+                   <button type="button" className="btn btn-bad mb-2 mt-2" onClick={toggleFormatting}>
                      Switch to Formatting Mode **
                    </button>
                )
@@ -334,12 +322,24 @@ const SectionEditor = ({
           <div className="col-10">
           </div>
         </div>
+        <div className="row mb-2 display-6 center-item text-center">
+          <center>Preview</center>
+        </div>
+        <div className="row mb-2">
+          <div id="sectionAttributes" className="w-100 border border-danger border-width-8">
+            {!isPresent(image) && !isPresent(description) ? (
+                <center><h1>No Contents</h1></center>
+            ) : (
+                 <RenderSection section={sectionData}/>
+             )}
+          </div>
+        </div>
         <div className="row mb-2">
           <div className="flex-container">
-            <button type="button" className="btn btn-primary" onClick={handleSubmit}>
+            <button type="button" className="btn btn-primary" accessKey="s" onClick={handleSubmit}>
               Save Section
             </button>
-            <button type="button" className="btn btn-secondary" onClick={handleCancel}>
+            <button type="button" className="btn btn-secondary" accessKey="c" onClick={handleCancel}>
               Cancel
             </button>
           </div>
@@ -457,15 +457,19 @@ function renderImage(
               imageMode,
               [
                 {
-                  label: "Images",
+                  label: "Image",
                   value: "Images",
                 },
                 {
-                  label: "Image Groups",
+                  label: "Image Section",
+                  value: "Section",
+                },
+                {
+                  label: "Image Group",
                   value: "Groups",
                 },
                 {
-                  label: "Videos",
+                  label: "Video",
                   value: "Videos",
                 }
               ],
@@ -915,6 +919,9 @@ function mapReactValuesToSection(sectionData, attribute, value, extraParameters)
       switch (mode) {
         case"Groups":
           sectionData.image = `ImageGroup:${value}`;
+          break;
+        case "Section":
+          sectionData.image = `ImageSection:"${value}"`;
           break;
         case "Videos":
           sectionData.image = `VideoImage:"${value}"`;

@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Quill from "quill";
+import {html as beautifyHtml} from "js-beautify";
 
 // Define a custom DivBlot
 const Block = Quill.import("blots/block");
@@ -93,19 +94,52 @@ const HtmlEditor = ({
     if (isHtmlView) {
       // Switching back to Quill editor
       const quill = quillRef.current?.getEditor();
-      if (quill) {
+
+      if (quill)
         quill.clipboard.dangerouslyPasteHTML(editorContent); // Update Quill with the raw HTML
-      }
     }
     else {
       // Switching to HTML view
       const quill = quillRef.current?.getEditor();
-      if (quill) {
-        setEditorContent(quill.root.innerHTML); // Update raw HTML content
-      }
+
+      if (quill)
+        setEditorContent(prettyPrintHtml(quill.root.innerHTML));
     }
+
     setIsHtmlView(!isHtmlView);
   };
+
+  function prettyPrintHtml(html) {
+    if (!html) return "";
+
+    let formattedHtml = beautifyHtml(html, {
+      indent_size: 2,
+      wrap_attributes: "force-expand-multiline",
+      wrap_line_length: 80,
+      preserve_newlines: true,
+      max_preserve_newlines: 1,
+      indent_inner_html: true,
+      end_with_newline: true,
+      inline: []
+    });
+
+    // Define the tags we want to force onto separate lines
+    const blockTags = ["p", "div", "a"];
+
+    formattedHtml = formattedHtml.replace(
+        new RegExp(`(<(${blockTags.join("|")})(\\s[^>]*)?>)`, "g"),
+        "\n  $1\n"
+    );
+
+    formattedHtml = formattedHtml.replace(
+        new RegExp(`(</(${blockTags.join("|")})>)`, "g"),
+        "\n$1\n"
+    );
+
+    formattedHtml = formattedHtml.replace(/\n\s*\n/g, "\n");
+
+    return formattedHtml.trim();
+  }
 
   const handleChange = (content) => {
     setEditorContent(content); // Keep local state updated
@@ -160,16 +194,16 @@ const HtmlEditor = ({
             <div className="row align-items-center">
               <div className="flex-container">
                 {isHtmlView ? (
-                    <button type="button" onClick={toggleView} className="btn btn-good mb-2">
+                    <button type="button" onClick={toggleView} className="btn btn-good mt-2 mb-2">
                       Switch to Editor View
                     </button>
                 ) : (
-                    <button type="button" onClick={toggleView} className="btn btn-bad mb-2">
-                      Switch to HTML View **
-                    </button>
-                )
+                     <button type="button" onClick={toggleView} className="btn btn-bad mt-2 mb-2">
+                       Switch to HTML View **
+                     </button>
+                 )
                 }
-                <span className="ms-4">
+                <span className="ms-4 mt-2">
                 ** HTML View should only be used by users who are familiar with HTML
               </span>
               </div>

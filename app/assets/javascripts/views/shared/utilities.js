@@ -1,4 +1,5 @@
 // /app/assets/javascripts/views/shared/utilities
+// noinspection JSUnusedGlobalSymbols
 
 var lastPage;
 
@@ -259,4 +260,21 @@ function setupRadioGroupArray(group, fields) {
     radioToSelect.checked = true;
   else
     console.warn(`Radio button with value "${selectedField}" not found in group "${group}".`);
+}
+
+function focusOnFields(shortcutMap) {
+  document.removeEventListener("keydown", handleKeyPress);
+
+  function handleKeyPress(event) {
+    if (event.altKey && shortcutMap[event.key]) {
+      event.preventDefault();
+
+      let inputField = document.getElementById(shortcutMap[event.key]);
+
+      if (inputField)
+        inputField.focus();
+    }
+  }
+
+  document.addEventListener("keydown", handleKeyPress);
 }

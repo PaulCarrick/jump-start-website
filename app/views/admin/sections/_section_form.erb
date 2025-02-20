@@ -1,4 +1,7 @@
 <!-- app/views/admin/sections/_section_form.erb -->
+
+<%= javascript_include_tag 'views/admin/sections/edit' %>
+
 <%= render 'shared/flash_error' %>
 <%=
   success_path = controller.get_item&.persisted? ? admin_section_url(controller.get_item) : admin_sections_url
