@@ -36,7 +36,7 @@ The final option is to install from source. This is fairly quick to load the rep
 6) Run the Server container:\
    **docker run -d -p 3000:3000 --name jump_start_server_rails --volume jump_start_server_storage:/rails/storage --volume jump_start_server_user_home:/home/jump_start --network jump_start_server_network paulcarrick/jump-start-website-server:latest**\
 \
-After the conatiners are running you will have an http server available running on port 3000 locally.
+After the containers are running you will have an http server available running on port 3000 locally.
 The containers are designed to be used behind a reverse proxy (NGINX or Apache). You can change the parameters to use port 80 easily if you simply want an http server. If you want an ssl server you can change the port to 443 and set the mode to https (see the documentation), however there is no way to
 install the certificates (which is why it's normally behind a proxy). If you need this you can use the 3rd option source code to regenerate the containers with your certificates.   
 
