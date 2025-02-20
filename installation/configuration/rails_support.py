@@ -21,20 +21,9 @@ def setup_rails(configuration):
     Args:
         configuration (SimpleNamespace): configuration to use.
     """
-    username = configuration.owner
     rails_dir = configuration.install_directory
+    username = configuration.owner
     sql_file = configuration.dump_file
-    configuration_file = f"{rails_dir}/config/environments/production.rb"
-    replacements = {
-            "config.assume_ssl = true": "config.assume_ssl = false",
-            "config.force_ssl = true":  "config.force_ssl = false",
-            "https":                    "http"
-    }
-
-    if configuration.mode == "http":
-        display_message(0, "Setting configuration to use http...")
-        replace_values_in_file(configuration_file, replacements)
-        display_message(0, "Configuration set to use http.")
 
     display_message(0, "Installing nodejs and npm...")
     run_command("apt update", True, False)

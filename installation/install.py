@@ -508,6 +508,7 @@ def generate_variables(params):
             "site_url":                 params.url,
             "server_host":              params.host,
             "server_mode":              params.mode,
+            "ssl_mode":                 "true" if (params.mode == "https") else "false",
             "server_port":              params.port,
             "internal_port":            params.local_port,
             "external_port":            params.port,
