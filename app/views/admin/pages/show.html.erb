@@ -4,7 +4,7 @@
     <% sections = controller.get_item&.sections %>
     <% if sections.present? %>
       <% sections.each do |section| %>
-        <%= react_component("RenderSection", { section: section, noBorder: true }) %>
+        <%= react_component("RenderSection", { section: section, noBorder: true, noHidden: true }) %>
       <% end %>
     <% else %>
       <h1>No Content</h1>

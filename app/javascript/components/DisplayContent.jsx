@@ -18,8 +18,9 @@ const DisplayContent = ({
                           sectionId = "",
                           imageAttributes = {},
                           textAttributes = {},
+                          noHidden = false
                         }) => {
-  let options = getDefaultOptions(format, textAttributes, imageAttributes);
+  let options = getDefaultOptions(format, textAttributes, imageAttributes, noHidden);
 
   // noinspection JSDeprecatedSymbols
     const toggleId = options.expanding_rows
@@ -32,7 +33,9 @@ const DisplayContent = ({
                                                  .split(",")
                                                  .map((s) => s.trim());
     if (customClass) toggleClass = customClass;
-    setupToggle(toggleId, className);
+
+    if (!noHidden)
+      setupToggle(toggleId, className);
   }
 
   return (
@@ -84,6 +87,7 @@ DisplayContent.propTypes = {
                                       margin_bottom:    PropTypes.string,
                                       background_color: PropTypes.string,
                                     }),
+  noHidden: PropTypes.bool,
 };
 
 export default DisplayContent;

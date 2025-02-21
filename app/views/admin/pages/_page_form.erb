@@ -47,13 +47,19 @@
     <%= form.text_field :access, class: "form-control", placeholder: "Enter the access, if any" %>
   </div>
 
-  <h1>Preview</h1>
+  <h1><center>Preview</center></h1>
   <div>
     <div class="w-100 border border-danger border-width-8 p-2">
       <% sections = controller.get_item&.sections %>
 
       <% if sections.present? %>
+        <% first = true %>
         <% sections.each do |section| %>
+          <% if first %>
+            <% first = false %>
+          <% else %>
+            <hr>
+          <% end %>
           <%= link_to "Edit",
                       edit_admin_section_path(section,
                                               return_url:             @return_path,
@@ -73,7 +79,7 @@
                         target:  "_self",
                         onclick: "if (!confirm('Are you sure you want to delete this?')) { return false; }" %>
           <% end %>
-          <%= react_component("RenderSection", { section: section, noBorder: true }) %>
+          <%= react_component("RenderSection", { section: section, noBorder: true, noHidden: true }) %>
         <% end %>
       <% else %>
         <h1>No Content</h1>

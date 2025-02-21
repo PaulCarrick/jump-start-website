@@ -17,6 +17,7 @@ import {
 const RenderSection = ({
                          section = null,
                          noBorder = false,
+                         noHidden = true
                        }) => {
   if (section === null) return; // We can't render what we don't have
 
@@ -27,7 +28,7 @@ const RenderSection = ({
   processVideoImages(contents);
 
   contents.forEach(content => {
-    sections.push(renderSection(content, noBorder));
+    sections.push(renderSection(content, noBorder, noHidden));
   });
 
   return (sections);
@@ -35,7 +36,7 @@ const RenderSection = ({
 
 // Utility Functions
 
-function renderSection(content, noBorder = false) {
+function renderSection(content, noBorder = false, noHidden) {
   let divClass = "w-100 border border-danger border-width-8";
 
   if (noBorder) divClass = "w-100 m-0 p-3";
@@ -51,6 +52,7 @@ function renderSection(content, noBorder = false) {
               sectionId={content.sectionName}
               textAttributes={content.text_attributes}
               imageAttributes={content.image_attributes}
+              noHidden={noHidden}
           />
         </div>
       </div>
@@ -238,6 +240,7 @@ RenderSection.propTypes = {
                               image_background_color: PropTypes.string,
                             }).isRequired, // Use `.isRequired` here,
   noBorder: PropTypes.bool,
+  noHidden: PropTypes.bool,
 };
 
 export default RenderSection;

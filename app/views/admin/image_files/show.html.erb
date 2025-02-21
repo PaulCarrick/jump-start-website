@@ -25,7 +25,7 @@
           <% end %>
         </div>
         <div class="row">
-          <%= react_component("RenderSection", { section: section, noBorder: true }) %>
+          <%= react_component("RenderSection", { section: section, noBorder: true, noHidden: true }) %>
         </div>
         <div class="row ms-2">
           <%= raw(image_file.description) %>

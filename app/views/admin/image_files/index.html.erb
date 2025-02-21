@@ -42,7 +42,7 @@
                 <% end %>
               </div>
               <div class="row">
-                <%= react_component("RenderSection", { section: section, noBorder: true }) %>
+                <%= react_component("RenderSection", { section: section, noBorder: true, noHidden: true }) %>
               </div>
               <div class="row">
                 <%= raw(image_file.description) %>
