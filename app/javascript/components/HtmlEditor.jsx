@@ -90,6 +90,12 @@ const HtmlEditor = ({
     }
   }, []);
 
+  // Store state in a global object for external access
+  useEffect(() => {
+    if (!window.htmlEditorStates) window.htmlEditorStates = {};
+    window.htmlEditorStates[id] = { isHtmlView };
+  }, [isHtmlView, id]);
+
   const toggleView = () => {
     if (isHtmlView) {
       // Switching back to Quill editor
@@ -170,6 +176,7 @@ const HtmlEditor = ({
       <div>
         {isHtmlView && !noSwitchButton ? (
             <textarea
+                id={`${id}_text`}
                 value={editorContent}
                 onChange={(e) => setEditorContent(e.target.value)}
                 onBlur={handleBlur}

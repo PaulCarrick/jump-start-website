@@ -177,8 +177,43 @@ const SectionEditor = ({
       setFormattingMode("safe");
   };
 
+  const sectionToPostData = (sectionData, prefix = "section") => {
+    const result         = {};
+    const skipParameters = ["id", "created_at", "updated_at"];
+    result[prefix]       = {};
+
+    for (const key in sectionData) {
+      if (!skipParameters.includes(key)) {
+        if ((key === "description") && (window.htmlEditorStates["description"]?.isHtmlView)) {
+          const textField = document.getElementById("description_text");
+
+          if (textField) {
+            const html   = textField.value;
+            const parser = new DOMParser();
+            const parsed = parser.parseFromString(html, "text/html");
+
+            if (!parsed.querySelector("parsererror")) {
+              sectionData[key] = html;
+            }
+            else {
+              setError(`Error the description does not contain valid html. Please correct it and try again.`);
+              return null;
+            }
+          }
+        }
+
+        result[prefix][key] = sectionData[key];
+      }
+    }
+
+    return result;
+  }
+
   const handleSubmit = () => {
     const data = sectionToPostData(sectionData);
+
+    if (data === null)
+      return
 
     if (isPresent(sectionData?.id) && (sectionData?.id != 0)) { // We are updating
       axios.put(submitUrl, data, {
@@ -802,21 +837,6 @@ function renderFormatting(formatting, setValue) {
 }
 
 // *** Utility Functions ***/
-
-function sectionToPostData(sectionData, prefix = "section") {
-  const result         = {};
-  const skipParameters = ["id", "created_at", "updated_at"];
-
-  result[prefix] = {};
-
-  for (const key in sectionData) {
-    if (!skipParameters.includes(key))
-      result[prefix][key] = sectionData[key];
-  }
-
-  return result;
-}
-
 function getMarginOptions(marginType) {
   const prefixes = {
     none:   "",
