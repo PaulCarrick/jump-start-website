@@ -171,7 +171,7 @@ const HtmlEditor = ({
         {isHtmlView && !noSwitchButton ? (
             <textarea
                 value={editorContent}
-                onChange={handleChange}
+                onChange={(e) => setEditorContent(e.target.value)}
                 onBlur={handleBlur}
                 className="form-control"
                 placeholder="Edit raw HTML here"
