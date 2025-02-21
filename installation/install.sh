@@ -59,4 +59,4 @@ if [ -z "${dotenv}" ]; then
   fi
 fi
 
-cd "$(dirname $0)" && sudo python3 install.py
+cd "$(dirname $0)" && sudo python3 install.py $@
