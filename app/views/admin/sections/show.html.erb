@@ -2,7 +2,7 @@
 <%= render layout: "layouts/admin_page" do %>
   <% if controller.get_item&.present? %>
     <div class="row mb-3">
-      <%= react_component("RenderSection", { section: controller.get_item }, noHidden: true ) %>
+      <%= react_component("RenderSection", { section: controller.get_item, noBorder: true, noHidden: true }) %>
     </div>
 
     <div class="row mb-3">
@@ -72,11 +72,11 @@
     <% if @application_user.admin? %>
       <%= link_to("Edit Section",
                   edit_admin_section_path(controller.get_item),
-                  class: "btn btn-primary",
+                  class:  "btn btn-primary",
                   target: "_self") %>
       <%= link_to("Back to Sections",
                   admin_sections_url,
-                  class: "btn btn-secondary",
+                  class:  "btn btn-secondary",
                   target: "_self") %>
     <% end %>
   </span>
