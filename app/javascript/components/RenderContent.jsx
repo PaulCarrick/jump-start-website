@@ -23,7 +23,7 @@ const RenderContent = ({
   if (options.slide_show_images) {
     captions = content;
   }
-debugger;
+
   switch (options.row_style) {
     case "text-left":
       return (
