@@ -10,7 +10,7 @@ module HtmlSanitizer
     doc = Nokogiri::HTML::DocumentFragment.parse(html_string)
 
     # Allowed tags
-    allowed_tags = %w[br p a b i h1 h2 h3 h4 h5 div section button title li ul iframe video]
+    allowed_tags = %w[br p a b i hr h1 h2 h3 h4 h5 div section button title li ul iframe video]
 
     # Traverse through the nodes
     doc.traverse do |node|

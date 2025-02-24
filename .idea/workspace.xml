@@ -9,42 +9,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
-      <change afterPath="$PROJECT_DIR$/app/assets/javascripts/views/admin/columns/edit.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/controllers/admin/columns_controller.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/controllers/api/V1/columns_controller.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/controllers/columns_controller.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/javascript/components/ColumnEditor.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/javascript/components/RenderColumn.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/models/column.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/serializers/column_serializer.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/views/admin/columns/_column_form.erb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/views/admin/columns/edit.html.erb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/views/admin/columns/index.html.erb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/views/admin/columns/new.html.erb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/views/admin/columns/show.html.erb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/views/columns/index.html.erb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/db/migrate/20250222131434_create_columns.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/spec/controllers/admin/columns_controller_spec.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/spec/controllers/columns_controller_spec.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/spec/factories/columns.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/spec/models/column_spec.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/assets/javascripts/views/admin/sections/edit.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/assets/javascripts/views/admin/sections/edit.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/helpers/home_helper.rb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/helpers/image_helper.rb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/helpers/pages_helper.rb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/helpers/search_helper.rb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/helpers/section_helper.rb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/DisplayContent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/DisplayContent.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderContent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderContent.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/SectionEditor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/SectionEditor.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/getDefaultOptions.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/getDefaultOptions.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/renderControlFunctions.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/renderControlFunctions.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/section.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/section.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/schema.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/concerns/html_sanitizer.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/concerns/html_sanitizer.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,41 +103,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Docker.Docker.executor": "Run",
-    "Docker.docker-compose-mail.yml.mailhog: Compose Deployment.executor": "Run",
-    "JavaScript Debug.Debug Chrome JavaScript.executor": "Debug",
-    "JavaScript Debug.Debug Chrome.executor": "Debug",
-    "JavaScript Debug.Debug Rails an Javascript JavaScript.executor": "Debug",
-    "JavaScript Debug.Debug Rails and Javascript JavaScript.executor": "Debug",
-    "JavaScript Debug.Development: rails-website JavaScript.executor": "Debug",
-    "JavaScript Debug.Generic Chrome.executor": "Debug",
-    "Python.Build Python.executor": "Debug",
-    "Rails.Debug Rails an Javascript.executor": "Debug",
-    "Rails.Debug Rails and Javascript.executor": "Debug",
-    "Rails.Development: rails-website.executor": "Debug",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "database.data.extractors.current.export.id": "SQL Inserts",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/paul/src/jump-start-website/app/javascript/components",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "ruby.structure.view.model.defaults.configured": "true",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "settings.editor.splitter.proportion": "0.2631579",
-    "ts.external.directory.path": "/Applications/RubyMine.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
-    "two.files.diff.last.used.file": "/Users/paul/src/jump-start-website/app/javascript/components/HtmlEditor.jsx",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Docker.Docker.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.docker-compose-mail.yml.mailhog: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript Debug.Debug Chrome JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Debug Chrome.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Debug Rails an Javascript JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Debug Rails and Javascript JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Development: rails-website JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Generic Chrome.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.Build Python.executor&quot;: &quot;Debug&quot;,
+    &quot;Rails.Debug Rails an Javascript.executor&quot;: &quot;Debug&quot;,
+    &quot;Rails.Debug Rails and Javascript.executor&quot;: &quot;Debug&quot;,
+    &quot;Rails.Development: rails-website.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;SQL Inserts&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/paul/src/jump-start-website/app/javascript/components&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;ruby.structure.view.model.defaults.configured&quot;: &quot;true&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;settings.editor.splitter.proportion&quot;: &quot;0.2631579&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Applications/RubyMine.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;two.files.diff.last.used.file&quot;: &quot;/Users/paul/src/jump-start-website/app/javascript/components/HtmlEditor.jsx&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -574,7 +540,8 @@
       <workItem from="1739973985833" duration="2423000" />
       <workItem from="1739984449797" duration="8418000" />
       <workItem from="1740057972463" duration="47971000" />
-      <workItem from="1740228441978" duration="49468000" />
+      <workItem from="1740228441978" duration="50140000" />
+      <workItem from="1740418743527" duration="571000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />
