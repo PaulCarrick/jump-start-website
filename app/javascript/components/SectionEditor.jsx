@@ -416,6 +416,7 @@ function renderSectionName(sectionName, setValue) {
                   sectionName,
                   setValue,
                   null,
+                  {},
                   "Enter the name for the section (optional; used for section focus)"
               )
             }
@@ -437,6 +438,7 @@ function renderSectionOrder(sectionOrder, setValue) {
                   sectionOrder,
                   setValue,
                   null,
+                  {},
                   "Enter the order of the section (1 is first)",
                   "number"
               )
@@ -527,6 +529,7 @@ function renderLink(link, setValue) {
                   link,
                   setValue,
                   null,
+                  {},
                   "Enter the URL to be opened when an image is clicked (optional)"
               )
             }

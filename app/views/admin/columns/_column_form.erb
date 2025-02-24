@@ -1,0 +1,29 @@
+<!-- app/views/admin/columns/_column_form.erb -->
+
+<%= javascript_include_tag 'views/admin/columns/edit' %>
+
+<%= render 'shared/flash_error' %>
+<%=
+  success_path = controller.get_item&.persisted? ? admin_column_url(controller.get_item) : admin_columns_url
+  success_path = @return_url if @return_url.present?
+  cancel_path = admin_columns_url
+  cancel_path = @cancel_url if @cancel_url.present?
+  read_only_content_type = @read_only_content_type.present? ? @read_only_content_type : false
+  new_column = @new_column.present? ? @new_column : false
+
+  react_component(
+    "ColumnEditor",
+    {
+      column:                controller.get_item,
+      availableSectionNames: @section_names,
+      availableImages:       @images,
+      availableImageGroups:  @groups,
+      availableVideos:       @videos,
+      submitPath:            controller.get_item&.persisted? ? admin_column_url(controller.get_item) : admin_columns_url,
+      successPath:           success_path,
+      cancelPath:            cancel_path,
+      readOnlyContentType:   read_only_content_type,
+      newColumn:             new_column
+    }
+  )
+%>

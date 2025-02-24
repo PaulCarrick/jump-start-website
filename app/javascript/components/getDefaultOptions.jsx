@@ -6,6 +6,7 @@
 
 import parseStyle from "./parseStyle";
 import PropTypes from "prop-types";
+import {getDefaultRowStyle} from "./App.jsx";
 
 const getDefaultOptions = (
     format          = {},
@@ -14,9 +15,11 @@ const getDefaultOptions = (
 ) => {
   const formatOptions = dupObject(format);
   let options         = {
-    row_style:         "text-single",
+    row_style:         getDefaultRowStyle(),
     div_ratio:         "",
     row_classes:       "align-items-center",
+    classes:           null,
+    styles:            {},
     text_classes:      null,
     text_styles:       {},
     image_classes:     null,
@@ -34,6 +37,7 @@ const getDefaultOptions = (
     if (isPresent(formatOptions.row_style)) options.row_style = formatOptions.row_style;
     if (isPresent(formatOptions.div_ratio)) options.div_ratio = formatOptions.div_ratio;
     if (isPresent(formatOptions.row_classes)) options.row_classes = formatOptions.row_classes;
+    if (isPresent(formatOptions.classes)) options.classes = formatOptions.classes;
     if (isPresent(formatOptions.text_classes)) options.text_classes = formatOptions.text_classes;
     if (isPresent(formatOptions.image_classes)) options.image_classes = formatOptions.image_classes;
     if (isPresent(formatOptions.image_caption)) options.image_caption = formatOptions.image_caption;
@@ -42,6 +46,13 @@ const getDefaultOptions = (
     if (isPresent(formatOptions.caption_classes)) options.caption_classes = formatOptions.caption_classes;
     if (isPresent(formatOptions.caption_position)) options.caption_position = formatOptions.caption_position;
     if (isPresent(formatOptions.slide_show_images)) options.slide_show_images = formatOptions.slide_show_images;
+
+    if (isPresent(formatOptions.styles)) {
+      if (typeof formatOptions.styles === 'string')
+        options.styles = parseStyle(formatOptions.styles);
+      else
+        options.styles = formatOptions.styles;
+    }
 
     if (isPresent(formatOptions.text_styles)) {
       if (typeof formatOptions.text_styles === 'string')
@@ -122,31 +133,31 @@ export function dupObject(existingObject) {
   return structuredClone(existingObject);
 }
 
-export function hasImageSection(rowStyle = "text-single") {
+export function hasImageSection(rowStyle = getDefaultRowStyle()) {
   return (rowStyle !== "text-single");
 }
 
-export function hasTextSection(rowStyle = "text-single") {
+export function hasTextSection(rowStyle = getDefaultRowStyle()) {
   return (rowStyle !== "image-single");
 }
 
-export function hasSplitSections(rowStyle = "text-single") {
+export function hasSplitSections(rowStyle = getDefaultRowStyle()) {
   return (rowStyle === "text-left") || (rowStyle === "text-right");
 }
 
-export function isTextOnly(rowStyle = "text-single") {
+export function isTextOnly(rowStyle = getDefaultRowStyle()) {
   return (!isPresent(rowStyle) || rowStyle === "text-single");
 }
 
-export function isImageOnly(rowStyle = "text-single") {
+export function isImageOnly(rowStyle = getDefaultRowStyle()) {
   return (rowStyle === "image-single");
 }
 
-export function hasTextAndImage(rowStyle = "text-single") {
+export function hasTextAndImage(rowStyle = getDefaultRowStyle()) {
   return ((rowStyle !== "text-single") && (rowStyle !== "image-single"));
 }
 
-export function getColumWidths(divRatio = "50:50", rowStyle = "text-single") {
+export function getColumWidths(divRatio = "50:50", rowStyle = getDefaultRowStyle()) {
   let textColumnWidth  = "col-12";
   let imageColumnWidth = "";
 
@@ -285,6 +296,12 @@ export function formattingOptions(styleData) {
 
   if (!isPresent(styleData?.row_classes))
     fields.push({ label: "Row Classes", value: "row_classes" });
+
+  if (!isPresent(styleData?.classes))
+    fields.push({ label: "Classes", value: "classes" });
+
+  if (!isPresent(styleData?.styles))
+    fields.push({ label: "Styles", value: "styles" });
 
   if (!isPresent(styleData?.text_classes))
     fields.push({ label: "Text Classes", value: "text_classes" });
@@ -430,6 +447,8 @@ getDefaultOptions.propTypes = {
   format:           PropTypes.shape({
                                       row_style:         PropTypes.string,
                                       row_classes:       PropTypes.string,
+                                      classes:           PropTypes.string,
+                                      styles:            PropTypes.any,
                                       text_classes:      PropTypes.string,
                                       text_styles:       PropTypes.any,
                                       image_classes:     PropTypes.string,

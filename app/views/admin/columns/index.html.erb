@@ -1,0 +1,120 @@
+<!-- app/views/admin/columns/index.html.erb -->
+<%= render layout: "layouts/admin_page" do %>
+  <div class="auto-size p-2 border-bottom border-dark">
+    <% controller.get_items.each do |column| %>
+      <div class="row align-content-bottom d-flex align-items-center" style="min-height: 3em; max-height: 3em;">
+        <div class="col-2 m-0 p-0">
+          <h2>Column</h2>
+        </div>
+        <div class="col-10 mt-2" style="min-height: 3em; max-height: 3em;">
+          <div class="d-flex justify-content-end">
+            <div class="mt-2">
+              <%= link_to 'Clear Sort', admin_columns_path(clear_sort: true), class: "action-links", target: "_self" %>
+              <% delete_path = admin_column_path(column).to_s + "/delete" %>
+              <%= action_links(column,
+                               admin_column_path(column),
+                               edit_admin_column_path(column),
+                               delete_path) %>
+            </div>
+            <%= render 'shared/top_page_navigation' %>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <%= react_component("RenderColumn", { column: column, noBorder: true, noHidden: true }) %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <%= sortable_column('Section', 'section_name', "columns") %>
+        </div>
+        <div class="col-2">
+          <%= sortable_column('Name', 'column_name', "columns") %>
+        </div>
+        <div class="col-2">
+          <%= sortable_column('Order:', 'column_order', "columns") %>
+        </div>
+        <div class="col-4">
+          <%= sortable_column('Image:', 'image', "columns") %>
+        </div>
+        <div class="col-2">
+          <%= sortable_column('URL:', 'link', "columns") %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <%= column.section_name %>
+        </div>
+        <div class="col-2">
+          <%= column.column_name %>
+        </div>
+        <div class="col-2">
+          <%= column.column_order %>
+        </div>
+        <div class="col-4">
+          <%= column.image %>
+        </div>
+        <div class="col-2">
+          <%= column.link %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="row mt-3">
+    <div class="col-2">
+      <%= link_to("New Column", new_admin_column_path, class: "btn btn-primary", target: "_self") %>
+    </div>
+    <div class="col-10 justify-content-end">
+      <%= render 'shared/page_navigation' %>
+    </div>
+  </div>
+
+  <%= search_form_for @q,
+                      url:    admin_columns_path,
+                      id:     "columns_search_form",
+                      class:  "mt-3 p-2 rounded-box",
+                      method: :get,
+                      html:   { target: "_self", "data-turbo": "false", "data-turbolinks": "false" } do |form| %>
+    <div class="row mb-2">
+      <div class="col-2" style="font-size: 11pt;">
+        <%= form.label :section_name_cont, "Section Name", class: "form-label" %>
+      </div>
+      <div class="col-4">
+        <%= form.search_field :section_name_cont %>
+      </div>
+      <div class="col-2" style="font-size: 11pt;">
+        <%= form.label :column_name_cont, "Column Name", class: "form-label" %>
+      </div>
+      <div class="col-4">
+        <%= form.search_field :column_name_cont, style: "min-width: 100%;" %>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-2" style="font-size: 11pt;">
+        <%= form.label :image_cont, "Image", class: "form-label" %>
+      </div>
+      <div class="col-4">
+        <%= form.search_field :image_cont, style: "min-width: 100%;" %>
+      </div>
+      <div class="col-2" style="font-size: 11pt;">
+        <%= form.label :link_cont, "URL", class: "form-label" %>
+      </div>
+      <div class="col-4">
+        <%= form.search_field :link_cont, style: "min-width: 100%;" %>
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-2" style="font-size: 11pt;">
+        <%= form.label :content_cont, "Content", class: "form-label" %>
+      </div>
+      <div class="col-10">
+        <%= form.search_field :content_cont, style: "min-width: 100%;" %>
+      </div>
+    </div>
+    <div>
+      <%= form.submit "Search Columns", class: "btn btn-primary" %>
+      <%= link_to 'Clear Search', admin_columns_path(clear_search: true), class: "btn btn-secondary", target: "_self" %>
+    </div>
+  <% end %>
+<% end %>

@@ -34,7 +34,7 @@ export function renderComboBox(id, value, optionsHash, setValue, readOnly = fals
   );
 }
 
-export function renderSelect(id, value, options, setValue, controlClass = "form-control", dataOptions={}) {
+export function renderSelect(id, value, options, setValue, controlClass = "form-control", dataOptions = {}) {
   return (
       <select
           id={id}
@@ -53,19 +53,38 @@ export function renderSelect(id, value, options, setValue, controlClass = "form-
   );
 }
 
-export function renderInput(id, value, onChange, onBlur, placeHolder  = "Please enter a value", type  = "text",
-                            controlClass = "form-control", dataOptions={}) {
-  return (
-      <input
-          type={type}
-          id={id}
-          value={isPresent(value) ? value : ""}
-          placeholder={placeHolder}
-          className={controlClass}
-          data-options={dataOptions}
-          onChange={(event) => onChange(event.target.value, id, event.target.dataset.options)}
-          onBlur={(onBlur !== null) && ((event) => onBlur(event.target.value, id, event.target.dataset.options))}
-      />
-  );
+export function renderInput(
+    id, value, onChange = null, onBlur = null, options = {}, placeHolder = "Please enter a value", type = "text",
+    controlClass                                                                                        = "form-control", dataOptions = {}
+) {
+  if (onBlur)
+    return (
+        <input
+            type={type}
+            id={id}
+            value={isPresent(value) ? value : ""}
+            placeholder={placeHolder}
+            className={controlClass}
+            data-options={dataOptions}
+            required={(options && ('required' in options)) ? options.required : false}
+            readOnly={(options && ('readOnly' in options)) ? options.readOnly : false}
+            onChange={(event) => onChange(event.target.value, id, event.target.dataset.options)}
+            onBlur={(onBlur !== null) && ((event) => onBlur(event.target.value, id, event.target.dataset.options))}
+        />
+    );
+  else
+    return (
+        <input
+            type={type}
+            id={id}
+            value={isPresent(value) ? value : ""}
+            placeholder={placeHolder}
+            className={controlClass}
+            data-options={dataOptions}
+            required={(options && ('required' in options)) ? options.required : false}
+            readOnly={(options && ('readOnly' in options)) ? options.readOnly : false}
+            onChange={(event) => onChange(event.target.value, id, event.target.dataset.options)}
+        />
+    );
 }
 

@@ -2,4 +2,4 @@
 
 // Functions for the section editor
 
-focusOnFields({ "q": "q_section_name_cont" });
+focusOnFields({ "q": "q_content_type_cont" });

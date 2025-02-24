@@ -1,6 +1,8 @@
 # app/models/section.rb
 
 class Section < ApplicationRecord
+  has_many :columns, foreign_key: "section_name", primary_key: "section_name", dependent: :destroy
+
   after_find :verify_checksum, unless: -> { Thread.current[:skip_checksum_verification] }
   after_find :setup_formatting
 

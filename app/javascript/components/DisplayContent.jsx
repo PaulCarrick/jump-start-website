@@ -61,6 +61,8 @@ DisplayContent.propTypes = {
   format:  PropTypes.shape({
                              row_style:         PropTypes.string,
                              row_classes:       PropTypes.string,
+                             classes:           PropTypes.string,
+                             styles:            PropTypes.any,
                              text_classes:      PropTypes.string,
                              text_styles:       PropTypes.any,
                              image_classes:     PropTypes.string,

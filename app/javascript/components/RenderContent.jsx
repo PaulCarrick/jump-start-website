@@ -23,7 +23,7 @@ const RenderContent = ({
   if (options.slide_show_images) {
     captions = content;
   }
-
+debugger;
   switch (options.row_style) {
     case "text-left":
       return (
@@ -129,7 +129,21 @@ const RenderContent = ({
           </>
       );
     default:
-      return null;
+      if (image)
+        return (
+            <div className={options.classes} style={options.styles}>
+              <RenderImage content={captions} image={image} link={link} options={options}/>
+            </div>)
+      else
+        return (
+            <div className={options.classes} style={options.styles}>
+              <ContentBlock content={text}
+                            options={options}
+                            toggleId={toggleId}
+                            toggleClass={toggleClass}
+              />
+            </div>
+        );
   }
 };
 
@@ -142,8 +156,11 @@ RenderContent.propTypes = {
                                                                       "text-single",
                                                                       "image-single",
                                                                       "text-top",
-                                                                      "text-bottom"
+                                                                      "text-bottom",
+                                                                      "cell"
                                                                     ]).isRequired,
+                                 classes:           PropTypes.string,
+                                 styles:            PropTypes.object,
                                  text_classes:      PropTypes.string,
                                  text_styles:       PropTypes.object,
                                  image_classes:     PropTypes.string,

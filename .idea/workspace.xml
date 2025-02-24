@@ -9,7 +9,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
+      <change afterPath="$PROJECT_DIR$/app/assets/javascripts/views/admin/columns/edit.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/controllers/admin/columns_controller.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/controllers/api/V1/columns_controller.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/controllers/columns_controller.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/components/ColumnEditor.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/components/RenderColumn.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/models/column.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/serializers/column_serializer.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/views/admin/columns/_column_form.erb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/views/admin/columns/edit.html.erb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/views/admin/columns/index.html.erb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/views/admin/columns/new.html.erb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/views/admin/columns/show.html.erb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/views/columns/index.html.erb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/db/migrate/20250222131434_create_columns.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/controllers/admin/columns_controller_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/controllers/columns_controller_spec.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/factories/columns.rb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spec/models/column_spec.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/assets/javascripts/views/admin/sections/edit.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/assets/javascripts/views/admin/sections/edit.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/helpers/home_helper.rb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/helpers/image_helper.rb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/helpers/pages_helper.rb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/helpers/search_helper.rb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/helpers/section_helper.rb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/DisplayContent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/DisplayContent.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderContent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderContent.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/SectionEditor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/SectionEditor.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/getDefaultOptions.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/getDefaultOptions.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/renderControlFunctions.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/renderControlFunctions.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/section.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/section.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/schema.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,7 +155,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "database.data.extractors.current.export.id": "SQL Inserts",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/paul/src/jump-start-website",
+    "last_opened_file_path": "/Users/paul/src/jump-start-website/app/javascript/components",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.detected.package.tslint": "true",
@@ -150,11 +185,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/startup/debconf" />
-      <recent name="$PROJECT_DIR$/startup/debconf/configure_server" />
-      <recent name="$APPLICATION_CONFIG_DIR$/scratches" />
-      <recent name="$PROJECT_DIR$/startup/mail/scripts" />
+      <recent name="$PROJECT_DIR$/app/javascript/components" />
+      <recent name="$PROJECT_DIR$/spec/controllers/admin" />
+      <recent name="$PROJECT_DIR$/spec/controllers" />
+      <recent name="$PROJECT_DIR$/app/views/admin" />
+      <recent name="$PROJECT_DIR$/app/views/columns" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/installation" />
@@ -169,7 +204,7 @@
       <command value="Newhall2Eastsound!" />
     </option>
   </component>
-  <component name="RunManager" selected="Docker.docker-compose-mail.yml.mailhog: Compose Deployment">
+  <component name="RunManager" selected="JavaScript Debug.Generic Chrome">
     <configuration name="Debug Chrome JavaScript" type="JavascriptDebugType" uri="http://localhost:3000/">
       <method v="2">
         <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_OpenServer" />
@@ -218,7 +253,11 @@
       <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
       <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
       <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
       <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
       <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="SCRIPT_ARGS" VALUE="" />
       <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="PORT" VALUE="3000" />
@@ -242,7 +281,11 @@
       <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
       <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
       <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
       <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
       <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="SCRIPT_ARGS" VALUE="" />
       <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="PORT" VALUE="3000" />
@@ -263,7 +306,11 @@
       <RAKE_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
       <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
       <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
       <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
       <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_NAME" VALUE="spec" />
       <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_ARGS" VALUE="" />
@@ -287,7 +334,11 @@
       </envs>
       <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
       <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
       <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
       <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_NAME" VALUE="test" />
       <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_ARGS" VALUE="" />
@@ -306,7 +357,11 @@
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
       <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
+        <COVERAGE_PATTERN ENABLED="true">
+          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
+        </COVERAGE_PATTERN>
+      </EXTENSION>
       <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TESTS_FOLDER_PATH" VALUE="" />
       <RTEST_RUN_CONFIG_SETTINGS_ID NAME="TEST_SCRIPT_PATH" VALUE="" />
@@ -519,6 +574,7 @@
       <workItem from="1739973985833" duration="2423000" />
       <workItem from="1739984449797" duration="8418000" />
       <workItem from="1740057972463" duration="47971000" />
+      <workItem from="1740228441978" duration="49468000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />
