@@ -72,6 +72,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_22_131434) do
     t.string "column_type"
     t.integer "column_order"
     t.text "content"
+    t.jsonb "options"
     t.string "image"
     t.string "link"
     t.jsonb "formatting"
@@ -156,7 +157,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_22_131434) do
 
   create_table "sections", force: :cascade do |t|
     t.string "content_type", null: false
-    t.string "section_name"
+    t.string "section_name", null: false
     t.integer "section_order"
     t.string "image"
     t.string "link"
@@ -169,6 +170,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_22_131434) do
     t.jsonb "image_attributes", default: {}, null: false
     t.jsonb "text_attributes", default: {}, null: false
     t.jsonb "formatting", default: {}, null: false
+    t.index ["section_name"], name: "index_sections_on_section_name", unique: true
   end
 
   create_table "site_setups", force: :cascade do |t|

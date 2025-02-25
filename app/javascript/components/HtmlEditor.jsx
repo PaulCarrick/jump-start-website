@@ -47,9 +47,10 @@ const HtmlEditor = ({
                       placeholder = "Enter text here...",
                       onChange = null,
                       onBlur = null,
+                      useHtmlView = false,
                       noSwitchButton = false,
                     }) => {
-  const [isHtmlView, setIsHtmlView]       = useState(false); // Toggle for raw HTML view
+  const [isHtmlView, setIsHtmlView]       = useState(useHtmlView); // Toggle for raw HTML view
   const [editorContent, setEditorContent] = useState(value || ""); // Store editor content
   const quillRef                          = useRef(null);
 
@@ -119,14 +120,14 @@ const HtmlEditor = ({
     if (!html) return "";
 
     let formattedHtml = beautifyHtml(html, {
-      indent_size: 2,
-      wrap_attributes: "force-expand-multiline",
-      wrap_line_length: 80,
-      preserve_newlines: true,
+      indent_size:           2,
+      wrap_attributes:       "force-expand-multiline",
+      wrap_line_length:      80,
+      preserve_newlines:     true,
       max_preserve_newlines: 1,
-      indent_inner_html: true,
-      end_with_newline: true,
-      inline: []
+      indent_inner_html:     true,
+      end_with_newline:      true,
+      inline:                []
     });
 
     // Define the tags we want to force onto separate lines
@@ -226,6 +227,7 @@ HtmlEditor.propTypes = {
   placeholder:    PropTypes.string,
   onChange:       PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   onBlur:         PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  useHtmlView:    PropTypes.bool,
   noSwitchButton: PropTypes.bool
 };
 

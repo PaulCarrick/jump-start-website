@@ -1,5 +1,5 @@
 // app/assets/javascript/views/pages/show.js
 
-// Setup for pages
+// Setup for editing pages
 
 setupScroll();

@@ -53,18 +53,19 @@ class Admin::SectionsController < Admin::AbstractAdminController
 
   def edit
     super
+    @return_url = params["return_url"].present? ? params["return_url"] : admin_section_url(get_item)
+    @cancel_url = URI(params["cancel_url"].present? ? params["cancel_url"] : admin_sections_url)
 
-    @return_url = params[:return_url].present? ? params[:return_url] : admin_section_url(get_item)
-    @cancel_url = URI(params[:cancel_url].present? ? params[:cancel_url] : admin_sections_url)
-
-    if params[:new_section].present?
+    if params[:new_section].present? && params[:new_section] == "true"
       @cancel_url.query = URI.encode_www_form({
                                                 canceled:    true,
                                                 section_id:  get_item.id,
                                                 new_section: params[:new_section]
                                               })
     else
-      @cancel_url.query = URI.encode_www_form({ canceled: true, section_id: get_item.id })
+      @cancel_url.query = URI.encode_www_form({ canceled:     true,
+                                                section_id:   get_item.id,
+                                                section_name: get_item.section_name })
     end
 
     @read_only_content_type = params[:read_only_content_type].present? ? params[:read_only_content_type] : false

@@ -6,6 +6,7 @@ class CreateColumns < ActiveRecord::Migration[8.0]
       t.string  :column_type
       t.integer :column_order
       t.text    :content
+      t.jsonb   :options
       t.string  :image
       t.string  :link
       t.jsonb   :formatting
@@ -16,5 +17,8 @@ class CreateColumns < ActiveRecord::Migration[8.0]
     end
 
     add_index :columns, [:column_name, :section_name], unique: true
+
+    change_column :sections, :section_name, :string, null: false
+    add_index :sections, :section_name, unique: true
   end
 end

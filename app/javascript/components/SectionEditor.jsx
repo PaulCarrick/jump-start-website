@@ -407,7 +407,7 @@ function renderContentType(contentType, availableContentTypesData, setValue, rea
 function renderSectionName(sectionName, setValue) {
   return (
       <div className="row mb-2">
-        <div className="col-2 d-flex align-items-center">Section Name:</div>
+        <div className="col-2 d-flex align-items-center">Section Name*:</div>
         <div className="col-10">
           <div id="sectionNameDiv">
             {
@@ -416,8 +416,8 @@ function renderSectionName(sectionName, setValue) {
                   sectionName,
                   setValue,
                   null,
-                  {},
-                  "Enter the name for the section (optional; used for section focus)"
+                  {required: true},
+                  "Enter the name for the section (required and must be unique)"
               )
             }
           </div>

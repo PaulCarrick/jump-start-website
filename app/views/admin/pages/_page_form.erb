@@ -1,11 +1,6 @@
 <!-- app/views/admin/pages/_page_form.html.erb -->
-<%
-  if controller.get_item&.id.present?
-    @return_path = edit_admin_page_path(controller.get_item, target: "_self")
-  else
-    @return_path = new_admin_page_path(target: "_self")
-  end
-%>
+
+<%= javascript_include_tag 'views/admin/pages/edit' %>
 
 <%= form_with(model:  controller.get_item,
               url:    controller.get_item.persisted? ? admin_page_path(controller.get_item) : admin_pages_path,
@@ -60,27 +55,36 @@
           <% else %>
             <hr>
           <% end %>
-          <%= link_to "Edit",
-                      edit_admin_section_path(section,
-                                              return_url:             @return_path,
-                                              cancel_url:             @return_path,
-                                              read_only_content_type: true,
-                                              new_section:            false,
-                                              target:                 "_self"),
-                      class:  "ms-2",
-                      target: "_self" %>
-          <% if @application_user.admin? %>
-            <%= link_to "Delete",
-                        admin_delete_section_path(section, method: :delete, return_url: @return_path),
-                        method:  :delete,
-                        data:    { confirm: "Are you sure?" },
-                        class:   "btn-link",
-                        style:   "color: red",
-                        target:  "_self",
-                        onclick: "if (!confirm('Are you sure you want to delete this?')) { return false; }" %>
+          <%
+            if controller.get_item&.id.present?
+              @return_path = edit_admin_page_path(controller.get_item, section_name: section.section_name, target: "_self")
+            else
+              @return_path = new_admin_page_path(target: "_self")
+            end
+          %>
+          <div id="<%= section.section_name %>">
+            <%= link_to "Edit",
+                        edit_admin_section_path(section,
+                                                return_url:             @return_path,
+                                                cancel_url:             @return_path,
+                                                read_only_content_type: true,
+                                                new_section:            false,
+                                                target:                 "_self"),
+                        class:  "ms-2",
+                        target: "_self" %>
+            <% if @application_user.admin? %>
+              <%= link_to "Delete",
+                          admin_delete_section_path(section, method: :delete, return_url: @return_path),
+                          method:  :delete,
+                          data:    { confirm: "Are you sure?" },
+                          class:   "btn-link",
+                          style:   "color: red",
+                          target:  "_self",
+                          onclick: "if (!confirm('Are you sure you want to delete this?')) { return false; }" %>
+            <% end %>
+            <%= react_component("RenderSection", { section: section, noBorder: true, noHidden: true }) %>
           <% end %>
-          <%= react_component("RenderSection", { section: section, noBorder: true, noHidden: true }) %>
-        <% end %>
+        </div>
       <% else %>
         <h1>No Content</h1>
       <% end %>

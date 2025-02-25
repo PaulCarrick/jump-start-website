@@ -43,9 +43,6 @@ const ColumnEditor = ({
     }
   }, [column, columnData]);
 
-  if (!columnData.formatting && formatting) // Create it it doesn't exist
-    columnData.formatting = formatting;
-
   // Assign Column Attributes
   const [sectionName, setSectionName]          = useState(columnData.section_name);
   const [columnName, setColumnName]            = useState(columnData.column_name);
@@ -53,6 +50,8 @@ const ColumnEditor = ({
   const [content, setContent]                  = useState(columnData.content);
   const [image, setImage]                      = useState(columnData.image);
   const [link, setLink]                        = useState(columnData.link);
+  const [options, setOptions]                  = useState(columnData.options ? columnData.options : {});
+  const [useHtmlView, setUseHtmlView]          = useState((columnData.options && ('use_html_view' in options)) ? columnData.options.use_html_view : null);
   const [formatting, setFormatting]            = useState(columnData.formatting ? columnData.formatting : {});
   const [marginTop, setMarginTop]              = useState((columnData.formatting && ('margin_top' in formatting)) ? columnData.formatting.margin_top : null);
   const [marginLeft, setMarginLeft]            = useState((columnData.formatting && ('margin_left' in formatting)) ? columnData.formatting.margin_left : null);
@@ -127,21 +126,30 @@ const ColumnEditor = ({
 
     for (const key in columnData) {
       if (!skipParameters.includes(key)) {
-        if ((key === "content") && (window.htmlEditorStates["content"]?.isHtmlView)) {
-          const textField = document.getElementById("content_text");
+        if (key === "content") {
+          if (window.htmlEditorStates["content"]?.useHtmlView) {
+            const textField = document.getElementById("content_text");
 
-          if (textField) {
-            const html   = textField.value;
-            const parser = new DOMParser();
-            const parsed = parser.parseFromString(html, "text/html");
+            if (columnData.options)
+              columnData.options["use_html_view"] = true
 
-            if (!parsed.querySelector("parsererror")) {
-              columnData[key] = html;
+            if (textField) {
+              const html   = textField.value;
+              const parser = new DOMParser();
+              const parsed = parser.parseFromString(html, "text/html");
+
+              if (!parsed.querySelector("parsererror")) {
+                columnData[key] = html;
+              }
+              else {
+                setError(`Error the content does not contain valid html. Please correct it and try again.`);
+                return null;
+              }
             }
-            else {
-              setError(`Error the content does not contain valid html. Please correct it and try again.`);
-              return null;
-            }
+          }
+          else {
+            if (columnData.options)
+              columnData.options["use_html_view"] = false
           }
         }
 
@@ -229,7 +237,7 @@ const ColumnEditor = ({
             renderColumnName(columnName, setValue)
           }
           {
-            renderContent(content, setValue)
+            renderContent(content, setValue, useHtmlView)
           }
           {
             renderImage(
@@ -471,7 +479,7 @@ function renderLink(link, setValue) {
   );
 }
 
-function renderContent(content, setValue) {
+function renderContent(content, setValue, useHtmlView = false) {
   return (
       <div className="row mb-2">
         <div className="col-2 d-flex align-items-center">Content:</div>
@@ -486,6 +494,7 @@ function renderContent(content, setValue) {
                     "content"
                 )}
                 onBlur={(setValue !== null) && ((event) => setValue(event.target.value, id, event.target.dataset.options))}
+                useHtmlView={useHtmlView}
                 theme="snow"
             />
           </div>
