@@ -24,13 +24,15 @@ for arg in "$@"; do
 done
 
 DATE_STRING=`date +"%m-%d-%Y"`
-USER=${USERNAME}
+USER=${DB_USERNAME}
+HOST=${DB_HOST}
+PORT=${DB_PORT}
 DATABASE=${DB_DATABASE}
 DESTINATION_NAME=${DB_DATABASE}
 LOCAL_DUMP_NAME="${DESTINATION_NAME}_database_${DATE_STRING}.dump"
 LOCAL_STORAGE_NAME="${DESTINATION_NAME}_images_${DATE_STRING}.tar.gz"
 
-pg_dump -U "${USER}" -d "${DATABASE}" -F c -f "${HOME}/${LOCAL_DUMP_NAME}"
+pg_dump -h "${HOST}" -p "${PORT}" -U "${USER}" -d "${DATABASE}" -F c -f "${HOME}/${LOCAL_DUMP_NAME}"
 
 if [ $? -ne 0 ]; then
   echo "Error: Failed to backup ${HOME}/${LOCAL_DUMP_NAME}"
@@ -38,7 +40,7 @@ if [ $? -ne 0 ]; then
 fi
 
 if [ "$INCLUDE_STORAGE_FLAG" = "true" ]; then
-    tar -czvf "${HOME}/${LOCAL_STORAGE_NAME}" storage/
+    tar --dereference -czvf "${HOME}/${LOCAL_STORAGE_NAME}" storage/
 
     if [ $? -ne 0 ]; then
       echo "Error: Failed to create ${REMOTE_STORAGE_NAME} in ${HOME}"
