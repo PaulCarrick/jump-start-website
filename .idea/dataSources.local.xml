@@ -48,7 +48,7 @@
       </schema-mapping>
     </data-source>
     <data-source name="rails-website: development" uuid="275f3b4f-8acd-45e8-b7a4-dd26a72f6ae4">
-      <database-info product="PostgreSQL" version="15.8 (Homebrew)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="15.8" exact-driver-version="42.7">
+      <database-info product="PostgreSQL" version="14.15 (Homebrew)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="14.15" exact-driver-version="42.7">
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />

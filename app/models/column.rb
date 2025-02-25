@@ -8,7 +8,6 @@ class Column < ApplicationRecord
   include Checksum
   include Validation
 
-  validate :at_least_one_field_present
   validate :content_is_valid
 
   scope :by_section_name, ->(name) { where(section_name: name).order(:column_order) }
@@ -35,12 +34,6 @@ class Column < ApplicationRecord
 
       raise ActiveRecord::RecordInvalid, "Checksum verification failed for Section record ##{id}"
     end
-  end
-
-  def at_least_one_field_present
-    return unless image.blank? && content.blank?
-
-    errors.add(:base, "At least one of image or content must be present.")
   end
 
   def content_is_valid

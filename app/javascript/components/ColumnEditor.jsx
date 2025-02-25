@@ -289,9 +289,6 @@ const ColumnEditor = ({
               <p>
                 * - Required Fields
               </p>
-              <p>
-                ** - Content or Image is required
-              </p>
             </div>
             <div className="col-8">
             </div>
@@ -421,7 +418,7 @@ function renderImage(
 
   return (
       <div className="row mb-2">
-        <div className="col-2 d-flex align-items-center">Image**:</div>
+        <div className="col-2 d-flex align-items-center">Image:</div>
         <div className="col-7">
           <div id="imageDiv">
             {renderComboBox("image", image, optionsHash, setValue)}
@@ -477,7 +474,7 @@ function renderLink(link, setValue) {
 function renderContent(content, setValue) {
   return (
       <div className="row mb-2">
-        <div className="col-2 d-flex align-items-center">Content**:</div>
+        <div className="col-2 d-flex align-items-center">Content:</div>
         <div className="col-10">
           <div id="content">
             <HtmlEditor
