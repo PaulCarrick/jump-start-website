@@ -51,7 +51,7 @@ const ColumnEditor = ({
   const [image, setImage]                      = useState(columnData.image);
   const [link, setLink]                        = useState(columnData.link);
   const [options, setOptions]                  = useState(columnData.options ? columnData.options : {});
-  const [useHtmlView, setUseHtmlView]          = useState((columnData.options && ('use_html_view' in options)) ? columnData.options.use_html_view : null);
+  const [useHtmlView, setUseHtmlView]          = useState((columnData.options && ('use_html_view' in options)) ? columnData.options.use_html_view : false);
   const [formatting, setFormatting]            = useState(columnData.formatting ? columnData.formatting : {});
   const [marginTop, setMarginTop]              = useState((columnData.formatting && ('margin_top' in formatting)) ? columnData.formatting.margin_top : null);
   const [marginLeft, setMarginLeft]            = useState((columnData.formatting && ('margin_left' in formatting)) ? columnData.formatting.margin_left : null);
@@ -89,6 +89,7 @@ const ColumnEditor = ({
     marginRight:     setMarginRight,
     backgroundColor: settBackgroundColor,
     imageMode:       setImageMode,
+    useHtmlView:     setUseHtmlView
   }
 
   // Onchange/OnBlur Callback
@@ -127,11 +128,8 @@ const ColumnEditor = ({
     for (const key in columnData) {
       if (!skipParameters.includes(key)) {
         if (key === "content") {
-          if (window.htmlEditorStates["content"]?.useHtmlView) {
+          if (useHtmlView) {
             const textField = document.getElementById("content_text");
-
-            if (columnData.options)
-              columnData.options["use_html_view"] = true
 
             if (textField) {
               const html   = textField.value;
@@ -147,10 +145,16 @@ const ColumnEditor = ({
               }
             }
           }
-          else {
-            if (columnData.options)
-              columnData.options["use_html_view"] = false
-          }
+        }
+        else if (key === "options") {
+          let options = columnData.options;
+
+          if (options)
+            options["use_html_view"] = useHtmlView;
+          else
+            options = { "use_html_view": useHtmlView };
+
+          columnData[key] = options;
         }
 
         result[prefix][key] = columnData[key];
@@ -489,9 +493,9 @@ function renderContent(content, setValue, useHtmlView = false) {
                 id="content"
                 value={content}
                 placeholder="Enter the contents of the column"
-                onChange={(value) => setValue(
+                onChange={(value, attribute) => setValue(
                     value,
-                    "content"
+                    attribute
                 )}
                 onBlur={(setValue !== null) && ((event) => setValue(event.target.value, id, event.target.dataset.options))}
                 useHtmlView={useHtmlView}
@@ -701,6 +705,17 @@ function mapReactValuesToColumn(columnData, attribute, value, extraParameters) {
     case 'backgroundColor':
       setFormattingStyleElement(columnData, attribute, `background-color: ${value}`);
       break;
+    case "useHtmlView":
+      let options = columnData.options;
+
+      if (options)
+        options["use_html_view"] = value;
+      else
+        options = { "use_html_view": value };
+
+      columnData.options = options;
+
+      break;
   }
 }
 
@@ -740,6 +755,8 @@ function convertType(value, attribute) {
       return stringOrValue(value);
     case "backgroundColor":
       return stringOrValue(value);
+    case "useHtmlView":
+      return value;
     default:
       return null;
   }

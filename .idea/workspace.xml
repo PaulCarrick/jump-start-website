@@ -9,17 +9,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
-      <change afterPath="$PROJECT_DIR$/app/assets/javascripts/views/admin/pages/edit.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/assets/javascripts/views/pages/show.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/assets/javascripts/views/pages/show.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/assets/javascripts/views/shared/utilities.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/assets/javascripts/views/shared/utilities.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/admin/sections_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/admin/sections_controller.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/admin/columns_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/admin/columns_controller.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/javascript/components/ColumnEditor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/ColumnEditor.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/javascript/components/HtmlEditor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/HtmlEditor.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/SectionEditor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/SectionEditor.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/pages/_page_form.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/pages/_page_form.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/migrate/20250222131434_create_columns.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/migrate/20250222131434_create_columns.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/schema.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,7 +114,7 @@
     "JavaScript Debug.Debug Rails an Javascript JavaScript.executor": "Debug",
     "JavaScript Debug.Debug Rails and Javascript JavaScript.executor": "Debug",
     "JavaScript Debug.Development: rails-website JavaScript.executor": "Debug",
-    "JavaScript Debug.Generic Chrome.executor": "Run",
+    "JavaScript Debug.Generic Chrome.executor": "Debug",
     "Python.Build Python.executor": "Debug",
     "Rails.Debug Rails an Javascript.executor": "Debug",
     "Rails.Debug Rails and Javascript.executor": "Debug",
@@ -550,7 +543,7 @@
       <workItem from="1739984449797" duration="8418000" />
       <workItem from="1740057972463" duration="47971000" />
       <workItem from="1740228441978" duration="50140000" />
-      <workItem from="1740418743527" duration="35386000" />
+      <workItem from="1740418743527" duration="42207000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />
@@ -682,7 +675,7 @@
     </breakpoint-manager>
     <watches-manager>
       <configuration name="JavascriptDebugType">
-        <watch expression="format" />
+        <watch expression="format" language="ECMAScript 6" />
       </configuration>
       <configuration name="RailsRunConfigurationType">
         <watch expression="request.url" />

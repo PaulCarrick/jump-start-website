@@ -82,6 +82,7 @@ class Admin::ColumnsController < Admin::AbstractAdminController
   end
 
   def update
+    debugger
     @error_message = nil
     data           = get_params
     data[:content] = Utilities.pretty_print_html(data[:content]) if data[:content].present?
@@ -168,6 +169,7 @@ class Admin::ColumnsController < Admin::AbstractAdminController
       :link,
       :width,
       :checksum,
+      options: {},
       formatting: {},
     )
   end

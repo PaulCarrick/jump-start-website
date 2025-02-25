@@ -97,6 +97,17 @@ const HtmlEditor = ({
     window.htmlEditorStates[id] = { isHtmlView };
   }, [isHtmlView, id]);
 
+  const sendChange = (content, attribute) => {
+    if (typeof onChange === "function") {
+      onChange(content, attribute);
+    }
+    else if (onChange && typeof onChange === "string") {
+      const callable = new Function("editorContent", attribute, onChange);
+
+      callable(content, attribute);
+    }
+  }
+
   const toggleView = () => {
     if (isHtmlView) {
       // Switching back to Quill editor
@@ -104,6 +115,8 @@ const HtmlEditor = ({
 
       if (quill)
         quill.clipboard.dangerouslyPasteHTML(editorContent); // Update Quill with the raw HTML
+
+      sendChange(false, "useHtmlView");
     }
     else {
       // Switching to HTML view
@@ -111,6 +124,8 @@ const HtmlEditor = ({
 
       if (quill)
         setEditorContent(prettyPrintHtml(quill.root.innerHTML));
+
+      sendChange(true, "useHtmlView");
     }
 
     setIsHtmlView(!isHtmlView);
@@ -150,14 +165,7 @@ const HtmlEditor = ({
 
   const handleChange = (content) => {
     setEditorContent(content); // Keep local state updated
-
-    if (typeof onChange === "function") {
-      onChange(content, id);
-    }
-    else if (onChange && typeof onChange === "string") {
-      const callable = new Function("editorContent", "id", onChange);
-      callable(content, id);
-    }
+    sendChange(content, id);
   };
 
   const handleBlur = () => {
