@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Debug Chrome" type="JavascriptDebugType" uri="http://localhost:3000/home" useFirstLineBreakpoints="true">
-    <method v="2">
-      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_OpenServer" />
-    </method>
-  </configuration>
-</component>

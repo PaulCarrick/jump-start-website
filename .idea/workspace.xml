@@ -9,10 +9,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/275f3b4f-8acd-45e8-b7a4-dd26a72f6ae4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/275f3b4f-8acd-45e8-b7a4-dd26a72f6ae4.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/275f3b4f-8acd-45e8-b7a4-dd26a72f6ae4/storage_v2/_src_/database/paul-carrick.Ll5vXg/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/275f3b4f-8acd-45e8-b7a4-dd26a72f6ae4/storage_v2/_src_/database/paul-carrick.Ll5vXg/schema/public.abK9xQ.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/rails-website.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/rails-website.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/Debug_Chrome.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/Debug_Rails_and_Javascript.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/Debug_Rails_and_Javascript.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/admin/columns_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/admin/columns_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/ColumnEditor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/ColumnEditor.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/HtmlEditor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/HtmlEditor.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderColumn.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderColumn.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/section.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/section.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/start_server.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bin/start_server.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/tasks/refactor_sections.rake" beforeDir="false" afterPath="$PROJECT_DIR$/lib/tasks/refactor_sections.rake" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -133,7 +139,7 @@
     "nodejs_package_manager_path": "yarn",
     "ruby.structure.view.model.defaults.configured": "true",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "settings.editor.selected.configurable": "inlay.hints",
     "settings.editor.splitter.proportion": "0.2631579",
     "ts.external.directory.path": "/Applications/RubyMine.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
     "two.files.diff.last.used.file": "/Users/paul/src/jump-start-website/app/javascript/components/HtmlEditor.jsx",
@@ -172,9 +178,10 @@
       <command value="Newhall2Eastsound!" />
     </option>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.Generic Chrome">
-    <configuration name="Debug Chrome JavaScript" type="JavascriptDebugType" uri="http://localhost:3000/">
+  <component name="RunManager" selected="Rails.Debug Rails and Javascript">
+    <configuration name="Debug Chrome" type="JavascriptDebugType" uri="http://localhost:3000/" useFirstLineBreakpoints="true">
       <method v="2">
+        <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Compile JavaSctipt" />
         <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_OpenServer" />
       </method>
     </configuration>
@@ -182,9 +189,6 @@
       <method v="2" />
     </configuration>
     <configuration name="Debug Opera" type="JavascriptDebugType" engineId="53e2f627-b1a7-4dfa-bfa7-5b83cc034776" uri="http://localhost:3000" useFirstLineBreakpoints="true">
-      <method v="2" />
-    </configuration>
-    <configuration name="Generic Chrome" type="JavascriptDebugType" uri="http://localhost:3000">
       <method v="2" />
     </configuration>
     <configuration name="Build Python" type="PythonConfigurationType" factoryName="Python">
@@ -209,59 +213,6 @@
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Development: rails-website" type="RailsRunConfigurationType" factoryName="Rails">
-      <module name="rails-website" />
-      <predefined_log_file enabled="true" id="RUBY_RAILS_SERVER" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
-      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
-      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
-        <COVERAGE_PATTERN ENABLED="true">
-          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
-        </COVERAGE_PATTERN>
-      </EXTENSION>
-      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="SCRIPT_ARGS" VALUE="" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="PORT" VALUE="3000" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="IP" VALUE="127.0.0.1" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="DUMMY_APP" VALUE="test/dummy" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="RAILS_SERVER_TYPE" VALUE="puma" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="ENVIRONMENT_TYPE" VALUE="development" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="BROWSER_URL" VALUE="http://127.0.0.1:3000" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="LAUNCH_JS" VALUE="true" />
-      <method v="2">
-        <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Clear Development Logs" />
-      </method>
-    </configuration>
-    <configuration name="Production: rails-website" type="RailsRunConfigurationType" factoryName="Rails">
-      <module name="rails-website" />
-      <predefined_log_file enabled="true" id="RUBY_RAILS_SERVER" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
-      <EXTENSION ID="BundlerRunConfigurationExtension" BUNDLE_MODE="AUTO" bundleExecEnabled="true" />
-      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-      <EXTENSION ID="RubyCoverageRunConfigurationExtension" runner="rcov">
-        <COVERAGE_PATTERN ENABLED="true">
-          <PATTERN REGEXPS="/.rvm/" INCLUDED="false" />
-        </COVERAGE_PATTERN>
-      </EXTENSION>
-      <EXTENSION ID="org.jetbrains.plugins.ruby.rails.run.RailsRunConfigurationExtension" SCRATCH_USE_RAILS_RUNNER="false" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="SCRIPT_ARGS" VALUE="" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="PORT" VALUE="3000" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="IP" VALUE="0.0.0.0" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="DUMMY_APP" VALUE="test/dummy" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="RAILS_SERVER_TYPE" VALUE="Default" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="ENVIRONMENT_TYPE" VALUE="production" />
-      <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="LAUNCH_JS" VALUE="false" />
       <method v="2" />
     </configuration>
     <configuration name="spec: rails-website" type="RakeRunConfigurationType" factoryName="Rake">
@@ -365,14 +316,10 @@
     <list>
       <item itemvalue="Docker.docker-compose-rails.yml: Compose Deployment" />
       <item itemvalue="Docker.docker-compose-mail.yml.mailhog: Compose Deployment" />
-      <item itemvalue="JavaScript Debug.Debug Chrome JavaScript" />
+      <item itemvalue="JavaScript Debug.Debug Chrome" />
       <item itemvalue="JavaScript Debug.Debug Edge" />
       <item itemvalue="JavaScript Debug.Debug Opera" />
-      <item itemvalue="JavaScript Debug.Generic Chrome" />
-      <item itemvalue="JavaScript Debug.Debug Chrome" />
       <item itemvalue="Rails.Debug Rails and Javascript" />
-      <item itemvalue="Rails.Development: rails-website" />
-      <item itemvalue="Rails.Production: rails-website" />
       <item itemvalue="Rake.spec: rails-website" />
       <item itemvalue="Rake.test: rails-website" />
     </list>
@@ -543,7 +490,11 @@
       <workItem from="1739984449797" duration="8418000" />
       <workItem from="1740057972463" duration="47971000" />
       <workItem from="1740228441978" duration="50140000" />
-      <workItem from="1740418743527" duration="42207000" />
+      <workItem from="1740418743527" duration="48357000" />
+      <workItem from="1740517008446" duration="2447000" />
+      <workItem from="1740519472603" duration="395000" />
+      <workItem from="1740519878990" duration="162000" />
+      <workItem from="1740520041999" duration="22258000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />
@@ -664,15 +615,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="Polishing things." />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/app/javascript/components/SlideShow.jsx</url>
-          <line>83</line>
-          <option name="timeStamp" value="21" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="JavascriptDebugType">
         <watch expression="format" language="ECMAScript 6" />
@@ -683,6 +625,6 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/paul_carrick_website$Build_Python.coverage" NAME="Build Python Coverage Results" MODIFIED="1737226763143" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/jump_start_website@Debug_Rails_and_Javascript.rcov" NAME="Debug Rails and Javascript Coverage Results" MODIFIED="1740585444950" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="rails-website" />
   </component>
 </project>

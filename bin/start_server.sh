@@ -3,6 +3,10 @@
 USER_HOME=$(eval echo ~)
 export PATH="${USER_HOME}/.rubies/ruby-3.2.2/bin:${PATH}"
 
+if [ "$1" = "NOHUP" ]; then
+    NOHUP="true"
+fi
+
 # Setup the environment
 if [ -z "${SERVER_HOST}" ]; then
     parent_directory="$(cd "$(dirname "$0")" && pwd)/.."

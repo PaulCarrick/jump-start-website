@@ -9,9 +9,8 @@ import {dupObject, isPresent} from "./getDefaultOptions";
 import {
   handleImageGroup,
   handleImageArray,
-  processVideoImages,
   imageFileFindByName,
-  missingImageUrl,
+  missingImageUrl, processVideoImageTag,
 } from "./imageProcessingUtilities.jsx"
 
 const RenderColumn = ({
@@ -21,18 +20,10 @@ const RenderColumn = ({
                       }) => {
   if (column === null) return; // We can't render what we don't have
 
-  const columnData = dupObject(column);
-  const contents   = processColumn(columnData);
+  const columnData      = dupObject(column);
+  const processedColumn = processColumn(columnData);
 
-  if (isPresent(column?.content)) {
-    const match = column.content.match(/VideoImage:\s*"(.+)"/);
-
-    if (match) {
-      column.content = processVideoImageTag(column.content, match[1]);
-    }
-  }
-
-  return (renderColumn(column, noBorder, noHidden));
+  return (renderColumn(processedColumn, noBorder, noHidden));
 }
 
 // Utility Functions
