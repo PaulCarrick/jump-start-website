@@ -3,75 +3,104 @@
 // Render a single Image
 
 import React from "react";
-import PropTypes from 'prop-types';
-import {isPresent} from "./getDefaultOptions"
+import PropTypes from "prop-types";
+import {isPresent} from "./getDefaultOptions";
 
 const RenderSingleImage = ({
+                             content = "",
                              image = "",
                              link = "",
-                             options = {}
+                             options = {},
                            }) => {
-  const renderImage = () => {
-    if (isPresent(image)) {
-      if (link) {
-        if (image.includes('.mp4'))  // This is a video
-          return (
-              <a href={link} target="_blank" rel="noopener noreferrer">
-                Click to play video.
-              </a>
-          )
-        else
-          return (
-              <a href={link} target="_blank" rel="noopener noreferrer">
-                <img src={image} alt={image} className="img-fluid"
-                     style={options.image_styles}/>
-              </a>
-          );
-      }
-      else {
-        if (image.includes('.mp4'))  // This is a video
-          return (
-              <video id="videoElement"
-                     controls style="width: 100%;"
-                     src={image}>
-              </video>
-          )
-        else
-          return (
-              <img src={image} alt={image} className="img-fluid"
-                   style={options.image_styles}/>
-          );
-      }
-    }
-  };
+  if (!image) return null; // Can't render image if it's not there.
 
-  const renderCaption = (captions) => {
-    if (captions)
-      return (
-          <div className={options.caption_classes}>{options.image_caption}</div>);
-  }
+  const isVideo        = image.includes(".mp4");
+  const hasDescription = isPresent(content);
+  const hasLink        = isPresent(link);
+  const hasCaption     = isPresent(options?.image_caption);
+  let contents;
 
-  return (
-      <div className="image-container d-flex flex-column">
-        {options.caption_position === "top" && renderCaption()}
-        <div>{renderImage()}</div>
-        {options.caption_position !== "top" && renderCaption()}
-      </div>
-  );
+  if (isVideo) contents = renderVideo(image);
+  else contents = renderImage(image, options);
+
+  if (hasCaption) contents = addCaption(contents, options.image_caption, options);
+  if (hasLink) contents = addLink(contents, link);
+  if (hasDescription) contents = addDescription(contents, content, options);
+
+  return contents;
 };
 
+function renderVideo(image) {
+  return (
+      <video id="videoElement" controls style={{ width: "100%" }} src={image}/>
+  );
+}
+
+function renderImage(image, options) {
+  return (
+      <img src={image} alt="" className="img-fluid" style={options.image_styles}/>
+  );
+}
+
+function addLink(content, link) {
+  return <a href={link}>{content}</a>;
+}
+
+function addDescription(content, description, options) {
+  return (
+      <div className="image-container d-flex flex-column">
+        {options.description_position === "top" && renderDescription(description, options)}
+        <div>{content}</div>
+        {options.description_position !== "top" && renderDescription(description, options)}
+      </div>
+  );
+}
+
+function renderDescription(description, options) {
+  return (
+      <>
+        <div dangerouslySetInnerHTML={{ __html: description }}/>
+        {options.expanding_rows && (
+            <div>
+              <button id={options.toggleId} className={options.toggleClass}>
+                Show More
+              </button>
+            </div>
+        )}
+      </>
+  );
+}
+
+function addCaption(content, caption, options) {
+  return (
+      <div className="image-container d-flex flex-column">
+        {options.caption_position === "top" && renderCaption(caption, options)}
+        <div>{content}</div>
+        {options.caption_position !== "top" && renderCaption(caption, options)}
+      </div>
+  );
+}
+
+function renderCaption(caption, options) {
+  if (caption) {
+    return <div className={options.caption_classes}>{caption}</div>;
+  }
+  return null;
+}
+
 RenderSingleImage.propTypes = {
-  image:   PropTypes.oneOfType([
-                                 PropTypes.string,
-                                 PropTypes.object
-                               ]),
+  image:   PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   link:    PropTypes.string,
   options: PropTypes.shape({
-                             image_styles:     PropTypes.object,
-                             caption_classes:  PropTypes.string,
-                             image_caption:    PropTypes.string,
-                             caption_position: PropTypes.oneOf(["top", "bottom", null])
-                           }).isRequired
+                             image_styles:         PropTypes.object,
+                             caption_classes:      PropTypes.string,
+                             image_caption:        PropTypes.string,
+                             caption_position:     PropTypes.oneOf(["top", "bottom", null]),
+                             description_position: PropTypes.oneOf(["top", "bottom", null]),
+                             expanding_rows:       PropTypes.bool,
+                             toggleId:             PropTypes.string,
+                             toggleClass:          PropTypes.string,
+                           }),
 };
 
 export default RenderSingleImage;

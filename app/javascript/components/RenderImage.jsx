@@ -24,7 +24,8 @@ const RenderImage = ({
   }
   else {
     return (
-      <RenderSingleImage image={image}
+      <RenderSingleImage content={content}
+                         image={image}
                          link={link}
                          options={options}
       />

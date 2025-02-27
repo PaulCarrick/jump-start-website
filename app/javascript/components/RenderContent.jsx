@@ -132,7 +132,10 @@ const RenderContent = ({
       if (image)
         return (
             <div className={options.classes} style={options.styles}>
-              <RenderImage content={captions} image={image} link={link} options={options}/>
+              <RenderImage content={text}
+                           image={image}
+                           link={link}
+                           options={options}/>
             </div>)
       else
         return (
