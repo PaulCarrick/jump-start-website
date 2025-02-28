@@ -58,7 +58,18 @@ class Admin::PagesController < Admin::AbstractAdminController
                                         new_section:            @new_section,
                                         return_url:             edit_admin_page_path(page),
                                         cancel_url:             edit_admin_page_path(page, new_section: true),
-                                        turbo: false)
+                                        turbo:                  false)
+  end
+
+  def get_sections
+    page         = set_item
+    section_name = page.section if page&.section.present?
+
+    if section_name.present?
+      @sections = Section.by_content_type(section_name).includes(:columns)
+    else
+      @sections = []
+    end
   end
 
   private

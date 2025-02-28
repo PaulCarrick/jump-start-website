@@ -1,7 +1,7 @@
 <!-- app/views/admin/pages/show.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
   <div>
-    <% sections = controller.get_item&.sections %>
+    <% sections = controller.get_sections %>
     <% if sections.present? %>
       <% sections.each do |section| %>
         <%= react_component("RenderSection", { section: section, noBorder: true, noHidden: true }) %>
