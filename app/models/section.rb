@@ -258,6 +258,11 @@ class Section < ApplicationRecord
                                                         2, image_width)
     end
 
+    if text_column.present? && !text_column.image.present? && !text_column.content.present?
+      text_column.column_type = "blank"
+      text_column.column_name = "#{section_name}_place-holder"
+    end
+
     [ text_column, image_column ]
   end
 

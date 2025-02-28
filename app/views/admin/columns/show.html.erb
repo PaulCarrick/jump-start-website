@@ -23,12 +23,30 @@
       </div>
     </div>
 
-    <div class="row mb-2">
+    <div class="row mb-3">
+      <div class="col-2">
+        Column Type:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.column_type %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
       <div class="col-2">
         Column Order:
       </div>
       <div class="col-10">
         <%= controller.get_item.column_order %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-2">
+        Description:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.content %>
       </div>
     </div>
 
@@ -55,7 +73,16 @@
         Formatting:
       </div>
       <div class="col-10">
-        <%= controller.get_item.formatting %>
+        <%= raw Utilities.pretty_print_json(controller.get_item.formatting) %>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-2">
+        Width:
+      </div>
+      <div class="col-10">
+        <%= controller.get_item.width %>
       </div>
     </div>
 

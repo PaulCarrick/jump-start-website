@@ -21,7 +21,7 @@ const RenderContent = ({
   let captions     = "";
 
   if (options.slide_show_images) {
-    captions = content;
+    captions = text;
   }
 
   switch (options.row_style) {
@@ -129,7 +129,7 @@ const RenderContent = ({
           </>
       );
     default:
-      if (image)
+      if (image || options.slide_show_images)
         return (
             <div className={options.classes} style={options.styles}>
               <RenderImage content={text}

@@ -39,24 +39,35 @@
           <%= sortable_column('Image:', 'image', "columns") %>
         </div>
         <div class="col-2">
-          <%= sortable_column('URL:', 'link', "columns") %>
+          <%= sortable_column('Type:', 'column_type', "columns") %>
         </div>
       </div>
+      <hr style="border: none; height: 5px; background-color: blue; box-shadow: 2px 2px 10px rgba(0, 0, 128, 0.5);">
       <div class="row">
         <div class="col-2">
-          <%= column.section_name %>
+          <b>
+            <%= column.section_name %>
+          </b>
         </div>
         <div class="col-2">
+          <b>
           <%= column.column_name %>
+          </b>
         </div>
         <div class="col-2">
+          <b>
           <%= column.column_order %>
+          </b>
         </div>
         <div class="col-4">
+          <b>
           <%= column.image %>
+          </b>
         </div>
         <div class="col-2">
-          <%= column.link %>
+          <b>
+          <%= column.column_type %>
+          </b>
         </div>
       </div>
     <% end %>
