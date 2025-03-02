@@ -1,17 +1,17 @@
-# /app/controllers/admin/columns
+# /app/controllers/admin/cells
 
 require 'uri'
 
-class Admin::ColumnsController < Admin::AbstractAdminController
+class Admin::CellsController < Admin::AbstractAdminController
   def initialize
     super
 
     @page_limit        = 1
-    @default_column    = 'column_order'
+    @default_column    = 'cell_order'
     @default_direction = 'desc'
     @has_query         = true
     @has_sort          = true
-    @model_class       = Column
+    @model_class       = Cell
     @section_names     = []
     @images            = []
     @groups            = []
@@ -23,10 +23,10 @@ class Admin::ColumnsController < Admin::AbstractAdminController
 
     setup_options
 
-    @return_url             = params[:return_url].present? ? params[:return_url] : admin_columns_url
-    @cancel_url             = params[:cancel_url].present? ? params[:cancel_url] : admin_columns_url
+    @return_url             = params[:return_url].present? ? params[:return_url] : admin_cells_url
+    @cancel_url             = params[:cancel_url].present? ? params[:cancel_url] : admin_cells_url
     @read_only_content_type = params[:read_only_content_type].present? ? params[:read_only_content_type] : false
-    @new_column             = params[:new_column].present? ? params[:new_column] : false
+    @new_cell             = params[:new_cell].present? ? params[:new_cell] : false
   end
 
   def create
@@ -38,9 +38,9 @@ class Admin::ColumnsController < Admin::AbstractAdminController
       get_item&.save!
 
       if request.headers['Content-Type'] === "application/json"
-        render json: { message: 'Column created successfully', id: get_item.id }, status: :ok
+        render json: { message: 'Cell created successfully', id: get_item.id }, status: :ok
       else
-        redirect_to admin_columns_path, turbo: false, notice: "Column created successfully."
+        redirect_to admin_cells_path, turbo: false, notice: "Cell created successfully."
       end
     rescue => e
       if request.headers['Content-Type'] === "application/json"
@@ -60,21 +60,21 @@ class Admin::ColumnsController < Admin::AbstractAdminController
   def edit
     super
 
-    @return_url = params[:return_url].present? ? params[:return_url] : admin_column_url(get_item)
-    @cancel_url = URI(params[:cancel_url].present? ? params[:cancel_url] : admin_columns_url)
+    @return_url = params[:return_url].present? ? params[:return_url] : admin_cell_url(get_item)
+    @cancel_url = URI(params[:cancel_url].present? ? params[:cancel_url] : admin_cells_url)
 
-    if params[:new_column].present?
+    if params[:new_cell].present?
       @cancel_url.query = URI.encode_www_form({
                                                 canceled:   true,
-                                                column_id:  get_item.id,
-                                                new_column: params[:new_column]
+                                                cell_id:  get_item.id,
+                                                new_cell: params[:new_cell]
                                               })
     else
-      @cancel_url.query = URI.encode_www_form({ canceled: true, column_id: get_item.id })
+      @cancel_url.query = URI.encode_www_form({ canceled: true, cell_id: get_item.id })
     end
 
     @read_only_content_type = params[:read_only_content_type].present? ? params[:read_only_content_type] : false
-    @new_column             = params[:new_column].present? ? params[:new_column] : false
+    @new_cell             = params[:new_cell].present? ? params[:new_cell] : false
     @cancel_url             = @cancel_url.to_s
     get_item&.content       = Utilities.pretty_print_html(get_item&.content) if get_item&.content.present?
 
@@ -82,7 +82,6 @@ class Admin::ColumnsController < Admin::AbstractAdminController
   end
 
   def update
-    debugger
     @error_message = nil
     data           = get_params
     data[:content] = Utilities.pretty_print_html(data[:content]) if data[:content].present?
@@ -95,9 +94,9 @@ class Admin::ColumnsController < Admin::AbstractAdminController
       get_record&.update!(get_params)
 
       if request.headers['Content-Type'] === "application/json"
-        render json: { message: 'Column updated successfully' }, status: :ok
+        render json: { message: 'Cell updated successfully' }, status: :ok
       else
-        redirect_to admin_columns_path, turbo: false, notice: "Column updated successfully."
+        redirect_to admin_cells_path, turbo: false, notice: "Cell updated successfully."
       end
     rescue => e
       if request.headers['Content-Type'] === "application/json"
@@ -159,11 +158,11 @@ class Admin::ColumnsController < Admin::AbstractAdminController
   end
 
   def get_params
-    params.require(:column).permit(
-      :column_name,
+    params.require(:cell).permit(
+      :cell_name,
       :section_name,
       :type,
-      :column_order,
+      :cell_order,
       :content,
       :image,
       :link,

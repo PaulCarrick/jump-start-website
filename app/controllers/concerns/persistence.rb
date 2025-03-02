@@ -58,7 +58,7 @@ module Persistence
         @sort_column = parameters[:sort].presence || default_column
         @sort_direction = parameters[:direction].presence || default_direction
 
-        # Safeguard against invalid columns and directions
+        # Safeguard against invalid cells and directions
         @sort_column = model_class.column_names.include?(@sort_column) ? @sort_column : default_column
         @sort_direction = %w[asc desc].include?(@sort_direction) ? @sort_direction : default_direction
       end

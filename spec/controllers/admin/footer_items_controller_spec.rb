@@ -56,7 +56,7 @@ RSpec.describe Admin::FooterItemsController, type: :controller do
       expect(assigns(:pagy)).to be_present
     end
 
-    it "sorts records by the default column" do
+    it "sorts records by the default cell" do
       get :index, params: { sort: 'label asc' }
       expect(assigns(:results).first).to eq(footer_item)
     end

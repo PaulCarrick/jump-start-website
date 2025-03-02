@@ -1,8 +1,8 @@
-<!-- app/views/admin/columns/show.html.erb -->
+<!-- app/views/admin/cells/show.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
   <% if controller.get_item&.present? %>
     <div class="row mb-3">
-      <%= react_component("RenderColumn", { column: controller.get_item, noBorder: true, noHidden: true }) %>
+      <%= react_component("RenderCell", { cell: controller.get_item, noBorder: true, noHidden: true }) %>
     </div>
 
     <div class="row mb-3">
@@ -16,28 +16,28 @@
 
     <div class="row mb-3">
       <div class="col-2">
-        Column Name:
+        Cell Name:
       </div>
       <div class="col-10">
-        <%= controller.get_item.column_name %>
+        <%= controller.get_item.cell_name %>
       </div>
     </div>
 
     <div class="row mb-3">
       <div class="col-2">
-        Column Type:
+        Cell Type:
       </div>
       <div class="col-10">
-        <%= controller.get_item.column_type %>
+        <%= controller.get_item.cell_type %>
       </div>
     </div>
 
     <div class="row mb-3">
       <div class="col-2">
-        Column Order:
+        Cell Order:
       </div>
       <div class="col-10">
-        <%= controller.get_item.column_order %>
+        <%= controller.get_item.cell_order %>
       </div>
     </div>
 
@@ -97,12 +97,12 @@
   <% end %>
   <span class="mb-3">
     <% if @application_user.admin? %>
-      <%= link_to("Edit Column",
-                  edit_admin_column_path(controller.get_item),
+      <%= link_to("Edit Cell",
+                  edit_admin_cell_path(controller.get_item),
                   class:  "btn btn-primary",
                   target: "_self") %>
-      <%= link_to("Back to Columns",
-                  admin_columns_url,
+      <%= link_to("Back to Cells",
+                  admin_cells_url,
                   class:  "btn btn-secondary",
                   target: "_self") %>
     <% end %>

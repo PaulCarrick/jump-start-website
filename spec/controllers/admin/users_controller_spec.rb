@@ -18,7 +18,7 @@ RSpec.describe Admin::UsersController, type: :controller do
         # TO DO Find a fix for devise.
       end
 
-      it "sorts users by specified column and direction" do
+      it "sorts users by specified cell and direction" do
         # TO DO Find a fix for devise.
       end
     end

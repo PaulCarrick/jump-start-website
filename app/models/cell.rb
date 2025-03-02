@@ -1,6 +1,6 @@
-# app/models/column.rb
+# app/models/cell.rb
 
-class Column < ApplicationRecord
+class Cell < ApplicationRecord
   belongs_to :section, foreign_key: :section_name, primary_key: :section_name, optional: true
 
   after_find :verify_checksum, unless: -> { Thread.current[:skip_checksum_verification] }
@@ -9,11 +9,12 @@ class Column < ApplicationRecord
   include Validation
 
   validate :content_is_valid
+  validates :cell_name, :section_name, presence: true
 
-  scope :by_section_name, ->(name) { where(section_name: name).order(:column_order) }
+  scope :by_section_name, ->(name) { where(section_name: name).order(:cell_order) }
 
   def self.ransackable_attributes(auth_object = nil)
-    %w[column_name section_name image link content]
+    %w[cell_name section_name image link content]
   end
 
   def self.ransackable_associations(auth_object = nil)

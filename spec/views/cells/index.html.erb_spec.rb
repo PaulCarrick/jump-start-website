@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe "columns/index", type: :view do
+RSpec.describe "cells/index", type: :view do
   before(:each) do
-    assign(:columns, [
-      Column.create!(
-        section_nmme: "Section Nmme",
-        column_order: 2,
+    assign(:cells, [
+      Cell.create!(
+        section_name: "Section Name",
+        cell_order: 2,
         description: "MyText",
         image: "Image",
         link: "Link",
@@ -14,9 +14,9 @@ RSpec.describe "columns/index", type: :view do
         width: "Width",
         checksum: "MyText"
       ),
-      Column.create!(
-        section_nmme: "Section Nmme",
-        column_order: 2,
+      Cell.create!(
+        section_name: "Section Name",
+        cell_order: 2,
         description: "MyText",
         image: "Image",
         link: "Link",
@@ -28,10 +28,10 @@ RSpec.describe "columns/index", type: :view do
     ])
   end
 
-  it "renders a list of columns" do
+  it "renders a list of cells" do
     render
     cell_selector = 'div>p'
-    assert_select cell_selector, text: Regexp.new("Section Nmme".to_s), count: 2
+    assert_select cell_selector, text: Regexp.new("Section Name".to_s), count: 2
     assert_select cell_selector, text: Regexp.new(2.to_s), count: 2
     assert_select cell_selector, text: Regexp.new("MyText".to_s), count: 2
     assert_select cell_selector, text: Regexp.new("Image".to_s), count: 2

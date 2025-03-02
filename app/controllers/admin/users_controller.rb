@@ -29,7 +29,7 @@ class Admin::UsersController < ApplicationController
     sort_column    = params[:sort].presence || "email"
     sort_direction = params[:direction].presence || "asc"
 
-    # Safeguard against invalid columns and directions
+    # Safeguard against invalid cells and directions
     sort_column    = User.column_names.include?(sort_column) ? sort_column : "email"
     sort_direction = %w[asc desc].include?(sort_direction) ? sort_direction : "asc"
 

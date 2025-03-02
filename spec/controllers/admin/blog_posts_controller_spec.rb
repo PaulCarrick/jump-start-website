@@ -65,7 +65,7 @@ RSpec.describe Admin::BlogPostsController, type: :controller do
       expect(assigns(:results)).to include(blog_post)
     end
 
-    it "sorts records by the default column" do
+    it "sorts records by the default cell" do
       get :index
       expect(assigns(:results).first).to eq(blog_post)
     end

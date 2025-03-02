@@ -66,11 +66,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_22_131434) do
     t.index ["title"], name: "index_blog_posts_on_title"
   end
 
-  create_table "columns", force: :cascade do |t|
-    t.string "column_name", null: false
+  create_table "cells", force: :cascade do |t|
+    t.string "cell_name", null: false
     t.string "section_name", null: false
-    t.string "column_type"
-    t.integer "column_order"
+    t.string "cell_type"
+    t.integer "cell_order"
     t.text "content"
     t.jsonb "options"
     t.string "image"
@@ -80,7 +80,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_22_131434) do
     t.text "checksum"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.index ["column_name", "section_name"], name: "index_columns_on_column_name_and_section_name", unique: true
+    t.index ["cell_name", "section_name"], name: "index_cells_on_cell_name_and_section_name", unique: true
   end
 
   create_table "contacts", force: :cascade do |t|

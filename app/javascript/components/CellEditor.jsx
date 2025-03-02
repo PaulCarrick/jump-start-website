@@ -1,63 +1,63 @@
-// /app/javascript/components/ColumnEditor
+// /app/javascript/components/CellEditor
 // noinspection JSUnusedLocalSymbols
 // noinspection JSValidateTypes
 // noinspection RegExpRedundantEscape
 
-// Component to Edit a column Record
+// Component to Edit a cell Record
 
 import React, {useState, useEffect, useRef} from "react";
 import PropTypes from "prop-types";
 import HtmlEditor from "./HtmlEditor";
 import {backgroundColors} from "./backgroundColors";
-import RenderColumn from "./RenderColumn";
+import RenderCell from "./RenderCell.jsx";
 import StylesEditor from "./StylesEditor";
 import {renderComboBox, renderSelect, renderInput} from "./renderControlFunctions.jsx";
 import {isPresent} from "./getDefaultOptions";
 import ErrorBoundary from './ErrorBoundary';
 import axios from "axios";
 
-const ColumnEditor = ({
-                        column = null,
-                        availableSectionNames = null,
-                        availableImages = null,
-                        availableImageGroups = null,
-                        availableVideos = null,
-                        submitPath = null,
-                        successPath = null,
-                        cancelPath = null,
-                        readOnlySectionName = false,
-                        newColumn = false,
-                      }) => {
-  // Assign column Record
-  const [columnData, setColumnData] = useState(column);
+const CellEditor = ({
+                      cell = null,
+                      availableSectionNames = null,
+                      availableImages = null,
+                      availableImageGroups = null,
+                      availableVideos = null,
+                      submitPath = null,
+                      successPath = null,
+                      cancelPath = null,
+                      readOnlySectionName = false,
+                      newCell = false,
+                    }) => {
+  // Assign cell Record
+  const [cellData, setCellData] = useState(cell);
 
-  // Handle case where column is not yet loaded
+  // Handle case where cell is not yet loaded
   useEffect(() => {
-    if (!columnData && column) {
-      setColumnData(column);
+    if (!cellData && cell) {
+      setCellData(cell);
     }
-    else if (!columnData) {
+    else if (!cellData) {
       setTimeout(() => {
         window.location.reload();
       }, 1000);
     }
-  }, [column, columnData]);
+  }, [cell, cellData]);
 
-  // Assign Column Attributes
-  const [sectionName, setSectionName]          = useState(columnData.section_name);
-  const [columnName, setColumnName]            = useState(columnData.column_name);
-  const [columnOrder, setColumnOrder]          = useState(columnData.column_order);
-  const [content, setContent]                  = useState(columnData.content);
-  const [image, setImage]                      = useState(columnData.image);
-  const [link, setLink]                        = useState(columnData.link);
-  const [options, setOptions]                  = useState(columnData.options ? columnData.options : {});
-  const [useHtmlView, setUseHtmlView]          = useState((columnData.options && ('use_html_view' in options)) ? columnData.options.use_html_view : false);
-  const [formatting, setFormatting]            = useState(columnData.formatting ? columnData.formatting : {});
-  const [marginTop, setMarginTop]              = useState((columnData.formatting && ('margin_top' in formatting)) ? columnData.formatting.margin_top : null);
-  const [marginLeft, setMarginLeft]            = useState((columnData.formatting && ('margin_left' in formatting)) ? columnData.formatting.margin_left : null);
-  const [marginBottom, setMarginBottom]        = useState((columnData.formatting && ('margin_bottom' in formatting)) ? columnData.formatting.margin_bottom : null);
-  const [marginRight, setMarginRight]          = useState((columnData.formatting && ('margin_right' in formatting)) ? columnData.formatting.margin_right : null);
-  const [backgroundColor, settBackgroundColor] = useState((columnData.formatting && ('background_color' in formatting)) ? columnData.formatting.background_color : null);
+  // Assign Cell Attributes
+  const [sectionName, setSectionName]          = useState(cellData.section_name);
+  const [cellName, setCellName]                = useState(cellData.cell_name);
+  const [cellOrder, setCellOrder]              = useState(cellData.cell_order);
+  const [content, setContent]                  = useState(cellData.content);
+  const [image, setImage]                      = useState(cellData.image);
+  const [link, setLink]                        = useState(cellData.link);
+  const [options, setOptions]                  = useState(cellData.options ? cellData.options : {});
+  const [useHtmlView, setUseHtmlView]          = useState((cellData.options && ('use_html_view' in options)) ? cellData.options.use_html_view : false);
+  const [formatting, setFormatting]            = useState(cellData.formatting ? cellData.formatting : {});
+  const [marginTop, setMarginTop]              = useState((cellData.formatting && ('margin_top' in formatting)) ? cellData.formatting.margin_top : null);
+  const [marginLeft, setMarginLeft]            = useState((cellData.formatting && ('margin_left' in formatting)) ? cellData.formatting.margin_left : null);
+  const [marginBottom, setMarginBottom]        = useState((cellData.formatting && ('margin_bottom' in formatting)) ? cellData.formatting.margin_bottom : null);
+  const [marginRight, setMarginRight]          = useState((cellData.formatting && ('margin_right' in formatting)) ? cellData.formatting.margin_right : null);
+  const [backgroundColor, settBackgroundColor] = useState((cellData.formatting && ('background_color' in formatting)) ? cellData.formatting.background_color : null);
   const [imageMode, setImageMode]              = useState("Images");
   const [formattingMode, setFormattingMode]    = useState("safe");
   const [error, setError]                      = useState(null);
@@ -77,8 +77,8 @@ const ColumnEditor = ({
   // Setup setters for change callback to update the values
   const attributeSetters = {
     sectionName:     setSectionName,
-    columnName:      setColumnName,
-    columnOrder:     setColumnOrder,
+    cellName:        setCellName,
+    cellOrder:       setCellOrder,
     content:         setContent,
     image:           setImage,
     link:            setLink,
@@ -120,12 +120,12 @@ const ColumnEditor = ({
       setFormattingMode("safe");
   };
 
-  const columnToPostData = (columnData, prefix = "column") => {
+  const cellToPostData = (cellData, prefix = "cell") => {
     const result         = {};
     const skipParameters = ["id", "created_at", "updated_at"];
     result[prefix]       = {};
 
-    for (const key in columnData) {
+    for (const key in cellData) {
       if (!skipParameters.includes(key)) {
         if (key === "content") {
           if (useHtmlView) {
@@ -137,7 +137,7 @@ const ColumnEditor = ({
               const parsed = parser.parseFromString(html, "text/html");
 
               if (!parsed.querySelector("parsererror")) {
-                columnData[key] = html;
+                cellData[key] = html;
               }
               else {
                 setError(`Error the content does not contain valid html. Please correct it and try again.`);
@@ -147,17 +147,17 @@ const ColumnEditor = ({
           }
         }
         else if (key === "options") {
-          let options = columnData.options;
+          let options = cellData.options;
 
           if (options)
             options["use_html_view"] = useHtmlView;
           else
             options = { "use_html_view": useHtmlView };
 
-          columnData[key] = options;
+          cellData[key] = options;
         }
 
-        result[prefix][key] = columnData[key];
+        result[prefix][key] = cellData[key];
       }
     }
 
@@ -165,12 +165,12 @@ const ColumnEditor = ({
   }
 
   const handleSubmit = () => {
-    const data = columnToPostData(columnData);
+    const data = cellToPostData(cellData);
 
     if (data === null)
       return
 
-    if (isPresent(columnData?.id) && (columnData?.id != 0)) { // We are updating
+    if (isPresent(cellData?.id) && (cellData?.id != 0)) { // We are updating
       axios.put(submitUrl, data, {
         headers: {
           "Content-Type": "application/json",
@@ -179,11 +179,11 @@ const ColumnEditor = ({
         }
       })
            .then(response => {
-             sessionStorage.setItem('flashMessage', 'Column updated successfully!');
+             sessionStorage.setItem('flashMessage', 'Cell updated successfully!');
              window.location.href = successUrl;
            })
            .catch(error => {
-             setError(`Error updating column: ${error.response || error.message}`);
+             setError(`Error updating cell: ${error.response || error.message}`);
            });
     }
     else { // We are creating
@@ -197,11 +197,11 @@ const ColumnEditor = ({
            .then(response => {
              const url = successUrl.replace("ID", response.data.id);
 
-             sessionStorage.setItem('flashMessage', 'Column created successfully!');
+             sessionStorage.setItem('flashMessage', 'Cell created successfully!');
              window.location.href = url;
            })
            .catch(error => {
-             setError(`Error creating column: ${error.message}`);
+             setError(`Error creating cell: ${error.message}`);
            });
     }
   };
@@ -215,8 +215,8 @@ const ColumnEditor = ({
       imageMode: imageMode,
     }
 
-    mapReactValuesToColumn(
-        columnData,
+    mapReactValuesToCell(
+        cellData,
         lastChange.current.attribute,
         lastChange.current.value,
         extraParameters
@@ -238,7 +238,7 @@ const ColumnEditor = ({
             renderSectionName(sectionName, availableSectionNamesData, setValue, readOnlySectionName)
           }
           {
-            renderColumnName(columnName, setValue)
+            renderCellName(cellName, setValue)
           }
           {
             renderContent(content, setValue, useHtmlView)
@@ -257,7 +257,7 @@ const ColumnEditor = ({
             renderLink(link, setValue)
           }
           {
-            renderColumnOrder(columnOrder, setValue)
+            renderCellOrder(cellOrder, setValue)
           }
           {
             formattingMode === 'danger' ? (
@@ -309,18 +309,18 @@ const ColumnEditor = ({
             <center>Preview</center>
           </div>
           <div className="row mb-2">
-            <div id="columnAttributes" className="w-100 border border-danger border-width-8">
+            <div id="cellAttributes" className="w-100 border border-danger border-width-8">
               {!isPresent(image) && !isPresent(content) ? (
                   <center><h1>No Contents</h1></center>
               ) : (
-                   <RenderColumn column={columnData}/>
+                   <RenderCell cell={cellData}/>
                )}
             </div>
           </div>
           <div className="row mb-2">
             <div className="flex-container">
               <button type="button" className="btn btn-primary" accessKey="s" onClick={handleSubmit}>
-                Save Column
+                Save Cell
               </button>
               <button type="button" className="btn btn-secondary" accessKey="c" onClick={handleCancel}>
                 Cancel
@@ -352,20 +352,20 @@ function renderSectionName(sectionName, availableSectionNamesData, setValue, rea
   );
 }
 
-function renderColumnName(columnName, setValue) {
+function renderCellName(cellName, setValue) {
   return (
       <div className="row mb-2">
-        <div className="col-2 d-flex align-items-center">*Column Name:</div>
+        <div className="col-2 d-flex align-items-center">*Cell Name:</div>
         <div className="col-10">
-          <div id="columnNameDiv">
+          <div id="cellNameDiv">
             {
               renderInput(
-                  "columnName",
-                  columnName,
+                  "cellName",
+                  cellName,
                   setValue,
                   null,
                   { required: true },
-                  "Enter the name for the column "
+                  "Enter the name for the cell "
               )
             }
           </div>
@@ -374,20 +374,20 @@ function renderColumnName(columnName, setValue) {
   );
 }
 
-function renderColumnOrder(columnOrder, setValue) {
+function renderCellOrder(cellOrder, setValue) {
   return (
       <div className="row mb-2">
-        <div className="col-2 d-flex align-items-center">Column Order:</div>
+        <div className="col-2 d-flex align-items-center">Cell Order:</div>
         <div className="col-10">
-          <div id="columnOrderDiv">
+          <div id="cellOrderDiv">
             {
               renderInput(
-                  "columnOrder",
-                  columnOrder,
+                  "cellOrder",
+                  cellOrder,
                   setValue,
                   null,
                   {},
-                  "Enter the order of the column (1 is first)",
+                  "Enter the order of the cell (1 is first)",
                   "number"
               )
             }
@@ -492,7 +492,7 @@ function renderContent(content, setValue, useHtmlView = false) {
             <HtmlEditor
                 id="content"
                 value={content}
-                placeholder="Enter the contents of the column"
+                placeholder="Enter the contents of the cell"
                 onChange={(value, attribute) => setValue(
                     value,
                     attribute
@@ -603,8 +603,8 @@ function getMarginOptions(marginType) {
          : [];
 }
 
-function setFormattingElement(columnData, fieldName, regex, newValue, elementType = "classes") {
-  const formatting = columnData.formatting;
+function setFormattingElement(cellData, fieldName, regex, newValue, elementType = "classes") {
+  const formatting = cellData.formatting;
   const fieldType  = (elementType === "styles") ? "styles" : "classes"
 
   if (formatting[fieldType]) {
@@ -616,31 +616,31 @@ function setFormattingElement(columnData, fieldName, regex, newValue, elementTyp
   }
 }
 
-function setFormattingClassElement(columnData, fieldName, newValue) {
+function setFormattingClassElement(cellData, fieldName, newValue) {
   switch (true) {
     case /mt\-(\d)/.test(newValue):
-      setFormattingElement(columnData, fieldName, /mt\-(\d+)/, newValue);
+      setFormattingElement(cellData, fieldName, /mt\-(\d+)/, newValue);
       break;
     case /mb\-(\d)/.test(newValue):
-      setFormattingElement(columnData, fieldName, /mb\-(\d+)/, newValue);
+      setFormattingElement(cellData, fieldName, /mb\-(\d+)/, newValue);
       break;
     case /ms\-(\d)/.test(newValue):
-      setFormattingElement(columnData, fieldName, /ms\-(\d+)/, newValue);
+      setFormattingElement(cellData, fieldName, /ms\-(\d+)/, newValue);
       break;
     case /me\-(\d)/.test(newValue):
-      setFormattingElement(columnData, fieldName, /me\-(\d+)/, newValue);
+      setFormattingElement(cellData, fieldName, /me\-(\d+)/, newValue);
       break;
     case /col\-\d{1,2}/.test(newValue):
-      setFormattingElement(columnData, fieldName, /col\-\d{1,2}/g, newValue);
+      setFormattingElement(cellData, fieldName, /col\-\d{1,2}/g, newValue);
       break;
   }
 }
 
-function setFormattingStyleElement(columnData, fieldName, newValue) {
+function setFormattingStyleElement(cellData, fieldName, newValue) {
   switch (true) {
     case /background\-color:\s*(.+)\s*;?/.test(newValue):
       setFormattingElement(
-          columnData,
+          cellData,
           fieldName,
           /background\-color:\s*(.+)\s*;?/,
           newValue,
@@ -650,16 +650,16 @@ function setFormattingStyleElement(columnData, fieldName, newValue) {
   }
 }
 
-function mapReactValuesToColumn(columnData, attribute, value, extraParameters) {
+function mapReactValuesToCell(cellData, attribute, value, extraParameters) {
   switch (attribute) {
     case "sectionName":
-      columnData.section_name = value;
+      cellData.section_name = value;
       break;
-    case "columnName":
-      columnData.column_name = value;
+    case "cellName":
+      cellData.cell_name = value;
       break;
-    case "columnOrder":
-      columnData.column_order = value;
+    case "cellOrder":
+      cellData.cell_order = value;
       break;
     case "image":
       let mode = "Images";
@@ -668,52 +668,52 @@ function mapReactValuesToColumn(columnData, attribute, value, extraParameters) {
 
       switch (mode) {
         case"Groups":
-          columnData.image = `ImageGroup:${value}`;
+          cellData.image = `ImageGroup:${value}`;
           break;
-        case "Column":
-          columnData.image = `ImageColumn:"${value}"`;
+        case "Cell":
+          cellData.image = `ImageCell:"${value}"`;
           break;
         case "Videos":
-          columnData.image = `VideoImage:"${value}"`;
+          cellData.image = `VideoImage:"${value}"`;
           break;
         default:
-          columnData.image = `ImageFile:${value}`;
+          cellData.image = `ImageFile:${value}`;
           break;
       }
       break;
     case "link":
-      columnData.link = value;
+      cellData.link = value;
       break;
     case "content":
-      columnData.content = value;
+      cellData.content = value;
       break;
     case "formatting":
-      columnData.formatting = value;
+      cellData.formatting = value;
       break;
     case 'marginTop':
-      setFormattingClassElement(columnData, attribute, value);
+      setFormattingClassElement(cellData, attribute, value);
       break;
     case 'marginBottom':
-      setFormattingClassElement(columnData, attribute, value);
+      setFormattingClassElement(cellData, attribute, value);
       break;
     case 'marginLeft':
-      setFormattingClassElement(columnData, attribute, value);
+      setFormattingClassElement(cellData, attribute, value);
       break;
     case 'marginRight':
-      setFormattingClassElement(columnData, attribute, value);
+      setFormattingClassElement(cellData, attribute, value);
       break;
     case 'backgroundColor':
-      setFormattingStyleElement(columnData, attribute, `background-color: ${value}`);
+      setFormattingStyleElement(cellData, attribute, `background-color: ${value}`);
       break;
     case "useHtmlView":
-      let options = columnData.options;
+      let options = cellData.options;
 
       if (options)
         options["use_html_view"] = value;
       else
         options = { "use_html_view": value };
 
-      columnData.options = options;
+      cellData.options = options;
 
       break;
   }
@@ -730,9 +730,9 @@ function convertType(value, attribute) {
   switch (attribute) {
     case "sectionName":
       return stringOrValue(value);
-    case "columnName":
+    case "cellName":
       return value;
-    case "columnOrder":
+    case "cellOrder":
       if (value === null)
         return null;
       else
@@ -775,11 +775,11 @@ function arrayToOptions(stringArray) {
   return options;
 }
 
-ColumnEditor.propTypes = {
-  column:                PropTypes.shape({
+CellEditor.propTypes = {
+  cell:                  PropTypes.shape({
                                            section_name: PropTypes.string,
-                                           column_name:  PropTypes.string,
-                                           column_order: PropTypes.number,
+                                           cell_name:    PropTypes.string,
+                                           cell_order:   PropTypes.number,
                                            content:      PropTypes.string,
                                            image:        PropTypes.string,
                                            link:         PropTypes.string,
@@ -793,7 +793,7 @@ ColumnEditor.propTypes = {
   successPath:           PropTypes.string.isRequired,
   cancelPath:            PropTypes.string.isRequired,
   readOnlySectionName:   PropTypes.bool,
-  newColumn:             PropTypes.bool,
+  newCell:               PropTypes.bool,
 }
 
-export default ColumnEditor;
+export default CellEditor;

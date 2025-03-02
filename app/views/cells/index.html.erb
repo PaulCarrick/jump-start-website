@@ -1,5 +1,5 @@
-<!-- app/views/column/index.html.erb -->
-<% content_for :title, "#{@site_information.site_name} - Columns" %>
+<!-- app/views/cell/index.html.erb -->
+<% content_for :title, "#{@site_information.site_name} - Cells" %>
 <%= render layout: "layouts/header" do %>
 <% end %>
 
@@ -7,19 +7,19 @@
   <div class="container">
     <div class="row">
       <div class="col-2 display-4">
-        Column
+        Cell
       </div>
       <div class="col-10 display-4">
         Contents
       </div>
     </div>
-    <% @columns.each do |column| %>
+    <% @cells.each do |cell| %>
       <div class="row pb-3">
         <div class="col-2">
-          <%= link_to column[:column_name], column[:url], target: "_self" %>
+          <%= link_to cell[:column_name], cell[:url], target: "_self" %>
         </div>
         <div class="col-10">
-          <%= sanitize(column[:content]).html_safe %>
+          <%= sanitize(cell[:content]).html_safe %>
         </div>
       </div>
     <% end %>

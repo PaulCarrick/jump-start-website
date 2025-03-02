@@ -39,15 +39,14 @@
         <% @contents.each do |content| %>
           <% section_classes = content == @focused_section ? 'highlight-section' : '' %>
           <div class="<%= section_classes %>">
-            <%= react_component("DisplayContent", {
-              content:         content.description,
-              image:           content.image,
-              link:            content.link,
-              format:          content.formatting,
-              sectionId:       content.section_name,
-              textAttributes:  content.text_attributes,
-              imageAttributes: content.image_attributes,
-            }) %>
+            <%= react_component("RenderSection",
+                                {
+                                  section:  content,
+                                  noBorder: true,
+                                  noHidden: false
+                                }
+                )
+            %>
           </div>
         <% end if @contents.present? %>
       </div>

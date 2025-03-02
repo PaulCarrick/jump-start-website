@@ -66,7 +66,7 @@ class Admin::PagesController < Admin::AbstractAdminController
     section_name = page.section if page&.section.present?
 
     if section_name.present?
-      @sections = Section.by_content_type(section_name).includes(:columns)
+      @sections = Section.by_content_type(section_name).includes(:cells)
     else
       @sections = []
     end

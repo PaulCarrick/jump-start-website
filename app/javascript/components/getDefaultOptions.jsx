@@ -28,6 +28,7 @@ const getDefaultOptions = (
     caption_position:  "top",
     caption_classes:   "caption-default text-center",
     expanding_rows:    null,
+    expanding_cells:   null,
     slide_show_images: null,
     slide_show_type:   null,
   };
@@ -42,6 +43,7 @@ const getDefaultOptions = (
     if (isPresent(formatOptions.image_classes)) options.image_classes = formatOptions.image_classes;
     if (isPresent(formatOptions.image_caption)) options.image_caption = formatOptions.image_caption;
     if (isPresent(formatOptions.expanding_rows)) options.expanding_rows = formatOptions.expanding_rows;
+    if (isPresent(formatOptions.expanding_cells)) options.expanding_cells = formatOptions.expanding_cells;
     if (isPresent(formatOptions.slide_show_type)) options.slide_show_type = formatOptions.slide_show_type;
     if (isPresent(formatOptions.caption_classes)) options.caption_classes = formatOptions.caption_classes;
     if (isPresent(formatOptions.caption_position)) options.caption_position = formatOptions.caption_position;
@@ -90,27 +92,27 @@ const getDefaultOptions = (
     }
   }
 
-  const hasExistingColumnDefinitions = /col\-\d{1,2}/.test(options.text_classes) ||
-                                       /col\-\d{1,2}/.test(options.image_classes)
+  const hasExistingCellDefinitions = /col\-\d{1,2}/.test(options.text_classes) ||
+                                     /col\-\d{1,2}/.test(options.image_classes)
 
-  if (!hasExistingColumnDefinitions && hasSplitSections(options.row_style)) {
-    const [textColumnWidth, imageColumnWidth] = getColumWidths(options.div_ratio, options.row_style);
+  if (!hasExistingCellDefinitions && hasSplitSections(options.row_style)) {
+    const [textCellWidth, imageCellWidth] = getColumWidths(options.div_ratio, options.row_style);
 
-    if (isPresent(textColumnWidth) && isPresent(imageColumnWidth)) {
+    if (isPresent(textCellWidth) && isPresent(imageCellWidth)) {
       if (isPresent(options.text_classes)) {
         options.text_classes = options.text_classes.replace(/col\-\d{1,2}/g, "").trim();
-        options.text_classes += " " + textColumnWidth;
+        options.text_classes += " " + textCellWidth;
       }
       else {
-        options.text_classes = textColumnWidth;
+        options.text_classes = textCellWidth;
       }
 
       if (isPresent(options.image_classes)) {
         options.image_classes = options.image_classes.replace(/col\-\d{1,2}/g, "").trim();
-        options.image_classes += " " + imageColumnWidth;
+        options.image_classes += " " + imageCellWidth;
       }
       else {
-        options.image_classes = `d-flex flex-column ${imageColumnWidth}`;
+        options.image_classes = `d-flex flex-column ${imageCellWidth}`;
       }
     }
   }
@@ -158,8 +160,8 @@ export function hasTextAndImage(rowStyle = getDefaultRowStyle()) {
 }
 
 export function getColumWidths(divRatio = "50:50", rowStyle = getDefaultRowStyle()) {
-  let textColumnWidth  = "col-12";
-  let imageColumnWidth = "";
+  let textCellWidth  = "col-12";
+  let imageCellWidth = "";
 
   if (hasSplitSections(rowStyle)) {
     if (divRatio) {
@@ -169,24 +171,24 @@ export function getColumWidths(divRatio = "50:50", rowStyle = getDefaultRowStyle
         let firstValue  = Math.round((parseInt(match[1], 10) / 100.0) * 12);
         let secondValue = 12 - firstValue;
 
-        textColumnWidth  = `col-${firstValue}`;
-        imageColumnWidth = `col-${secondValue}`;
+        textCellWidth  = `col-${firstValue}`;
+        imageCellWidth = `col-${secondValue}`;
       }
       else if (divRatio === "Custom") {
-        textColumnWidth  = "";
-        imageColumnWidth = "";
+        textCellWidth  = "";
+        imageCellWidth = "";
       }
     }
     else {
-      textColumnWidth  = "col-6";
-      imageColumnWidth = "col-6";
+      textCellWidth  = "col-6";
+      imageCellWidth = "col-6";
     }
   }
   else {
-    if (hasImageSection(rowStyle)) imageColumnWidth = "col-12"
+    if (hasImageSection(rowStyle)) imageCellWidth = "col-12"
   }
 
-  return [textColumnWidth, imageColumnWidth]
+  return [textCellWidth, imageCellWidth]
 }
 
 export function rowStyleOptions() {
@@ -330,6 +332,9 @@ export function formattingOptions(styleData) {
   if (!isPresent(styleData?.expanding_rows))
     fields.push({ label: "Expanding Rows", value: "expanding_rows" });
 
+  if (!isPresent(styleData?.expanding_cells))
+    fields.push({ label: "Expanding Cells", value: "expanding_cells" });
+
   if (!isPresent(styleData?.slide_show_images))
     fields.push({ label: "Slide SHow Images", value: "slide_show_images" });
 
@@ -457,6 +462,7 @@ getDefaultOptions.propTypes = {
                                       caption_position:  PropTypes.string,
                                       caption_classes:   PropTypes.string,
                                       expanding_rows:    PropTypes.string,
+                                      expanding_cells:   PropTypes.string,
                                       slide_show_images: PropTypes.any,
                                       slide_show_type:   PropTypes.string,
                                     }),

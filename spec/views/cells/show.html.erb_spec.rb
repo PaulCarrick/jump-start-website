@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe "columns/show", type: :view do
+RSpec.describe "cells/show", type: :view do
   before(:each) do
-    assign(:column, Column.create!(
-      section_nmme: "Section Nmme",
-      column_order: 2,
+    assign(:cell, Cell.create!(
+      section_name: "Section Name",
+      cell_order: 2,
       description: "MyText",
       image: "Image",
       link: "Link",
@@ -17,7 +17,7 @@ RSpec.describe "columns/show", type: :view do
 
   it "renders attributes in <p>" do
     render
-    expect(rendered).to match(/Section Nmme/)
+    expect(rendered).to match(/Section Name/)
     expect(rendered).to match(/2/)
     expect(rendered).to match(/MyText/)
     expect(rendered).to match(/Image/)

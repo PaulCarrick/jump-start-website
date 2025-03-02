@@ -1,7 +1,7 @@
 // /app/javascripts/components/RenderContent.jsx
 // noinspection RegExpRedundantEscape
 
-// Component to Display Column Records
+// Component to Display Cell Records
 
 import React from "react";
 import DisplayContent from "./DisplayContent";
@@ -13,23 +13,23 @@ import {
   missingImageUrl, processVideoImageTag,
 } from "./imageProcessingUtilities.jsx"
 
-const RenderColumn = ({
-                        column = null,
-                        noBorder = false,
-                        noHidden = true
-                      }) => {
-  if (column === null) return; // We can't render what we don't have
+const RenderCell = ({
+                      cell = null,
+                      noBorder = false,
+                      noHidden = true
+                    }) => {
+  if (cell === null) return; // We can't render what we don't have
 
-  const columnData      = dupObject(column);
-  const processedColumn = processColumn(columnData);
+  const cellData      = dupObject(cell);
+  const processedCell = processCell(cellData);
 
-  return (renderColumn(processedColumn, noBorder, noHidden));
+  return (renderCell(processedCell, noBorder, noHidden));
 }
 
 // Utility Functions
 
-function renderColumn(column, noBorder = false, noHidden) {
-  if (column == null)
+function renderCell(cell, noBorder = false, noHidden) {
+  if (cell == null)
     return "";
 
   let divClass = "w-100 border border-danger border-width-8";
@@ -38,13 +38,13 @@ function renderColumn(column, noBorder = false, noHidden) {
 
   return (
       <div className="row mb-2">
-        <div id="columnAttributes" className={divClass}>
+        <div id="cellAttributes" className={divClass}>
           <DisplayContent
-              content={column.content}
-              image={column.image}
-              link={column.link}
-              format={column.formatting}
-              columnId={column.columnName}
+              content={cell.content}
+              image={cell.image}
+              link={cell.link}
+              format={cell.formatting}
+              cellId={cell.cellName}
               noHidden={noHidden}
           />
         </div>
@@ -52,71 +52,71 @@ function renderColumn(column, noBorder = false, noHidden) {
   );
 }
 
-function processColumn(column) {
-  if ((column === null) || (column.image === null))
-    return column;
+function processCell(cell) {
+  if ((cell === null) || (cell.image === null))
+    return cell;
 
   const imageGroupRegex = /^\s*ImageGroup:\s*(.+)\s*$/;
   const videoRegex      = /^\s*VideoImage:"\s*(.+)\s*"$/;
   const imageFileRegex  = /^\s*ImageFile:\s*(.+)\s*$/;
   const imageArrayRegex = /^\s*\[\s*(.+?)\s*\]\s*$/m;
 
-  let newImages     = column.image.slice().trim();
-  let newFormatting = dupObject(column.formatting);
+  let newImages     = cell.image.slice().trim();
+  let newFormatting = dupObject(cell.formatting);
   let match;
 
   switch (true) {
     case imageGroupRegex.test(newImages):
       match                      = newImages.match(imageGroupRegex);
-      [newImages, newFormatting] = handleImageGroup(match[1], column.formatting);
+      [newImages, newFormatting] = handleImageGroup(match[1], cell.formatting);
       break;
     case videoRegex.test(newImages):
       match     = newImages.match(videoRegex);
-      newImages = handleVideoFile(column, match[1]);
+      newImages = handleVideoFile(cell, match[1]);
       break;
     case imageFileRegex.test(newImages):
       match     = newImages.match(imageFileRegex);
-      newImages = handleSingleImageFile(column, match[1]);
+      newImages = handleSingleImageFile(cell, match[1]);
       break;
     case imageArrayRegex.test(newImages):
       match                      = newImages.match(imageArrayRegex);
-      [newImages, newFormatting] = handleImageArray(match[1], column.formatting);
+      [newImages, newFormatting] = handleImageArray(match[1], cell.formatting);
       break;
     default:
       newImages = newImages.image_url;
   }
 
-  column.image      = newImages;
-  column.formatting = newFormatting;
+  cell.image      = newImages;
+  cell.formatting = newFormatting;
 
-  return column
+  return cell
 }
 
-function handleVideoFile(column, name) {
+function handleVideoFile(cell, name) {
   const imageFile = imageFileFindByName(name);
   const results   = imageFile.image_url
 
-  column.link = results;
+  cell.link = results;
 
   return results;
 }
 
-function handleSingleImageFile(column, name) {
-  if (column === null)
-    return column;
+function handleSingleImageFile(cell, name) {
+  if (cell === null)
+    return cell;
 
   const imageFile = imageFileFindByName(name);
   const results   = imageFile.image_url
 
-  column.link = results;
+  cell.link = results;
 
   return results;
 }
 
-function handleImageColumn(column, name, formatting) {
+function handleImageCell(cell, name, formatting) {
   const imageFile = imageFileFindByName(name);
 
-  if (column && imageFile.image_url) {
+  if (cell && imageFile.image_url) {
     let content                     = "";
     const caption                   = imageFile.caption;
     const containsOnlyPTagsOrNoHTML = /^(\s*<p>.*?<\/p>\s*)*$/i.test(caption);
@@ -126,7 +126,7 @@ function handleImageColumn(column, name, formatting) {
     else
       content = caption;
 
-    column.link = imageFile.image_url;
+    cell.link = imageFile.image_url;
 
     return [imageFile.image_url, content, updatedFormatting];
   }
@@ -137,11 +137,11 @@ function handleImageColumn(column, name, formatting) {
 
 import PropTypes from 'prop-types';
 
-RenderColumn.propTypes = {
-  column:   PropTypes.shape({
+RenderCell.propTypes = {
+  cell:   PropTypes.shape({
                               section_name: PropTypes.string,
-                              column_name:  PropTypes.string,
-                              column_order: PropTypes.number,
+                              cell_name:  PropTypes.string,
+                              cell_order: PropTypes.number,
                               content:      PropTypes.string,
                               image:        PropTypes.string,
                               link:         PropTypes.string,
@@ -151,4 +151,4 @@ RenderColumn.propTypes = {
   noHidden: PropTypes.bool,
 };
 
-export default RenderColumn;
+export default RenderCell;

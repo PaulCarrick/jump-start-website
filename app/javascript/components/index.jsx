@@ -26,9 +26,10 @@ import SectionEditor from "./SectionEditor";
 import HtmlEditor from "./HtmlEditor";
 import RenderControl from "./RenderControl";
 import RenderSection from "./RenderSection";
+import RenderCell from "./RenderCell.jsx";
 import StylesEditor from "./StylesEditor";
 import ErrorBoundary from "./ErrorBoundary";
-import ColumnEditor from "./ColumnEditor";
+import CellEditor from "./CellEditor.jsx";
 
 try {
   ReactRailsUJS.register({
@@ -51,9 +52,10 @@ try {
                            HtmlEditor,
                            RenderControl,
                            RenderSection,
+                           RenderCell: RenderCell,
                            StylesEditor,
                            ErrorBoundary,
-                           ColumnEditor,
+                           CellEditor: CellEditor,
                          });
 }
 catch (error) {

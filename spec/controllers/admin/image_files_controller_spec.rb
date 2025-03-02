@@ -59,7 +59,7 @@ RSpec.describe Admin::ImageFilesController, type: :controller do
       expect(assigns(:results)).to include(image_file)
     end
 
-    it "sorts records by the default column" do
+    it "sorts records by the default cell" do
       get :index, params: { sort: 'name asc' }
       expect(assigns(:results).first).to eq(image_file)
     end

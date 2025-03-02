@@ -44,7 +44,7 @@ RSpec.describe Admin::PagesController, type: :controller do
       expect(assigns(:pagy)).to be_present
     end
 
-    it "sorts records by the default column" do
+    it "sorts records by the default cell" do
       get :index, params: { sort: 'name asc' }
       expect(assigns(:results).first).to eq(page)
     end

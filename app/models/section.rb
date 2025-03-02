@@ -1,7 +1,7 @@
 # app/models/section.rb
 
 class Section < ApplicationRecord
-  has_many :columns, foreign_key: "section_name", primary_key: "section_name", dependent: :destroy
+  has_many :cells, -> { order(cell_order: :asc) }, foreign_key: "section_name", primary_key: "section_name", dependent: :destroy
 
   after_find :verify_checksum, unless: -> { Thread.current[:skip_checksum_verification] }
   after_find :setup_formatting
@@ -22,74 +22,78 @@ class Section < ApplicationRecord
     []
   end
 
-  def generate_columns
+  def renderable_section
+    self.as_json(include: :cells)
+  end
+
+  def generate_cells
     begin
       row_style    = formatting["row_style"] if formatting
       section_name = content_type unless section_name.present?
 
       if image&.start_with?("ImageSection:") # Special case
-        image_section             = image[13..-1]
-        text_column, image_column = generate_columns_from_image_section(image_section)
+        image_section         = image[13..-1]
+        text_cell, image_cell = generate_cells_from_image_section(image_section)
 
-        text_column.save!
-        image_column.save!
+        text_cell.save!
+        image_cell.save!
       else
         if row_style.present?
           case row_style
 
           when 'text-single'
-            column = generate_column_from_text_single
+            cell = generate_cell_from_text_single
 
-            column.save! if column.present?
+            cell.save! if cell.present?
 
           when 'text-left'
-            text_column, image_column = generate_columns_from_text_left
+            text_cell, image_cell = generate_cells_from_text_left
 
-            text_column.save!
-            image_column.save!
+            text_cell.save!
+            image_cell.save!
 
           when 'image-left'
-            text_column, image_column = generate_columns_from_image_left
+            text_cell, image_cell = generate_cells_from_image_left
 
-            image_column.save!
-            text_column.save!
+            image_cell.save!
+            text_cell.save!
 
           when 'text-right'
-            text_column, image_column = generate_columns_from_text_right
+            text_cell, image_cell = generate_cells_from_text_right
 
-            image_column.save!
-            text_column.save!
+            image_cell.save!
+            text_cell.save!
 
           when 'image-right'
-            text_column, image_column = generate_columns_from_image_right
+            text_cell, image_cell = generate_cells_from_image_right
 
-            text_column.save!
-            image_column.save!
+            text_cell.save!
+            image_cell.save!
 
           when 'text-top'
-            text_column, image_column = generate_columns_from_text_top
+            text_cell, image_cell = generate_cells_from_text_top
 
-            text_column.save!
-            image_column.save!
+            text_cell.save!
+            image_cell.save!
 
           when 'text-bottom'
-            text_column, image_column = generate_columns_from_text_bottom
+            text_cell, image_cell = generate_cells_from_text_bottom
 
-            image_column.save!
-            text_column.save!
+            image_cell.save!
+            text_cell.save!
           else
-            column = generate_column_from_text_single
+            cell = generate_cell_from_text_single
 
-            column.save! if column.present?
+            cell.save! if cell.present?
           end
         else
-          column = generate_column_from_text_single
+          cell = generate_cell_from_text_single
 
-          column.save! if column.present?
+          cell.save! if cell.present?
         end
       end
     rescue => e
-      errors.add(:base, "Cannot generate columns from: #{section_name}..Error: #{e.message}")
+      errors.add(:base, "Cannot generate cells from: #{section_name}..Error: #{e.message}")
 
       raise ActiveRecord::Rollback
     end
@@ -124,75 +128,100 @@ class Section < ApplicationRecord
     [ text_width, image_width ]
   end
 
-  def configure_formatting(formatting, column, column_type = "text")
+  def configure_formatting(formatting, cell, cell_type = "text")
     return unless formatting.present?
 
-    column.formatting = formatting
+    cell.formatting   = formatting
+    expanding_cells   = nil
+    container_classes = nil
     classes           = nil
     styles            = nil
 
-    column.formatting.delete("row_style") # Not used
-    column.formatting.delete("div_ratio") # Not used
-
-    column.formatting.each do |key, value|
-      if column_type == "image"
-        if key == "image_classes"
+    cell.formatting.each do |key, value|
+      case key
+      when "image_classes"
+        if cell_type == "image"
           classes = value
-        elsif key == "image_styles"
-          styles = value
+          styles  = value
         end
-      else
-        if key == "text_classes"
+      when "text_classes"
+        if cell_type != "image"
           classes = value
-        elsif key == "text_styles"
-          styles = value
+          styles  = value
         end
+      when "row_classes"
+        container_classes = value.gsub("Row", "Cell")
+      when "div_ratio"
+        if formatting["row_style"] == "text-left"
+          if cell_type == "image"
+            _, image_width = value.split(':')
+            cell.width     = "image_width" + "%"
+          else
+            text_width, _ = value.split(':')
+            cell.width    = "text_width" + "%"
+          end
+        elsif formatting["row_style"] == "text-right"
+          if cell_type == "image"
+            image_width, _ = value.split(':')
+            cell.width     = "image_width" + "%"
+          else
+            _, text_width = value.split(':')
+            cell.width    = "text_width" + "%"
+          end
+        end
+      when "expanding_rows"
+        expanding_cells = value.gsub("Row", "Cell")
       end
     end
 
-    column.formatting["classes"] = classes unless classes.nil?
-    column.formatting["styles"]  = styles unless styles.nil?
+    cell.formatting["classes"]           = classes unless classes.nil?
+    cell.formatting["styles"]            = styles unless styles.nil?
+    cell.formatting["container_classes"] = container_classes unless container_classes.nil?
 
-    column.formatting.delete("text_styles") # Not used
-    column.formatting.delete("text_classes") # Not used
-    column.formatting.delete("image_styles") # Not used
-    column.formatting.delete("image_classes") # Not used
+    cell.formatting.delete("row_style") # Not used
+    cell.formatting.delete("row_classes") # Not used
+    cell.formatting.delete("div_ratio") # Not used
+    cell.formatting.delete("text_styles") # Not used
+    cell.formatting.delete("text_classes") # Not used
+    cell.formatting.delete("image_styles") # Not used
+    cell.formatting.delete("image_classes") # Not used
+    cell.formatting.delete("expanding_rows") # Not used
 
-    if column.formatting["expanding_rows"].present?
+    if expanding_cells.present?
       if image&.start_with?("ImageSection:")
-        column.formatting.delete("expanding_rows") if column_type == "text"
+        cell.formatting["expanding_cells"] = expanding_cells if cell_type != "text"
       else
-        column.formatting.delete("expanding_rows") if column_type == "image"
+        cell.formatting["expanding_cells"] = expanding_cells
       end
     end
   end
 
-  def generate_column(section_name, column_name, description, image, link,
-                      column_order = 1, width = "100%", column_type = "text")
-    column              = Column.new
-    column.section_name = section_name
-    column.column_name  = column_name
-    column.column_type  = column_type
-    column.column_order = column_order
-    column.content      = description if column_type == "text" || self.image&.start_with?("ImageSection:")
-    column.image        = image if column_type == "image"
-    column.link         = link if column_type == "image"
-    column.width        = width
+  def generate_cell(section_name, cell_name, description, image, link,
+                    cell_order = 1, width = "100%", cell_type = "text")
+    cell              = Cell.new
+    cell.section_name = section_name
+    cell.cell_name    = cell_name
+    cell.cell_type    = cell_type
+    cell.cell_order   = cell_order
+    cell.content      = description if cell_type == "text" || self.image&.start_with?("ImageSection:")
+    cell.image        = image if cell_type == "image"
+    cell.link         = link if cell_type == "image"
+    cell.width        = width
 
-    configure_formatting(formatting, column, column_type) if formatting.present?
+    configure_formatting(formatting, cell, cell_type) if formatting.present?
 
-    column
+    cell
   end
 
-  def generate_column_from_section(column_name,
-                                   column_order = 1,
-                                   width = "100%",
-                                   column_type = "text")
-    generate_column(section_name, column_name, description, image, link,
-                    column_order, width, column_type)
+  def generate_cell_from_section(cell_name,
+                                 cell_order = 1,
+                                 width = "100%",
+                                 cell_type = "text")
+    generate_cell(section_name, cell_name, description, image, link,
+                  cell_order, width, cell_type)
   end
 
-  def generate_columns_from_image_section(file_name)
+  def generate_cells_from_image_section(file_name)
     image_file = ImageFile.find_by(name: file_name)
 
     if image_file.present?
@@ -217,25 +246,25 @@ class Section < ApplicationRecord
     text_width, image_width = get_percentages(formatting["text_classes"],
                                               formatting["image_classes"])
     image_tag               = "ImageFile:#{file_name}"
-    text_column             = generate_column(section_name,
-                                              "#{section_name}_text", content,
-                                              nil, nil, 1, text_width)
-    image_column            = generate_column(section_name, "#{section_name}_image",
-                                              additional_text, image_tag,
-                                              image_link, 2, image_width, "image")
+    text_cell               = generate_cell(section_name,
+                                            "#{section_name}_text", content,
+                                            nil, nil, 1, text_width)
+    image_cell              = generate_cell(section_name, "#{section_name}_image",
+                                            additional_text, image_tag,
+                                            image_link, 2, image_width, "image")
 
-    [ text_column, image_column ]
+    [ text_cell, image_cell ]
   end
 
-  def generate_column_from_text_section(column_name, column_order = 1, width = "100%")
-    generate_column_from_section(column_name, column_order, width)
+  def generate_cell_from_text_section(cell_name, cell_order = 1, width = "100%")
+    generate_cell_from_section(cell_name, cell_order, width)
   end
 
-  def generate_column_from_image_section(column_name, column_order = 1, width = "100%")
-    generate_column_from_section(column_name, column_order, width, "image")
+  def generate_cell_from_image_section(cell_name, cell_order = 1, width = "100%")
+    generate_cell_from_section(cell_name, cell_order, width, "image")
   end
 
-  def generate_columns_from_split_section(image_left = true)
+  def generate_cells_from_split_section(image_left = true)
     text_width  = "50%"
     image_width = "50%"
 
@@ -247,61 +276,61 @@ class Section < ApplicationRecord
     end
 
     if image_left
-      image_column = generate_column_from_image_section("#{section_name}_image",
-                                                        1, image_width)
-      text_column  = generate_column_from_text_section("#{section_name}_text",
-                                                       2, text_width)
+      image_cell = generate_cell_from_image_section("#{section_name}_image",
+                                                    1, image_width)
+      text_cell  = generate_cell_from_text_section("#{section_name}_text",
+                                                   2, text_width)
     else
-      text_column  = generate_column_from_text_section("#{section_name}_text",
-                                                       1, text_width)
-      image_column = generate_column_from_image_section("#{section_name}_image",
-                                                        2, image_width)
+      text_cell  = generate_cell_from_text_section("#{section_name}_text",
+                                                   1, text_width)
+      image_cell = generate_cell_from_image_section("#{section_name}_image",
+                                                    2, image_width)
     end
 
-    if text_column.present? && !text_column.image.present? && !text_column.content.present?
-      text_column.column_type = "blank"
-      text_column.column_name = "#{section_name}_place-holder"
+    if text_cell.present? && !text_cell.image.present? && !text_cell.content.present?
+      text_cell.cell_type = "blank"
+      text_cell.cell_name = "#{section_name}_place-holder"
     end
 
-    [ text_column, image_column ]
+    [ text_cell, image_cell ]
   end
 
-  def generate_column_from_text_single
-    generate_column_from_text_section(section_name)
+  def generate_cell_from_text_single
+    generate_cell_from_text_section(section_name)
   end
 
-  def generate_column_from_image_single
-    generate_column_from_image_section(section_name, 1, "100%")
+  def generate_cell_from_image_single
+    generate_cell_from_image_section(section_name, 1, "100%")
   end
 
-  def generate_columns_from_text_left
-    generate_columns_from_split_section(false)
+  def generate_cells_from_text_left
+    generate_cells_from_split_section(false)
   end
 
-  def generate_columns_from_image_left
-    generate_columns_from_split_section(true)
+  def generate_cells_from_image_left
+    generate_cells_from_split_section(true)
   end
 
-  def generate_columns_from_text_right
-    generate_columns_from_split_section(true)
+  def generate_cells_from_text_right
+    generate_cells_from_split_section(true)
   end
 
-  def generate_columns_from_image_right
-    generate_columns_from_split_section(false)
+  def generate_cells_from_image_right
+    generate_cells_from_split_section(false)
   end
 
-  def generate_columns_from_text_top
-    text_column  = generate_column_from_text_section("#{section_name}_text")
-    image_column = generate_column_from_image_section("#{section_name}_image")
+  def generate_cells_from_text_top
+    text_cell  = generate_cell_from_text_section("#{section_name}_text")
+    image_cell = generate_cell_from_image_section("#{section_name}_image")
 
-    [ text_column, image_column ]
+    [ text_cell, image_cell ]
   end
 
-  def generate_columns_from_text_bottom
-    text_column  = generate_column_from_text_section("#{section_name}_text")
-    image_column = generate_column_from_image_section("#{section_name}_image")
+  def generate_cells_from_text_bottom
+    text_cell  = generate_cell_from_text_section("#{section_name}_text")
+    image_cell = generate_cell_from_image_section("#{section_name}_image")
 
-    [ text_column, image_column ]
+    [ text_cell, image_cell ]
   end
 
   def update_attribute(attributes, key, regex, classes)

@@ -1,19 +1,19 @@
-<!-- app/views/admin/columns/index.html.erb -->
+<!-- app/views/admin/cells/index.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
   <div class="auto-size p-2 border-bottom border-dark">
-    <% controller.get_items.each do |column| %>
+    <% controller.get_items.each do |cell| %>
       <div class="row align-content-bottom d-flex align-items-center" style="min-height: 3em; max-height: 3em;">
         <div class="col-2 m-0 p-0">
-          <h2>Column</h2>
+          <h2>Cell</h2>
         </div>
         <div class="col-10 mt-2" style="min-height: 3em; max-height: 3em;">
           <div class="d-flex justify-content-end">
             <div class="mt-2">
-              <%= link_to 'Clear Sort', admin_columns_path(clear_sort: true), class: "action-links", target: "_self" %>
-              <% delete_path = admin_column_path(column).to_s + "/delete" %>
-              <%= action_links(column,
-                               admin_column_path(column),
-                               edit_admin_column_path(column),
+              <%= link_to 'Clear Sort', admin_cells_path(clear_sort: true), class: "action-links", target: "_self" %>
+              <% delete_path = admin_cell_path(cell).to_s + "/delete" %>
+              <%= action_links(cell,
+                               admin_cell_path(cell),
+                               edit_admin_cell_path(cell),
                                delete_path) %>
             </div>
             <%= render 'shared/top_page_navigation' %>
@@ -22,51 +22,51 @@
       </div>
       <div class="row mb-3">
         <div class="col-12">
-          <%= react_component("RenderColumn", { column: column, noBorder: true, noHidden: true }) %>
+          <%= react_component("RenderCell", { cell: cell, noBorder: true, noHidden: true }) %>
         </div>
       </div>
       <div class="row">
         <div class="col-2">
-          <%= sortable_column('Section', 'section_name', "columns") %>
+          <%= sortable_column('Section', 'section_name', "cells") %>
         </div>
         <div class="col-2">
-          <%= sortable_column('Name', 'column_name', "columns") %>
+          <%= sortable_column('Name', 'cell_name', "cells") %>
         </div>
         <div class="col-2">
-          <%= sortable_column('Order:', 'column_order', "columns") %>
+          <%= sortable_column('Order:', 'cell_order', "cells") %>
         </div>
         <div class="col-4">
-          <%= sortable_column('Image:', 'image', "columns") %>
+          <%= sortable_column('Image:', 'image', "cells") %>
         </div>
         <div class="col-2">
-          <%= sortable_column('Type:', 'column_type', "columns") %>
+          <%= sortable_column('Type:', 'cell_type', "cells") %>
         </div>
       </div>
       <hr style="border: none; height: 5px; background-color: blue; box-shadow: 2px 2px 10px rgba(0, 0, 128, 0.5);">
       <div class="row">
         <div class="col-2">
           <b>
-            <%= column.section_name %>
+            <%= cell.section_name %>
           </b>
         </div>
         <div class="col-2">
           <b>
-          <%= column.column_name %>
+          <%= cell.cell_name %>
           </b>
         </div>
         <div class="col-2">
           <b>
-          <%= column.column_order %>
+          <%= cell.cell_order %>
           </b>
         </div>
         <div class="col-4">
           <b>
-          <%= column.image %>
+          <%= cell.image %>
           </b>
         </div>
         <div class="col-2">
           <b>
-          <%= column.column_type %>
+          <%= cell.cell_type %>
           </b>
         </div>
       </div>
@@ -74,7 +74,7 @@
   </div>
   <div class="row mt-3">
     <div class="col-2">
-      <%= link_to("New Column", new_admin_column_path, class: "btn btn-primary", target: "_self") %>
+      <%= link_to("New Cell", new_admin_cell_path, class: "btn btn-primary", target: "_self") %>
     </div>
     <div class="col-10 justify-content-end">
       <%= render 'shared/page_navigation' %>
@@ -82,8 +82,8 @@
   </div>
 
   <%= search_form_for @q,
-                      url:    admin_columns_path,
-                      id:     "columns_search_form",
+                      url:    admin_cells_path,
+                      id:     "cells_search_form",
                       class:  "mt-3 p-2 rounded-box",
                       method: :get,
                       html:   { target: "_self", "data-turbo": "false", "data-turbolinks": "false" } do |form| %>
@@ -95,10 +95,10 @@
         <%= form.search_field :section_name_cont %>
       </div>
       <div class="col-2" style="font-size: 11pt;">
-        <%= form.label :column_name_cont, "Column Name", class: "form-label" %>
+        <%= form.label :cell_name_cont, "Cell Name", class: "form-label" %>
       </div>
       <div class="col-4">
-        <%= form.search_field :column_name_cont, style: "min-width: 100%;" %>
+        <%= form.search_field :cell_name_cont, style: "min-width: 100%;" %>
       </div>
     </div>
     <div class="row mb-2">
@@ -124,8 +124,8 @@
       </div>
     </div>
     <div>
-      <%= form.submit "Search Columns", class: "btn btn-primary" %>
-      <%= link_to 'Clear Search', admin_columns_path(clear_search: true), class: "btn btn-secondary", target: "_self" %>
+      <%= form.submit "Search Cells", class: "btn btn-primary" %>
+      <%= link_to 'Clear Search', admin_cells_path(clear_search: true), class: "btn btn-secondary", target: "_self" %>
     </div>
   <% end %>
 <% end %>

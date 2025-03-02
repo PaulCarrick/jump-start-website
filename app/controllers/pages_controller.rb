@@ -20,6 +20,14 @@ class PagesController < ApplicationController
       @contents = build_contents
 
       process_video_images
+
+      renderable_contents = []
+
+      @contents.each do |section|
+        renderable_contents << section.renderable_section
+      end
+
+      @contents = renderable_contents
     else
       flash[:alert] = "Can't find page for: #{params[:id]}."
     end
@@ -38,7 +46,7 @@ class PagesController < ApplicationController
     sections.each do |section|
       subsection = process_section(section)
       contents << section
-      contents << subsection if subsection.present?
+      contents << subsection if subsection.present? && !section.cells.present?
     end
 
     contents

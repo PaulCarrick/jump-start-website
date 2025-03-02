@@ -149,7 +149,7 @@ class Admin::SectionsController < Admin::AbstractAdminController
     if create
       @result = @model_class.new(create_params)
     else
-      @result = @model_class.includes(:columns).find(params[:id])
+      @result = @model_class.includes(:cells).find(params[:id])
     end
 
     instance_variable_set(get_singular_record_name, @result)
@@ -163,7 +163,7 @@ class Admin::SectionsController < Admin::AbstractAdminController
     if @has_query && @q.present?
       if @has_sort && @sort_column.present? && @sort_direction.present?
         @results = @q.result(distinct: true)
-                     .includes(:columns) # Eager load columns
+                     .includes(:cells) # Eager load cells
                      .order("#{ActiveRecord::Base.connection.quote_column_name(@sort_column)} #{@sort_direction}")
 
         if @page_limit.present?
@@ -172,7 +172,7 @@ class Admin::SectionsController < Admin::AbstractAdminController
           @pagy, @results = pagy(@results)
         end
       else
-        @results = @q.result(distinct: true).includes(:columns) # Eager load columns
+        @results = @q.result(distinct: true).includes(:cells) # Eager load cells
 
         if @page_limit.present?
           @pagy, @results = pagy(@results, limit: @page_limit)
@@ -182,10 +182,10 @@ class Admin::SectionsController < Admin::AbstractAdminController
       end
     else
       if @sort_column.present? && @sort_direction.present?
-        @pagy, @results = pagy(@model_class.includes(:columns) # Eager load columns
+        @pagy, @results = pagy(@model_class.includes(:cells) # Eager load cells
                                            .order("#{ActiveRecord::Base.connection.quote_column_name(@sort_column)} #{@sort_direction}"))
       else
-        @pagy, @results = pagy(@model_class.includes(:columns)) # Eager load columns
+        @pagy, @results = pagy(@model_class.includes(:cells)) # Eager load cells
       end
     end
 

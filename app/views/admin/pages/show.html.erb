@@ -4,7 +4,14 @@
     <% sections = controller.get_sections %>
     <% if sections.present? %>
       <% sections.each do |section| %>
-        <%= react_component("RenderSection", { section: section, noBorder: true, noHidden: true }) %>
+        <%= react_component("RenderSection",
+                            {
+                              section: section.renderable_section,
+                              noBorder: true,
+                              noHidden: true
+                            }
+            )
+        %>
       <% end %>
     <% else %>
       <h1>No Content</h1>

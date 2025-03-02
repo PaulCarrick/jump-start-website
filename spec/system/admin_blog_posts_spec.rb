@@ -135,7 +135,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
       expect(page).to have_title("#{site_setup.site_name} - Admin Dashboard: Blog Post")
     end
 
-    it "renders the sortable columns" do
+    it "renders the sortable cells" do
       expect(page).to have_link("Author", href: /sort=author/)
       expect(page).to have_link("Title", href: /sort=title/)
       expect(page).to have_link("Posted", href: /sort=posted/)

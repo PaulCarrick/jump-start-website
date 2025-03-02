@@ -82,7 +82,14 @@
                           target:  "_self",
                           onclick: "if (!confirm('Are you sure you want to delete this?')) { return false; }" %>
             <% end %>
-            <%= react_component("RenderSection", { section: section, noBorder: true, noHidden: true }) %>
+            <%= react_component("RenderSection",
+                                {
+                                  section: section.renderable_section,
+                                  noBorder: true,
+                                  noHidden: true
+                                }
+                )
+            %>
           <% end %>
         </div>
       <% else %>

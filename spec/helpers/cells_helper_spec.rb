@@ -1,15 +1,15 @@
 require 'rails_helper'
 
 # Specs in this file have access to a helper object that includes
-# the ColumnsHelper. For example:
+# the CellsHelper. For example:
 #
-# describe ColumnsHelper do
+# describe CellsHelper do
 #   describe "string concat" do
 #     it "concats two strings with spaces" do
 #       expect(helper.concat_strings("this","that")).to eq("this that")
 #     end
 #   end
 # end
-RSpec.describe ColumnsHelper, type: :helper do
+RSpec.describe CellsHelper, type: :helper do
   pending "add some examples to (or delete) #{__FILE__}"
 end

@@ -5,9 +5,9 @@ module Api
   module V1
     class ColumnsController < ApplicationController
       def index
-        columns = Column.all
+        cells = Cell.all
 
-        render json: columns
+        render json: cells
       end
     end
   end

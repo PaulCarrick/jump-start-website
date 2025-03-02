@@ -1,34 +1,34 @@
 # lib/tasks/html.rake
 
 namespace :sections do
-  desc "Convert sections to columns."
+  desc "Convert sections to cells."
   task :convert, [ :verbose, :interactive, :debug ] => :environment do |_, args|
     args.with_defaults(verbose: false, interactive: false, debug: false)
 
     # Invoke subtasks with the interactive argument
-    Rake::Task["sections:generate_columns"].invoke(args[:verbose], args[:interactive], args[:debug])
+    Rake::Task["sections:generate_cells"].invoke(args[:verbose], args[:interactive], args[:debug])
 
-    puts "Finished Converting Sections to Columns."
+    puts "Finished Converting Sections to Cells."
   end
 
-  desc "Generate columns from sections"
-  task :generate_columns, [ :verbose, :interactive, :debug ] => :environment do |_, args|
+  desc "Generate cells from sections"
+  task :generate_cells, [ :verbose, :interactive, :debug ] => :environment do |_, args|
     args.with_defaults(verbose: false, interactive: false, debug: false)
 
     verbose = args[:verbose] == "true"
 
-    puts "Generating columns from sections: #{args[:verbose]}"
+    puts "Generating cells from sections: #{args[:verbose]}"
 
     ActiveRecord::Base.transaction do
       debugger if args[:debug] == "true"
 
-      Column.delete_all
+      Cell.delete_all
 
-      ActiveRecord::Base.connection.execute("ALTER SEQUENCE columns_id_seq RESTART WITH 1")
+      ActiveRecord::Base.connection.execute("ALTER SEQUENCE cells_id_seq RESTART WITH 1")
 
       Section.find_each(batch_size: 1000) do |section|
-        puts "Generating columns for section: #{section.section_name}..." if verbose
-        section.generate_columns
+        puts "Generating cells for section: #{section.section_name}..." if verbose
+        section.generate_cells
 
         if section.errors.present?
           identifier = "(#{section.id} - #{section.content_type} #{section.section_order})"
@@ -41,7 +41,7 @@ namespace :sections do
           raise ActiveRecord::Rollback
         end
 
-        puts "Successfully generated columns for section: #{section.section_name}." if verbose && !section.errors.present?
+        puts "Successfully generated cells for section: #{section.section_name}." if verbose && !section.errors.present?
       end
     end
 

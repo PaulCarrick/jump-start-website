@@ -1,10 +1,10 @@
-# app/controllers/columns_controller.rb
+# app/controllers/cells_controller.rb
 
-class ColumnsController < ApplicationController
+class CellsController < ApplicationController
   include HtmlSanitizer
 
   def index
-    @q = Column.ransack(params[:q])
+    @q = Cell.ransack(params[:q])
     @pagy, @results = pagy(@q.result(distinct: true), limit: 3)
 
     @results

@@ -5,7 +5,10 @@
 
 import React from "react";
 import DisplayContent from "./DisplayContent";
+import RenderCell from "./RenderCell.jsx";
 import {dupObject, isTextOnly, isPresent} from "./getDefaultOptions";
+import PropTypes from 'prop-types';
+
 import {
   handleImageGroup,
   handleImageArray,
@@ -22,16 +25,22 @@ const RenderSection = ({
   if (section === null) return; // We can't render what we don't have
 
   const sectionData = dupObject(section);
-  const contents    = buildContents(sectionData);
-  const sections    = [];
 
-  processVideoImages(contents);
+  if (sectionData.cells) {
+    return processCells(sectionData.cells, noBorder, noHidden)
+  }
+  else {
+    const contents = buildContents(sectionData);
+    const sections = [];
 
-  contents.forEach(content => {
-    sections.push(renderSection(content, noBorder, noHidden));
-  });
+    processVideoImages(contents);
 
-  return (sections);
+    contents.forEach(content => {
+      sections.push(renderSection(content, noBorder, noHidden));
+    });
+
+    return (sections);
+  }
 }
 
 // Utility Functions
@@ -63,6 +72,48 @@ function buildContents(section) {
   const sections = processSection(section)
 
   return sections;
+}
+
+const processCells = (cells, noBorder = false, noHidden = true) => {
+  if (!cells || cells.length === 0) return null;
+
+  let containerClasses = "row";
+
+  cells.forEach(cell => {
+    const cellContainerClasses = cell.formatting["container_classes"]
+
+    if (cellContainerClasses && !containerClasses.includes(cellContainerClasses))
+      containerClasses = containerClasses + " " + cellContainerClasses;
+
+    processCell(cell);
+  });
+
+  return (
+      <div className={containerClasses}>
+        {cells.map((cell, index) => (
+            <div
+                key={index}
+                className={cell.container_class || ''}
+                style={cell.container_class ? {} : { width: `${cell.width}` }}
+            >
+              <RenderCell cell={cell} noBorder={noBorder} noHidden={noHidden} />
+            </div>
+        ))}
+      </div>
+  );
+};
+
+function processCell(cell) {
+  if (cell.formatting && cell.formatting["classes"]) {
+    let classes = cell.formatting["classes"];
+    const match = classes.match(/col(?:-(xs|sm|md|lg|xl|xxl))?-(\d{1,2})/);
+
+    if (match) {
+      cell.container_class = match[0];
+      // Remove the matched string from the classes field
+      cell.formatting["classes"] = classes.replace(match[0], "").trim();
+    }
+  }
 }
 
 function processSection(section) {
@@ -130,7 +181,7 @@ function handleVideoFile(section, name) {
   const imageFile = imageFileFindByName(name);
   const results   = imageFile.image_url
 
-  section.link    = results;
+  section.link = results;
 
   return results;
 }
@@ -148,9 +199,9 @@ function handleImageSection(section, name, formatting) {
   const imageFile = imageFileFindByName(name);
 
   if (imageFile.image_url) {
-    let description                 = "";
     const caption                   = imageFile.caption;
     const containsOnlyPTagsOrNoHTML = /^(\s*<p>.*?<\/p>\s*)*$/i.test(caption);
+    let description;
 
     if (containsOnlyPTagsOrNoHTML)
       description = `<div class='display-4 fw-bold mb-1 text-dark'>${caption}</div>`;
@@ -215,8 +266,6 @@ function flipFormattingSide(formatting) {
 
   return newFormatting;
 }
-
-import PropTypes from 'prop-types';
 
 RenderSection.propTypes = {
   section:  PropTypes.shape({

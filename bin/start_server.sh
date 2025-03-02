@@ -2,10 +2,19 @@
 
 USER_HOME=$(eval echo ~)
 export PATH="${USER_HOME}/.rubies/ruby-3.2.2/bin:${PATH}"
+NOHUP="false"
+DEV="false"
 
-if [ "$1" = "NOHUP" ]; then
-    NOHUP="true"
-fi
+for arg in "$@"; do
+    case "$arg" in
+        NOHUP)
+            NOHUP="true"
+            ;;
+        DEV)
+            DEV="true"
+            ;;
+    esac
+done
 
 # Setup the environment
 if [ -z "${SERVER_HOST}" ]; then
@@ -58,19 +67,29 @@ fi
 
 cd "${RAILS_DIRECTORY}" || { echo "Can't change to ${RAILS_DIRECTORY} directory." >&2; exit 3; }
 
-# Start the Puma server
+# Start the server
 echo "Starting the server..."
 
-if [ "$NOHUP" = "true" ]; then
-    nohup "${RAILS_DIRECTORY}/bin/bundle" exec rails s -b 0.0.0.0 -p "$INTERNAL_PORT" > log/server.log 2>&1 &
-    sleep 3
+if [ "$DEV" = "true" ]; then
+    if [ "$NOHUP" = "true" ]; then
+        nohup "${RAILS_DIRECTORY}/bin/dev" > log/server.log 2>&1 &
+        sleep 3
+    else
+        "${RAILS_DIRECTORY}/bin/dev"
+        sleep 3
+    fi
 else
-    echo "Running: ${RAILS_DIRECTORY}/bin/bundle exec rails s -b 0.0.0.0 -p $INTERNAL_PORT"
-    "${RAILS_DIRECTORY}/bin/bundle" exec rails s -b 0.0.0.0 -p "$INTERNAL_PORT"
+    if [ "$NOHUP" = "true" ]; then
+        nohup "${RAILS_DIRECTORY}/bin/bundle" exec rails s -b 0.0.0.0 -p "$INTERNAL_PORT" > log/server.log 2>&1 &
+        sleep 3
+    else
+        echo "Running: ${RAILS_DIRECTORY}/bin/bundle exec rails s -b 0.0.0.0 -p $INTERNAL_PORT"
+        "${RAILS_DIRECTORY}/bin/bundle" exec rails s -b 0.0.0.0 -p "$INTERNAL_PORT"
 
-    if [ $? -ne 0 ]; then
-        echo "Can't run ${RAILS_DIRECTORY}/bin/bundle exec rails s -b 0.0.0.0 -p $INTERNAL_PORT." >&2
-        exit 4
+        if [ $? -ne 0 ]; then
+            echo "Can't run ${RAILS_DIRECTORY}/bin/bundle exec rails s -b 0.0.0.0 -p $INTERNAL_PORT." >&2
+            exit 4
+        fi
     fi
 fi
 

@@ -20,22 +20,44 @@ const DisplayContent = ({
                           textAttributes = {},
                           noHidden = false
                         }) => {
-  let options = getDefaultOptions(format, textAttributes, imageAttributes, noHidden);
-
-  // noinspection JSDeprecatedSymbols
-    const toggleId = options.expanding_rows
-    ? `toggle-${Math.random().toString(36).substr(2, 9)}`
-    : null;
-  let toggleClass = "btn btn-primary my-2";
+  let options     = getDefaultOptions(format, textAttributes, imageAttributes);
+  let toggleId    = null;
+  let toggleClass = null;
 
   if (options.expanding_rows) {
-    const [ _, className, customClass ] = options.expanding_rows
-                                                 .split(",")
-                                                 .map((s) => s.trim());
-    if (customClass) toggleClass = customClass;
+    // noinspection JSDeprecatedSymbols
+    toggleId                       = options.expanding_rows
+                                     ? `toggle-${Math.random().toString(36).substr(2, 9)}`
+                                     : null;
+    const [_, className, tglClass] = options.expanding_rows
+                                            .split(",")
+                                            .map((s) => s.trim());
+    toggleClass                    = tglClass;
 
-    if (!noHidden)
+    if (!noHidden) {
+      options.toggleId    = toggleId
+      options.toggleClass = toggleClass;
+
       setupToggle(toggleId, className);
+    }
+  }
+
+  if (options.expanding_cells) {
+    // noinspection JSDeprecatedSymbols
+    toggleId                     = options.expanding_cells
+                                   ? `toggle-${Math.random().toString(36).substr(2, 9)}`
+                                   : null;
+    let [_, className, tglClass] = options.expanding_cells
+                                          .split(",")
+                                          .map((s) => s.trim());
+    toggleClass                  = tglClass;
+
+    if (!noHidden) {
+      options.toggleId    = toggleId
+      options.toggleClass = toggleClass;
+
+      setupToggle(toggleId, className);
+    }
   }
 
   return (
@@ -55,41 +77,41 @@ const DisplayContent = ({
 };
 
 DisplayContent.propTypes = {
-  content: PropTypes.string,
-  image:   PropTypes.string,
-  link:    PropTypes.string,
-  format:  PropTypes.shape({
-                             row_style:         PropTypes.string,
-                             row_classes:       PropTypes.string,
-                             classes:           PropTypes.string,
-                             styles:            PropTypes.any,
-                             text_classes:      PropTypes.string,
-                             text_styles:       PropTypes.any,
-                             image_classes:     PropTypes.string,
-                             image_styles:      PropTypes.any,
-                             image_caption:     PropTypes.string,
-                             caption_position:  PropTypes.string,
-                             caption_classes:   PropTypes.string,
-                             expanding_rows:    PropTypes.string,
-                             slide_show_images: PropTypes.any,
-                             slide_show_type:   PropTypes.string,
-                           }),
-  sectionId: PropTypes.string,
+  content:         PropTypes.string,
+  image:           PropTypes.string,
+  link:            PropTypes.string,
+  format:          PropTypes.shape({
+                                     row_style:         PropTypes.string,
+                                     row_classes:       PropTypes.string,
+                                     classes:           PropTypes.string,
+                                     styles:            PropTypes.any,
+                                     text_classes:      PropTypes.string,
+                                     text_styles:       PropTypes.any,
+                                     image_classes:     PropTypes.string,
+                                     image_styles:      PropTypes.any,
+                                     image_caption:     PropTypes.string,
+                                     caption_position:  PropTypes.string,
+                                     caption_classes:   PropTypes.string,
+                                     expanding_rows:    PropTypes.string,
+                                     slide_show_images: PropTypes.any,
+                                     slide_show_type:   PropTypes.string,
+                                   }),
+  sectionId:       PropTypes.string,
   textAttributes:  PropTypes.shape({
-                                      margin_top:       PropTypes.string,
-                                      margin_left:      PropTypes.string,
-                                      margin_right:     PropTypes.string,
-                                      margin_bottom:    PropTypes.string,
-                                      background_color: PropTypes.string,
-                                    }),
+                                     margin_top:       PropTypes.string,
+                                     margin_left:      PropTypes.string,
+                                     margin_right:     PropTypes.string,
+                                     margin_bottom:    PropTypes.string,
+                                     background_color: PropTypes.string,
+                                   }),
   imageAttributes: PropTypes.shape({
-                                      margin_top:       PropTypes.string,
-                                      margin_left:      PropTypes.string,
-                                      margin_right:     PropTypes.string,
-                                      margin_bottom:    PropTypes.string,
-                                      background_color: PropTypes.string,
-                                    }),
-  noHidden: PropTypes.bool,
+                                     margin_top:       PropTypes.string,
+                                     margin_left:      PropTypes.string,
+                                     margin_right:     PropTypes.string,
+                                     margin_bottom:    PropTypes.string,
+                                     background_color: PropTypes.string,
+                                   }),
+  noHidden:        PropTypes.bool,
 };
 
 export default DisplayContent;

@@ -31,18 +31,25 @@
                   </video>
                 <% else %>
                   <%
-                    section = Section.new(content_type:  "Temp",
-                                          section_order: 1,
-                                          image:         "ImageFile:#{image_file.name}",
-                                          description:   image_file.description,
-                                          row_style:     "image-single",
-                                          formatting:    { row_style: "image-single" }
-                    )
+                    cell = Cell.new(section_name: "Temp",
+                                        column_name:  "Temp",
+                                        column_order: 1,
+                                        column_type:  "image",
+                                        width:        "100%",
+                                        image:        "ImageFile:#{image_file.name}",
+                                        content:      image_file.description)
                   %>
                 <% end %>
               </div>
               <div class="row">
-                <%= react_component("RenderSection", { section: section, noBorder: true, noHidden: true }) %>
+                <%= react_component("RenderColumn",
+                                    {
+                                      cell:   cell,
+                                      noBorder: true,
+                                      noHidden: true
+                                    }
+                    )
+                %>
               </div>
               <div class="row">
                 <%= raw(image_file.description) %>
@@ -79,7 +86,7 @@
                         url:    admin_image_files_path,
                         class:  "mt-3 p-2 rounded-box",
                         method: :get,
-                        html: { target: "_self", "data-turbo": "false", "data-turbolinks": "false" } do |form| %>
+                        html:   { target: "_self", "data-turbo": "false", "data-turbolinks": "false" } do |form| %>
       <div class="row mt-2 mb-2">
         <div class="col-2"><%= form.label :name_cont, "Name", class: "form-label" %></div>
         <div class="col-3"><%= form.search_field :name_cont %></div>

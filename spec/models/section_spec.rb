@@ -30,7 +30,7 @@ RSpec.describe Section, type: :model do
   describe "callbacks" do
     describe "#verify_checksum" do
       it "does not raise an error if checksum matches description" do
-        section = Section.create!(content_type: 'Test', description: "<html><body><p>Valid HTML</p></body></html>", formatting: '{"key":"value"}')
+        section = Section.create!(content_type: 'Test', section_name: "Test", description: "<html><body><p>Valid HTML</p></body></html>", formatting: '{"key":"value"}')
         checksum = Digest::SHA256.hexdigest(section.description)
         section.update!(checksum: checksum)
         expect { section.reload }.not_to raise_error
@@ -39,9 +39,9 @@ RSpec.describe Section, type: :model do
   end
 
   describe "scopes" do
-    let!(:section_1) { Section.create!(content_type: "type1", description: "Section 1", section_order: 1) }
-    let!(:section_2) { Section.create!(content_type: "type1", description: "Section 2", section_order: 2) }
-    let!(:section_3) { Section.create!(content_type: "type2", description: "Section 3", section_order: 3) }
+    let!(:section_1) { Section.create!(content_type: "type1", section_name: "section1", description: "Section 1", section_order: 1) }
+    let!(:section_2) { Section.create!(content_type: "type1", section_name: "section2", description: "Section 2", section_order: 2) }
+    let!(:section_3) { Section.create!(content_type: "type2", section_name: "section3", description: "Section 3", section_order: 3) }
 
     describe ".by_content_type" do
       it "returns sections by content type ordered by section_order" do

@@ -12,10 +12,10 @@ require 'rails_helper'
 # of tools you can use to make these specs even more expressive, but we're
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
-RSpec.describe "/columns", type: :request do
+RSpec.describe "/cells", type: :request do
   
   # This should return the minimal set of attributes required to create a valid
-  # Column. As you add validations to Column, be sure to
+  # Cell. As you add validations to Cell, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
     skip("Add a hash of attributes valid for your model")
@@ -27,58 +27,58 @@ RSpec.describe "/columns", type: :request do
 
   describe "GET /index" do
     it "renders a successful response" do
-      Column.create! valid_attributes
-      get columns_url
+      Cell.create! valid_attributes
+      get cells_url
       expect(response).to be_successful
     end
   end
 
   describe "GET /show" do
     it "renders a successful response" do
-      column = Column.create! valid_attributes
-      get column_url(column)
+      cell = Cell.create! valid_attributes
+      get cell_url(cell)
       expect(response).to be_successful
     end
   end
 
   describe "GET /new" do
     it "renders a successful response" do
-      get new_column_url
+      get new_cell_url
       expect(response).to be_successful
     end
   end
 
   describe "GET /edit" do
     it "renders a successful response" do
-      column = Column.create! valid_attributes
-      get edit_column_url(column)
+      cell = Cell.create! valid_attributes
+      get edit_cell_url(cell)
       expect(response).to be_successful
     end
   end
 
   describe "POST /create" do
     context "with valid parameters" do
-      it "creates a new Column" do
+      it "creates a new Cell" do
         expect {
-          post columns_url, params: { column: valid_attributes }
-        }.to change(Column, :count).by(1)
+          post cells_url, params: { cell: valid_attributes }
+        }.to change(Cell, :count).by(1)
       end
 
-      it "redirects to the created column" do
-        post columns_url, params: { column: valid_attributes }
-        expect(response).to redirect_to(column_url(Column.last))
+      it "redirects to the created cell" do
+        post cells_url, params: { cell: valid_attributes }
+        expect(response).to redirect_to(cell_url(Cell.last))
       end
     end
 
     context "with invalid parameters" do
-      it "does not create a new Column" do
+      it "does not create a new Cell" do
         expect {
-          post columns_url, params: { column: invalid_attributes }
-        }.to change(Column, :count).by(0)
+          post cells_url, params: { cell: invalid_attributes }
+        }.to change(Cell, :count).by(0)
       end
 
       it "renders a response with 422 status (i.e. to display the 'new' template)" do
-        post columns_url, params: { column: invalid_attributes }
+        post cells_url, params: { cell: invalid_attributes }
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -90,42 +90,42 @@ RSpec.describe "/columns", type: :request do
         skip("Add a hash of attributes valid for your model")
       }
 
-      it "updates the requested column" do
-        column = Column.create! valid_attributes
-        patch column_url(column), params: { column: new_attributes }
-        column.reload
+      it "updates the requested cell" do
+        cell = Cell.create! valid_attributes
+        patch cell_url(cell), params: { cell: new_attributes }
+        cell.reload
         skip("Add assertions for updated state")
       end
 
-      it "redirects to the column" do
-        column = Column.create! valid_attributes
-        patch column_url(column), params: { column: new_attributes }
-        column.reload
-        expect(response).to redirect_to(column_url(column))
+      it "redirects to the cell" do
+        cell = Cell.create! valid_attributes
+        patch cell_url(cell), params: { cell: new_attributes }
+        cell.reload
+        expect(response).to redirect_to(cell_url(cell))
       end
     end
 
     context "with invalid parameters" do
       it "renders a response with 422 status (i.e. to display the 'edit' template)" do
-        column = Column.create! valid_attributes
-        patch column_url(column), params: { column: invalid_attributes }
+        cell = Cell.create! valid_attributes
+        patch cell_url(cell), params: { cell: invalid_attributes }
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
 
   describe "DELETE /destroy" do
-    it "destroys the requested column" do
-      column = Column.create! valid_attributes
+    it "destroys the requested cell" do
+      cell = Cell.create! valid_attributes
       expect {
-        delete column_url(column)
-      }.to change(Column, :count).by(-1)
+        delete cell_url(cell)
+      }.to change(Cell, :count).by(-1)
     end
 
-    it "redirects to the columns list" do
-      column = Column.create! valid_attributes
-      delete column_url(column)
-      expect(response).to redirect_to(columns_url)
+    it "redirects to the cells list" do
+      cell = Cell.create! valid_attributes
+      delete cell_url(cell)
+      expect(response).to redirect_to(cells_url)
     end
   end
 end

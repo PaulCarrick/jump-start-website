@@ -6,16 +6,16 @@ const setupToggle = (elementId = "", className = "") => {
   useEffect(() => {
     const setupLogic = () => {
       const toggleButton = document.getElementById(elementId);
-      const rows = document.querySelectorAll(className);
+      const elements = document.querySelectorAll(className);
 
-      if (toggleButton && rows.length > 0) {
-        rows.forEach((element) => {
+      if (toggleButton && elements.length > 0) {
+        elements.forEach((element) => {
           element.classList.add("collapse");
         });
 
         toggleButton.textContent = "Show More";
 
-        rows.forEach((element) => {
+        elements.forEach((element) => {
           element.addEventListener("show.bs.collapse", () => {
             toggleButton.textContent = "Show Less";
           });
@@ -26,7 +26,7 @@ const setupToggle = (elementId = "", className = "") => {
         });
 
         toggleButton.addEventListener("click", () => {
-          rows.forEach((element) => {
+          elements.forEach((element) => {
             element.classList.toggle("show");
             const isShown = element.classList.contains("show");
             toggleButton.textContent = isShown ? "Show Less" : "Show More";

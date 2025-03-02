@@ -14,18 +14,25 @@
             </a>
           <% else %>
             <%
-              section = Section.new(content_type:  "Temp",
-                                    section_order: 1,
-                                    image:         "ImageFile:#{image_file.name}",
-                                    description:   image_file.description,
-                                    row_style:     "image-single",
-                                    formatting:    { row_style: "image-single" }
-              )
+              cell = Cell.new(section_name: "Temp",
+                                  column_name:  "Temp",
+                                  column_order: 1,
+                                  column_type:  "image",
+                                  width:        "100%",
+                                  image:        "ImageFile:#{image_file.name}",
+                                  content:      image_file.description)
             %>
           <% end %>
         </div>
         <div class="row">
-          <%= react_component("RenderSection", { section: section, noBorder: true, noHidden: true }) %>
+          <%= react_component("RenderColumn",
+                              {
+                                cell:   cell,
+                                noBorder: true,
+                                noHidden: true
+                              }
+              )
+          %>
         </div>
         <div class="row ms-2">
           <%= raw(image_file.description) %>

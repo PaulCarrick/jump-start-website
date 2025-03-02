@@ -22,7 +22,14 @@
       </div>
       <div class="row mb-3">
         <div class="col-12">
-          <%= react_component("RenderSection", { section: section, noBorder: true, noHidden: true }) %>
+          <%= react_component("RenderSection",
+                              {
+                                section: section.renderable_section,
+                                noBorder: true,
+                                noHidden: true
+                              }
+              )
+          %>
         </div>
       </div>
       <div class="row">

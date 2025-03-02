@@ -1,29 +1,29 @@
-<!-- app/views/admin/columns/_column_form.erb -->
+<!-- app/views/admin/cells/_cell_form.erb -->
 
-<%= javascript_include_tag 'views/admin/columns/edit' %>
+<%= javascript_include_tag 'views/admin/cells/edit' %>
 
 <%= render 'shared/flash_error' %>
 <%=
-  success_path = controller.get_item&.persisted? ? admin_column_url(controller.get_item) : admin_columns_url
+  success_path = controller.get_item&.persisted? ? admin_cell_url(controller.get_item) : admin_cells_url
   success_path = @return_url if @return_url.present?
-  cancel_path = admin_columns_url
+  cancel_path = admin_cells_url
   cancel_path = @cancel_url if @cancel_url.present?
   read_only_content_type = @read_only_content_type.present? ? @read_only_content_type : false
-  new_column = @new_column.present? ? @new_column : false
+  new_cell = @new_cell.present? ? @new_cell : false
 
   react_component(
-    "ColumnEditor",
+    "CellEditor",
     {
-      column:                controller.get_item,
+      cell:                  controller.get_item,
       availableSectionNames: @section_names,
       availableImages:       @images,
       availableImageGroups:  @groups,
       availableVideos:       @videos,
-      submitPath:            controller.get_item&.persisted? ? admin_column_url(controller.get_item) : admin_columns_url,
+      submitPath:            controller.get_item&.persisted? ? admin_cell_url(controller.get_item) : admin_cells_url,
       successPath:           success_path,
       cancelPath:            cancel_path,
       readOnlyContentType:   read_only_content_type,
-      newColumn:             new_column
+      newCell:               new_cell
     }
   )
 %>

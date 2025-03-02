@@ -49,20 +49,32 @@ function addLink(content, link) {
 function addDescription(content, description, options) {
   return (
       <div className="image-container d-flex flex-column">
-        {options.description_position === "top" && renderDescription(description, options)}
+        {options.description_position === "top" && renderDescription(
+            description,
+            (options.expanding_rows ||
+             options.expanding_cells),
+            options.toggleId,
+            options.toggleClass
+        )}
         <div>{content}</div>
-        {options.description_position !== "top" && renderDescription(description, options)}
+        {options.description_position !== "top" && renderDescription(
+            description,
+            (options.expanding_rows ||
+             options.expanding_cells),
+            options.toggleId,
+            options.toggleClass
+        )}
       </div>
   );
 }
 
-function renderDescription(description, options) {
+function renderDescription(description, expandable, toggleId, toggleClass) {
   return (
       <>
         <div dangerouslySetInnerHTML={{ __html: description }}/>
-        {options.expanding_rows && (
+        {expandable && (
             <div>
-              <button id={options.toggleId} className={options.toggleClass}>
+              <button id={toggleId} className={toggleClass}>
                 Show More
               </button>
             </div>
@@ -98,6 +110,7 @@ RenderSingleImage.propTypes = {
                              caption_position:     PropTypes.oneOf(["top", "bottom", null]),
                              description_position: PropTypes.oneOf(["top", "bottom", null]),
                              expanding_rows:       PropTypes.bool,
+                             expanding_cells:      PropTypes.bool,
                              toggleId:             PropTypes.string,
                              toggleClass:          PropTypes.string,
                            }),

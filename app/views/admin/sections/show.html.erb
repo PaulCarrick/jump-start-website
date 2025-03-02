@@ -2,7 +2,14 @@
 <%= render layout: "layouts/admin_page" do %>
   <% if controller.get_item&.present? %>
     <div class="row mb-3">
-      <%= react_component("RenderSection", { section: controller.get_item, noBorder: true, noHidden: true }) %>
+      <%= react_component("RenderSection",
+                          {
+                            section: controller.get_item&.renderable_section,
+                            noBorder: true,
+                            noHidden: true
+                          }
+          )
+      %>
     </div>
 
     <div class="row mb-3">
