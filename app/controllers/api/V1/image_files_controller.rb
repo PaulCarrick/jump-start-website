@@ -10,13 +10,10 @@ module Api
 
       def index
         @q = ImageFile.ransack(params[:q]) # Initialize Ransack search object
-        image_files = @q.result(distinct: true)
+        image_files = @q.result(distinct: true).order(:slide_order) # Add ordering by caption
 
-        @pagy, @image_files = pagy(image_files, limit: params[:limit] || 10)
+        @pagy, @image_files = pagy(image_files, limit: params[:limit] || 100)
 
-        image_files.map do |image_file|
-          image_file
-        end
         # Add pagination details to headers before rendering
         pagy_headers_merge(@pagy)
 

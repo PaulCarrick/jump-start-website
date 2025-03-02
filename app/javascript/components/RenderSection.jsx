@@ -13,6 +13,7 @@ import {
   handleImageGroup,
   handleImageArray,
   processVideoImages,
+  processVideoImageTag,
   imageFileFindByName,
   missingImageUrl,
 } from "./imageProcessingUtilities.jsx"
@@ -78,18 +79,23 @@ const processCells = (cells, noBorder = false, noHidden = true) => {
   if (!cells || cells.length === 0) return null;
 
   let containerClasses = "row";
+  let containerId = "";
 
   cells.forEach(cell => {
-    const cellContainerClasses = cell.formatting["container_classes"]
+    containerId = cell.section_name;
 
-    if (cellContainerClasses && !containerClasses.includes(cellContainerClasses))
-      containerClasses = containerClasses + " " + cellContainerClasses;
+    if (cell.formatting) {
+      const cellContainerClasses = cell.formatting["container_classes"]
+
+      if (cellContainerClasses && !containerClasses.includes(cellContainerClasses))
+        containerClasses = containerClasses + " " + cellContainerClasses;
+    }
 
     processCell(cell);
   });
 
   return (
-      <div className={containerClasses}>
+      <div className={containerClasses} id={containerId}>
         {cells.map((cell, index) => (
             <div
                 key={index}
@@ -104,6 +110,16 @@ const processCells = (cells, noBorder = false, noHidden = true) => {
 };
 
 function processCell(cell) {
+  if (!cell)
+    return;
+
+  if (cell.content) {
+    const match = cell.content.match(/VideoImage:\s*"(.+)"/);
+
+    if (match)
+      processVideoImageTag(cell.content, match[1]);
+  }
+
   if (cell.formatting && cell.formatting["classes"]) {
     let classes = cell.formatting["classes"];
     const match = classes.match(/col(?:-(xs|sm|md|lg|xl|xxl))?-(\d{1,2})/);

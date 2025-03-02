@@ -9,73 +9,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
-      <change afterPath="$PROJECT_DIR$/db/migrate/20250222131434_create_cells.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/spec/models/cell_spec.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/spec/routing/cells_routing_spec.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/spec/views/cells/edit.html.erb_spec.rb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/spec/views/cells/new.html.erb_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/275f3b4f-8acd-45e8-b7a4-dd26a72f6ae4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/275f3b4f-8acd-45e8-b7a4-dd26a72f6ae4.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/275f3b4f-8acd-45e8-b7a4-dd26a72f6ae4/storage_v2/_src_/database/paul-carrick.Ll5vXg/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/275f3b4f-8acd-45e8-b7a4-dd26a72f6ae4/storage_v2/_src_/database/paul-carrick.Ll5vXg/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/assets/javascripts/views/admin/columns/edit.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/assets/javascripts/views/admin/cells/edit.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/admin/columns_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/admin/cells_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/admin/pages_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/admin/pages_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/admin/sections_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/admin/sections_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/admin/users_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/admin/users_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/api/V1/columns_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/api/V1/cells_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/columns_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/cells_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/concerns/persistence.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/concerns/persistence.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/pages_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/pages_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/ColumnEditor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/CellEditor.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/ContentBlock.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/ContentBlock.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/DisplayContent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/DisplayContent.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderColumn.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderCell.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/api/V1/image_files_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/api/V1/image_files_controller.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderSection.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderSingleImage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderSingleImage.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/javascript/components/getDefaultOptions.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/getDefaultOptions.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/index.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/setupToggle.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/setupToggle.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/column.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/cell.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/section.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/section.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/serializers/column_serializer.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/serializers/cells_serializer.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/columns/_column_form.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/cells/_cell_form.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/columns/edit.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/cells/edit.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/columns/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/cells/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/columns/new.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/cells/new.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/columns/show.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/cells/show.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/renderControlFunctions.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/renderControlFunctions.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/views/admin/image_files/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/image_files/index.html.erb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/views/admin/image_files/show.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/image_files/show.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/pages/_page_form.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/pages/_page_form.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/pages/show.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/pages/show.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/sections/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/sections/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/sections/show.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/sections/show.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/columns/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/cells/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/layouts/_admin_menu.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/layouts/_admin_menu.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/cells/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/cells/index.html.erb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/views/layouts/_page_contents.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/layouts/_page_contents.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/start_server.sh" beforeDir="false" afterPath="$PROJECT_DIR$/bin/start_server.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/migrate/20250222131434_create_columns.rb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/schema.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/tasks/refactor_sections.rake" beforeDir="false" afterPath="$PROJECT_DIR$/lib/tasks/refactor_sections.rake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/controllers/admin/blog_posts_controller_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/controllers/admin/blog_posts_controller_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/controllers/admin/columns_controller_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/controllers/admin/cells_controller_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/controllers/admin/footer_items_controller_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/controllers/admin/footer_items_controller_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/controllers/admin/image_files_controller_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/controllers/admin/image_files_controller_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/controllers/admin/menu_items_controller_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/controllers/admin/menu_items_controller_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/controllers/admin/pages_controller_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/controllers/admin/pages_controller_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/controllers/admin/users_controller_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/controllers/admin/users_controller_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/controllers/columns_controller_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/controllers/cells_controller_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/factories/columns.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/factories/cells.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/helpers/columns_helper_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/helpers/cells_helper_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/models/column_spec.rb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/models/section_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/models/section_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/requests/columns_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/requests/cells_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/routing/columns_routing_spec.rb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/system/admin_blog_posts_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/system/admin_blog_posts_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/views/columns/edit.html.erb_spec.rb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/views/columns/index.html.erb_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/views/cells/index.html.erb_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/views/columns/new.html.erb_spec.rb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/views/columns/show.html.erb_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/views/cells/show.html.erb_spec.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -241,7 +184,7 @@
       <command value="Newhall2Eastsound!" />
     </option>
   </component>
-  <component name="RunManager" selected="Rails.Debug Rails and Javascript">
+  <component name="RunManager" selected="JavaScript Debug.Debug Chrome">
     <configuration name="Debug Chrome (Dev)" type="JavascriptDebugType" uri="http://localhost:3000/" useFirstLineBreakpoints="true">
       <method v="2">
         <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_OpenServer (Dev)" />
@@ -569,7 +512,7 @@
       <workItem from="1740519878990" duration="162000" />
       <workItem from="1740520041999" duration="48233000" />
       <workItem from="1740742699823" duration="17255000" />
-      <workItem from="1740760127955" duration="49790000" />
+      <workItem from="1740760127955" duration="63019000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />
@@ -693,24 +636,16 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/app/javascript/components/RenderSection.jsx</url>
-          <line>28</line>
+          <url>file://$PROJECT_DIR$/app/javascript/components/renderControlFunctions.jsx</url>
+          <line>92</line>
           <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="47" />
+          <option name="timeStamp" value="93" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/app/javascript/components/RenderSection.jsx</url>
-          <line>98</line>
+          <url>file://$PROJECT_DIR$/app/javascript/components/renderControlFunctions.jsx</url>
+          <line>93</line>
           <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="50" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="ruby-line">
-          <url>file://$PROJECT_DIR$/app/controllers/pages_controller.rb</url>
-          <line>19</line>
-          <properties myBlockOrdinal="-1">
-            <option name="block-ordinal" value="-1" />
-          </properties>
-          <option name="timeStamp" value="52" />
+          <option name="timeStamp" value="94" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -724,6 +659,6 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/jump_start_website@Debug_Rails_and_Javascript.rcov" NAME="Debug Rails and Javascript Coverage Results" MODIFIED="1740930645063" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="rails-website" />
+    <SUITE FILE_PATH="coverage/jump_start_website@Debug_Rails_and_Javascript.rcov" NAME="Debug Rails and Javascript Coverage Results" MODIFIED="1740941875948" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="rails-website" />
   </component>
 </project>

@@ -37,7 +37,7 @@
 
       <div id="contents">
         <% @contents.each do |content| %>
-          <% section_classes = content == @focused_section ? 'highlight-section' : '' %>
+          <% section_classes = (@focused_section.present? && (@focused_section.section_name == content["section_name"])) ? 'highlight-section' : '' %>
           <div class="<%= section_classes %>">
             <%= react_component("RenderSection",
                                 {

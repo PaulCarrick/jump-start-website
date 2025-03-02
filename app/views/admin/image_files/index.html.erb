@@ -32,19 +32,19 @@
                 <% else %>
                   <%
                     cell = Cell.new(section_name: "Temp",
-                                        column_name:  "Temp",
-                                        column_order: 1,
-                                        column_type:  "image",
-                                        width:        "100%",
-                                        image:        "ImageFile:#{image_file.name}",
-                                        content:      image_file.description)
+                                    cell_name:  "Temp",
+                                    cell_order: 1,
+                                    cell_type:  "image",
+                                    width:        "100%",
+                                    image:        "ImageFile:#{image_file.name}",
+                                    content:      image_file.description)
                   %>
                 <% end %>
               </div>
               <div class="row">
-                <%= react_component("RenderColumn",
+                <%= react_component("RenderCell",
                                     {
-                                      cell:   cell,
+                                      cell:     cell,
                                       noBorder: true,
                                       noHidden: true
                                     }

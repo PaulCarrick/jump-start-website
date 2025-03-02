@@ -110,7 +110,7 @@ RenderSingleImage.propTypes = {
                              caption_position:     PropTypes.oneOf(["top", "bottom", null]),
                              description_position: PropTypes.oneOf(["top", "bottom", null]),
                              expanding_rows:       PropTypes.bool,
-                             expanding_cells:      PropTypes.bool,
+                             expanding_cells:      PropTypes.string,
                              toggleId:             PropTypes.string,
                              toggleClass:          PropTypes.string,
                            }),

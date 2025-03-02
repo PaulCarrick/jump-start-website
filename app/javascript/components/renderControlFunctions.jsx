@@ -57,6 +57,15 @@ export function renderInput(
     id, value, onChange = null, onBlur = null, options = {}, placeHolder = "Please enter a value", type = "text",
     controlClass                                                                                        = "form-control", dataOptions = {}
 ) {
+  const getBooleanOption = (option) => {
+    let result = false;
+
+    if (option && options && options.hasOwnProperty(option))
+      result = options[option]
+
+    return result;
+  }
+
   if (onBlur)
     return (
         <input
@@ -66,8 +75,8 @@ export function renderInput(
             placeholder={placeHolder}
             className={controlClass}
             data-options={dataOptions}
-            required={(options && ('required' in options)) ? options.required : false}
-            readOnly={(options && ('readOnly' in options)) ? options.readOnly : false}
+            required={getBooleanOption("required")}
+            readOnly={getBooleanOption("readOnly")}
             onChange={(event) => onChange(event.target.value, id, event.target.dataset.options)}
             onBlur={(onBlur !== null) && ((event) => onBlur(event.target.value, id, event.target.dataset.options))}
         />
@@ -81,8 +90,8 @@ export function renderInput(
             placeholder={placeHolder}
             className={controlClass}
             data-options={dataOptions}
-            required={(options && ('required' in options)) ? options.required : false}
-            readOnly={(options && ('readOnly' in options)) ? options.readOnly : false}
+            required={getBooleanOption("required")}
+            readOnly={getBooleanOption("readOnly")}
             onChange={(event) => onChange(event.target.value, id, event.target.dataset.options)}
         />
     );
