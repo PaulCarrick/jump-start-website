@@ -114,7 +114,7 @@ function processCell(cell) {
     return;
 
   if (cell.content) {
-    const match = cell.content.match(/VideoImage:"?(.+)"?/);
+    const match = cell.content.match(/VideoImage:\s*"(.+)"/);
 
     if (match)
       processVideoImageTag(cell.content, match[1]);
@@ -139,7 +139,7 @@ function processSection(section) {
     return [section];
 
   const imageGroupRegex   = /^\s*ImageGroup:\s*(.+)\s*$/;
-  const videoRegex        = /^\s*VideoImage:?\s*"?(.+?)"?\s*$/;
+  const videoRegex        = /^\s*VideoImage:"\s*(.+)\s*"$/;
   const imageFileRegex    = /^\s*ImageFile:\s*(.+)\s*$/;
   const imageSectionRegex = /^\s*ImageSection:\s*(.+)\s*$/;
   const imageArrayRegex   = /^\s*\[\s*(.+?)\s*\]\s*$/m;
