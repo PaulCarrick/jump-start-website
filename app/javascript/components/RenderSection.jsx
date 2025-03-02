@@ -114,7 +114,7 @@ function processCell(cell) {
     return;
 
   if (cell.content) {
-    const match = cell.content.match(/VideoImage:\s*"(.+)"/);
+    const match = cell.content.match(/VideoImage:"?(.+)"?/);
 
     if (match)
       processVideoImageTag(cell.content, match[1]);
