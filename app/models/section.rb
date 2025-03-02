@@ -141,12 +141,22 @@ class Section < ApplicationRecord
       case key
       when "image_classes"
         if cell_type == "image"
+          value.gsub!(/\s*w-\d{2,3}\s*/, "")
+
           classes = value
+        end
+      when "image_styles"
+        if cell_type == "image"
           styles  = value
         end
       when "text_classes"
         if cell_type != "image"
+          value.gsub!(/\s*w-\d{2,3}\s*/, "")
+
           classes = value
+        end
+      when "text_styles"
+        if cell_type != "image"
           styles  = value
         end
       when "row_classes"
