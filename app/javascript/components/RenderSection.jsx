@@ -117,7 +117,7 @@ function processCell(cell) {
     const match = cell.content.match(/VideoImage:\s*"(.+)"/);
 
     if (match)
-      processVideoImageTag(cell.content, match[1]);
+      cell.content = processVideoImageTag(cell.content, match[1]);
   }
 
   if (cell.formatting && cell.formatting["classes"]) {

@@ -10,9 +10,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderCell.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderCell.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderSection.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/imageProcessingUtilities.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/imageProcessingUtilities.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,6 +140,7 @@
   },
   "keyToStringList": {
     "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "TEXT",
       "JSON"
     ]
   }
@@ -506,7 +505,7 @@
       <workItem from="1740519878990" duration="162000" />
       <workItem from="1740520041999" duration="48233000" />
       <workItem from="1740742699823" duration="17255000" />
-      <workItem from="1740760127955" duration="71103000" />
+      <workItem from="1740760127955" duration="72768000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />
@@ -630,40 +629,17 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/app/javascript/components/DisplayContent.jsx</url>
-          <line>65</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="96" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
+          <condition expression="sectionData.section_name == &quot;christianity&quot;" language="ECMAScript 6" />
           <url>file://$PROJECT_DIR$/app/javascript/components/RenderSection.jsx</url>
           <line>29</line>
           <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="97" />
+          <option name="timeStamp" value="102" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/app/javascript/components/RenderSection.jsx</url>
-          <line>93</line>
+          <line>84</line>
           <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="98" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/app/javascript/components/RenderSection.jsx</url>
-          <line>104</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="99" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/app/javascript/components/RenderCell.jsx</url>
-          <line>22</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="100" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/app/javascript/components/DisplayContent.jsx</url>
-          <line>22</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="101" />
+          <option name="timeStamp" value="107" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
