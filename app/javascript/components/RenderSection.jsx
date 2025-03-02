@@ -139,7 +139,7 @@ function processSection(section) {
     return [section];
 
   const imageGroupRegex   = /^\s*ImageGroup:\s*(.+)\s*$/;
-  const videoRegex        = /^\s*VideoImage:"\s*(.+)\s*"$/;
+  const videoRegex        = /^\s*VideoImage:?\s*"?(.+?)"?\s*$/;
   const imageFileRegex    = /^\s*ImageFile:\s*(.+)\s*$/;
   const imageSectionRegex = /^\s*ImageSection:\s*(.+)\s*$/;
   const imageArrayRegex   = /^\s*\[\s*(.+?)\s*\]\s*$/m;

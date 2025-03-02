@@ -24,7 +24,7 @@ export function processVideoImages(contents) {
   contents.forEach(content => {
     if (!isPresent(content?.description)) return;
 
-    const match = content.description.match(/VideoImage:\s*"(.+)"/);
+    const match = content.description.match(/^\s*VideoImage:?\s*"?(.+?)"?\s*$/);
 
     if (match) replaceVideoImageTag(content, match[1]);
   });
@@ -32,7 +32,7 @@ export function processVideoImages(contents) {
 
 export function handleVideoImageTag(description) {
   if (isPresent(description)) {
-    const match = description.match(/VideoImage:\s*"(.+)"/);
+    const match = description.match(/^\s*VideoImage:?\s*"?(.+?)"?\s*$/);
 
     if (match) description = processVideoImageTag(description, match[1]);
   }
@@ -57,7 +57,7 @@ export function processVideoImageTag(description, name) {
 
     const videoTag = `<a href="#" onclick="showVideoPlayer('${imageUrl}')">${label}</a>`;
 
-    results = results.replace(/VideoImage:\s*"(.+)"/, videoTag);
+    results = results.replace(/^\s*VideoImage:?\s*"?(.+?)"?\s*$/, videoTag);
   }
 
   return results;
