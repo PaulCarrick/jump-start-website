@@ -3,7 +3,7 @@
 # app/controllers/api/home_contents_controller.rb
 module Api
   module V1
-    class ColumnsController < ApplicationController
+    class CellsController < ApplicationController
       def index
         cells = Cell.all
 

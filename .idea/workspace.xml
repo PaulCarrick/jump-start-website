@@ -9,16 +9,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/api/V1/image_files_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/api/V1/image_files_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderSection.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderSingleImage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderSingleImage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/getDefaultOptions.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/getDefaultOptions.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/renderControlFunctions.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/renderControlFunctions.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/image_files/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/image_files/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/image_files/show.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/image_files/show.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/cells/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/cells/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/layouts/_page_contents.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/layouts/_page_contents.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/api/V1/cells_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/api/V1/cells_controller.rb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -512,7 +503,7 @@
       <workItem from="1740519878990" duration="162000" />
       <workItem from="1740520041999" duration="48233000" />
       <workItem from="1740742699823" duration="17255000" />
-      <workItem from="1740760127955" duration="63019000" />
+      <workItem from="1740760127955" duration="63509000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />
@@ -633,22 +624,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="Polishing things." />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/app/javascript/components/renderControlFunctions.jsx</url>
-          <line>92</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="93" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/app/javascript/components/renderControlFunctions.jsx</url>
-          <line>93</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="94" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="JavascriptDebugType">
         <watch expression="format" language="ECMAScript 6" />
