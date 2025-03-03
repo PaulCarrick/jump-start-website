@@ -51,7 +51,12 @@ function renderCell(cell, editing = false, noBorder = false, noHidden) {
           <div className="row mb-2">
             <div className="col-4">
               {urls?.edit?.url && (
-                  <a href={urls["edit"]["url"]}>
+                  <a
+                      href={urls?.edit?.url}
+                      target="_self"
+                      data-turbo="false"
+                      data-turbolinks="false"
+                  >
                     Edit Column
                   </a>)
               }
