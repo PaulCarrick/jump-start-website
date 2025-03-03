@@ -4,7 +4,8 @@
     <div class="row mb-3">
       <%= react_component("RenderSection",
                           {
-                            section: controller.get_item&.renderable_section,
+                            section:  controller.get_item&.renderable_section,
+                            editing:  true,
                             noBorder: true,
                             noHidden: true
                           }

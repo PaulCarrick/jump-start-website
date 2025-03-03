@@ -20,15 +20,16 @@ import {
 
 const RenderSection = ({
                          section = null,
-                         noBorder = false,
-                         noHidden = true
+                         editing = false,
+                         noBorder = true,
+                         noHidden = false
                        }) => {
   if (section === null) return; // We can't render what we don't have
 
   const sectionData = dupObject(section);
 
   if (sectionData.cells) {
-    return processCells(sectionData.cells, noBorder, noHidden)
+    return processCells(sectionData.cells, editing, noBorder, noHidden)
   }
   else {
     const contents = buildContents(sectionData);
@@ -75,11 +76,11 @@ function buildContents(section) {
   return sections;
 }
 
-const processCells = (cells, noBorder = false, noHidden = true) => {
+const processCells = (cells, editing = false, noBorder = false, noHidden = true) => {
   if (!cells || cells.length === 0) return null;
 
   let containerClasses = "row";
-  let containerId = "";
+  let containerId      = "";
 
   cells.forEach(cell => {
     containerId = cell.section_name;
@@ -102,7 +103,7 @@ const processCells = (cells, noBorder = false, noHidden = true) => {
                 className={cell.container_class || ''}
                 style={cell.container_class ? {} : { width: `${cell.width}` }}
             >
-              <RenderCell cell={cell} noBorder={noBorder} noHidden={noHidden} />
+              <RenderCell cell={cell} editing={editing} noBorder={noBorder} noHidden={noHidden}/>
             </div>
         ))}
       </div>
@@ -125,7 +126,7 @@ function processCell(cell) {
     const match = classes.match(/col(?:-(xs|sm|md|lg|xl|xxl))?-(\d{1,2})/);
 
     if (match) {
-      cell.container_class = match[0];
+      cell.container_class       = match[0];
       // Remove the matched string from the classes field
       cell.formatting["classes"] = classes.replace(match[0], "").trim();
     }
@@ -304,6 +305,7 @@ RenderSection.propTypes = {
                               image_margin_bottom:    PropTypes.string,
                               image_background_color: PropTypes.string,
                             }).isRequired, // Use `.isRequired` here,
+  editing:  PropTypes.bool,
   noBorder: PropTypes.bool,
   noHidden: PropTypes.bool,
 };

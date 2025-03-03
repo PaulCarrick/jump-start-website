@@ -20,8 +20,8 @@
         <div class="row mb-5">
           <div class="col-5">
             <% if image_file.image.attached? %>
-              <div class="row">
-                <center><%= raw(image_file.caption) %></center>
+              <div class="row text-center">
+                <%= raw(image_file.caption) %>
               </div>
               <div class="row text-center">
                 <% if image_file.mime_type === "video/mp4" %>
@@ -32,9 +32,9 @@
                 <% else %>
                   <%
                     cell = Cell.new(section_name: "Temp",
-                                    cell_name:  "Temp",
-                                    cell_order: 1,
-                                    cell_type:  "image",
+                                    cell_name:    "Temp",
+                                    cell_order:   1,
+                                    cell_type:    "image",
                                     width:        "100%",
                                     image:        "ImageFile:#{image_file.name}",
                                     content:      image_file.description)
@@ -45,6 +45,7 @@
                 <%= react_component("RenderCell",
                                     {
                                       cell:     cell,
+                                      editing:  false,
                                       noBorder: true,
                                       noHidden: true
                                     }

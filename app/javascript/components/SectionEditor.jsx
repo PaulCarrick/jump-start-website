@@ -358,14 +358,14 @@ const SectionEditor = ({
           </div>
         </div>
         <div className="row mb-2 display-6 center-item text-center">
-          <center>Preview</center>
+          Preview
         </div>
         <div className="row mb-2">
           <div id="sectionAttributes" className="w-100 border border-danger border-width-8">
             {!isPresent(image) && !isPresent(description) ? (
-                <center><h1>No Contents</h1></center>
+                <h1 className="text-center">No Contents</h1>
             ) : (
-                 <RenderSection section={sectionData}/>
+                 <RenderSection section={sectionData} editing={true} noBorder={false} noHidden={true} />
              )}
           </div>
         </div>

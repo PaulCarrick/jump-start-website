@@ -2,7 +2,7 @@
 <%= render layout: "layouts/admin_page" do %>
   <% if controller.get_item&.present? %>
     <div class="row mb-3">
-      <%= react_component("RenderCell", { cell: controller.get_item, noBorder: true, noHidden: true }) %>
+      <%= react_component("RenderCell", { cell: controller.get_item, editing: true, noBorder: true, noHidden: true }) %>
     </div>
 
     <div class="row mb-3">

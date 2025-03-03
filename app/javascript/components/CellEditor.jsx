@@ -306,14 +306,14 @@ const CellEditor = ({
             </div>
           </div>
           <div className="row mb-2 display-6 center-item text-center">
-            <center>Preview</center>
+            Preview
           </div>
           <div className="row mb-2">
             <div id="cellAttributes" className="w-100 border border-danger border-width-8">
               {!isPresent(image) && !isPresent(content) ? (
-                  <center><h1>No Contents</h1></center>
+                  <h1 className="text-center">No Contents</h1>
               ) : (
-                   <RenderCell cell={cellData}/>
+                   <RenderCell cell={cellData} editing={false} noBorder={true} noHidden={true} />
                )}
             </div>
           </div>

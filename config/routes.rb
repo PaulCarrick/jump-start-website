@@ -32,8 +32,10 @@ Rails.application.routes.draw do
     resources :cells, except: [ :destroy ]
     delete "/cells/:id", to: "cells#destroy", as: "delete_cell"
     get "/cells/:id/delete", to: "cells#destroy", as: "destroy_cell"
+    get "/cells/:id/admin_urls", to: "/api/v1/cells#get_admin_urls"
     resources :sections, except: [ :destroy ]
     delete "/sections/:id", to: "sections#destroy", as: "delete_section"
+    get "/sections/:id/admin_urls", to: "/api/v1/sections#get_admin_urls"
     get "/sections/:id/delete", to: "sections#destroy", as: "destroy_section"
     get "/page/new_cell/:id", to: "sections#add_cell_to_section", as: "add_cell_to_existing_section"
     get "/page/new_cell", to: "sections#add_cell_to_section", as: "add_cell_to_new_section"

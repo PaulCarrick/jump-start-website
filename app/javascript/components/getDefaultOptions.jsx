@@ -448,6 +448,22 @@ export function getBootStrapClasses() {
   );
 }
 
+export function getAdminPaths(model, id) {
+  if (!id)
+    id = "nil";
+
+  const url = `/admin/${model}/${id}/admin_urls`;
+  const request = new XMLHttpRequest();
+
+  request.open("GET", url, false);
+  request.send(null);
+
+  if (request.status === 200)
+    return(request.responseText)
+
+  return null;
+}
+
 getDefaultOptions.propTypes = {
   format:           PropTypes.shape({
                                       row_style:         PropTypes.string,

@@ -5,51 +5,98 @@
 
 import React from "react";
 import DisplayContent from "./DisplayContent";
-import {dupObject, isPresent} from "./getDefaultOptions";
+import {dupObject, getAdminPaths} from "./getDefaultOptions";
 import {
   handleImageGroup,
   handleImageArray,
   imageFileFindByName,
-  missingImageUrl, processVideoImageTag,
 } from "./imageProcessingUtilities.jsx"
 
 const RenderCell = ({
                       cell = null,
-                      noBorder = false,
-                      noHidden = true
+                      editing = false,
+                      noBorder = true,
+                      noHidden = false
                     }) => {
   if (cell === null) return; // We can't render what we don't have
 
   const cellData      = dupObject(cell);
   const processedCell = processCell(cellData);
 
-  return (renderCell(processedCell, noBorder, noHidden));
+  return (renderCell(processedCell, editing, noBorder, noHidden));
 }
 
 // Utility Functions
 
-function renderCell(cell, noBorder = false, noHidden) {
+function renderCell(cell, editing = false, noBorder = false, noHidden) {
   if (cell == null)
     return "";
 
-  let divClass = "w-100 border border-danger border-width-8";
+  let divClass;
+  let urls;
 
-  if (noBorder) divClass = "w-100 m-0 p-3";
+  if (noBorder)
+    divClass = "w-100 m-0 p-3";
+  else
+    divClass = "w-100 border border-danger border-width-8"
 
-  return (
-      <div className="row mb-2">
-        <div id="cellAttributes" className={divClass}>
-          <DisplayContent
-              content={cell.content}
-              image={cell.image}
-              link={cell.link}
-              format={cell.formatting}
-              cellId={cell.cellName}
-              noHidden={noHidden}
-          />
+  if (editing)
+    urls = getAdminPaths("cells", cell.id)
+
+  if (urls) {
+    urls = JSON.parse(urls)
+
+    return (
+        <>
+          <div className="row mb-2">
+            <div className="col-4">
+              {urls?.edit?.url && (
+                  <a href={urls["edit"]["url"]}>
+                    Edit Column
+                  </a>)
+              }
+            </div>
+            <div className="col-4">
+              {urls?.delete?.url && (
+                  <a href={urls["delete"]["url"]} data-confirm="Are you sure?">
+                    Delete Column
+                  </a>)
+              }
+            </div>
+            <div className="col-4">
+            </div>
+          </div>
+          <div className="row mb-2">
+            <div id="cellAttributes" className={divClass}>
+              <DisplayContent
+                  content={cell.content}
+                  image={cell.image}
+                  link={cell.link}
+                  format={cell.formatting}
+                  cellId={cell.cellName}
+                  noHidden={noHidden}
+              />
+            </div>
+          </div>
+        </>
+    );
+  }
+  else {
+    return (
+        <div className="row mb-2">
+          <div id="cellAttributes" className={divClass}>
+            <DisplayContent
+                content={cell.content}
+                image={cell.image}
+                link={cell.link}
+                format={cell.formatting}
+                cellId={cell.cellName}
+                noHidden={noHidden}
+            />
+          </div>
         </div>
-      </div>
-  );
+    );
+  }
 }
 
 function processCell(cell) {
@@ -113,40 +160,19 @@ function handleSingleImageFile(cell, name) {
   return results;
 }
 
-function handleImageCell(cell, name, formatting) {
-  const imageFile = imageFileFindByName(name);
-
-  if (cell && imageFile.image_url) {
-    let content                     = "";
-    const caption                   = imageFile.caption;
-    const containsOnlyPTagsOrNoHTML = /^(\s*<p>.*?<\/p>\s*)*$/i.test(caption);
-
-    if (containsOnlyPTagsOrNoHTML)
-      content = `<div class='display-4 fw-bold mb-1 text-dark'>${caption}</div>`;
-    else
-      content = caption;
-
-    cell.link = imageFile.image_url;
-
-    return [imageFile.image_url, content, updatedFormatting];
-  }
-  else {
-    return [missingImageUrl(), "", null];
-  }
-}
-
 import PropTypes from 'prop-types';
 
 RenderCell.propTypes = {
-  cell:   PropTypes.shape({
+  cell:     PropTypes.shape({
                               section_name: PropTypes.string,
-                              cell_name:  PropTypes.string,
-                              cell_order: PropTypes.number,
+                              cell_name:    PropTypes.string,
+                              cell_order:   PropTypes.number,
                               content:      PropTypes.string,
                               image:        PropTypes.string,
                               link:         PropTypes.string,
                               formatting:   PropTypes.any,
                             }).isRequired, // Use `.isRequired` here,
+  editing:  PropTypes.bool,
   noBorder: PropTypes.bool,
   noHidden: PropTypes.bool,
 };
