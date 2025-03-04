@@ -74,11 +74,15 @@ const SectionEditor = ({
   const [submitUrl, setSubmitUrl]                       = useState(submitPath);
   const [successUrl, setSuccessUrl]                     = useState(successPath);
   const [cancelUrl, setCancelUrl]                       = useState(cancelPath);
+  const [cells, setCells]                               = useState(sectionData.cells);
   const previousFormatting                              = useRef(formatting);
   const previousRowStyle                                = useRef(rowStyle);
   const previousDivRatio                                = useRef(divRatio);
   const previousImageMode                               = useRef(imageMode);
   const lastChange                                      = useRef(null);
+
+  if (!sectionData.cells)
+    setCells(getCellsForSection(sectionData.section_name));
 
   // Assign select lists
   const [availableContentTypesData, setAvailableContentTypesData] = useState(availableContentTypes);
@@ -964,6 +968,8 @@ function mapReactValuesToSection(sectionData, attribute, value, extraParameters)
       sectionData.formatting = value;
       break;
     case "rowStyle":
+      const confirmChanges = window.confirm("Switching, row style will remove previous columns Are you sure you want to continue?");
+
       [textColumnWidth, imageColumnWidth] = getColumWidths(sectionData.div_ratio, value)
 
       if (isPresent(textColumnWidth) && isPresent(imageColumnWidth)) {

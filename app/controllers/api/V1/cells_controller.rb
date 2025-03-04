@@ -10,6 +10,18 @@ module Api
         render json: cells
       end
 
+      def show
+        results = nil
+
+        if param[:id] =~ /\A\d+\z/
+          results = Cell.find(params[:id])
+        else
+          results = Cell.by_section_name(params[:id])
+        end
+
+        render json: results
+      end
+
       def get_admin_urls
         urls          = {}
         index_url     = admin_cells_url

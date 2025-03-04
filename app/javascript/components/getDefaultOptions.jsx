@@ -452,16 +452,30 @@ export function getAdminPaths(model, id) {
   if (!id)
     id = "nil";
 
-  const url = `/admin/${model}/${id}/admin_urls`;
+  const url     = `/admin/${model}/${id}/admin_urls`;
   const request = new XMLHttpRequest();
 
   request.open("GET", url, false);
   request.send(null);
 
   if (request.status === 200)
-    return(request.responseText)
+    return (request.responseText)
 
   return null;
+}
+
+export function getCellsForSection(section_name) {
+  let results   = null;
+  const url     = `/api/v1/cells/${encodeURIComponent(section_name)}`;
+  const request = new XMLHttpRequest();
+
+  request.open("GET", url, false);
+  request.send(null);
+
+  if ((request.status === 200) && request.responseText)
+    results = JSON.parse(request.responseText);
+
+  return results;
 }
 
 getDefaultOptions.propTypes = {
