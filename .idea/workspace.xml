@@ -9,10 +9,68 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
+      <change afterPath="$PROJECT_DIR$/app/javascript/components/CellEditor.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/components/FormattingEditor.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/components/GenerateCells.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/components/GeneratePage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/components/GenerateSections.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/components/PageEditor.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/components/RenderImageControl.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/components/RenderPage.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/components/SectionEditor.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/components/renderUtilities.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/components/utilities.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/services/cellService.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/services/imageFileService.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/services/pageService.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/services/sectionService.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/services/utilities.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/javascript/types/dataTypes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/views/admin/pages/test.html.erb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jest.config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/resume.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/stories/GenerateCells.stories.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/rails-website.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/rails-website.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/Debug_Rails_and_Javascript.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/Debug_Rails.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/assets/quill/quill.snow.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/assets/quill/quill.snow.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/assets/stylesheets/quill.snow.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/assets/stylesheets/quill.snow.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/admin/abstract_admin_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/admin/abstract_admin_controller.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/admin/cells_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/admin/cells_controller.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/admin/pages_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/admin/pages_controller.rb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/controllers/api/V1/cells_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/api/V1/cells_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/SectionEditor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/SectionEditor.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/api/V1/image_files_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/api/V1/image_files_controller.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/api/V1/pages_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/api/V1/pages_controller.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/api/V1/sections_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/api/V1/sections_controller.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/controllers/pages_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/pages_controller.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/CellEditor.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/ContentBlock.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/ContentBlock.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/DisplayContent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/DisplayContent.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/HtmlEditor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/HtmlEditor.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderCell.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderCell.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderContent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderContent.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderImage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderImage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderSection.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderSingleImage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderSingleImage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/SectionEditor.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/StylesEditor.jsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/javascript/components/getDefaultOptions.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/getDefaultOptions.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/imageProcessingUtilities.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/imageProcessingUtilities.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/index.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/index.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/javascript/components/renderControlFunctions.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/renderControlFunctions.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/cell.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/cell.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/image_file.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/image_file.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/page.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/page.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/models/section.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/section.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/admin/cells/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/cells/index.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/admin/pages/new.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/pages/new.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/admin/sections/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/sections/index.html.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/schema.rb" beforeDir="false" afterPath="$PROJECT_DIR$/db/schema.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,8 +90,10 @@
         <option value="Ruby File" />
         <option value="Ruby Class" />
         <option value="JavaScript File" />
-        <option value="JSX File" />
         <option value="Python Script" />
+        <option value="JSX File" />
+        <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -105,48 +165,52 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Docker.Docker.executor": "Run",
-    "Docker.docker-compose-mail.yml.mailhog: Compose Deployment.executor": "Run",
-    "JavaScript Debug.Debug Chrome (No Start).executor": "Run",
-    "JavaScript Debug.Debug Chrome JavaScript.executor": "Debug",
-    "JavaScript Debug.Debug Chrome.executor": "Debug",
-    "JavaScript Debug.Debug Rails an Javascript JavaScript.executor": "Debug",
-    "JavaScript Debug.Debug Rails and Javascript JavaScript.executor": "Debug",
-    "JavaScript Debug.Development: rails-website JavaScript.executor": "Debug",
-    "JavaScript Debug.Generic Chrome.executor": "Debug",
-    "Python.Build Python.executor": "Debug",
-    "Rails.Debug Rails an Javascript.executor": "Debug",
-    "Rails.Debug Rails and Javascript.executor": "Debug",
-    "Rails.Development: rails-website.executor": "Debug",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "database.data.extractors.current.export.id": "SQL Inserts",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/paul/src/jump-start-website/lib/tasks",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "ruby.structure.view.model.defaults.configured": "true",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.externalTools",
-    "settings.editor.splitter.proportion": "0.2631579",
-    "ts.external.directory.path": "/Applications/RubyMine.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
-    "two.files.diff.last.used.file": "/Users/paul/src/jump-start-website/app/javascript/components/HtmlEditor.jsx",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Docker.Docker.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.docker-compose-mail.yml.mailhog: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;JavaScript Debug.Debug Chrome (Dev).executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Debug Chrome (No Start).executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Debug Chrome JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Debug Chrome.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Debug JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Debug Rails JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Debug Rails an Javascript JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Debug Rails and Javascript JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Development: rails-website JavaScript.executor&quot;: &quot;Debug&quot;,
+    &quot;JavaScript Debug.Generic Chrome.executor&quot;: &quot;Debug&quot;,
+    &quot;Python.Build Python.executor&quot;: &quot;Debug&quot;,
+    &quot;Rails.Debug Rails an Javascript.executor&quot;: &quot;Debug&quot;,
+    &quot;Rails.Debug Rails and Javascript.executor&quot;: &quot;Run&quot;,
+    &quot;Rails.Debug Rails.executor&quot;: &quot;Debug&quot;,
+    &quot;Rails.Development: rails-website.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;database.data.extractors.current.export.id&quot;: &quot;SQL Inserts&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/paul/src/jump-start-website/config&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;ruby.structure.view.model.defaults.configured&quot;: &quot;true&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
+    &quot;settings.editor.splitter.proportion&quot;: &quot;0.2631579&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Applications/RubyMine.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;two.files.diff.last.used.file&quot;: &quot;/Users/paul/src/jump-start-website Saved/app/javascript/services/pageService.tsx&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "TEXT",
-      "JSON"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;TEXT&quot;,
+      &quot;JSON&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -160,18 +224,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/lib/tasks" />
+      <recent name="$PROJECT_DIR$/config" />
+      <recent name="$PROJECT_DIR$/app" />
       <recent name="$PROJECT_DIR$/app/javascript/components" />
-      <recent name="$PROJECT_DIR$/spec/controllers/admin" />
-      <recent name="$PROJECT_DIR$/spec/controllers" />
-      <recent name="$PROJECT_DIR$/app/views/admin" />
+      <recent name="$PROJECT_DIR$/app/javascript/services" />
+      <recent name="$PROJECT_DIR$/app/javascript/types" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app" />
+      <recent name="$PROJECT_DIR$/app/views/admin/pages" />
+      <recent name="$PROJECT_DIR$/stories" />
       <recent name="$PROJECT_DIR$/installation" />
       <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/startup/debconf/configure_server" />
-      <recent name="$PROJECT_DIR$/startup/rails/scripts" />
-      <recent name="$PROJECT_DIR$/startup/mail/templates" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -179,7 +243,7 @@
       <command value="Newhall2Eastsound!" />
     </option>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.Debug Chrome">
+  <component name="RunManager" selected="Rails.Debug Rails">
     <configuration name="Debug Chrome (Dev)" type="JavascriptDebugType" uri="http://localhost:3000/" useFirstLineBreakpoints="true">
       <method v="2">
         <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_OpenServer (Dev)" />
@@ -188,14 +252,14 @@
     <configuration name="Debug Chrome (No Start)" type="JavascriptDebugType" uri="http://localhost:3000/" useFirstLineBreakpoints="true">
       <method v="2" />
     </configuration>
-    <configuration name="Debug Chrome" type="JavascriptDebugType" uri="http://localhost:3000/" useFirstLineBreakpoints="true">
+    <configuration name="Debug Edge" type="JavascriptDebugType" engineId="37cae5b9-e8b2-4949-9172-aafa37fbc09c" uri="http://localhost:3000" useFirstLineBreakpoints="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="Debug JavaScript" type="JavascriptDebugType" uri="http://localhost:3000/" useFirstLineBreakpoints="true">
       <method v="2">
         <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Compile JavaSctipt" />
         <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_OpenServer" />
       </method>
-    </configuration>
-    <configuration name="Debug Edge" type="JavascriptDebugType" engineId="37cae5b9-e8b2-4949-9172-aafa37fbc09c" uri="http://localhost:3000" useFirstLineBreakpoints="true">
-      <method v="2" />
     </configuration>
     <configuration name="Debug Opera" type="JavascriptDebugType" engineId="53e2f627-b1a7-4dfa-bfa7-5b83cc034776" uri="http://localhost:3000" useFirstLineBreakpoints="true">
       <method v="2" />
@@ -325,12 +389,12 @@
     <list>
       <item itemvalue="Docker.docker-compose-rails.yml: Compose Deployment" />
       <item itemvalue="Docker.docker-compose-mail.yml.mailhog: Compose Deployment" />
-      <item itemvalue="JavaScript Debug.Debug Chrome" />
+      <item itemvalue="JavaScript Debug.Debug JavaScript" />
       <item itemvalue="JavaScript Debug.Debug Chrome (No Start)" />
       <item itemvalue="JavaScript Debug.Debug Chrome (Dev)" />
       <item itemvalue="JavaScript Debug.Debug Edge" />
       <item itemvalue="JavaScript Debug.Debug Opera" />
-      <item itemvalue="Rails.Debug Rails and Javascript" />
+      <item itemvalue="Rails.Debug Rails" />
       <item itemvalue="Rake.spec: rails-website" />
       <item itemvalue="Rake.test: rails-website" />
     </list>
@@ -509,7 +573,24 @@
       <workItem from="1740742699823" duration="17255000" />
       <workItem from="1740760127955" duration="72932000" />
       <workItem from="1740955273230" duration="27000" />
-      <workItem from="1741007776388" duration="26504000" />
+      <workItem from="1741007776388" duration="26569000" />
+      <workItem from="1741104718419" duration="2435000" />
+      <workItem from="1741108702072" duration="2824000" />
+      <workItem from="1741126445496" duration="6108000" />
+      <workItem from="1741178299889" duration="25002000" />
+      <workItem from="1741205832043" duration="246000" />
+      <workItem from="1741211964360" duration="23858000" />
+      <workItem from="1741436700136" duration="63003000" />
+      <workItem from="1741632685568" duration="33000" />
+      <workItem from="1741634018875" duration="20002000" />
+      <workItem from="1741712094392" duration="29633000" />
+      <workItem from="1741879068663" duration="251000" />
+      <workItem from="1741879641718" duration="19861000" />
+      <workItem from="1741956904459" duration="92991000" />
+      <workItem from="1742389974264" duration="41553000" />
+      <workItem from="1743791759853" duration="4493000" />
+      <workItem from="1744391218309" duration="73617000" />
+      <workItem from="1744907410675" duration="26643000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />
@@ -631,15 +712,13 @@
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
-      <configuration name="JavascriptDebugType">
-        <watch expression="format" language="ECMAScript 6" />
-      </configuration>
       <configuration name="RailsRunConfigurationType">
         <watch expression="request.url" />
       </configuration>
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/jump_start_website@Debug_Rails_and_Javascript.rcov" NAME="Debug Rails and Javascript Coverage Results" MODIFIED="1740941875948" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="rails-website" />
+    <SUITE FILE_PATH="coverage/jump_start_website@Debug_Rails.rcov" NAME="Debug Rails Coverage Results" MODIFIED="1744994838778" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="rails-website" />
+    <SUITE FILE_PATH="coverage/jump_start_website@Debug_Rails_and_Javascript.rcov" NAME="Debug Rails Coverage Results" MODIFIED="1744906759721" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="rails-website" />
   </component>
 </project>

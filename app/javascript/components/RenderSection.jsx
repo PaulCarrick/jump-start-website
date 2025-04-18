@@ -6,7 +6,8 @@
 import React from "react";
 import DisplayContent from "./DisplayContent";
 import RenderCell from "./RenderCell.jsx";
-import {dupObject, isTextOnly, isPresent} from "./getDefaultOptions";
+import {isTextOnly} from "./getDefaultOptions";
+import {dupObject, isPresent} from "./utilities";
 import PropTypes from 'prop-types';
 
 import {
@@ -22,14 +23,15 @@ const RenderSection = ({
                          section = null,
                          editing = false,
                          noBorder = true,
-                         noHidden = false
+                         noHidden = false,
+                         onChange = null
                        }) => {
   if (section === null) return; // We can't render what we don't have
 
   const sectionData = dupObject(section);
 
   if (sectionData.cells) {
-    return processCells(sectionData.cells, editing, noBorder, noHidden)
+    return processCells(sectionData.cells, editing, noBorder, noHidden, onChange)
   }
   else {
     const contents = buildContents(sectionData);
@@ -64,6 +66,7 @@ function renderSection(content, noBorder = false, noHidden) {
               textAttributes={content.text_attributes}
               imageAttributes={content.image_attributes}
               noHidden={noHidden}
+              onChange={onChange}
           />
         </div>
       </div>
@@ -76,7 +79,7 @@ function buildContents(section) {
   return sections;
 }
 
-const processCells = (cells, editing = false, noBorder = false, noHidden = true) => {
+const processCells = (cells, editing = false, noBorder = false, noHidden = true, onChange = null) => {
   if (!cells || cells.length === 0) return null;
 
   let containerClasses = "row";
@@ -101,9 +104,11 @@ const processCells = (cells, editing = false, noBorder = false, noHidden = true)
             <div
                 key={index}
                 className={cell.container_class || ''}
-                style={cell.container_class ? {} : { width: `${cell.width}` }}
+                style={{
+                  ...(cell.width === 'auto' ? { flex: 1 } : { width: `${cell.width}` }),
+                }}
             >
-              <RenderCell cell={cell} editing={editing} noBorder={noBorder} noHidden={noHidden}/>
+              <RenderCell cell={cell} editing={editing} noBorder={noBorder} noHidden={noHidden} onChange={onChange} />
             </div>
         ))}
       </div>
@@ -308,6 +313,7 @@ RenderSection.propTypes = {
   editing:  PropTypes.bool,
   noBorder: PropTypes.bool,
   noHidden: PropTypes.bool,
+  onChange: PropTypes.any
 };
 
 export default RenderSection;

@@ -4,7 +4,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import {isPresent} from "./getDefaultOptions";
+import {isPresent} from "./utilities";
 
 const RenderSingleImage = ({
                              content = "",

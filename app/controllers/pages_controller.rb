@@ -12,7 +12,9 @@ class PagesController < ApplicationController
   private
 
   def load_page
-    @page = Page.find_by(name: params[:id])
+    return if params[:id].present? && params[:id] =~ /^favicon.*$/
+
+    @page = Page.by_page_name(params[:id]).first
 
     if @page.present?
       setup_defaults

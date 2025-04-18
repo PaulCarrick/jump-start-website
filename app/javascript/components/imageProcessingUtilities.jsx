@@ -1,6 +1,6 @@
 // /app/javascript/components/image{processingUtilities.jsx
 
-import {isPresent} from "./getDefaultOptions.jsx";
+import {isPresent} from "./utilities";
 
 export function handleImageGroup(group, formatting) {
   const imageFiles = imageFilesFindByGroup(group)

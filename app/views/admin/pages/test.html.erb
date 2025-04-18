@@ -1,0 +1,17 @@
+<!-- app/views/admin/pages/test.html.erb -->
+<%= render layout: "layouts/admin_page" do %>
+  <div>
+    <%
+      options = {
+        force:                 false,
+        availableSectionNames: @content_types,
+        availableImages:       @images,
+        availableImageGroups:  @groups,
+        availableVideos:       @videos,
+        readOnlySectionName:   false,
+        newCell:               true
+      }
+    %>
+    <%= react_component("CellEditor", { cell: nil, editorOptions: options, editing: false, noBorder: false, noHidden: true }) %>
+  </div>
+<% end %>

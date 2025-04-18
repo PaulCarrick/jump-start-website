@@ -8,47 +8,49 @@ import RenderSlideShow from "./RenderSlideShow";
 import RenderSingleImage from "./RenderSingleImage";
 
 const RenderImage = ({
-                         content = "",
-                         image = "",
-                         link = "",
-                         options = {}
-                    }) => {
+                       content = "",
+                       image = "",
+                       link = "",
+                       options = {},
+                       onChange = null
+                     }) => {
   if (options.slide_show_images) {
     return (
-      <RenderSlideShow
-        images={options.slide_show_images}
-        captions={content}
-        slideType={options.slide_show_type}
-      />
+        <RenderSlideShow
+            images={options.slide_show_images}
+            captions={content}
+            slideType={options.slide_show_type}
+        />
     );
   }
   else {
     return (
-      <RenderSingleImage content={content}
-                         image={image}
-                         link={link}
-                         options={options}
-      />
+        <RenderSingleImage content={content}
+                           image={image}
+                           link={link}
+                           options={options}
+        />
     );
   }
 };
 
 RenderImage.propTypes = {
   content: PropTypes.string,
-  image: PropTypes.oneOfType([
-                               PropTypes.string,
-                               PropTypes.object,
-                             ]),
-  link: PropTypes.string,
+  image:   PropTypes.oneOfType([
+                                 PropTypes.string,
+                                 PropTypes.object,
+                               ]),
+  link:    PropTypes.string,
   options: PropTypes.shape({
                              slide_show_images: PropTypes.arrayOf(
-                               PropTypes.oneOfType([
-                                                     PropTypes.string,
-                                                     PropTypes.object,
-                                                   ])
+                                 PropTypes.oneOfType([
+                                                       PropTypes.string,
+                                                       PropTypes.object,
+                                                     ])
                              ),
-                             slide_show_type: PropTypes.string
+                             slide_show_type:   PropTypes.string
                            }).isRequired,
+  onChange: PropTypes.any
 };
 
 export default RenderImage;

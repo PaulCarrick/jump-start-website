@@ -18,7 +18,8 @@ const DisplayContent = ({
                           sectionId = "",
                           imageAttributes = {},
                           textAttributes = {},
-                          noHidden = false
+                          noHidden = false,
+                          onChange = null
                         }) => {
   let options     = getDefaultOptions(format, textAttributes, imageAttributes);
   let toggleId    = null;
@@ -70,6 +71,7 @@ const DisplayContent = ({
                          sectionId={sectionId}
                          toggleId={toggleId}
                          toggleClass={toggleClass}
+                         onChange={onChange}
           />
         </div>
       </ErrorBoundary>
@@ -78,7 +80,7 @@ const DisplayContent = ({
 
 DisplayContent.propTypes = {
   content:         PropTypes.string,
-  image:           PropTypes.string,
+  image:           PropTypes.oneOfType([PropTypes.string, PropTypes.null]),
   link:            PropTypes.string,
   format:          PropTypes.shape({
                                      row_style:         PropTypes.string,
@@ -112,6 +114,7 @@ DisplayContent.propTypes = {
                                      background_color: PropTypes.string,
                                    }),
   noHidden:        PropTypes.bool,
+  onChange:        PropTypes.any
 };
 
 export default DisplayContent;

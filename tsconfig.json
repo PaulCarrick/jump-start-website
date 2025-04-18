@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "outDir": "./app/build/typescript",
+    "rootDir": "./app/javascript",
+    "target": "ESNext",
+    "types": ["jest"],
+    "module": "ESNext",
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "strict": true,
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["app/javascript/**/*.ts", "app/javascript//**/*.tsx"],
+  "exclude": ["node_modules", "app/build", "app/javascript/application.js"]
+}

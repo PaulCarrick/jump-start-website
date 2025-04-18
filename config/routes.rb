@@ -5,9 +5,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :menu_items, only: %i[index show]
       resources :footer_items, only: %i[index show]
-      resources :pages, only: %i[index show]
-      resources :sections, only: %i[index show]
-      resources :cells, only: %i[index show]
+      resources :pages, only: %i[index show create update destroy]
+      resources :sections, only: %i[index show create update destroy]
+      resources :cells, only: %i[index show create update destroy]
       resources :blog_posts
       resources :post_comments
       resources :image_files
@@ -41,6 +41,7 @@ Rails.application.routes.draw do
     get "/page/new_cell", to: "sections#add_cell_to_section", as: "add_cell_to_new_section"
     resources :pages, except: [ :destroy ]
     delete "/pages/:id", to: "pages#destroy", as: "delete_page"
+    get "/pages/:id/test", to: "pages#test"
     get "/pages/:id/delete", to: "pages#destroy", as: "destroy_page"
     get "/page/new_section/:id", to: "pages#add_section_to_page", as: "add_section_to_existing_page"
     get "/page/new_section", to: "pages#add_section_to_page", as: "add_section_to_new_page"

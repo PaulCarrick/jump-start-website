@@ -2,6 +2,7 @@
 
 require 'uri'
 
+# noinspection RailsParamDefResolve
 class Admin::CellsController < Admin::AbstractAdminController
   def initialize
     super
@@ -125,7 +126,7 @@ class Admin::CellsController < Admin::AbstractAdminController
 
       result = get_record&.destroy
 
-      if result.destroyed?
+      if result&.destroyed?
         flash[:notice] = "#{controller_name.singularize.titleize} deleted successfully."
 
         if params[:return_url].present?
@@ -158,18 +159,36 @@ class Admin::CellsController < Admin::AbstractAdminController
   end
 
   def get_params
-    params.require(:cell).permit(
-      :cell_name,
+    section = params.require(:section)
+
+    section[:cells_attributes] = section.delete(:cells) if section[:cells].present?
+
+    section.permit(
+      :content_type,
       :section_name,
-      :type,
-      :cell_order,
-      :content,
+      :section_order,
       :image,
       :link,
-      :width,
+      :description,
       :checksum,
-      options: {},
-      formatting: {},
+      :row_style,
+      :div_ratio,
+      image_attributes: {},
+      text_attributes:  {},
+      formatting:       {},
+      cells_attributes: [
+                          :id,
+                          :cell_name,
+                          :cell_type,
+                          :cell_order,
+                          :content,
+                          :image,
+                          :link,
+                          :width,
+                          :_destroy,
+                          formatting: {},
+                          options:    {}
+                        ]
     )
   end
 end

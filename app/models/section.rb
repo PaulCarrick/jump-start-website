@@ -1,7 +1,10 @@
 # app/models/section.rb
 
+# noinspection RubyTooManyMethodsInspection
 class Section < ApplicationRecord
-  has_many :cells, -> { order(cell_order: :asc) }, foreign_key: "section_name", primary_key: "section_name", dependent: :destroy
+  has_many :cells, -> { order(cell_order: :asc) }, dependent: :destroy
+  accepts_nested_attributes_for :cells, allow_destroy: true
+  belongs_to :page
 
   after_find :verify_checksum, unless: -> { Thread.current[:skip_checksum_verification] }
   after_find :setup_formatting
@@ -9,10 +12,17 @@ class Section < ApplicationRecord
   include Checksum
   include Validation
 
-  validate :at_least_one_field_present
-  validate :description_is_valid
+  scope :by_content_type, ->(type) {
+    where(content_type: type)
+      .order(:section_order)
+      .includes(:cells)
+      .references(:cells)
+      .order("cells.cell_order ASC")
+  }
+  scope :content_types, ->() { all.distinct.order(:content_type).pluck(:content_type) }
+  scope :names, ->() { all.distinct.order(:section_name).pluck(:section_name) }
 
-  scope :by_content_type, ->(type) { where(content_type: type).order(:section_order) }
+  validates :section_name, presence: true, uniqueness: true
 
   def self.ransackable_attributes(auth_object = nil)
     %w[content_type section_name image link description]
@@ -24,6 +34,16 @@ class Section < ApplicationRecord
 
   def renderable_section
     self.as_json(include: :cells)
+  end
+
+  def self.generate_unique_name(prefix = "new-section_")
+    existing_names = Section.where("section_name ~ ?", "^#{prefix}\\d+$").pluck(:section_name)
+
+    max_number = existing_names
+                   .map { |name| name[/\d+\z/].to_i }
+                   .max || 0
+
+    "#{prefix}#{max_number + 1}"
   end
 
   def generate_cells
@@ -147,7 +167,7 @@ class Section < ApplicationRecord
         end
       when "image_styles"
         if cell_type == "image"
-          styles  = value
+          styles = value
         end
       when "text_classes"
         if cell_type != "image"
@@ -157,7 +177,7 @@ class Section < ApplicationRecord
         end
       when "text_styles"
         if cell_type != "image"
-          styles  = value
+          styles = value
         end
       when "row_classes"
         container_classes = value.gsub("Row", "Cell")

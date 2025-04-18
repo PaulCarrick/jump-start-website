@@ -104,7 +104,7 @@ class Admin::AbstractAdminController < ApplicationController
 
       result = get_record&.destroy
 
-      if result.destroyed?
+      if result&.destroyed?
         flash[:notice] = "#{controller_name.singularize.titleize} deleted successfully."
         redirect_to action: :index, turbo: false
       else

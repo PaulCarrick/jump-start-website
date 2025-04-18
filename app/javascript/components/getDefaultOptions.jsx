@@ -7,6 +7,7 @@
 import parseStyle from "./parseStyle";
 import PropTypes from "prop-types";
 import {getDefaultRowStyle} from "./App.jsx";
+import {isPresent, dupObject} from "./utilities";
 
 const getDefaultOptions = (
     format          = {},
@@ -120,21 +121,6 @@ const getDefaultOptions = (
   return new Object(options);
 };
 
-export function isPresent(variable) {
-  if (typeof variable === "undefined") return false;
-  if (variable === null) return false;
-  if ((typeof variable === "string") && (variable === "")) return false;
-  if (Array.isArray(variable) && (variable.length === 0)) return false;
-  if ((typeof variable === "object") && (Object.keys(variable).length === 0)) return false;
-
-  return true;
-}
-
-export function dupObject(existingObject) {
-  if (!isPresent(existingObject)) return {};
-  return structuredClone(existingObject);
-}
-
 export function hasImageSection(rowStyle = getDefaultRowStyle()) {
   return (rowStyle !== "text-single");
 }
@@ -218,6 +204,10 @@ export function rowStyleOptions() {
           label: "Text on the Right",
           value: "text-right",
         },
+        {
+          label: "Multicolumn",
+          value: "multi-column",
+        },
       ]
   );
 }
@@ -268,6 +258,21 @@ export function ratioOptions(custom = false) {
                            });
 
   return results;
+}
+
+export function descriptionOptions() {
+  return (
+      [
+        {
+          label: "Image Description at Top",
+          value: "top",
+        },
+        {
+          label: "Image Description at Bottom",
+          value: "bottom",
+        },
+      ]
+  );
 }
 
 export function captionOptions() {
@@ -446,36 +451,6 @@ export function getBootStrapClasses() {
         },
       ]
   );
-}
-
-export function getAdminPaths(model, id) {
-  if (!id)
-    id = "nil";
-
-  const url     = `/admin/${model}/${id}/admin_urls`;
-  const request = new XMLHttpRequest();
-
-  request.open("GET", url, false);
-  request.send(null);
-
-  if (request.status === 200)
-    return (request.responseText)
-
-  return null;
-}
-
-export function getCellsForSection(section_name) {
-  let results   = null;
-  const url     = `/api/v1/cells/${encodeURIComponent(section_name)}`;
-  const request = new XMLHttpRequest();
-
-  request.open("GET", url, false);
-  request.send(null);
-
-  if ((request.status === 200) && request.responseText)
-    results = JSON.parse(request.responseText);
-
-  return results;
 }
 
 getDefaultOptions.propTypes = {

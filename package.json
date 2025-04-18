@@ -8,25 +8,53 @@
     "node": ">=22.12.0"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.5",
+    "@storybook/addon-essentials": "^8.6.4",
+    "@storybook/addon-interactions": "^8.6.4",
+    "@storybook/addon-mdx-gfm": "^8.6.4",
+    "@storybook/addon-onboarding": "^8.6.4",
+    "@storybook/addon-webpack5-compiler-swc": "^2.1.0",
+    "@storybook/blocks": "^8.6.4",
+    "@storybook/experimental-addon-test": "^8.6.4",
+    "@storybook/react": "^8.6.4",
+    "@storybook/react-vite": "^8.6.4",
+    "@storybook/react-webpack5": "^8.6.4",
+    "@storybook/test": "^8.6.4",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@types/jest": "^29.5.14",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
     "@typescript-eslint/eslint-plugin": "^8.18.1",
     "@typescript-eslint/parser": "^8.18.1",
+    "@vitest/browser": "^3.0.8",
+    "@vitest/coverage-v8": "^3.0.8",
     "esbuild": "^0.25.0",
     "eslint": "^9.19.0",
     "eslint-plugin-react": "^7.37.4",
-    "eslint-plugin-react-hooks": "^5.1.0"
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-storybook": "^0.11.4",
+    "jest": "^29.7.0",
+    "playwright": "^1.51.0",
+    "storybook": "^8.6.4",
+    "ts-jest": "^29.2.6",
+    "ts-node": "^10.9.2",
+    "vitest": "^3.0.8"
   },
   "scripts": {
     "build": "esbuild --loader:.js=jsx app/javascript/application.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
     "build:css:compile": "sass ./app/assets/stylesheets/application.bootstrap.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules",
     "build:css:prefix": "postcss ./app/assets/builds/application.css --use=autoprefixer --output=./app/assets/builds/application.css",
     "build:css": "npm run build:css:compile && npm run build:css:prefix",
-    "watch:css": "nodemon --watch ./app/assets/stylesheets/ --ext css --exec npm run build:css"
+    "watch:css": "nodemon --watch ./app/assets/stylesheets/ --ext css --exec npm run build:css",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.12",
     "@popperjs/core": "^2.11.8",
     "@rails/actiontext": "^8.0.0",
+    "@testing-library/react": "^16.2.0",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
@@ -50,5 +78,10 @@
     ">0.2%",
     "not dead",
     "not op_mini all"
-  ]
+  ],
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
+  }
 }

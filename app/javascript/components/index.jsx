@@ -26,10 +26,14 @@ import SectionEditor from "./SectionEditor";
 import HtmlEditor from "./HtmlEditor";
 import RenderControl from "./RenderControl";
 import RenderSection from "./RenderSection";
-import RenderCell from "./RenderCell.jsx";
-import StylesEditor from "./StylesEditor";
+import RenderCell from "./RenderCell";
+import FormattingEditor from "./FormattingEditor";
 import ErrorBoundary from "./ErrorBoundary";
-import CellEditor from "./CellEditor.jsx";
+import CellEditor from "./CellEditor";
+import GenerateCells from "./GenerateCells";
+import RenderPage from "./RenderPage";
+import PageEditor from "./PageEditor";
+import RenderImageControl from "./RenderImageControl";
 
 try {
   ReactRailsUJS.register({
@@ -52,10 +56,14 @@ try {
                            HtmlEditor,
                            RenderControl,
                            RenderSection,
-                           RenderCell: RenderCell,
-                           StylesEditor,
+                           RenderCell,
+                           FormattingEditor,
                            ErrorBoundary,
-                           CellEditor: CellEditor,
+                           CellEditor,
+                           GenerateCells,
+                           RenderPage,
+                           PageEditor,
+                           RenderImageControl
                          });
 }
 catch (error) {

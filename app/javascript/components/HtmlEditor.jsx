@@ -236,7 +236,8 @@ HtmlEditor.propTypes = {
   onChange:       PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   onBlur:         PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   useHtmlView:    PropTypes.bool,
-  noSwitchButton: PropTypes.bool
+  noSwitchButton: PropTypes.bool,
+  theme:          PropTypes.string
 };
 
 export default HtmlEditor;

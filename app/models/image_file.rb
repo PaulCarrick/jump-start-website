@@ -13,6 +13,9 @@ class ImageFile < ApplicationRecord
   scope :jpegs_with_captions_in_an_image_group, ->() { where.not(group: nil).where.not(caption: nil).where(mime_type: 'image/jpeg') }
   scope :by_image_group, ->(group) { where(group: group).order(:slide_order) }
   scope :by_name, ->(name) { where(name: name) }
+  scope :images, ->() { where.not(mime_type: "video/mp4").distinct.order(:name).pluck(:name) }
+  scope :groups, ->() { all.distinct.order(:group).pluck(:group) }
+  scope :videos, ->() { where(mime_type: "video/mp4").distinct.order(:name).pluck(:name) }
 
   def self.ransackable_attributes(auth_object = nil)
     %w[ name group caption description ]

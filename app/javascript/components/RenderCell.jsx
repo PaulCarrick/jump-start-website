@@ -1,11 +1,13 @@
-// /app/javascripts/components/RenderContent.jsx
+// /app/javascripts/components/RenderCell.jsx
 // noinspection RegExpRedundantEscape
 
 // Component to Display Cell Records
 
 import React from "react";
 import DisplayContent from "./DisplayContent";
-import {dupObject, getAdminPaths} from "./getDefaultOptions";
+import {dupObject} from "./utilities";
+import {getAdminPaths} from "../services/utilities";
+
 import {
   handleImageGroup,
   handleImageArray,
@@ -16,19 +18,20 @@ const RenderCell = ({
                       cell = null,
                       editing = false,
                       noBorder = true,
-                      noHidden = false
+                      noHidden = false,
+                      onChange = null
                     }) => {
   if (cell === null) return; // We can't render what we don't have
 
   const cellData      = dupObject(cell);
   const processedCell = processCell(cellData);
 
-  return (renderCell(processedCell, editing, noBorder, noHidden));
+  return (renderCell(processedCell, editing, noBorder, noHidden, onChange));
 }
 
 // Utility Functions
 
-function renderCell(cell, editing = false, noBorder = false, noHidden) {
+function renderCell(cell, editing = false, noBorder = false, noHidden = false, onChange = null) {
   if (cell == null)
     return "";
 
@@ -40,37 +43,97 @@ function renderCell(cell, editing = false, noBorder = false, noHidden) {
   else
     divClass = "w-100 border border-danger border-width-8"
 
-  if (editing)
+  if (editing) {
     urls = getAdminPaths("cells", cell.id)
 
-  if (urls) {
-    urls = JSON.parse(urls)
+    if (onChange && cell) {
+      return (
+          <>
+            <div className="row mb-2">
+              <div className="col-4">
+                <a href="#"
+                   onClick={(e) => {
+                     e.preventDefault();
 
-    return (
-        <>
-          <div className="row mb-2">
-            <div className="col-4">
-              {urls?.edit?.url && (
-                  <a
-                      href={urls?.edit?.url}
-                      target="_self"
-                      data-turbo="false"
-                      data-turbolinks="false"
-                  >
-                    Edit Column
-                  </a>)
-              }
+                     if (onChange)
+                       onChange(cell, "edit");
+                   }}>
+                  Edit Column
+                </a>
+              </div>
+              <div className="col-4">
+                <a href="#"
+                   data-confirm="Are you sure?"
+                   onClick={(e) => {
+                     e.preventDefault();
+
+                     if (onChange)
+                       onChange(cell.index, "delete");
+                   }}>
+                  Delete Column
+                </a>
+              </div>
+              <div className="col-4">
+              </div>
             </div>
-            <div className="col-4">
-              {urls?.delete?.url && (
-                  <a href={urls["delete"]["url"]} data-confirm="Are you sure?">
-                    Delete Column
-                  </a>)
-              }
+            <div className="row mb-2">
+              <div key={cell.index} className={divClass}>
+                <DisplayContent
+                    content={cell.content}
+                    image={cell.image}
+                    link={cell.link}
+                    format={cell.formatting}
+                    cellId={cell.cell_name}
+                    noHidden={noHidden}
+                />
+              </div>
             </div>
-            <div className="col-4">
+          </>
+      );
+    }
+    else if (urls) {
+      return (
+          <>
+            <div className="row mb-2">
+              <div className="col-4">
+                {urls?.edit?.url && (
+                    <a
+                        href={urls?.edit?.url}
+                        target="_self"
+                        data-turbo="false"
+                        data-turbolinks="false"
+                    >
+                      Edit Column
+                    </a>)
+                }
+              </div>
+              <div className="col-4">
+                {urls?.delete?.url && (
+                    <a href={urls["delete"]["url"]} data-confirm="Are you sure?">
+                      Delete Column
+                    </a>)
+                }
+              </div>
+              <div className="col-4">
+              </div>
             </div>
-          </div>
+            <div className="row mb-2">
+              <div id="cellAttributes" className={divClass}>
+                <DisplayContent
+                    content={cell.content}
+                    image={cell.image}
+                    link={cell.link}
+                    format={cell.formatting}
+                    cellId={cell.cell_name}
+                    noHidden={noHidden}
+                />
+              </div>
+            </div>
+          </>
+      );
+    }
+    else {
+      return (
           <div className="row mb-2">
             <div id="cellAttributes" className={divClass}>
               <DisplayContent
@@ -78,13 +141,13 @@ function renderCell(cell, editing = false, noBorder = false, noHidden) {
                   image={cell.image}
                   link={cell.link}
                   format={cell.formatting}
-                  cellId={cell.cellName}
+                  cellId={cell.cell_name}
                   noHidden={noHidden}
               />
             </div>
           </div>
-        </>
-    );
+      );
+    }
   }
   else {
     return (
@@ -95,7 +158,7 @@ function renderCell(cell, editing = false, noBorder = false, noHidden) {
                 image={cell.image}
                 link={cell.link}
                 format={cell.formatting}
-                cellId={cell.cellName}
+                cellId={cell.cell_name}
                 noHidden={noHidden}
             />
           </div>
@@ -135,7 +198,10 @@ function processCell(cell) {
       [newImages, newFormatting] = handleImageArray(match[1], cell.formatting);
       break;
     default:
-      newImages = newImages.image_url;
+      if (typeof newImages === "string")
+        newImages = handleSingleImageFile(cell, newImages);
+      else
+        newImages = newImages.image_url;
   }
 
   cell.image      = newImages;
@@ -169,6 +235,7 @@ import PropTypes from 'prop-types';
 
 RenderCell.propTypes = {
   cell:     PropTypes.shape({
+                              id:           PropTypes.number,
                               section_name: PropTypes.string,
                               cell_name:    PropTypes.string,
                               cell_order:   PropTypes.number,
@@ -180,6 +247,7 @@ RenderCell.propTypes = {
   editing:  PropTypes.bool,
   noBorder: PropTypes.bool,
   noHidden: PropTypes.bool,
+  onChange: PropTypes.any
 };
 
 export default RenderCell;

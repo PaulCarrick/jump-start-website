@@ -14,7 +14,8 @@ const RenderContent = ({
                          link = "",
                          sectionId = "",
                          toggleId = "",
-                         toggleClass = {}
+                         toggleClass = {},
+                         onChange = null
                        }) => {
   const rowClasses = `row ${options.row_classes}`;
   let text         = content;
@@ -34,10 +35,17 @@ const RenderContent = ({
                               options={options}
                               toggleId={toggleId}
                               toggleClass={toggleClass}
+                              onChange={onChange}
                 />
               </div>
               <div className={options.image_classes} style={options.image_styles}>
-                <RenderImage content={captions} image={image} link={link} options={options}/>
+                <RenderImage
+                    content={captions}
+                    image={image}
+                    link={link}
+                    options={options}
+                    onChange={onChange}
+                />
               </div>
             </div>
           </>
@@ -47,13 +55,20 @@ const RenderContent = ({
           <>
             <div className={rowClasses} {...(sectionId ? { id: sectionId } : {})}>
               <div className={options.image_classes} style={options.image_styles}>
-                <RenderImage content={captions} image={image} link={link} options={options}/>
+                <RenderImage
+                    content={captions}
+                    image={image}
+                    link={link}
+                    options={options}
+                    onChange={onChange}
+                />
               </div>
               <div className={options.text_classes} style={options.text_styles}>
                 <ContentBlock content={text}
                               options={options}
                               toggleId={toggleId}
                               toggleClass={toggleClass}
+                              onChange={onChange}
                 />
               </div>
             </div>
@@ -67,6 +82,7 @@ const RenderContent = ({
                             options={options}
                             toggleId={toggleId}
                             toggleClass={toggleClass}
+                            onChange={onChange}
               />
             </div>
           </div>
@@ -79,7 +95,9 @@ const RenderContent = ({
                 <RenderImage content={captions}
                              image={image}
                              link={link}
-                             options={options}/>
+                             options={options}
+                             onChange={onChange}
+                />
               </div>
             </div>
           </>
@@ -93,6 +111,7 @@ const RenderContent = ({
                               options={options}
                               toggleId={toggleId}
                               toggleClass={toggleClass}
+                              onChange={onChange}
                 />
               </div>
             </div>
@@ -101,7 +120,9 @@ const RenderContent = ({
                 <RenderImage content={captions}
                              image={image}
                              link={link}
-                             options={options}/>
+                             options={options}
+                             onChange={onChange}
+                />
               </div>
             </div>
           </>
@@ -114,7 +135,9 @@ const RenderContent = ({
                 <RenderImage content={captions}
                              image={image}
                              link={link}
-                             options={options}/>
+                             options={options}
+                             onChange={onChange}
+                />
               </div>
             </div>
             <div className={rowClasses}>
@@ -123,6 +146,7 @@ const RenderContent = ({
                               options={options}
                               toggleId={toggleId}
                               toggleClass={toggleClass}
+                              onChange={onChange}
                 />
               </div>
             </div>
@@ -135,7 +159,9 @@ const RenderContent = ({
               <RenderImage content={text}
                            image={image}
                            link={link}
-                           options={options}/>
+                           options={options}
+                           onChange={onChange}
+              />
             </div>)
       else
         return (
@@ -144,6 +170,7 @@ const RenderContent = ({
                             options={options}
                             toggleId={toggleId}
                             toggleClass={toggleClass}
+                            onChange={onChange}
               />
             </div>
         );
@@ -175,7 +202,8 @@ RenderContent.propTypes = {
   link:        PropTypes.string,
   sectionId:   PropTypes.string,
   toggleId:    PropTypes.string,
-  toggleClass: PropTypes.string
+  toggleClass: PropTypes.string,
+  onChange:    PropTypes.any
 };
 
 export default RenderContent;

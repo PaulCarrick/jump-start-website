@@ -2,7 +2,7 @@
 
 import React from "react";
 import Select from "react-select";
-import {isPresent} from "./getDefaultOptions.jsx";
+import {isPresent} from "./utilities";
 
 export function renderComboBox(id, value, optionsHash, setValue, readOnly = false, dataOptions = {}) {
   return (

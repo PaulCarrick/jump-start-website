@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_22_131434) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_15_200619) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -80,7 +80,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_22_131434) do
     t.text "checksum"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "section_id", null: false
     t.index ["cell_name", "section_name"], name: "index_cells_on_cell_name_and_section_name", unique: true
+    t.index ["section_id"], name: "index_cells_on_section_id"
   end
 
   create_table "contacts", force: :cascade do |t|
@@ -139,6 +141,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_22_131434) do
     t.string "access"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["name"], name: "index_pages_on_name", unique: true
+    t.index ["section"], name: "index_pages_on_section", unique: true
   end
 
   create_table "post_comments", force: :cascade do |t|
@@ -170,6 +174,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_22_131434) do
     t.jsonb "image_attributes", default: {}, null: false
     t.jsonb "text_attributes", default: {}, null: false
     t.jsonb "formatting", default: {}, null: false
+    t.integer "page_id", null: false
+    t.index ["page_id"], name: "index_sections_on_page_id"
     t.index ["section_name"], name: "index_sections_on_section_name", unique: true
   end
 
@@ -229,4 +235,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_22_131434) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "cells", "sections"
+  add_foreign_key "sections", "pages"
 end

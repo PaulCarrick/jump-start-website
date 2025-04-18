@@ -1,4 +1,18 @@
 <!-- app/views/admin/pages/edit.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
-  <%= render :partial => "page_form" %>
+  <%
+    options = {
+      availableSectionNames: @sections,
+      availableImages:       @images,
+      availableImageGroups:  @groups,
+      availableVideos:       @videos,
+      availableContentTypes: @content_types,
+      defaultPageName:       @default_page_name,
+      defaultSectionName:    @default_section_name,
+      defaultCellName:       @default_cell_name,
+      returnUrl:             admin_pages_url,
+      cancelUrl:             admin_pages_url,
+    }
+  %>
+  <%= react_component("PageEditor", { page: controller.get_item, options: options }) %>
 <% end %>

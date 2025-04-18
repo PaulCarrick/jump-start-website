@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Debug Rails and Javascript" type="RailsRunConfigurationType" factoryName="Rails" show_console_on_std_err="true">
+  <configuration default="false" name="Debug Rails" type="RailsRunConfigurationType" factoryName="Rails" show_console_on_std_err="true">
     <module name="rails-website" />
     <predefined_log_file enabled="true" id="RUBY_RAILS_SERVER" />
     <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="" />
@@ -20,8 +20,7 @@
     <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="DUMMY_APP" VALUE="test/dummy" />
     <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="RAILS_SERVER_TYPE" VALUE="puma" />
     <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="ENVIRONMENT_TYPE" VALUE="production" />
-    <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="BROWSER_URL" VALUE="http://127.0.0.1:3000" />
-    <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="LAUNCH_JS" VALUE="true" />
+    <RAILS_SERVER_CONFIG_SETTINGS_ID NAME="LAUNCH_JS" VALUE="false" />
     <method v="2">
       <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Compile JavaSctipt" />
       <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_OpenServer" />

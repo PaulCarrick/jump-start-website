@@ -1,0 +1,1 @@
+{"root":["./javascript/types/datatypes.ts","./javascript/components/generatecells.tsx","./javascript/components/sectioneditor.tsx","./javascript/components/renderutilities.tsx","./javascript/services/cellservice.tsx","./javascript/services/pageservice.tsx","./javascript/services/sectionservice.tsx","./javascript/services/utilities.tsx"],"version":"5.7.3"}
