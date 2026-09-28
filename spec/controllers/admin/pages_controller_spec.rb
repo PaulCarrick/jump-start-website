@@ -3,10 +3,19 @@ require 'rails_helper'
 RSpec.describe Admin::PagesController, type: :controller do
   include_context "debug setup"
 
-  Page.delete_all
+  # destroy_all (not delete_all) so it cascades to dependent Sections via
+  # Page's has_many :sections, dependent: :destroy - a raw delete_all would
+  # violate sections.page_id's foreign key if any Section still references
+  # one of these pages (e.g. left over from a prior db:replicate restore).
+  Page.destroy_all
 
   let!(:admin_user) { create_admin_user }
   let(:valid_attributes) { { name: "Test Page", title: "Test Page", section: "test" } }
+  # Distinct from valid_attributes: POST #create below creates a NEW page while
+  # `page` (below) already exists using valid_attributes' name/section, and Page
+  # validates both as unique - reusing valid_attributes there would always fail
+  # the uniqueness validation and no record would ever be created.
+  let(:new_page_attributes) { { name: "New Test Page", title: "New Test Page", section: "new-test" } }
   let(:invalid_attributes) { { name: nil, title: nil, section: nil } }
   let!(:page) { create(:page, valid_attributes) }
   let!(:section) {
@@ -61,7 +70,7 @@ RSpec.describe Admin::PagesController, type: :controller do
     context "with valid attributes" do
       it "creates a new record and redirects to index" do
         expect {
-          post :create, params: { page: valid_attributes }
+          post :create, params: { page: new_page_attributes }
         }.to change(Page, :count).by(1)
         expect(response).to redirect_to(action: :index, turbo: false)
         expect(flash[:notice]).to eq("Page created successfully.")

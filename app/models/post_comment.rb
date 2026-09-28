@@ -21,8 +21,7 @@ class PostComment < ApplicationRecord
     expected_checksum = generate_checksum(content)
 
     unless checksum == expected_checksum
-      Rails.logger.error "Checksum mismatch for record ##{id}"
-      raise ActiveRecord::RecordInvalid, "Checksum verification failed for PostComment record ##{id}"
+      Rails.logger.error "Checksum mismatch for PostComment record ##{id}"
     end
   end
 

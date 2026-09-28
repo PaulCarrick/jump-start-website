@@ -40,10 +40,22 @@ namespace :db do
 
     if $?.success?
       puts "#{source_db} Database dumped successfully. Restoring to #{destination_db}..."
-      system("pg_restore --verbose --clean --no-acl --no-owner -h localhost -U #{db_user} -d \"#{destination_db}\" #{dump_file}")
+      system("pg_restore --verbose --clean --if-exists --no-acl --no-owner -h localhost -U #{db_user} -d \"#{destination_db}\" #{dump_file}")
 
       if $?.success?
         puts "#{destination_db} database restored successfully."
+
+        # pg_restore copies ar_internal_metadata verbatim from the source
+        # database, which stamps this (destination) database as having last
+        # run under the SOURCE environment (development). Left alone, that
+        # trips ActiveRecord::EnvironmentMismatchError the next time anything
+        # (e.g. maintain_test_schema! in rails_helper.rb) checks it against
+        # the environment this database is actually meant to be used under.
+        ActiveRecord::Base.connection.execute(<<~SQL)
+          INSERT INTO ar_internal_metadata (key, value, created_at, updated_at)
+          VALUES ('environment', #{ActiveRecord::Base.connection.quote(Rails.env)}, NOW(), NOW())
+          ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()
+        SQL
       else
         handle_error("Error: Failed to restore the #{destination_db}  database.", args[:interactive])
       end
@@ -60,6 +72,16 @@ namespace :fs do
   task :duplicate, [ :interactive ] => :environment do |t, args|
     source_directory      = ENV["SOURCE_DIRECTORY"] || Rails.root.join("storage")
     destination_directory = ENV["DESTINATION_DIRECTORY"] || Rails.root.join("tmp/storage")
+
+    unless File.exist?(source_directory)
+      # ActiveStorage creates this directory lazily on first upload, so a
+      # fresh checkout with no attachments yet won't have it. There is
+      # nothing to copy in that case - just make sure the destination
+      # exists so specs that depend on tmp/storage don't fail.
+      puts "#{source_directory} does not exist yet - creating an empty #{destination_directory} instead of copying."
+      FileUtils.mkdir_p(destination_directory)
+      next
+    end
 
     puts "Copying files from #{source_directory} to #{destination_directory}..."
     system("cp -a #{source_directory} #{destination_directory}")

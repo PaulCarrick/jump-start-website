@@ -4,7 +4,7 @@ RSpec.describe PagesController, type: :controller do
   include_context "debug setup"
 
   let!(:page) { create(:page, name: "home", section: "content") }
-  let!(:section) { create(:section, section_name: "main-section", content_type: "content", image: "ImageFile:sample.jpg", description: "<b>Description</b>") }
+  let!(:section) { create(:section, page: page, section_name: "main-section", content_type: "content", image: "ImageFile:sample.jpg", description: "<b>Description</b>") }
   let!(:image_file) { create(:image_file, name: "sample.jpg", caption: "Sample Caption", description: "Sample Image Description") }
   let(:missing_image_path) { ActionController::Base.helpers.image_path("missing-image.jpg") }
 
@@ -23,8 +23,12 @@ RSpec.describe PagesController, type: :controller do
       end
 
       it "builds contents from the page sections" do
+        # PagesController#load_page deliberately converts each Section to a plain
+        # hash via Section#renderable_section (self.as_json(include: :cells))
+        # before assigning @contents, for the view to consume - so this compares
+        # against that same shape rather than the raw Section record.
         expect(assigns(:contents)).to be_an(Array)
-        expect(assigns(:contents)).to include(section)
+        expect(assigns(:contents)).to include(a_hash_including("id" => section.id, "section_name" => section.section_name))
       end
 
       it "renders the show template" do

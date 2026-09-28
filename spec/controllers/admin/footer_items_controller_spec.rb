@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Admin::FooterItemsController, type: :controller do
+  # Pages reference FooterItem via pages.footer_item_id (a real foreign key,
+  # though Page has no belongs_to :footer_item association to cascade from).
+  # Detach any referencing pages first so this delete_all can't violate that
+  # constraint - deleting FooterItems here shouldn't delete Pages too.
+  Page.where.not(footer_item_id: nil).update_all(footer_item_id: nil)
   FooterItem.delete_all
 
   let!(:admin_user) { create_admin_user }

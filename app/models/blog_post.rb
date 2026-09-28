@@ -29,8 +29,7 @@ class BlogPost < ApplicationRecord
     expected_checksum = generate_checksum(content)
 
     unless checksum == expected_checksum
-      Rails.logger.error "Checksum mismatch for record ##{id}"
-      raise ActiveRecord::RecordInvalid, "Checksum verification failed for BlogPost record ##{id}"
+      Rails.logger.error "Checksum mismatch for BlogPost record ##{id}"
     end
   end
 

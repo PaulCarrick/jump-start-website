@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.0"
+gem "rails", "~> 8.1.0"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use postgresql as the database for Active Record
@@ -52,6 +52,11 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
 gem "react-rails"
+# Pinned: react-rails 3.2.1 calls ConnectionPool.new(options_hash) positionally,
+# which breaks under connection_pool >= 3.0 (keyword-only initializer) on Ruby 3.2.
+# See lib/react/server_rendering.rb in react-rails. Remove this pin if react-rails
+# is ever upgraded to a version that fixes this.
+gem "connection_pool", "~> 2.5"
 gem 'pagy'
 gem 'htmlbeautifier'
 gem 'active_model_serializers'

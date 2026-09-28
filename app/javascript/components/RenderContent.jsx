@@ -155,23 +155,27 @@ const RenderContent = ({
     default:
       if (image || options.slide_show_images)
         return (
-            <div className={options.classes} style={options.styles}>
-              <RenderImage content={text}
-                           image={image}
-                           link={link}
-                           options={options}
-                           onChange={onChange}
-              />
+            <div className={rowClasses}>
+              <div className={options.classes} style={options.styles}>
+                <RenderImage content={text}
+                             image={image}
+                             link={link}
+                             options={options}
+                             onChange={onChange}
+                />
+              </div>
             </div>)
       else
         return (
-            <div className={options.classes} style={options.styles}>
-              <ContentBlock content={text}
-                            options={options}
-                            toggleId={toggleId}
-                            toggleClass={toggleClass}
-                            onChange={onChange}
-              />
+            <div className={rowClasses}>
+              <div className={options.classes} style={options.styles}>
+                <ContentBlock content={text}
+                              options={options}
+                              toggleId={toggleId}
+                              toggleClass={toggleClass}
+                              onChange={onChange}
+                />
+              </div>
             </div>
         );
   }

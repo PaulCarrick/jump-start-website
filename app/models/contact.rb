@@ -20,8 +20,11 @@ class Contact < ActiveRecord::Base
           errors.add(:base, self.submit_information)
         end
       else
+        # NOTE: do not call save here - this runs inside a `validate` callback,
+        # and re-entering save() from within its own validation is unsafe
+        # (risk of recursive validation / duplicate inserts). Setting the
+        # in-memory attribute is enough for the re-rendered form to show it.
         self.submit_information = error_message
-        self.save
 
         errors.add(:base, self.submit_information)
       end

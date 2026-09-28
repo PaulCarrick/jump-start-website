@@ -11,11 +11,19 @@ RSpec.describe Cell, type: :model do
     end
 
     it "does not add an error for valid HTML in content" do
+      # Cell#section is a required association (schema: section_id null: false) -
+      # a Section named "Test" has to exist for populate_section_id_from_name to
+      # resolve it, or validation fails on the association before content is
+      # ever checked.
+      create(:section, section_name: "Test")
+
       cell = Cell.new(cell_name: "Test", section_name: "Test", content: "<html><body><p>Valid HTML</p></body></html>")
       expect(cell.valid?).to be true
     end
 
     it "skips HTML validation if content starts with <title>" do
+      create(:section, section_name: "Test")
+
       cell = Cell.new(cell_name: "Test", section_name: "Test", content: "<title>Valid Title</title>")
       expect(cell.valid?).to be true
     end
@@ -24,6 +32,8 @@ RSpec.describe Cell, type: :model do
   describe "callbacks" do
     describe "#verify_checksum" do
       it "does not raise an error if checksum matches content" do
+        create(:section, section_name: "Test")
+
         cell     = Cell.create!(cell_name:    'Test',
                                 section_name: 'Test',
                                 content:      "<html><body><p>Valid HTML</p></body></html>",
@@ -36,6 +46,8 @@ RSpec.describe Cell, type: :model do
   end
 
   describe "scopes" do
+    let!(:section_type1) { create(:section, section_name: "type1") }
+    let!(:section_type2) { create(:section, section_name: "type2") }
     let!(:cell_1) { Cell.create!(cell_name: "Test 1", section_name: "type1", content: "Cell 1", cell_order: 1) }
     let!(:cell_2) { Cell.create!(cell_name: "Test 2", section_name: "type1", content: "Cell 2", cell_order: 2) }
     let!(:cell_3) { Cell.create!(cell_name: "Test 3", section_name: "type2", content: "Cell 3", cell_order: 3) }

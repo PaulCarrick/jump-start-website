@@ -18,8 +18,9 @@ end
 
 FactoryBot.define do
   factory :cell do
+    section
     section_name { "Test" }
-    cell_name { "Test" }
+    sequence(:cell_name) { |n| "Test Cell #{n}" }
     cell_order { 1 }
     image { "ImageFile:test" }
     link { "/images/test.jpg" }

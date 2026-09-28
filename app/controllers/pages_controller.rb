@@ -32,6 +32,8 @@ class PagesController < ApplicationController
       @contents = renderable_contents
     else
       flash[:alert] = "Can't find page for: #{params[:id]}."
+
+      redirect_to root_path
     end
   end
 
@@ -41,7 +43,10 @@ class PagesController < ApplicationController
 
   def build_contents
     contents = []
-    sections = Section.by_content_type(@page.section)
+    # Real page_id FK association, not the legacy content_type string match -
+    # every Section already has a required page_id (schema: null: false), so
+    # this is both more correct and safe for existing data.
+    sections = @page.sections.includes(:cells).order(:section_order)
 
     set_focused_section(sections)
 

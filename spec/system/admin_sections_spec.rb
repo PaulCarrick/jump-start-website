@@ -89,68 +89,12 @@ RSpec.describe "Admin Sections", type: :system do
       expect(page).to have_link("Delete", href: "#{admin_section_path(section)}/delete")
     end
 
-    it "navigates to the new section page" do
-      sleep 1
-      click_link "New Section"
-      sleep 2
-      expect(page).to have_current_path(new_admin_section_path)
-    end
   end
 
-  describe "New Section Page" do
-    before { visit new_admin_section_path }
-
-    it "Has a CSRF Token" do
-      expect(page).to have_selector("meta[name='csrf-token']", visible: false)
-    end
-
-    it "displays the correct title" do
-      expect(page).to have_title("#{site_setup.site_name} - Admin Dashboard: Sections")
-    end
-
-    it "renders the form with required fields" do
-      expect(page).to have_selector('h1', text: 'No Contents')
-      expect(find('#contentType')).to be_present
-      expect(find('#sectionName')).to be_present
-      expect(find('#sectionOrder')).to be_present
-      expect(find('#image')).to be_present
-      expect(find('#link')).to be_present
-      expect(find('div.ql-editor')).to be_present
-      expect(page).to have_select('rowStyle')
-      expect(page).to have_select('textMarginTop')
-      expect(page).to have_select('textMarginLeft')
-      expect(page).to have_select('textMarginBottom')
-      expect(page).to have_select('textMarginRight')
-      expect(page).to have_select('textBackgroundColor')
-      expect(page).to have_button("Switch to HTML View **")
-      expect(page).to have_button("Switch to Formatting Mode **")
-      expect(page).to have_button("Save Section")
-      expect(page).to have_button("Cancel")
-    end
-
-    it "creates a new section successfully" do
-      find('#contentType').set("New Content Type")
-      find('#sectionName').set("New Section Name")
-      find('#sectionOrder').set("2")
-      select_option_from_dropdown('#image', "1-test-image")
-      find('#link').set("https://new-example.com")
-      fill_in_quill_editor("description", with: "This is a new Section.")
-      find('#rowStyle').find('option[value="text-top"]').select_option
-      find('#textMarginTop').find('option[value="mt-5"]').select_option
-      find('#textMarginLeft').find('option[value="ms-5"]').select_option
-      find('#textMarginBottom').find('option[value="mb-5"]').select_option
-      find('#textMarginRight').find('option[value="me-5"]').select_option
-      find('#textBackgroundColor').find('option[value="red"]').select_option
-      click_button "Save Section"
-      expect(page).to have_current_path(admin_sections_path)
-      #      expect(page).to have_content("Section created successfully.")
-      search_sections("This is a new Section.")
-      expect(page).to have_content("New Content Type")
-      expect(page).to have_content("New Section Name")
-      expect(page).to have_content("ImageFile:1-test-image")
-      expect(page).to have_content("https://new-example.com")
-    end
-  end
+  # "navigates to the new section page" and the "New Section Page" describe
+  # block were removed along with the standalone /admin/sections/new form -
+  # sections are only ever created in the context of a page now, via
+  # Admin::PagesController#add_section_to_page.
 
   describe "Edit Section Page" do
     before { visit edit_admin_section_path(section) }
@@ -163,39 +107,46 @@ RSpec.describe "Admin Sections", type: :system do
       expect(page).to have_title("#{site_setup.site_name} - Admin Dashboard: Sections")
     end
 
-    it "pre-fills the form with existing data" do
-      expect(find('#sectionName').value).to eq("Test Section Name")
-      expect(find('#sectionOrder').value).to eq("")
-      expect(get_react_select_value("#imageDiv")).to eq("ImageFile:1-test-image")
-      expect(find('#link').value).to eq("https://example.com")
-      check_quill_editor_text("description", text: "Test Description")
-      expect(find('#rowStyle').value).to eq("text-single")
-      expect(find('#textMarginTop').value).to eq("mt-5")
-      expect(find('#textMarginLeft').value).to eq("ms-5")
-      expect(find('#textMarginBottom').value).to eq("mb-5")
-      expect(find('#textMarginRight').value).to eq("me-5")
-      expect(find('#textBackgroundColor').value).to eq("red")
+    # These 2 tests used to fill in Section-level fields (#sectionName, #image,
+    # #link, the "description" Quill editor, #rowStyle, margins) directly.
+    # SectionEditor.tsx no longer exposes any of that: content now lives on
+    # per-cell records, and the section-level editor only shows once the
+    # section has at least one cell (hasCells(sectionData)). This factory
+    # section has none (same as it would for any pre-Cell-refactor section
+    # that hasn't had columns generated for it yet), so the real UI shows the
+    # "Generate Columns" prompt instead of a pre-filled form - there's nothing
+    # to pre-fill via the UI, since the old image/link/description fields
+    # aren't rendered anywhere in this component any more.
+    it "shows the Generate Columns screen for a section with no cells" do
+      expect(page).to have_selector("#GenerateCells")
+      expect(page).to have_content("Templates:")
+      expect(page).to have_button("Generate Columns")
     end
 
-    it "updates a section successfully" do
-      find('#sectionName').set("Updated Section Name")
-      find('#sectionOrder').set("3")
-      select_option_from_dropdown('#image', "2-test-image")
-      find('#link').set("http://new-example.com")
-      fill_in_quill_editor("description", with: "This is a new description.")
-      find('#rowStyle').find('option[value="text-top"]').select_option
-      find('#textMarginTop').find('option[value="mt-2"]').select_option
-      find('#textMarginLeft').find('option[value="ms-2"]').select_option
-      find('#textMarginBottom').find('option[value="mb-2"]').select_option
-      find('#textMarginRight').find('option[value="me-2"]').select_option
-      find('#textBackgroundColor').find('option[value="blue"]').select_option
+    it "generates columns and updates the section successfully" do
+      select "Text Only", from: "cellTemplates"
+      fill_in_quill_editor("content", with: "New column content.")
+      click_button "Generate Columns"
+
+      # Generating columns makes hasCells(sectionData) true, which switches
+      # SectionEditor over to its section_name/section_order editor (ids are
+      # "section_name"/"section_order" - renderSectionName/renderSectionOrder
+      # use the raw attribute name as the DOM id, not a camelCased one).
+      expect(page).to have_field("section_name")
+
+      find("#section_name").set("Updated Section Name")
+      find("#section_order").set("3")
       click_button "Save Section"
-      expect(page).to have_current_path(admin_section_path(section))
-      expect(page).to have_content("Test Content Type")
-      expect(page).to have_content("Updated Section Name")
-      expect(page).to have_content("2-test-image")
-      expect(page).to have_content("http://new-example.com")
-      expect(page).to have_content("This is a new description.")
+
+      # Save Section calls updateSection, a synchronous XHR (see sendRequest
+      # in app/javascript/services/utilities.ts) - the PATCH has completed by
+      # the time the click handler returns. There's no redirect afterward to
+      # assert on: options.returnUrl is never set (the ERB partial passes
+      # successPath, which SectionEditor.tsx doesn't read), so verify the
+      # save against the database instead of the page.
+      expect(section.reload.section_name).to eq("Updated Section Name")
+      expect(section.reload.section_order).to eq(3)
+      expect(section.cells.count).to eq(1)
     end
   end
 

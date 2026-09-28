@@ -43,7 +43,7 @@ RSpec.describe Admin::CellsController, type: :controller do
            description:   "<b>Test Description</b>")
   }
 
-  let!(:cell) { create(:cell, valid_attributes) }
+  let!(:cell) { create(:cell, valid_attributes.merge(section: section)) }
 
   before do
     allow(controller).to receive(:controller_name).and_return("cells")

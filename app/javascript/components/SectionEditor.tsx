@@ -80,9 +80,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       if (!prev) return null;
 
       switch (attribute) {
-        case "sectionName":
+        // renderSectionName/renderSectionOrder (renderUtilities.tsx) pass the
+        // real attribute name through as-is via renderInput's onChange - that's
+        // "section_name"/"section_order" (the DOM id), not a camelCased form.
+        // These case labels used to be "sectionName"/"sectionOrder", which
+        // never matched, so editing either field silently did nothing.
+        case "section_name":
           return { ...prev, section_name: newValue as string };
-        case "sectionOrder":
+        case "section_order":
           return { ...prev, section_order: Number(newValue) };
         default:
           return prev;

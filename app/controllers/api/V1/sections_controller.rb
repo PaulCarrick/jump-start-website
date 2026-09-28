@@ -77,7 +77,10 @@ module Api
         urls          = {}
         index_url     = admin_sections_url
         urls[:index]  = { url: index_url, method: "GET" }
-        urls[:new]    = { url: new_admin_section_url, method: "POST" }
+        # No urls[:new] - standalone section creation no longer exists (sections
+        # are only created in the context of a page, via
+        # Admin::PagesController#add_section_to_page); new_admin_section_url no
+        # longer has a matching route.
         urls[:return] = { url: index_url, method: "GET" }
         urls[:submit] = { url: index_url, method: "POST" }
         urls[:cancel] = { url: index_url, method: "GET" }

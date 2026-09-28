@@ -38,6 +38,18 @@ RSpec.configure do |config|
   # @note Include named routes
   config.include Rails.application.routes.url_helpers
 
+  # Force routes.rb (and its `devise_for :users`) to actually be evaluated
+  # once, up front. Without this, Rails can defer drawing routes until the
+  # first real HTTP dispatch, so Devise.mappings stays empty and
+  # `user_signed_in?` is undefined for whichever spec happens to touch a
+  # controller first (via a bare `controller.some_method` call, not `get`/
+  # `post`) before any other spec has forced routes to load - order-dependent
+  # and not this controller's fault. See the note in
+  # ApplicationController#signed_in? about the related Devise/test-env quirk.
+  config.before(:suite) do
+    Rails.application.reload_routes!
+  end
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 

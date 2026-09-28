@@ -27,6 +27,7 @@ RSpec.describe "Admin Pages", type: :system do
   end
   let!(:section) do
     create(:section,
+           page:          page_record,
            content_type:  "Test Section",
            section_name:  "Test Section Name",
            section_order: 1,
@@ -80,21 +81,36 @@ RSpec.describe "Admin Pages", type: :system do
       expect(page).to have_title("#{site_setup.site_name} - Admin Dashboard: Pages")
     end
 
+    # These 2 tests used to fill in an ERB form ("page[name]", "Section",
+    # "Title", "Access") - but new.html.erb renders PageEditor.tsx (a React
+    # component), not that form. Admin::AbstractAdminController#new already
+    # builds a real (unpersisted) Page via get_item, so PageEditor's needPage
+    # is false from the start - there's no separate "Generate Page" step here,
+    # just the main editor, pre-filled from the generated default page/section
+    # names. Its Section Name field is rendered via renderSectionName called
+    # without an explicit attribute, so it defaults to id="section_name" (not
+    # "section").
+
     it "renders the form with required fields" do
-      expect(page).to have_field("page[name]", type: "text")
-      expect(page).to have_field("Section", type: "text")
-      expect(page).to have_field("Title", type: "text")
-      expect(page).to have_field("Access", type: "text")
+      expect(page).to have_field("name", type: "text")
+      expect(page).to have_field("section_name", type: "text")
+      expect(page).to have_field("title", type: "text")
+      expect(page).to have_field("access", type: "text")
     end
 
     it "creates a new page successfully" do
-      fill_in "page[name]", with: "New Page"
-      fill_in "Section", with: "New Section"
-      fill_in "Title", with: "New Title"
-      fill_in "Access", with: "Private"
+      fill_in "name", with: "New Page"
+      fill_in "section_name", with: "New Section"
+      fill_in "title", with: "New Title"
+      fill_in "access", with: "Private"
       click_button "Save Page"
 
-      expect(page).to have_current_path(admin_pages_path(turbo: false))
+      # Unlike the ERB-form-based Edit Page flow (whose controller redirect
+      # literally bakes "?turbo=false" into the URL, which is why that test
+      # below matches admin_pages_path(turbo: false)), PageEditor.tsx redirects
+      # via `window.location.href = options.returnUrl`, and new.html.erb sets
+      # returnUrl to the plain admin_pages_url with no turbo param.
+      expect(page).to have_current_path(admin_pages_path)
       expect(page).to have_content("New Page")
       expect(page).to have_content("Private")
     end
@@ -142,7 +158,13 @@ RSpec.describe "Admin Pages", type: :system do
     it "deletes an page successfully" do
       click_link "Delete", href: "#{admin_destroy_page_path(page_record)}"
       page.driver.browser.switch_to.alert.accept # Confirm alert
-      expect(page).not_to have_content("Test Page")
+
+      # Checking for "Test Page" (page_record's name) is unreliable: the
+      # db:replicate dev data (see spec/rails_helper.rb) includes an
+      # unrelated real page named "test-page" whose title is literally
+      # "Test Page", so that substring can still be present after a correct
+      # delete. page_record's title, "Test Title", is not shared by that row.
+      expect(page).not_to have_content("Test Title")
     end
   end
 end

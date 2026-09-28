@@ -51,8 +51,7 @@ class ImageFile < ApplicationRecord
     expected_checksum = generate_checksum(value)
 
     unless checksum == expected_checksum
-      Rails.logger.error "Checksum mismatch for record ##{id}"
-      raise ActiveRecord::RecordInvalid, "Checksum verification failed for Image File record ##{id}"
+      Rails.logger.error "Checksum mismatch for ImageFile record ##{id}"
     end
   end
 

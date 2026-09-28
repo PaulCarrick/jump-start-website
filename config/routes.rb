@@ -33,7 +33,10 @@ Rails.application.routes.draw do
     delete "/cells/:id", to: "cells#destroy", as: "delete_cell"
     get "/cells/:id/delete", to: "cells#destroy", as: "destroy_cell"
     get "/cells/:id/admin_urls", to: "/api/v1/cells#get_admin_urls"
-    resources :sections, except: [ :destroy ]
+    # :new/:create intentionally excluded - sections are only ever created
+    # in the context of a page, via add_section_to_page below (the standalone
+    # /admin/sections/new form was removed).
+    resources :sections, except: [ :destroy, :new, :create ]
     delete "/sections/:id", to: "sections#destroy", as: "delete_section"
     get "/sections/:id/admin_urls", to: "/api/v1/sections#get_admin_urls"
     get "/sections/:id/delete", to: "sections#destroy", as: "destroy_section"

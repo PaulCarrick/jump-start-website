@@ -18,38 +18,9 @@ class Admin::SectionsController < Admin::AbstractAdminController
     @videos            = []
   end
 
-  def new
-    super
-
-    setup_options
-
-    @return_url             = params[:return_url].present? ? params[:return_url] : admin_sections_url
-    @cancel_url             = params[:cancel_url].present? ? params[:cancel_url] : admin_sections_url
-    @read_only_content_type = params[:read_only_content_type].present? ? params[:read_only_content_type] : false
-    @new_section            = params[:new_section].present? ? params[:new_section] : false
-  end
-
-  def create
-    begin
-      throw "You are not permitted to change #{class_title}." unless @application_user.admin?
-
-      set_item(true, get_params)
-      get_item&.description = Utilities.pretty_print_html(get_item&.description) if get_item&.description.present?
-      get_item&.save!
-
-      if request.headers['Content-Type'] === "application/json"
-        render json: { message: 'Section created successfully', id: get_item.id }, status: :ok
-      else
-        redirect_to admin_sections_path, turbo: false, notice: "Section created successfully."
-      end
-    rescue => e
-      if request.headers['Content-Type'] === "application/json"
-        render json: { error: get_item&.errors&.full_messages }, status: :unprocessable_entity
-      else
-        handle_error(:new, e)
-      end
-    end
-  end
+  # NOTE: :new / :create were removed (see config/routes.rb) - standalone
+  # section creation no longer exists. Sections are only ever created in the
+  # context of a page, via Admin::PagesController#add_section_to_page.
 
   def edit
     super

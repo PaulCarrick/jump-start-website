@@ -1,0 +1,281 @@
+DEPRECATION WARNING: ActiveSupport::Configurable is deprecated without replacement, and will be removed in Rails 8.2.
+
+The previous behavior can be emulated with `attr_accessor`s, `class_attribute`s, or combinations of `class_attribute` and `InheritableOptions` depending on requirements.
+ (called from <top (required)> at /Users/paul/src/updated/jump-start-website/config/application.rb:22)
+DEPRECATION WARNING: ActiveSupport::Configurable is deprecated without replacement, and will be removed in Rails 8.2.
+
+The previous behavior can be emulated with `attr_accessor`s, `class_attribute`s, or combinations of `class_attribute` and `InheritableOptions` depending on requirements.
+ (called from <main> at /Users/paul/src/updated/jump-start-website/config/application.rb:22)
+bin/rails aborted!
+ActiveRecord::EnvironmentMismatchError: You are attempting to modify a database that was last run in `development` environment. (ActiveRecord::EnvironmentMismatchError)
+You are running in `test` environment. If you are sure you want to continue, first set the environment using:
+
+        bin/rails db:environment:set RAILS_ENV=test
+
+
+Tasks: TOP => db:test:load_schema => db:test:purge => db:check_protected_environments
+(See full trace by running task with --trace)
+DEPRECATION WARNING: resource received a hash argument only. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <main> at /Users/paul/src/updated/jump-start-website/config/routes.rb:19)
+DEPRECATION WARNING: resource received a hash argument path. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <main> at /Users/paul/src/updated/jump-start-website/config/routes.rb:19)
+DEPRECATION WARNING: resource received a hash argument path_names. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <main> at /Users/paul/src/updated/jump-start-website/config/routes.rb:19)
+DEPRECATION WARNING: resource received a hash argument controller. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <main> at /Users/paul/src/updated/jump-start-website/config/routes.rb:19)
+.DEPRECATION WARNING: resource received a hash argument only. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <main> at /Users/paul/src/updated/jump-start-website/config/routes.rb:19)
+DEPRECATION WARNING: resource received a hash argument path. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <main> at /Users/paul/src/updated/jump-start-website/config/routes.rb:19)
+DEPRECATION WARNING: resource received a hash argument path_names. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <main> at /Users/paul/src/updated/jump-start-website/config/routes.rb:19)
+DEPRECATION WARNING: resource received a hash argument controller. Please use a keyword instead. Support to hash argument will be removed in Rails 8.2. (called from block in <main> at /Users/paul/src/updated/jump-start-website/config/routes.rb:19)
+....................................................................................................................................................................................................................................................Dumping paul-carrick...
+paul-carrick Database dumped successfully. Restoring to paul-carrick_test...
+pg_restore: connecting to database for restore
+pg_restore: dropping FK CONSTRAINT active_storage_attachments fk_rails_c3b3935057
+pg_restore: dropping FK CONSTRAINT sections fk_rails_b9060f893a
+pg_restore: dropping FK CONSTRAINT active_storage_variant_records fk_rails_993965df05
+pg_restore: dropping FK CONSTRAINT pages fk_rails_8275feaac7
+pg_restore: dropping FK CONSTRAINT pages fk_rails_588824d678
+pg_restore: dropping FK CONSTRAINT cells fk_rails_4179ad9e54
+pg_restore: dropping INDEX index_users_on_reset_password_token
+pg_restore: dropping INDEX index_users_on_email
+pg_restore: dropping INDEX index_sections_on_section_name
+pg_restore: dropping INDEX index_sections_on_page_id
+pg_restore: dropping INDEX index_post_comments_on_title
+pg_restore: dropping INDEX index_post_comments_on_blog_post_id
+pg_restore: dropping INDEX index_post_comments_on_author
+pg_restore: dropping INDEX index_pages_on_section
+pg_restore: dropping INDEX index_pages_on_name
+pg_restore: dropping INDEX index_pages_on_menu_item_id
+pg_restore: dropping INDEX index_pages_on_footer_item_id
+pg_restore: dropping INDEX index_image_files_on_name
+pg_restore: dropping INDEX index_contacts_on_name_email_phone_and_message
+pg_restore: dropping INDEX index_cells_on_section_id
+pg_restore: dropping INDEX index_cells_on_cell_name_and_section_name
+pg_restore: dropping INDEX index_blog_posts_on_title
+pg_restore: dropping INDEX index_blog_posts_on_author
+pg_restore: dropping INDEX index_active_storage_variant_records_uniqueness
+pg_restore: dropping INDEX index_active_storage_blobs_on_key
+pg_restore: dropping INDEX index_active_storage_attachments_uniqueness
+pg_restore: dropping INDEX index_active_storage_attachments_on_blob_id
+pg_restore: dropping INDEX index_action_text_rich_texts_uniqueness
+pg_restore: dropping CONSTRAINT users users_pkey
+pg_restore: dropping CONSTRAINT site_setups site_setups_pkey
+pg_restore: dropping CONSTRAINT sections sections_pkey
+pg_restore: dropping CONSTRAINT schema_migrations schema_migrations_pkey
+pg_restore: dropping CONSTRAINT post_comments post_comments_pkey
+pg_restore: dropping CONSTRAINT pages pages_pkey
+pg_restore: dropping CONSTRAINT menu_items menu_items_pkey
+pg_restore: dropping CONSTRAINT image_files image_files_pkey
+pg_restore: dropping CONSTRAINT footer_items footer_items_pkey
+pg_restore: dropping CONSTRAINT contacts contacts_pkey
+pg_restore: dropping CONSTRAINT cells cells_pkey
+pg_restore: dropping CONSTRAINT blog_posts blog_posts_pkey
+pg_restore: dropping CONSTRAINT ar_internal_metadata ar_internal_metadata_pkey
+pg_restore: dropping CONSTRAINT active_storage_variant_records active_storage_variant_records_pkey
+pg_restore: dropping CONSTRAINT active_storage_blobs active_storage_blobs_pkey
+pg_restore: dropping CONSTRAINT active_storage_attachments active_storage_attachments_pkey
+pg_restore: dropping CONSTRAINT action_text_rich_texts action_text_rich_texts_pkey
+pg_restore: dropping DEFAULT users id
+pg_restore: dropping DEFAULT site_setups id
+pg_restore: dropping DEFAULT sections id
+pg_restore: dropping DEFAULT post_comments id
+pg_restore: dropping DEFAULT pages id
+pg_restore: dropping DEFAULT menu_items id
+pg_restore: dropping DEFAULT image_files id
+pg_restore: dropping DEFAULT footer_items id
+pg_restore: dropping DEFAULT contacts id
+pg_restore: dropping DEFAULT cells id
+pg_restore: dropping DEFAULT blog_posts id
+pg_restore: dropping DEFAULT active_storage_variant_records id
+pg_restore: dropping DEFAULT active_storage_blobs id
+pg_restore: dropping DEFAULT active_storage_attachments id
+pg_restore: dropping DEFAULT action_text_rich_texts id
+pg_restore: dropping SEQUENCE users_id_seq
+pg_restore: dropping TABLE users
+pg_restore: dropping SEQUENCE site_setups_id_seq
+pg_restore: dropping TABLE site_setups
+pg_restore: dropping SEQUENCE sections_id_seq
+pg_restore: dropping TABLE sections
+pg_restore: dropping TABLE schema_migrations
+pg_restore: dropping SEQUENCE post_comments_id_seq
+pg_restore: dropping TABLE post_comments
+pg_restore: dropping SEQUENCE pages_id_seq
+pg_restore: dropping TABLE pages
+pg_restore: dropping SEQUENCE menu_items_id_seq
+pg_restore: dropping TABLE menu_items
+pg_restore: dropping SEQUENCE image_files_id_seq
+pg_restore: dropping TABLE image_files
+pg_restore: dropping SEQUENCE footer_items_id_seq
+pg_restore: dropping TABLE footer_items
+pg_restore: dropping SEQUENCE contacts_id_seq
+pg_restore: dropping TABLE contacts
+pg_restore: dropping SEQUENCE cells_id_seq
+pg_restore: dropping TABLE cells
+pg_restore: dropping SEQUENCE blog_posts_id_seq
+pg_restore: dropping TABLE blog_posts
+pg_restore: dropping TABLE ar_internal_metadata
+pg_restore: dropping SEQUENCE active_storage_variant_records_id_seq
+pg_restore: dropping TABLE active_storage_variant_records
+pg_restore: dropping SEQUENCE active_storage_blobs_id_seq
+pg_restore: dropping TABLE active_storage_blobs
+pg_restore: dropping SEQUENCE active_storage_attachments_id_seq
+pg_restore: dropping TABLE active_storage_attachments
+pg_restore: dropping SEQUENCE action_text_rich_texts_id_seq
+pg_restore: dropping TABLE action_text_rich_texts
+pg_restore: dropping SCHEMA public
+pg_restore: creating SCHEMA "public"
+pg_restore: creating TABLE "public.action_text_rich_texts"
+pg_restore: creating SEQUENCE "public.action_text_rich_texts_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.action_text_rich_texts_id_seq"
+pg_restore: creating TABLE "public.active_storage_attachments"
+pg_restore: creating SEQUENCE "public.active_storage_attachments_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.active_storage_attachments_id_seq"
+pg_restore: creating TABLE "public.active_storage_blobs"
+pg_restore: creating SEQUENCE "public.active_storage_blobs_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.active_storage_blobs_id_seq"
+pg_restore: creating TABLE "public.active_storage_variant_records"
+pg_restore: creating SEQUENCE "public.active_storage_variant_records_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.active_storage_variant_records_id_seq"
+pg_restore: creating TABLE "public.ar_internal_metadata"
+pg_restore: creating TABLE "public.blog_posts"
+pg_restore: creating SEQUENCE "public.blog_posts_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.blog_posts_id_seq"
+pg_restore: creating TABLE "public.cells"
+pg_restore: creating SEQUENCE "public.cells_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.cells_id_seq"
+pg_restore: creating TABLE "public.contacts"
+pg_restore: creating SEQUENCE "public.contacts_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.contacts_id_seq"
+pg_restore: creating TABLE "public.footer_items"
+pg_restore: creating SEQUENCE "public.footer_items_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.footer_items_id_seq"
+pg_restore: creating TABLE "public.image_files"
+pg_restore: creating SEQUENCE "public.image_files_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.image_files_id_seq"
+pg_restore: creating TABLE "public.menu_items"
+pg_restore: creating SEQUENCE "public.menu_items_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.menu_items_id_seq"
+pg_restore: creating TABLE "public.pages"
+pg_restore: creating SEQUENCE "public.pages_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.pages_id_seq"
+pg_restore: creating TABLE "public.post_comments"
+pg_restore: creating SEQUENCE "public.post_comments_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.post_comments_id_seq"
+pg_restore: creating TABLE "public.schema_migrations"
+pg_restore: creating TABLE "public.sections"
+pg_restore: creating SEQUENCE "public.sections_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.sections_id_seq"
+pg_restore: creating TABLE "public.site_setups"
+pg_restore: creating SEQUENCE "public.site_setups_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.site_setups_id_seq"
+pg_restore: creating TABLE "public.users"
+pg_restore: creating SEQUENCE "public.users_id_seq"
+pg_restore: creating SEQUENCE OWNED BY "public.users_id_seq"
+pg_restore: creating DEFAULT "public.action_text_rich_texts id"
+pg_restore: creating DEFAULT "public.active_storage_attachments id"
+pg_restore: creating DEFAULT "public.active_storage_blobs id"
+pg_restore: creating DEFAULT "public.active_storage_variant_records id"
+pg_restore: creating DEFAULT "public.blog_posts id"
+pg_restore: creating DEFAULT "public.cells id"
+pg_restore: creating DEFAULT "public.contacts id"
+pg_restore: creating DEFAULT "public.footer_items id"
+pg_restore: creating DEFAULT "public.image_files id"
+pg_restore: creating DEFAULT "public.menu_items id"
+pg_restore: creating DEFAULT "public.pages id"
+pg_restore: creating DEFAULT "public.post_comments id"
+pg_restore: creating DEFAULT "public.sections id"
+pg_restore: creating DEFAULT "public.site_setups id"
+pg_restore: creating DEFAULT "public.users id"
+pg_restore: processing data for table "public.action_text_rich_texts"
+pg_restore: processing data for table "public.active_storage_attachments"
+pg_restore: processing data for table "public.active_storage_blobs"
+pg_restore: processing data for table "public.active_storage_variant_records"
+pg_restore: processing data for table "public.ar_internal_metadata"
+pg_restore: processing data for table "public.blog_posts"
+pg_restore: processing data for table "public.cells"
+pg_restore: processing data for table "public.contacts"
+pg_restore: processing data for table "public.footer_items"
+pg_restore: processing data for table "public.image_files"
+pg_restore: processing data for table "public.menu_items"
+pg_restore: processing data for table "public.pages"
+pg_restore: processing data for table "public.post_comments"
+pg_restore: processing data for table "public.schema_migrations"
+pg_restore: processing data for table "public.sections"
+pg_restore: processing data for table "public.site_setups"
+pg_restore: processing data for table "public.users"
+pg_restore: executing SEQUENCE SET action_text_rich_texts_id_seq
+pg_restore: executing SEQUENCE SET active_storage_attachments_id_seq
+pg_restore: executing SEQUENCE SET active_storage_blobs_id_seq
+pg_restore: executing SEQUENCE SET active_storage_variant_records_id_seq
+pg_restore: executing SEQUENCE SET blog_posts_id_seq
+pg_restore: executing SEQUENCE SET cells_id_seq
+pg_restore: executing SEQUENCE SET contacts_id_seq
+pg_restore: executing SEQUENCE SET footer_items_id_seq
+pg_restore: executing SEQUENCE SET image_files_id_seq
+pg_restore: executing SEQUENCE SET menu_items_id_seq
+pg_restore: executing SEQUENCE SET pages_id_seq
+pg_restore: executing SEQUENCE SET post_comments_id_seq
+pg_restore: executing SEQUENCE SET sections_id_seq
+pg_restore: executing SEQUENCE SET site_setups_id_seq
+pg_restore: executing SEQUENCE SET users_id_seq
+pg_restore: creating CONSTRAINT "public.action_text_rich_texts action_text_rich_texts_pkey"
+pg_restore: creating CONSTRAINT "public.active_storage_attachments active_storage_attachments_pkey"
+pg_restore: creating CONSTRAINT "public.active_storage_blobs active_storage_blobs_pkey"
+pg_restore: creating CONSTRAINT "public.active_storage_variant_records active_storage_variant_records_pkey"
+pg_restore: creating CONSTRAINT "public.ar_internal_metadata ar_internal_metadata_pkey"
+pg_restore: creating CONSTRAINT "public.blog_posts blog_posts_pkey"
+pg_restore: creating CONSTRAINT "public.cells cells_pkey"
+pg_restore: creating CONSTRAINT "public.contacts contacts_pkey"
+pg_restore: creating CONSTRAINT "public.footer_items footer_items_pkey"
+pg_restore: creating CONSTRAINT "public.image_files image_files_pkey"
+pg_restore: creating CONSTRAINT "public.menu_items menu_items_pkey"
+pg_restore: creating CONSTRAINT "public.pages pages_pkey"
+pg_restore: creating CONSTRAINT "public.post_comments post_comments_pkey"
+pg_restore: creating CONSTRAINT "public.schema_migrations schema_migrations_pkey"
+pg_restore: creating CONSTRAINT "public.sections sections_pkey"
+pg_restore: creating CONSTRAINT "public.site_setups site_setups_pkey"
+pg_restore: creating CONSTRAINT "public.users users_pkey"
+pg_restore: creating INDEX "public.index_action_text_rich_texts_uniqueness"
+pg_restore: creating INDEX "public.index_active_storage_attachments_on_blob_id"
+pg_restore: creating INDEX "public.index_active_storage_attachments_uniqueness"
+pg_restore: creating INDEX "public.index_active_storage_blobs_on_key"
+pg_restore: creating INDEX "public.index_active_storage_variant_records_uniqueness"
+pg_restore: creating INDEX "public.index_blog_posts_on_author"
+pg_restore: creating INDEX "public.index_blog_posts_on_title"
+pg_restore: creating INDEX "public.index_cells_on_cell_name_and_section_name"
+pg_restore: creating INDEX "public.index_cells_on_section_id"
+pg_restore: creating INDEX "public.index_contacts_on_name_email_phone_and_message"
+pg_restore: creating INDEX "public.index_image_files_on_name"
+pg_restore: creating INDEX "public.index_pages_on_footer_item_id"
+pg_restore: creating INDEX "public.index_pages_on_menu_item_id"
+pg_restore: creating INDEX "public.index_pages_on_name"
+pg_restore: creating INDEX "public.index_pages_on_section"
+pg_restore: creating INDEX "public.index_post_comments_on_author"
+pg_restore: creating INDEX "public.index_post_comments_on_blog_post_id"
+pg_restore: creating INDEX "public.index_post_comments_on_title"
+pg_restore: creating INDEX "public.index_sections_on_page_id"
+pg_restore: creating INDEX "public.index_sections_on_section_name"
+pg_restore: creating INDEX "public.index_users_on_email"
+pg_restore: creating INDEX "public.index_users_on_reset_password_token"
+pg_restore: creating FK CONSTRAINT "public.cells fk_rails_4179ad9e54"
+pg_restore: creating FK CONSTRAINT "public.pages fk_rails_588824d678"
+pg_restore: creating FK CONSTRAINT "public.pages fk_rails_8275feaac7"
+pg_restore: creating FK CONSTRAINT "public.active_storage_variant_records fk_rails_993965df05"
+pg_restore: creating FK CONSTRAINT "public.sections fk_rails_b9060f893a"
+pg_restore: creating FK CONSTRAINT "public.active_storage_attachments fk_rails_c3b3935057"
+paul-carrick_test database restored successfully.
+Database paul-carrick duplication to  paul-carrick successful.
+/Users/paul/src/updated/jump-start-website/storage does not exist yet - creating an empty /Users/paul/src/updated/jump-start-website/tmp/storage instead of copying.
+........................................................................................................
+
+Deprecation Warnings:
+
+Rails 7.1 has deprecated the singular fixture_path in favour of an array.You should migrate to plural:
+
+
+If you need more of the backtrace for any of these deprecations to
+identify where to make the necessary changes, you can configure
+`config.raise_errors_for_deprecations!`, and it will turn the
+deprecation warnings into errors, giving you the full backtrace.
+
+1 deprecation warning total
+
+Finished in 1 minute 44.45 seconds (files took 1.49 seconds to load)
+349 examples, 0 failures
+

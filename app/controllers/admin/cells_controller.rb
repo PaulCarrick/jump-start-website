@@ -159,36 +159,25 @@ class Admin::CellsController < Admin::AbstractAdminController
   end
 
   def get_params
-    section = params.require(:section)
-
-    section[:cells_attributes] = section.delete(:cells) if section[:cells].present?
-
-    section.permit(
-      :content_type,
+    # NOTE: this used to read params[:section] and permit Section's own
+    # attributes (content_type, section_order, cells_attributes, ...),
+    # which looks like it was copy-pasted from Admin::SectionsController
+    # and never adapted for Cell. Cell has its own attributes and is
+    # submitted as params[:cell] (see cells_controller_spec.rb / the cell
+    # form), so create/update always failed: create silently produced no
+    # record, and update raised ActionController::ParameterMissing.
+    params.require(:cell).permit(
+      :cell_name,
       :section_name,
-      :section_order,
+      :cell_type,
+      :cell_order,
+      :content,
       :image,
       :link,
-      :description,
+      :width,
       :checksum,
-      :row_style,
-      :div_ratio,
-      image_attributes: {},
-      text_attributes:  {},
-      formatting:       {},
-      cells_attributes: [
-                          :id,
-                          :cell_name,
-                          :cell_type,
-                          :cell_order,
-                          :content,
-                          :image,
-                          :link,
-                          :width,
-                          :_destroy,
-                          formatting: {},
-                          options:    {}
-                        ]
+      formatting: {},
+      options:    {}
     )
   end
 end

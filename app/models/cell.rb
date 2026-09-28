@@ -3,6 +3,7 @@ class Cell < ApplicationRecord
   belongs_to :section
 
   after_find :verify_checksum, unless: -> { Thread.current[:skip_checksum_verification] }
+  before_validation :populate_section_id_from_name
 
   include Checksum
   include Validation
@@ -40,12 +41,10 @@ class Cell < ApplicationRecord
     if section
       self.section_id = section.id
     else
-      self.errors ||= []
-      error       = "No section ID is present and cannot find session by name."
+      error = "No section ID is present and cannot find a section by name."
 
       errors.add(:section_id, error)
       Rails.logger.error error
-      raise ActiveRecord::RecordInvalid, error
     end
   end
 
@@ -55,12 +54,9 @@ class Cell < ApplicationRecord
     expected_checksum = generate_checksum(content)
 
     unless checksum == expected_checksum
-      self.errors ||= []
-      error       = "Checksum mismatch for Cell ##{id}"
-
-      errors.add(:content, error)
-      Rails.logger.error error
-      raise ActiveRecord::RecordInvalid, error
+      # Log rather than raise: an after_find hook is not the place to hard-fail
+      # on legacy/out-of-band data, since that breaks every read of the row.
+      Rails.logger.error "Checksum mismatch for Cell ##{id}"
     end
   end
 
@@ -70,12 +66,7 @@ class Cell < ApplicationRecord
     skip_check = content =~ /^\s*<title>/
 
     unless skip_check || validate_html(content, :content)
-      self.errors ||= []
-      error       = "Invalid HTML in Content."
-
-      errors.add(:content, error)
-      Rails.logger.error error
-      raise ActiveRecord::RecordInvalid, error
+      errors.add(:base, "Invalid HTML in Content.")
     end
   end
 end

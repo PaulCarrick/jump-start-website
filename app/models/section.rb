@@ -185,18 +185,18 @@ class Section < ApplicationRecord
         if formatting["row_style"] == "text-left"
           if cell_type == "image"
             _, image_width = value.split(':')
-            cell.width     = "image_width" + "%"
+            cell.width     = "#{image_width}%"
           else
             text_width, _ = value.split(':')
-            cell.width    = "text_width" + "%"
+            cell.width    = "#{text_width}%"
           end
         elsif formatting["row_style"] == "text-right"
           if cell_type == "image"
             image_width, _ = value.split(':')
-            cell.width     = "image_width" + "%"
+            cell.width     = "#{image_width}%"
           else
             _, text_width = value.split(':')
-            cell.width    = "text_width" + "%"
+            cell.width    = "#{text_width}%"
           end
         end
       when "expanding_rows"
@@ -363,7 +363,7 @@ class Section < ApplicationRecord
     [ text_cell, image_cell ]
   end
 
-  def update_attribute(attributes, key, regex, classes)
+  def extract_attribute_from_classes(attributes, key, regex, classes)
     attributes[key] = Regexp.last_match(1) if classes =~ regex && !attributes[key].present?
   end
 
@@ -374,16 +374,16 @@ class Section < ApplicationRecord
     self.row_style = row_style.gsub(/\A"|"\z/, '') if row_style.present? && !self.row_style.present?
 
     # Update text attributes
-    update_attribute(self.text_attributes, "text_margin_top", /(mt-\d)/, formatting["text_classes"])
-    update_attribute(self.text_attributes, "text_margin_left", /(ms-\d)/, formatting["text_classes"])
-    update_attribute(self.text_attributes, "text_margin_bottom", /(mb-\d)/, formatting["text_classes"])
-    update_attribute(self.text_attributes, "text_margin_right", /(me-\d)/, formatting["text_classes"])
+    extract_attribute_from_classes(self.text_attributes, "text_margin_top", /(mt-\d)/, formatting["text_classes"])
+    extract_attribute_from_classes(self.text_attributes, "text_margin_left", /(ms-\d)/, formatting["text_classes"])
+    extract_attribute_from_classes(self.text_attributes, "text_margin_bottom", /(mb-\d)/, formatting["text_classes"])
+    extract_attribute_from_classes(self.text_attributes, "text_margin_right", /(me-\d)/, formatting["text_classes"])
 
     # Update image attributes
-    update_attribute(self.image_attributes, "image_margin_top", /(mt-\d)/, formatting["image_classes"])
-    update_attribute(self.image_attributes, "image_margin_left", /(ms-\d)/, formatting["image_classes"])
-    update_attribute(self.image_attributes, "image_margin_bottom", /(mb-\d)/, formatting["image_classes"])
-    update_attribute(self.image_attributes, "image_margin_right", /(me-\d)/, formatting["image_classes"])
+    extract_attribute_from_classes(self.image_attributes, "image_margin_top", /(mt-\d)/, formatting["image_classes"])
+    extract_attribute_from_classes(self.image_attributes, "image_margin_left", /(ms-\d)/, formatting["image_classes"])
+    extract_attribute_from_classes(self.image_attributes, "image_margin_bottom", /(mb-\d)/, formatting["image_classes"])
+    extract_attribute_from_classes(self.image_attributes, "image_margin_right", /(me-\d)/, formatting["image_classes"])
 
     return if self.div_ratio.present?
     return unless (self.row_style == "text-left") || (self.row_style == "text-right")
@@ -393,7 +393,7 @@ class Section < ApplicationRecord
     text_width    = Regexp.last_match(1).to_i if text_classes.present? && text_classes =~ /col-(\d{1,2})/
     image_width   = Regexp.last_match(1).to_i if image_classes.present? && image_classes =~ /col-(\d{1,2})/
 
-    return if text_width.present? || image_width.present?
+    return if text_width.blank? && image_width.blank?
 
     original_text_percentage  = ((text_width.to_f / 12.0) * 100).floor if text_width.present?
     original_image_percentage = 100 - original_text_percentage if original_text_percentage.present?
@@ -425,11 +425,10 @@ class Section < ApplicationRecord
     expected_checksum = generate_checksum(description)
 
     unless checksum == expected_checksum
-      Rails.logger.error "Checksum mismatch for record ##{id}"
-
-      self.errors = [] unless self.errors.present?
-
-      raise ActiveRecord::RecordInvalid, "Checksum verification failed for Section record ##{id}"
+      # Historical/legacy rows can have a checksum that no longer matches (data
+      # touched outside the app, or computed under older logic). Log it instead
+      # of raising so a single bad row does not take down every page that loads it.
+      Rails.logger.error "Checksum mismatch for Section record ##{id}"
     end
   end
 

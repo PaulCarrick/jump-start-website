@@ -66,7 +66,12 @@ class Admin::PagesController < Admin::AbstractAdminController
 
     section_order           = page.sections.maximum(:section_order).to_i + 1
     section_order           = 1 unless section_order.present?
-    section                 = Section.create!(content_type: page.section, description: "New Section. Please replace this text.", section_order: section_order)
+    # page: page is the fix - this used to create the Section without setting
+    # its page at all, which always raised "Page must exist" (Section belongs_to
+    # :page, required) and meant there was no working way to add a section to a
+    # page anywhere in the app. content_type is kept in sync with page.section
+    # for display/legacy purposes only; it is no longer used to look sections up.
+    section                 = Section.create!(page: page, content_type: page.section, description: "New Section. Please replace this text.", section_order: section_order)
     @new_section            = true
     @read_only_content_type = true
 
@@ -79,14 +84,17 @@ class Admin::PagesController < Admin::AbstractAdminController
   end
 
   def get_sections
-    page         = set_item
-    section_name = page.section if page&.section.present?
+    # Use the item the current controller action already set (get_item), not
+    # set_item - calling set_item here re-derives the record from params[:id],
+    # which is nil for the "new" page form (no id yet) and, on Ruby 3.2+,
+    # crashes the whole view render with `NoMethodError: undefined method
+    # `=~' for nil` inside set_item's `params[:id] =~ /^\d+$/` check.
+    page = get_item
 
-    if section_name.present?
-      @sections = Section.by_content_type(section_name).includes(:cells)
-    else
-      @sections = []
-    end
+    # Real page_id FK association, not the legacy content_type string match -
+    # every Section already has a required page_id (schema: null: false), so
+    # this is both more correct and safe for existing data.
+    @sections = page.present? && page.persisted? ? page.sections.includes(:cells).order(:section_order) : []
   end
 
   private

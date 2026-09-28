@@ -3,7 +3,11 @@ require 'rails_helper'
 RSpec.describe Admin::SectionsController, type: :controller do
   include_context "debug setup"
 
-  Section.delete_all
+  # destroy_all (not delete_all) so it cascades to dependent Cells via
+  # Section's has_many :cells, dependent: :destroy - a raw delete_all would
+  # violate cells.section_id's foreign key if any Cell still references one
+  # of these sections.
+  Section.destroy_all
 
   let!(:admin_user) { create_admin_user }
   let(:valid_attributes) {
@@ -49,37 +53,9 @@ RSpec.describe Admin::SectionsController, type: :controller do
     end
   end
 
-  describe "GET #new" do
-    it "assigns a new instance of the model and loads content types" do
-      get :new
-      expect(assigns(:_section)).to be_a_new(Section)
-      expect(assigns(:content_types)).to eq(Section.distinct.pluck(:content_type))
-    end
-  end
-
-  describe "POST #create" do
-    context "with valid attributes" do
-      it "creates a new section and redirects to index" do
-        expect {
-          post :create, params: { section: valid_attributes }
-        }.to change(Section, :count).by(1)
-
-        expect(response).to redirect_to(admin_sections_path)
-        expect(flash[:notice]).to eq("Section created successfully.")
-      end
-    end
-
-    context "with invalid attributes" do
-      it "does not create a new section and redirects to new" do
-        expect {
-          post :create, params: { section: invalid_attributes }
-        }.not_to change(Section, :count)
-
-        expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :new, turbo: false)
-      end
-    end
-  end
+  # GET #new / POST #create were removed along with the standalone
+  # /admin/sections/new form - sections are only ever created in the context
+  # of a page now, via Admin::PagesController#add_section_to_page.
 
   describe "GET #edit" do
     it "assigns the requested record and loads content types" do

@@ -30,7 +30,7 @@ const RenderSection = ({
 
   const sectionData = dupObject(section);
 
-  if (sectionData.cells) {
+  if (sectionData.cells && sectionData.cells.length > 0) {
     return processCells(sectionData.cells, editing, noBorder, noHidden, onChange)
   }
   else {
@@ -40,7 +40,7 @@ const RenderSection = ({
     processVideoImages(contents);
 
     contents.forEach(content => {
-      sections.push(renderSection(content, noBorder, noHidden));
+      sections.push(renderSection(content, noBorder, noHidden, onChange));
     });
 
     return (sections);
@@ -49,7 +49,7 @@ const RenderSection = ({
 
 // Utility Functions
 
-function renderSection(content, noBorder = false, noHidden) {
+function renderSection(content, noBorder = false, noHidden, onChange = null) {
   let divClass = "w-100 border border-danger border-width-8";
 
   if (noBorder) divClass = "w-100 m-0 p-3";
@@ -180,7 +180,11 @@ function processSection(section) {
       [newImages, newFormatting] = handleImageArray(match[1], section.formatting);
       break;
     default:
-      newImages = newImages.image_url;
+      // newImages is still a plain (trimmed) string here - a bare image name
+      // that was not tagged with ImageGroup:/VideoImage:/ImageFile:/ImageSection:/[...]
+      // Previously this called `.image_url` directly on that string, which is
+      // always undefined and silently dropped the image.
+      newImages = handleSingleImageFile(section, newImages);
   }
 
   if (isImageSection && isPresent(subsection)) {

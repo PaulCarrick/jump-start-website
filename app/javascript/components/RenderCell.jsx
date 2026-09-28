@@ -168,7 +168,7 @@ function renderCell(cell, editing = false, noBorder = false, noHidden = false, o
 }
 
 function processCell(cell) {
-  if ((cell === null) || (cell.image === null))
+  if (!cell || !cell.image)
     return cell;
 
   const imageGroupRegex = /^\s*ImageGroup:\s*(.+)\s*$/;

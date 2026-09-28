@@ -3,6 +3,11 @@ require 'rails_helper'
 RSpec.describe Admin::MenuItemsController, type: :controller do
   include_context "debug setup"
 
+  # Pages reference MenuItem via pages.menu_item_id (a real foreign key,
+  # though Page has no belongs_to :menu_item association to cascade from).
+  # Detach any referencing pages first so this delete_all can't violate that
+  # constraint - deleting MenuItems here shouldn't delete Pages too.
+  Page.where.not(menu_item_id: nil).update_all(menu_item_id: nil)
   MenuItem.delete_all
 
   let!(:admin_user) { create_admin_user }

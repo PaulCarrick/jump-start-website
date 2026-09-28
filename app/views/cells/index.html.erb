@@ -13,10 +13,10 @@
         Contents
       </div>
     </div>
-    <% @cells.each do |cell| %>
+    <% @results.each do |cell| %>
       <div class="row pb-3">
         <div class="col-2">
-          <%= link_to cell[:cell_name], cell[:url], target: "_self" %>
+          <%= link_to cell[:cell_name], cell[:link], target: "_self" %>
         </div>
         <div class="col-10">
           <%= sanitize(cell[:content]).html_safe %>

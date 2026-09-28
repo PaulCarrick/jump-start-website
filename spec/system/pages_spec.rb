@@ -12,15 +12,15 @@ RSpec.describe "Pages", type: :system do
   let!(:image_section) { create(:page, name: "image_section_page", section: "image_section", title: "Image Section Page") }
   let!(:image_group) { create(:page, name: "image_group_page", section: "image_group", title: "Image Group Page") }
   let!(:video_image) { create(:page, name: "video_image_page", section: "video_image", title: "Video Image Page") }
-  let!(:text_section) { create(:section, :plain_text) }
-  let!(:html_section) { create(:section, :plain_html) }
-  let!(:text_left_section) { create(:section, :text_left) }
-  let!(:text_right_section) { create(:section, :text_right) }
-  let!(:text_top_section) { create(:section, :text_top) }
-  let!(:text_bottom_section) { create(:section, :text_bottom) }
-  let!(:image_section_section) { create(:section, :image_section) }
-  let!(:image_group_section) { create(:section, :image_group) }
-  let!(:video_image_section) { create(:section, :video_image, description: 'VideoImage:"pact_video"') }
+  let!(:text_section) { create(:section, :plain_text, page: text_page) }
+  let!(:html_section) { create(:section, :plain_html, page: html_page) }
+  let!(:text_left_section) { create(:section, :text_left, page: text_left) }
+  let!(:text_right_section) { create(:section, :text_right, page: text_right) }
+  let!(:text_top_section) { create(:section, :text_top, page: text_top) }
+  let!(:text_bottom_section) { create(:section, :text_bottom, page: text_bottom) }
+  let!(:image_section_section) { create(:section, :image_section, page: image_section) }
+  let!(:image_group_section) { create(:section, :image_group, page: image_group) }
+  let!(:video_image_section) { create(:section, :video_image, page: video_image, description: 'VideoImage:"pact_video"') }
   let!(:test_photo) { create(:image_file, :test_photo) }
   let!(:test_photo_2) { create(:image_file, :test_photo_2) }
   let!(:test_photo_3) { create(:image_file, :test_photo_3) }

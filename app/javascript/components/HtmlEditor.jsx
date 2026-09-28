@@ -102,7 +102,7 @@ const HtmlEditor = ({
       onChange(content, attribute);
     }
     else if (onChange && typeof onChange === "string") {
-      const callable = new Function("editorContent", attribute, onChange);
+      const callable = new Function("editorContent", "id", onChange);
 
       callable(content, attribute);
     }
