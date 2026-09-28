@@ -2,7 +2,7 @@
 
 # noinspection RubyTooManyMethodsInspection
 class Section < ApplicationRecord
-  has_many :cells, -> { order(cell_order: :asc) }, dependent: :destroy
+  has_many :cells, -> { order(cell_order: :asc) }, dependent: :destroy, inverse_of: :section
   accepts_nested_attributes_for :cells, allow_destroy: true
   belongs_to :page
 

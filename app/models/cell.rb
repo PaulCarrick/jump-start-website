@@ -1,6 +1,6 @@
 # app/models/cell.rb
 class Cell < ApplicationRecord
-  belongs_to :section
+  belongs_to :section, inverse_of: :cells
 
   after_find :verify_checksum, unless: -> { Thread.current[:skip_checksum_verification] }
   before_validation :populate_section_id_from_name
@@ -34,7 +34,13 @@ class Cell < ApplicationRecord
   private
 
   def populate_section_id_from_name
-    return if section_id.present?
+    # section_id is blank for a brand-new Cell whose Section is also brand new
+    # (e.g. creating a new Page with a new Section and its cells in one nested
+    # save) - inverse_of above means the built Cell already has the in-memory
+    # Section object at this point via the association, even though neither
+    # has been saved yet and section_id isn't set. Only fall back to looking
+    # the section up by name when neither is present.
+    return if section_id.present? || section.present?
 
     section = Section.find_by(section_name: section_name) if section_name.present?
 
