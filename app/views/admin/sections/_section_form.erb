@@ -14,7 +14,7 @@
   react_component(
     "SectionEditor",
     {
-      section:               controller.get_item,
+      section:               controller.get_item&.renderable_section,
       availableContentTypes: @content_types,
       availableImages:       @images,
       availableImageGroups:  @groups,
