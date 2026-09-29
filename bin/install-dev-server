@@ -5,6 +5,9 @@ LABEL="com.paulcarrick.jump-start-website-dev"
 PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 LOG_DIR="$HOME/Library/Logs"
+SUPPORT_DIR="$HOME/Library/Application Support/jump-start-website"
+ENV_FILE="$SUPPORT_DIR/dev-server.env"
+RUNNER="$SUPPORT_DIR/run-dev-server"
 RUBY_BIN="/opt/homebrew/opt/ruby@3.2/bin/ruby"
 
 if [[ ! -x "$RUBY_BIN" ]]; then
@@ -16,7 +19,35 @@ fi
 GEM_BINDIR="$("$RUBY_BIN" -e 'print Gem.bindir')"
 PATH_VALUE="/opt/homebrew/opt/ruby@3.2/bin:$GEM_BINDIR:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
-mkdir -p "$HOME/Library/LaunchAgents" "$LOG_DIR"
+mkdir -p "$HOME/Library/LaunchAgents" "$LOG_DIR" "$SUPPORT_DIR"
+
+if [[ -z "${DB_PASSWORD:-}" ]]; then
+  echo "DB_PASSWORD is not set in this shell."
+  echo "Set it first, then run bin/install-dev-server again."
+  exit 1
+fi
+
+# Store only the local development variables needed by Rails.
+# This file is outside the repository and readable only by the current user.
+{
+  printf 'export DB_PASSWORD=%q\n' "$DB_PASSWORD"
+  [[ -n "${DB_HOST:-}" ]] && printf 'export DB_HOST=%q\n' "$DB_HOST"
+  [[ -n "${DB_PORT:-}" ]] && printf 'export DB_PORT=%q\n' "$DB_PORT"
+  [[ -n "${DB_DATABASE:-}" ]] && printf 'export DB_DATABASE=%q\n' "$DB_DATABASE"
+  [[ -n "${DB_USERNAME:-}" ]] && printf 'export DB_USERNAME=%q\n' "$DB_USERNAME"
+  [[ -n "${RAILS_MASTER_KEY:-}" ]] && printf 'export RAILS_MASTER_KEY=%q\n' "$RAILS_MASTER_KEY"
+} > "$ENV_FILE"
+chmod 600 "$ENV_FILE"
+
+cat > "$RUNNER" <<RUNNER
+#!/usr/bin/env bash
+set -e
+source "$ENV_FILE"
+export PATH="$PATH_VALUE"
+cd "$PROJECT_DIR"
+exec "$PROJECT_DIR/bin/dev"
+RUNNER
+chmod 700 "$RUNNER"
 
 cat > "$PLIST" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -28,7 +59,7 @@ cat > "$PLIST" <<PLIST
 
   <key>ProgramArguments</key>
   <array>
-    <string>$PROJECT_DIR/bin/dev</string>
+    <string>$RUNNER</string>
   </array>
 
   <key>WorkingDirectory</key>
@@ -68,6 +99,7 @@ echo
 echo "Installed and started $LABEL"
 echo "Project: $PROJECT_DIR"
 echo "URL:     http://localhost:3000"
+echo "Env:     $ENV_FILE (mode 600)"
 echo
 echo "Logs:"
 echo "  $LOG_DIR/jump-start-website-dev.log"
