@@ -19,19 +19,30 @@ interface GenerateCellsProps {
   sectionName?: string | null;
   options?: options;
   onFinished?: (cells: Cell[]) => void;
+  // Pre-fills the Content/Image fields below from a Section's existing
+  // (pre-Cell-refactor) description/image, so that generating columns for a
+  // legacy section that still has real Section-level content starts from
+  // that content instead of blank placeholder text - see SectionEditor.tsx,
+  // which is the only caller that passes these.
+  initialContent?: string | null;
+  initialImage?: string | null;
+  initialImageType?: ImageType;
 }
 
 const GenerateCells: React.FC<GenerateCellsProps> = ({
                                                        sectionName = null,
                                                        options = {} as options,
-                                                       onFinished = null
+                                                       onFinished = null,
+                                                       initialContent = null,
+                                                       initialImage = null,
+                                                       initialImageType = "Images"
                                                      }) => {
   const [ cellTemplate, setCellTemplate ]       = useState<string>("");
   const [ needImage, setNeedImage ]             = useState<boolean>(false);
   const [ needContent, setNeedContent ]         = useState<boolean>(false);
-  const [ content, setContent ]                 = useState<string | null>(null);
-  const [ image, setImage ]                     = useState<string | null>(null);
-  const [ imageMode, setImageMode ]             = useState<ImageType>("Images");
+  const [ content, setContent ]                 = useState<string | null>(initialContent);
+  const [ image, setImage ]                     = useState<string | null>(initialImage);
+  const [ imageMode, setImageMode ]             = useState<ImageType>(initialImageType || "Images");
   const textTemplates: string[]                 =
             [
               "text-single",
