@@ -83,11 +83,8 @@ const processCells = (cells, editing = false, noBorder = false, noHidden = true,
   if (!cells || cells.length === 0) return null;
 
   let containerClasses = "row";
-  let containerId      = "";
 
   cells.forEach(cell => {
-    containerId = cell.section_name;
-
     if (cell.formatting) {
       const cellContainerClasses = cell.formatting["container_classes"]
 
@@ -99,7 +96,18 @@ const processCells = (cells, editing = false, noBorder = false, noHidden = true,
   });
 
   return (
-      <div className={containerClasses} id={containerId}>
+      // No id here - _page_form.erb's "Preview" list (Admin > Edit Page)
+      // already wraps each section's RenderSection output in its own
+      // <div id="<%= section.section_name %>">, and this container used to
+      // stamp that exact same id on the cells row nested inside it. That
+      // gave every section two real elements sharing one id, which is what
+      // made `within("#<section_name>")` raise Capybara::Ambiguous ("found 2
+      // elements matching visible css") when the admin full-workflow spec
+      // tried to find its "Delete Section" link. Nothing looks this id up
+      // (no getElementById/querySelector, no CSS rule, and the live
+      // front-end page - _page_contents.erb - doesn't wrap sections in an id
+      // div at all), so it's safe to drop.
+      <div className={containerClasses}>
         {cells.map((cell, index) => (
             <div
                 key={index}

@@ -263,7 +263,23 @@ export function renderAccess(access: string | null = "",
 }
 
 export function renderSectionName(sectionName: string | null                 = "",
-                                  availableContentTypesData: string[] | null = [],
+                                  // null, not [] - every other caller
+                                  // (GeneratePage.tsx, GenerateSections.tsx,
+                                  // PageEditor.tsx) already passes null
+                                  // explicitly to get the plain Section
+                                  // Name input below. SectionEditor.tsx and
+                                  // CellEditor.tsx instead pass
+                                  // options.availableSectionNames, which is
+                                  // undefined whenever it isn't set - and a
+                                  // [] default only applies to an omitted
+                                  // argument, not to a falsy one, so
+                                  // `if (availableContentTypesData)` below
+                                  // was always true (an empty array is
+                                  // truthy), permanently stuck on the
+                                  // "Content Type" combo box branch instead
+                                  // of ever falling through to the plain
+                                  // input.
+                                  availableContentTypesData: string[] | null = null,
                                   setValue: any                              = null,
                                   readOnlySectionName: boolean | null        = false,
                                   attribute = "section_name") {

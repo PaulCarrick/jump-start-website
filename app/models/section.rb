@@ -36,14 +36,20 @@ class Section < ApplicationRecord
     self.as_json(include: :cells)
   end
 
+  # Based on Section's own max id, not on counting currently-matching
+  # "new-section_N" names: a Section created with this placeholder name is
+  # meant to be renamed right away (see Admin::PagesController#
+  # add_section_to_page), and once it is, that number no longer shows up in
+  # the "currently matching" count - so the old max-plus-one approach could
+  # hand the very same number back out to the next new Section. Its cells
+  # are named "#{section_name}-#{order}" (see cellService.tsx's
+  # genericCell), which never gets updated when the section is renamed, so
+  # reissuing a freed number produced a real, reproducible "Cells cell name
+  # has already been taken" failure the moment two sections were created
+  # and renamed in a row. id only ever goes up, so this can't reissue a
+  # number a renamed-away Section used to hold.
   def self.generate_unique_name(prefix = "new-section_")
-    existing_names = Section.where("section_name ~ ?", "^#{prefix}\\d+$").pluck(:section_name)
-
-    max_number = existing_names
-                   .map { |name| name[/\d+\z/].to_i }
-                   .max || 0
-
-    "#{prefix}#{max_number + 1}"
+    "#{prefix}#{(Section.maximum(:id) || 0) + 1}"
   end
 
   def generate_cells

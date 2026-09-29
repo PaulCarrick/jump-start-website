@@ -14,16 +14,36 @@
   react_component(
     "SectionEditor",
     {
-      section:               controller.get_item,
-      availableContentTypes: @content_types,
-      availableImages:       @images,
-      availableImageGroups:  @groups,
-      availableVideos:       @videos,
-      submitPath:            controller.get_item&.persisted? ? admin_section_url(controller.get_item) : admin_sections_url,
-      successPath:           success_path,
-      cancelPath:            cancel_path,
-      readOnlyContentType:   read_only_content_type,
-      newSection:            new_section
+      # controller.get_item is a bare Section record - Rails' default JSON
+      # serialization only includes a record's own columns, not associations,
+      # so SectionEditor never saw this section's existing cells and always
+      # fell through to the blank "Generate Columns" screen, even for a
+      # section that already has real cell content in the database.
+      # #renderable_section (used successfully elsewhere for this exact
+      # purpose - the public page renderer, and RenderSection in
+      # _page_form.erb) is `self.as_json(include: :cells)`, so it carries the
+      # section's cells along with it.
+      #
+      # SectionEditor.tsx (SectionEditorProps) reads everything below from a
+      # nested `options` object - the same pattern PageEditor's own call uses
+      # in admin/pages/new.html.erb ("options: options"). This view used to
+      # pass submitPath/successPath/cancelPath/availableContentTypes/
+      # readOnlyContentType as flat, top-level keys, none of which
+      # SectionEditor.tsx actually reads (handleSubmit posts straight to the
+      # API, ignoring submitPath entirely), so options.returnUrl was always
+      # undefined and "Save Section" - even on a successful save - had no
+      # visible effect, since handleSubmit only redirects when
+      # options.returnUrl is truthy.
+      section: controller.get_item&.renderable_section,
+      options: {
+        availableImages:      @images,
+        availableImageGroups: @groups,
+        availableVideos:      @videos,
+        returnUrl:            success_path,
+        cancelUrl:            cancel_path,
+        readOnlySectionName:  read_only_content_type,
+        newSection:           new_section
+      }
     }
   )
 %>

@@ -112,9 +112,14 @@ const PageEditor: React.FC<PageEditorProps> = ({ page = null, options = {} }) =>
 
         updatedSections[editingSection] = section;
 
+        // finishedNewSection and handleAction's delete branch both re-sort
+        // after changing the sections array - this one didn't, so editing an
+        // existing section's Section Order saved the new value but never
+        // reshuffled the Preview list to match it (the list below just maps
+        // over this array in array order, it doesn't look at section_order).
         return {
           ...prev,
-          sections: updatedSections
+          sections: sortSections(updatedSections),
         };
       });
 

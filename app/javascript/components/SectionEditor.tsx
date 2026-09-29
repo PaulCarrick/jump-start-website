@@ -6,7 +6,7 @@ import GenerateCells                                              from "./Genera
 import CellEditor                                                 from "./CellEditor";
 import React, { useState, useEffect }                             from "react";
 import { createSection, genericSection, hasCells, updateSection } from "../services/sectionService";
-import { Cell, Section }                                          from "../types/dataTypes";
+import { Cell, ImageType, Section }                               from "../types/dataTypes";
 import { renderSectionOrder, renderSectionName }                  from "./renderUtilities";
 import { dupObject }                                              from "./utilities";
 import { isPresent }                                              from "./utilities";
@@ -33,6 +33,36 @@ interface SectionEditorProps {
   options?: Options;
   onFinished?: (section: Section) => void;
   onChange?: (section: Section, action: string) => void;
+}
+
+// A legacy (pre-Cell-refactor) Section can still carry its old image tag in
+// one of a few "Type:value" forms (see cellService.tsx's genericCell, which
+// writes these same prefixes) - this reverses that so GenerateCells can
+// pre-select the right image type/value when pre-filling from old content.
+function parseLegacyImageTag(image: string | null | undefined): { image: string | null; imageType: ImageType } {
+  if (!image) return { image: null, imageType: "Images" };
+
+  const trimmed = image.trim();
+  let match: RegExpMatchArray | null;
+
+  if ((match = trimmed.match(/^ImageGroup:\s*(.+)$/)))
+    return { image: match[1], imageType: "Groups" };
+
+  if ((match = trimmed.match(/^ImageFile:\s*(.+)$/)))
+    return { image: match[1], imageType: "Images" };
+
+  if ((match = trimmed.match(/^VideoImage:"(.+)"$/)))
+    return { image: match[1], imageType: "Videos" };
+
+  // ImageSection:... (a section-level image that is itself another section)
+  // and a bare/untagged path both fall through here - neither maps cleanly
+  // onto GenerateCells' single image picker, so they're passed through as a
+  // plain Images value; worst case Paul has to reselect the image, same as
+  // today's behavior of showing nothing at all.
+  if ((match = trimmed.match(/^ImageSection:\s*(.+)$/)))
+    return { image: match[1], imageType: "Images" };
+
+  return { image: trimmed, imageType: "Images" };
 }
 
 const SectionEditor: React.FC<SectionEditorProps> = ({
@@ -178,10 +208,13 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       return;
     }
 
+    // Pass setError through so a failed save (validation error, network
+    // failure, etc.) shows up in the error box above instead of only being
+    // logged to the console with no visible sign anything happened.
     if (isPresent(sectionData?.id))
-      result = updateSection(sectionData as Section);
+      result = updateSection(sectionData as Section, setError);
     else
-      result = createSection(sectionData as Section);
+      result = createSection(sectionData as Section, setError);
 
     if (result && options.returnUrl) window.location.href = options.returnUrl;
   };
@@ -197,9 +230,18 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   };
 
   if (!hasCells(sectionData)) {
+    // A section from before the Cell refactor can still have real content
+    // sitting in its own description/image fields with zero cells - without
+    // this, that content would be invisible here and effectively unreachable
+    // (the API refuses to save a section with no cells at all), so pre-fill
+    // GenerateCells from it rather than starting Paul from a blank template.
+    const { image: legacyImage, imageType: legacyImageType } = parseLegacyImageTag(sectionData?.image);
+
     return (
         <div>
-          <GenerateCells sectionName={sectionData?.section_name} options={options} onFinished={cellsGenerated}/>
+          <GenerateCells sectionName={sectionData?.section_name} options={options} onFinished={cellsGenerated}
+                         initialContent={sectionData?.description} initialImage={legacyImage}
+                         initialImageType={legacyImageType}/>
         </div>
     )
   }

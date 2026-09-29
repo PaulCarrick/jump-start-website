@@ -71,7 +71,13 @@ class Admin::PagesController < Admin::AbstractAdminController
     # :page, required) and meant there was no working way to add a section to a
     # page anywhere in the app. content_type is kept in sync with page.section
     # for display/legacy purposes only; it is no longer used to look sections up.
-    section                 = Section.create!(page: page, content_type: page.section, description: "New Section. Please replace this text.", section_order: section_order)
+    # section_name is required too (Section validates presence/uniqueness on
+    # it) but was never set here at all, so this raised "Section name can't be
+    # blank" on every attempt - Section.generate_unique_name is the same
+    # helper already used to pick @default_section_name for the New Page form,
+    # so this follows that same established pattern rather than inventing a
+    # new naming scheme.
+    section                 = Section.create!(page: page, content_type: page.section, section_name: Section.generate_unique_name, description: "New Section. Please replace this text.", section_order: section_order)
     @new_section            = true
     @read_only_content_type = true
 

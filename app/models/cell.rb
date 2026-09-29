@@ -21,14 +21,11 @@ class Cell < ApplicationRecord
     []
   end
 
+  # See Section#generate_unique_name for why this is based on the table's
+  # own max id rather than counting currently-matching "new-column_N" names -
+  # the same reissue-after-rename risk applies here.
   def self.generate_unique_name(prefix = "new-column_")
-    existing_names = Cell.where("cell_name ~ ?", "^#{prefix}\\d+$").pluck(:cell_name)
-
-    max_number = existing_names
-                   .map { |name| name[/\d+\z/].to_i }
-                   .max || 0
-
-    "#{prefix}#{max_number + 1}"
+    "#{prefix}#{(Cell.maximum(:id) || 0) + 1}"
   end
 
   private

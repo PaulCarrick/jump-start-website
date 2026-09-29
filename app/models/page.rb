@@ -32,13 +32,10 @@ class Page < ApplicationRecord
 
   validates :name, :section, presence: true, uniqueness: true
 
+  # See Section#generate_unique_name for why this is based on the table's
+  # own max id rather than counting currently-matching "new-page_N" names -
+  # the same reissue-after-rename risk applies here.
   def self.generate_unique_name(prefix = "new-page_")
-    existing_names = Page.where("name ~ ?", "^#{prefix}\\d+$").pluck(:name)
-
-    max_number = existing_names
-                   .map { |name| name[/\d+\z/].to_i }
-                   .max || 0
-
-    "#{prefix}#{max_number + 1}"
+    "#{prefix}#{(Page.maximum(:id) || 0) + 1}"
   end
 end

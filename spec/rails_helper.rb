@@ -85,6 +85,20 @@ RSpec.configure do |config|
     Rails.application.routes.default_url_options[:host] = "http://#{ENV.fetch('SERVER_HOST', 'localhost')}:#{ENV.fetch('SERVER_PORT', '3000')}"
   end
 
+  # Capybara's own test server for `type: :system` specs otherwise binds to
+  # a random free port, which doesn't match the SERVER_PORT baked into
+  # default_url_options above. Anything that builds an absolute URL outside
+  # a real request - ImageFile#image_url's bare
+  # `Rails.application.routes.url_helpers.url_for(self.image)`, in
+  # particular - falls back to default_url_options and so points at
+  # "localhost:#{SERVER_PORT}" regardless of which port the browser is
+  # actually talking to. The browser then can't load that URL at all, so
+  # e.g. an <img> built from image_url renders at 0x0 forever ("found but
+  # not visible" to Capybara) even though the markup and the image data are
+  # both correct. Pinning Capybara's server to the same port keeps the two
+  # in sync.
+  Capybara.server_port = ENV.fetch('SERVER_PORT', '3000').to_i
+
   Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
   config.include Devise::Test::ControllerHelpers, type: :controller
