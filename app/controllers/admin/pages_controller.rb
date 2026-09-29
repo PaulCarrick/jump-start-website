@@ -66,7 +66,10 @@ class Admin::PagesController < Admin::AbstractAdminController
 
     section_order           = page.sections.maximum(:section_order).to_i + 1
     section_order           = 1 unless section_order.present?
-    section                 = Section.create!(content_type: page.section, description: "New Section. Please replace this text.", section_order: section_order)
+    section                 = page.sections.create!(content_type: page.section,
+                                                    section_name: Section.generate_unique_name,
+                                                    description: "New Section. Please replace this text.",
+                                                    section_order: section_order)
     @new_section            = true
     @read_only_content_type = true
 

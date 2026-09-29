@@ -11,6 +11,7 @@ RSpec.describe Admin::PagesController, type: :controller do
   let!(:page) { create(:page, valid_attributes) }
   let!(:section) {
     create(:section,
+           page:          page,
            content_type:  "test",
            section_order: 1,
            description:   "<b>Test Description</b>",
@@ -77,6 +78,42 @@ RSpec.describe Admin::PagesController, type: :controller do
         expect(flash[:error]).to be_present
         expect(response).to redirect_to(action: :new, turbo: false)
       end
+    end
+  end
+
+  describe "GET #add_section_to_page" do
+    it "creates a named section belonging to the page and opens its editor" do
+      expect {
+        get :add_section_to_page, params: { id: page.id }
+      }.to change { page.sections.count }.by(1)
+
+      added_section = page.sections.order(:id).last
+      expect(added_section.section_name).to be_present
+      expect(added_section.content_type).to eq(page.section)
+      expect(added_section.section_order).to eq(section.section_order + 1)
+      expect(response).to redirect_to(edit_admin_section_path(added_section,
+        read_only_content_type: true, new_section: true,
+        return_url: edit_admin_page_path(page),
+        cancel_url: edit_admin_page_path(page, new_section: true), turbo: false))
+    end
+
+    it "uses distinct names for repeated additions" do
+      2.times { get :add_section_to_page, params: { id: page.id } }
+
+      names = page.sections.pluck(:section_name)
+      expect(names.uniq).to eq(names)
+      expect(page.sections.order(:section_order).pluck(:section_order)).to eq([1, 2, 3])
+    end
+
+    it "removes the newly added section when editing is canceled" do
+      get :add_section_to_page, params: { id: page.id }
+      added_section = page.sections.order(:id).last
+
+      expect {
+        get :edit, params: { id: page.id, canceled: "true",
+                            new_section: "true", section_id: added_section.id }
+      }.to change { page.sections.count }.by(-1)
+      expect(Section.exists?(section.id)).to be(true)
     end
   end
 
