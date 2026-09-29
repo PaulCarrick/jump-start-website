@@ -102,28 +102,34 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     });
   };
 
-  const handleAction = (index: number, action: string) => {
-    if (sectionData?.cells && sectionData.cells.length > index) {
-      if (action === "edit") {
-        setEditingCell(index);
-      }
-      else if (action === "delete") {
-        setEditingCell(null);
+  const handleAction = (cellOrIndex: Cell | number, action: string) => {
+    if (!sectionData?.cells) return;
 
-        setSectionData(prev => {
-          if (!prev) return null;
+    const index = typeof cellOrIndex === "number"
+      ? cellOrIndex
+      : sectionData.cells.findIndex(cell => cell.id === cellOrIndex.id);
 
-          const updatedCells = [ ...prev.cells ];
+    if (index < 0 || sectionData.cells.length <= index) return;
 
-          updatedCells.splice(index, 1);
+    if (action === "edit") {
+      setEditingCell(index);
+    }
+    else if (action === "delete") {
+      setEditingCell(null);
 
-          return {
-            ...prev,
-            cells:        updatedCells,
-            section_name: prev.section_name ?? "new-section",
-          };
-        });
-      }
+      setSectionData(prev => {
+        if (!prev) return null;
+
+        const updatedCells = [ ...prev.cells ];
+
+        updatedCells.splice(index, 1);
+
+        return {
+          ...prev,
+          cells:        updatedCells,
+          section_name: prev.section_name ?? "new-section",
+        };
+      });
     }
   };
 
@@ -228,7 +234,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 {!sectionData ? (
                     <h1 className="text-center">No Contents</h1>
                 ) : (
-                     <RenderSection section={sectionData as any} editing={false} noBorder={true} noHidden={false}
+                     <RenderSection section={sectionData as any} editing={true} noBorder={true} noHidden={false}
                                     onChange={handleAction as any}/>
                  )}
               </div>
