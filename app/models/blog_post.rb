@@ -6,6 +6,8 @@ class BlogPost < ApplicationRecord
 
   has_many :post_comments, dependent: :destroy
 
+  scope :publicly_visible, -> { where(visibility: "Public") }
+
   validates :title, :author, :posted, :content, presence: true
   validate :content_is_valid
 

@@ -532,6 +532,171 @@ RSpec.describe 'Admin Selenium UI', admin_e2e: true do
       end
     end
   end
+  describe 'public website after admin changes' do
+    def public_visit(path)
+      Capybara.reset_sessions!
+      visit path
+      expect(page).to have_no_link('Edit Page', exact: true)
+      expect(page).to have_no_link('Edit Column', exact: true)
+    end
+
+    it 'publishes page content and title updates, preserves canceled edits, and removes deleted pages' do
+      create_page
+      public_visit('/e2e-page')
+      expect(page).to have_title(/Title e2e-page/)
+      expect(page).to have_content('Content e2e-page')
+      log_in
+      area('pages'); open_record('pages', 'e2e-page', 'Edit')
+      fill_field 'Title', with: 'Public Updated Title'; click_button 'Save Page'
+      area('cells'); click_link 'Edit', exact: true
+      quill('Public updated body'); click_button 'Save Column'
+      public_visit('/e2e-page')
+      expect(page).to have_title(/Public Updated Title/)
+      expect(page).to have_content('Public updated body')
+      expect(page).to have_no_content('Content e2e-page')
+      log_in
+      area('cells'); click_link 'Edit', exact: true
+      quill('Discarded public body'); cancel
+      public_visit('/e2e-page')
+      expect(page).to have_content('Public updated body')
+      expect(page).to have_no_content('Discarded public body')
+      log_in
+      area('pages'); delete_record('pages', 'e2e-page')
+      public_visit('/e2e-page')
+      expect(page).to have_content("Can't find page for: e2e-page.")
+      expect(page).to have_no_content('Public updated body')
+    end
+
+    it 'renders saved rich text and background formatting on the public page' do
+      create_page
+      area('cells'); click_link 'Edit', exact: true
+      click_button 'Switch to HTML View **'
+      find('textarea').set('<p><strong>Public bold text</strong> <em>Public italic text</em></p>')
+      click_button 'Switch to Editor View'
+      select 'Red', from: 'backgroundColor'
+      click_button 'Save Column'
+      public_visit('/e2e-page')
+      expect(page).to have_css('strong', text: 'Public bold text')
+      expect(page).to have_css('em', text: 'Public italic text')
+      colored_block = find('strong', text: 'Public bold text').find(:xpath, 'ancestor::div[@style][1]')
+      expect(colored_block.style('background-color')['background-color']).to match(/rgba?\(255,\s*0,\s*0(?:,\s*1)?\)/)
+    end
+
+    it 'removes deleted columns and sections from a public page' do
+      create_page
+      public_visit('/e2e-page')
+      expect(page).to have_content('Content e2e-page')
+      log_in
+      area('cells'); click_link 'Edit', exact: true
+      cell_name = find('#cell_name').value
+      cancel
+      delete_record('cells', cell_name)
+      public_visit('/e2e-page')
+      expect(page).to have_no_content('Content e2e-page')
+      log_in
+      area('sections'); delete_record('sections', 'e2e-page-section')
+      public_visit('/e2e-page')
+      expect(page).to have_title(/Title e2e-page/)
+      expect(page).to have_no_content('Content e2e-page')
+      expect(page).to have_no_css('[data-react-props*="e2e-page-section"]')
+    end
+
+    { 'menu_items' => 'header', 'footer_items' => 'footer' }.each do |resource, container|
+      it "publishes edited #{container} links and removes deleted links for visitors" do
+        create_page
+        create_link_item(resource, 'Public Link', parent: resource == 'footer_items' ? 'OTHER' : nil)
+        open_record(resource, 'Public Link', 'Edit')
+        fill_field 'Options', with: ''; fill_field 'Link', with: '/e2e-page'
+        click_button(resource == 'menu_items' ? 'Save Menu Item' : 'Save Footer Item')
+        public_visit('/e2e-page')
+        within(container) do
+          expect(page).to have_link('Public Link', href: '/e2e-page')
+          click_link 'Public Link', exact: true
+        end
+        expect(page).to have_current_path('/e2e-page', ignore_query: true)
+        expect(page).to have_content('Content e2e-page')
+        log_in
+        area(resource); open_record(resource, 'Public Link', 'Edit')
+        fill_field 'Label*', with: 'Updated Public Link'
+        click_button(resource == 'menu_items' ? 'Save Menu Item' : 'Save Footer Item')
+        public_visit('/e2e-page')
+        within(container) do
+          expect(page).to have_link('Updated Public Link', href: '/e2e-page')
+          expect(page).to have_no_link('Public Link', exact: true)
+        end
+        log_in
+        area(resource); delete_record(resource, 'Updated Public Link')
+        public_visit('/e2e-page')
+        within(container) { expect(page).to have_no_link('Updated Public Link', exact: true) }
+      end
+    end
+
+    it 'loads an uploaded image publicly and shows updated captions and descriptions' do
+      create_image
+      image_path = "/image_files/#{ImageFile.find_by!(name: 'e2e-image').id}"
+      public_visit(image_path)
+      expect(page).to have_content('Caption e2e-image')
+      image = find('img[alt="e2e-image"]') { |node| node.evaluate_script('this.complete && this.naturalWidth > 0') }
+      expect(image).to match_css('img[src*="/rails/active_storage/"]')
+      log_in
+      area('image_files'); open_record('image_files', 'e2e-image', 'Edit')
+      quill('Public updated caption', index: 0); quill('Public updated description', index: 1)
+      click_button 'Save Image'
+      public_visit(image_path)
+      expect(page).to have_content('Public updated caption')
+      expect(page).to have_content('Public updated description')
+      expect(page).to have_no_content('Caption e2e-image')
+      log_in
+      area('image_files'); delete_record('image_files', 'e2e-image')
+      public_visit(image_path)
+      expect(page).to have_no_css('img[alt="e2e-image"]')
+      expect(page).to have_no_content('Public updated description')
+    end
+
+    it 'publishes blog edits to visitors and removes deleted posts from the public list' do
+      create_blog
+      blog_path = "/blogs/#{BlogPost.find_by!(title: 'E2E Blog').id}"
+      public_visit('/blogs')
+      expect(page).to have_css('h2', text: 'E2E Blog')
+      expect(page).to have_content('E2E post content')
+      public_visit(blog_path)
+      expect(page).to have_content('E2E post content')
+      log_in
+      area('blog_posts'); open_record('blog_posts', 'E2E Blog', 'Edit')
+      fill_field 'Title*', with: 'Public Updated Blog'; quill('Public updated post body')
+      click_button 'Save Blog Post'
+      public_visit('/blogs')
+      expect(page).to have_css('h2', text: 'Public Updated Blog')
+      expect(page).to have_content('Public updated post body')
+      expect(page).to have_no_content('E2E post content')
+      public_visit(blog_path)
+      expect(page).to have_content('Public updated post body')
+      log_in
+      area('blog_posts'); delete_record('blog_posts', 'Public Updated Blog')
+      public_visit('/blogs')
+      expect(page).to have_no_css('h2', text: 'Public Updated Blog')
+      expect(page).to have_no_content('Public updated post body')
+      public_visit(blog_path)
+      expect(page).to have_no_content('Public updated post body')
+    end
+
+    it 'hides a post changed to Private from the public list, latest view, and direct URL' do
+      create_blog('Private visibility test', 'Visitor-secret body')
+      blog_path = "/blogs/#{BlogPost.find_by!(title: 'Private visibility test').id}"
+      open_record('blog_posts', 'Private visibility test', 'Edit')
+      select 'Private', from: 'Visibility'; click_button 'Save Blog Post'
+      public_visit('/blogs')
+      expect(page).to have_css('input[placeholder="Search by title"]')
+      expect(page).to have_no_css('h2', text: 'Private visibility test')
+      expect(page).to have_no_content('Visitor-secret body')
+      aggregate_failures('private post public routes') do
+        public_visit('/blogs/latest')
+        expect(page).to have_no_content('Visitor-secret body')
+        public_visit(blog_path)
+        expect(page).to have_no_content('Visitor-secret body')
+      end
+    end
+  end
 end
 
 end
