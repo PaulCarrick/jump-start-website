@@ -3,15 +3,19 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      resources :menu_items, only: %i[index show]
-      resources :footer_items, only: %i[index show]
+      resources :menu_items, only: %i[index show create update destroy]
+      resources :footer_items, only: %i[index show create update destroy]
       resources :pages, only: %i[index show create update destroy]
       resources :sections, only: %i[index show create update destroy]
       resources :cells, only: %i[index show create update destroy]
       resources :blog_posts
       resources :post_comments
-      resources :image_files
+      resources :image_files do
+        get :groups, on: :collection
+      end
 
+      get "/menu_item/:id", to: "menu_items#get"
+      get "/footer_item/:id", to: "footer_items#get"
       post 'validate_html', to: 'validations#validate_html'
     end
   end

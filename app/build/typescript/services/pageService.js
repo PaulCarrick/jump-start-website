@@ -18,12 +18,14 @@ export function getPages(query, limit, setError = null) {
     const url = `/api/v1/pages${queryString}`;
     return sendRequest(url, setError);
 }
-export function newPage(params = {}, options = {}) {
+export function newPage(params = {}) {
     return {
-        name: params.name || options.defaultPageName || "new-page",
-        section: params.section || options.defaultSectionName || "new-section",
-        title: params.title || "New Page",
+        name: params.name,
+        section: params.section,
+        title: params.title,
         access: params.access || null,
+        menu_item: params.menu_item || null,
+        footer_item: params.footer_item || null,
         sections: params.sections || []
     };
 }
@@ -31,32 +33,85 @@ export function show(id, setError = null) {
     return sendRequest(`/api/v1/pages/${id}`, setError);
 }
 export function createPage(page, setError = null) {
+    if (page.menu_item?.parent_id === -1)
+        page.menu_item.parent_id = null;
+    if (page.footer_item?.parent_id === -1)
+        page.footer_item.parent_id = null;
     const transformedSections = page.sections?.map(section => {
         const sectionWithNestedCells = {
             ...section,
-            cells_attributes: section.cells,
+            cells_attributes: section.cells.map(cell => cell.id === -1 ? { ...cell, id: null } : cell)
         };
         delete sectionWithNestedCells.cells;
         return sectionWithNestedCells;
     });
-    const pageWithNestedSections = {
+    const transformedMenuItem = page.menu_item && typeof page.menu_item === "object"
+        ? {
+            ...page.menu_item,
+            id: page.menu_item.id === -1 ? null : page.menu_item.id,
+        }
+        : undefined;
+    const transformedFooterItem = page.footer_item && typeof page.footer_item === "object"
+        ? {
+            ...page.footer_item,
+            id: page.footer_item.id === -1 ? null : page.footer_item.id,
+        }
+        : undefined;
+    const pageWithNested = {
         ...page,
         sections_attributes: transformedSections,
+        ...(transformedMenuItem && { menu_item_attributes: transformedMenuItem }),
+        ...(transformedFooterItem && { footer_item_attributes: transformedFooterItem }),
     };
-    delete pageWithNestedSections.sections;
-    return sendRequest("/api/v1/pages/", setError, "POST", { page: pageWithNestedSections });
+    delete pageWithNested.sections;
+    delete pageWithNested.menu_item;
+    delete pageWithNested.footer_item;
+    return sendRequest("/api/v1/pages/", setError, "POST", { page: pageWithNested });
 }
 export function updatePage(page, setError = null) {
     if (!page.id) {
         console.error("Error: Page ID is required for updating.");
         return null;
     }
-    return sendRequest(`/api/v1/pages/${page.id}`, setError, "PATCH", { page });
+    if (page.menu_item?.parent_id === -1)
+        page.menu_item.parent_id = null;
+    if (page.footer_item?.parent_id === -1)
+        page.footer_item.parent_id = null;
+    const transformedSections = page.sections?.map(section => {
+        const sectionWithNestedCells = {
+            ...section,
+            cells_attributes: section.cells.map(cell => cell.id === -1 ? { ...cell, id: null } : cell)
+        };
+        delete sectionWithNestedCells.cells;
+        return sectionWithNestedCells;
+    });
+    const transformedMenuItem = page.menu_item && typeof page.menu_item === "object"
+        ? {
+            ...page.menu_item,
+            id: page.menu_item.id === -1 ? null : page.menu_item.id,
+        }
+        : undefined;
+    const transformedFooterItem = page.footer_item && typeof page.footer_item === "object"
+        ? {
+            ...page.footer_item,
+            id: page.footer_item.id === -1 ? null : page.footer_item.id,
+        }
+        : undefined;
+    const pageWithNested = {
+        ...page,
+        sections_attributes: transformedSections,
+        ...(transformedMenuItem && { menu_item_attributes: transformedMenuItem }),
+        ...(transformedFooterItem && { footer_item_attributes: transformedFooterItem }),
+    };
+    delete pageWithNested.sections;
+    delete pageWithNested.menu_item;
+    delete pageWithNested.footer_item;
+    return sendRequest(`/api/v1/pages/${page.id}`, setError, "PATCH", { pageWithNested });
 }
 export function deletePage(id, setError = null) {
     return sendRequest(`/api/v1/pages/${id}`, setError, "DELETE");
 }
-export function genericPage(pageName, sections = [], sectionName = null, title = null, access = null) {
+export function genericPage(pageName, sections = [], sectionName = null, title = null, access = null, menuItem = null, footerItem = null) {
     return {
         name: pageName,
         sections: sections,
@@ -66,7 +121,9 @@ export function genericPage(pageName, sections = [], sectionName = null, title =
             title
             :
                 pageName.toLowerCase()
-                    .replace(/\b\w/g, (char) => char.toUpperCase())
+                    .replace(/\b\w/g, (char) => char.toUpperCase()),
+        menu_item: menuItem,
+        footer_item: footerItem
     };
 }
 export function generatePage(pageName, sectionName = null, type = null, title = null, access = null, content = "Replace with your text", image = null, imageType = "Images", extraText = undefined) {

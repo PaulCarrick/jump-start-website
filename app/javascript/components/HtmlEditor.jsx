@@ -102,7 +102,7 @@ const HtmlEditor = ({
       onChange(content, attribute);
     }
     else if (onChange && typeof onChange === "string") {
-      const callable = new Function("editorContent", attribute, onChange);
+      const callable = new Function("editorContent", "id", onChange);
 
       callable(content, attribute);
     }
@@ -116,7 +116,7 @@ const HtmlEditor = ({
       if (quill)
         quill.clipboard.dangerouslyPasteHTML(editorContent); // Update Quill with the raw HTML
 
-      sendChange(false, "useHtmlView");
+      if (typeof onChange === "function") sendChange(false, "useHtmlView");
     }
     else {
       // Switching to HTML view
@@ -125,7 +125,7 @@ const HtmlEditor = ({
       if (quill)
         setEditorContent(prettyPrintHtml(quill.root.innerHTML));
 
-      sendChange(true, "useHtmlView");
+      if (typeof onChange === "function") sendChange(true, "useHtmlView");
     }
 
     setIsHtmlView(!isHtmlView);
@@ -170,7 +170,7 @@ const HtmlEditor = ({
 
   const handleBlur = () => {
     const quill   = quillRef.current?.getEditor();
-    const content = quill?.root.innerHTML;
+    const content = isHtmlView ? editorContent : (quill?.root.innerHTML ?? editorContent);
 
     if (typeof onBlur === "function") {
       onBlur(content, id);
@@ -187,7 +187,7 @@ const HtmlEditor = ({
             <textarea
                 id={`${id}_text`}
                 value={editorContent}
-                onChange={(e) => setEditorContent(e.target.value)}
+                onChange={(e) => handleChange(e.target.value)}
                 onBlur={handleBlur}
                 className="form-control"
                 placeholder="Edit raw HTML here"

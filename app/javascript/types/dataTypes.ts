@@ -20,7 +20,6 @@ export type PageOptions = {
   defaultCellName?: string | null;
   returnUrl?: string | null;
   cancelUrl?: string | null;
-
   [key: string]: any;
 }
 
@@ -69,10 +68,12 @@ export type Section = {
 
 export type Page = {
   id?: number | null;
-  name: string;
-  section: string;
-  title?: string;
+  name?: string | null;
+  section?: string | null;
+  title?: string | null;
   access?: string | null;
+  menu_item: MenuItem | null;
+  footer_item: FooterItem | null;
   sections?: Section[];
 };
 
@@ -86,6 +87,33 @@ export type ImageFile = {
   group?: string | null;
   slide_order?: number | null;
   image_url?: string | null;
+}
+
+export type MenuItem = {
+  id?: number | null;
+  label?: string | null;
+  menu_type?: string | null;
+  icon?: string | null;
+  options?: string | null;
+  link?: string | null;
+  access?: string | null;
+  menu_order?: number | null;
+  parent_id?: number | null;
+  page_id?: number | null;
+  sub_items?: MenuItem[] | null;
+}
+
+export type FooterItem = {
+  id?: number | null;
+  label?: string | null;
+  icon?: string | null;
+  options?: string | null;
+  link?: string | null;
+  access?: string | null;
+  footer_order?: number | null;
+  parent_id?: number | null;
+  page_id?: number | null;
+  sub_items?: FooterItem[] | null;
 }
 
 export type SetValueCallback = (newValue: string, attribute: string) => void | null;

@@ -1,12 +1,16 @@
 class Page < ApplicationRecord
   has_many :sections, dependent: :destroy
   accepts_nested_attributes_for :sections, allow_destroy: true
+  has_one :menu_item, dependent: :destroy
+  accepts_nested_attributes_for :menu_item, allow_destroy: true
+  has_one :footer_item, dependent: :destroy
+  accepts_nested_attributes_for :footer_item, allow_destroy: true
 
   scope :by_id, ->(id) {
     where(id: id)
       .left_joins(sections: :cells)
-      .includes(sections: :cells)
-      .references(:sections, :cells)
+      .includes(:menu_item, :footer_item, sections: :cells)
+      .references(:menu_item, :footer_item, :sections, :cells)
       .order("sections.section_order ASC NULLS LAST, cells.cell_order ASC NULLS LAST")
       .limit(1)
   }
@@ -14,16 +18,16 @@ class Page < ApplicationRecord
   scope :by_page_name, ->(name) {
     where(name: name)
       .left_joins(sections: :cells)
-      .includes(sections: :cells)
-      .references(:sections, :cells)
+      .includes(:menu_item, :footer_item, sections: :cells)
+      .references(:menu_item, :footer_item, :sections, :cells)
       .order("sections.section_order ASC NULLS LAST, cells.cell_order ASC NULLS LAST")
       .limit(1)
   }
 
   scope :by_section, ->(section) {
     where(section: section)
-      .includes(sections: :cells)
-      .references(:sections, :cells)
+      .includes(:menu_item, :footer_item, sections: :cells)
+      .references(:menu_item, :footer_item, :sections, :cells)
       .order("sections.section_order ASC NULLS LAST, cells.cell_order ASC NULLS LAST")
       .limit(1)
   }

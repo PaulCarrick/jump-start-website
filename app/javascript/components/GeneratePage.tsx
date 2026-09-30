@@ -1,8 +1,8 @@
 // app/javascript/components/GeneratePage.tsx
 
-import React, { useState } from "react";
-import { Page }            from "../types/dataTypes";
-import ErrorBoundary       from "./ErrorBoundary";
+import React, { useState }            from "react";
+import { FooterItem, MenuItem, Page } from "../types/dataTypes";
+import ErrorBoundary                  from "./ErrorBoundary";
 import {
   renderTitle,
   renderPageName,
@@ -10,6 +10,7 @@ import {
   renderAccess
 }                          from "./renderUtilities";
 import { createPage }      from "../services/pageService";
+import { isPresent }       from "./utilities";
 
 interface Options {
   defaultPageName?: string | null;
@@ -26,26 +27,29 @@ interface GeneratePageProps {
   access?: string | null;
   options?: Options;
   onFinished?: ((page: Page) => void) | null;
+  menuItem?: MenuItem | null;
+  footerItem?: FooterItem | null;
 }
 
 const GeneratePage: React.FC<GeneratePageProps> = ({
-                                                     title = "New Page",
+                                                     title = null,
                                                      name = null,
                                                      section = null,
                                                      access = null,
                                                      options = {} as Options,
                                                      onFinished = () => null,
+                                                     menuItem = null,
+                                                     footerItem = null,
                                                    }) => {
-  if (!name && options.defaultPageName) name = options.defaultPageName;
-  if (!section && options.defaultPageName) section = options.defaultPageName;
-
   const [ pageData, setPageData ] = useState<Page>({
-                                                     id:       null,
-                                                     title:    title || "New Page",
-                                                     name:     name || "new-page",
-                                                     section:  section || "new-page",
-                                                     sections: [],
-                                                     access:   access || null
+                                                     id:          null,
+                                                     title:       title,
+                                                     name:        name,
+                                                     section:     section,
+                                                     sections:    [],
+                                                     access:      access || null,
+                                                     menu_item:   menuItem || null,
+                                                     footer_item: footerItem || null,
                                                    });
   const [ error, setError ]       = useState<string | null>(null);
 
@@ -56,6 +60,12 @@ const GeneratePage: React.FC<GeneratePageProps> = ({
       [attribute]: newValue as string
     }));
   };
+
+  const canGenerate = (): boolean => {
+    let result: boolean = isPresent(pageData.name) && isPresent(pageData.section);
+
+    return result;
+  }
 
   const handleGenerate = () => {
     if (onFinished)
@@ -79,28 +89,51 @@ const GeneratePage: React.FC<GeneratePageProps> = ({
             {renderPageName(pageData.name, setValue)}
             {renderSectionName(pageData.section, null, setValue, false, 'section')}
             {renderAccess(pageData.access, setValue)}
-            <div className="row">
-              <div className="col-2">
-                <button
-                    onClick={handleGenerate}
-                    className="btn btn-primary me-2"
-                    style={{ maxWidth: "12em" }}
-                >
-                  Generate Page
-                </button>
-              </div>
-              <div className="col-5">
-                {options.cancelUrl && (
-                    <a href={options.cancelUrl} className="btn btn-secondary" style={{ maxWidth: "6em" }}>
-                      Cancel
-                    </a>
-                )}
-              </div>
-            </div>
+            {canGenerate() ? (
+                <>
+                  <div className="row">
+                    <div className="col-2">
+                      <button
+                          onClick={handleGenerate}
+                          className="btn btn-primary me-2"
+                          style={{ maxWidth: "12em" }}
+                      >
+                        Generate Page
+                      </button>
+                    </div>
+                    <div className="col-5">
+                      {options.cancelUrl && (
+                          <a
+                              href={options.cancelUrl}
+                              className="btn btn-secondary ms-2"
+                              style={{ maxWidth: "6em" }}
+                          >
+                            Cancel
+                          </a>
+                      )}
+                    </div>
+                  </div>
+                </>
+            ) : (
+                 options.cancelUrl && (
+                     <div className="row">
+                       <div className="col-2">
+                         <a
+                             href={options.cancelUrl}
+                             className="btn btn-secondary"
+                             style={{ maxWidth: "6em" }}
+                         >
+                           Cancel
+                         </a>
+                       </div>
+                     </div>
+                 )
+             )}
           </div>
         </ErrorBoundary>
       </div>
-  );
+  )
+      ;
 };
 
 export default GeneratePage;

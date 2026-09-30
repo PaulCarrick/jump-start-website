@@ -65,7 +65,7 @@ export function newSection(params = {}) {
 export function createSection(section, setError = null) {
     const sectionWithNestedCells = {
         ...section,
-        cells_attributes: section.cells.map(cell => cell.id === -1 ? { ...cell, id: null } : cell),
+        cells_attributes: section.cells.map(cell => cell.id === -1 ? { ...cell, id: null } : cell)
     };
     delete sectionWithNestedCells.cells;
     return sendRequest("/api/v1/sections/", setError, "POST", { section: sectionWithNestedCells });
@@ -106,7 +106,7 @@ export function genericSection(sectionName, contentType, cells = null, order = 1
     };
 }
 export function textSection(sectionName, contentType, content = "Replace with your text", order = 1) {
-    const cells = generateCells(sectionName, contentType, "text-single", content);
+    const cells = generateCells(sectionName, "text-single", content);
     const results = genericSection(sectionName, contentType, cells, order);
     return results;
 }
@@ -117,7 +117,7 @@ export function imageSection(sectionName, contentType, image, imageType = null, 
 }
 export function textTopSections(sectionName, contentType = null, content = "Replace with your text", image = null, imageType = null, order = 1) {
     const results = [];
-    let cells = generateCells(sectionName, contentType, "text-single", content);
+    let cells = generateCells(sectionName, "text-single", content);
     const textName = sectionName + "_text";
     const imageName = sectionName + "_image";
     if (!order)
@@ -135,7 +135,7 @@ export function textBottomSections(sectionName, contentType = null, content = "R
     if (!order)
         order = 1;
     results.push(genericSection(textName, contentType, cells, order));
-    cells = generateCells(textName, contentType, "text-single", content);
+    cells = generateCells(textName, "text-single", content);
     results.push(genericSection(imageName, contentType, cells, (order + 1)));
     return results;
 }
@@ -157,7 +157,7 @@ export function headerSections(sectionName, contentType = null, content = "Repla
     if (!order)
         order = 1;
     results.push(genericSection(topName, contentType, cells, order));
-    cells = generateCells(bottomName, contentType, "text-right", content);
+    cells = generateCells(bottomName, "text-right", content);
     results.push(genericSection(bottomName, contentType, cells, (order + 1)));
     return results;
 }

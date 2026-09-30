@@ -30,10 +30,19 @@ const FormattingEditor: React.FC<FormattingEditorProps> = ({ formatting, onChang
 
   // Handle input changes for existing key-value pairs
   const handleChange = (value: string, key: string) => {
-    setFormattingData((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
+    setFormattingData((prev) => {
+      const marginPrefixes: Record<string, string> = {
+        marginTop: "mt", marginLeft: "ms", marginBottom: "mb", marginRight: "me"
+      };
+      const prefix = marginPrefixes[key];
+      if (prefix) {
+        const classes = (prev.classes || "").split(/\s+/).filter((token: string) =>
+          token && !new RegExp(`^${prefix}-[0-5]$`).test(token));
+        if (value) classes.push(value);
+        return { ...prev, classes: classes.join(" ") };
+      }
+      return { ...prev, [key === "backgroundColor" ? "background-color" : key]: value };
+    });
   };
 
   // Handle deleting a key-value pair
@@ -63,9 +72,9 @@ const FormattingEditor: React.FC<FormattingEditorProps> = ({ formatting, onChang
       <>
         {
           (formattingMode === 'danger') ?
-          renderFormatting(formatting, handleAdd, handleDelete, handleChange)
+          renderFormatting(formattingData, handleAdd, handleDelete, handleChange)
                                         :
-          renderAttributes(formatting, handleChange)
+          renderAttributes(formattingData, handleChange)
         }
         <div className="row align-items-center">
           <div className="col-2">
@@ -222,7 +231,6 @@ function renderAttributes(formatting: Record<string, any>,
 export function formattingOptions(formattingData: Record<string, any>) {
   const fields = [];
 
-  fields.push({ label: "Select an option to add", value: null });
 
   if (!isPresent(formattingData?.container_classes))
     fields.push({ label: "Container Classes", value: "container_classes" });
@@ -260,25 +268,13 @@ export function formattingOptions(formattingData: Record<string, any>) {
   return fields;
 }
 
-function extractNumber(text: string | null, expression: RegExp) {
-  let result: number = 0;
-
-  if (text) {
-    const match: RegExpMatchArray | null = text.match(expression)
-
-    if (match) result = Number(match[1]);
-  }
-
-  return result;
-}
-
-function getMarginValues(classes: string) {
-  const top: number    = extractNumber(classes, /mt-\d/);
-  const left: number   = extractNumber(classes, /ms-\d/);
-  const bottom: number = extractNumber(classes, /mb-\d/);
-  const right: number  = extractNumber(classes, /me-\d/);
-
-  return [ top, left, bottom, right ]
+function getMarginValues(classes: string = "") {
+  return ["t", "s", "b", "e"].map(direction => {
+    const axis = direction === "t" || direction === "b" ? "y" : "x";
+    const find = (prefix: string) => classes.match(new RegExp(`(?:^|\\s)${prefix}-([0-5])(?:\\s|$)`))?.[1];
+    const value = find(`m${direction}`) ?? find(`m${axis}`) ?? find("m");
+    return value === undefined ? "" : `m${direction}-${value}`;
+  });
 }
 
 function getMarginOptions(marginType: "none" | "top" | "bottom" | "left" | "right") {

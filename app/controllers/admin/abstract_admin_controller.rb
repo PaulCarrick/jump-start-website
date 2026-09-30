@@ -71,7 +71,8 @@ class Admin::AbstractAdminController < ApplicationController
 
       if get_record&.update(get_params)
         flash[:notice] = "#{controller_name.singularize.titleize} updated successfully."
-        redirect_to action: :index, turbo: false
+        # Fetch preserves PATCH across 302; 303 follows the list redirect with GET.
+        redirect_to action: :index, turbo: false, status: :see_other
       else
         raise("Could not update #{controller_name.singularize.titleize}, ID: #{params[:id]}.")
       end

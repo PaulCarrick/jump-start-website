@@ -35,7 +35,7 @@
   <div class="mb-3">
     <%= form.label :visibility, "Visibility", class: "form-label" %><br>
     <%= form.select :visibility,
-                    options_for_select(%w[Public Private]),
+                    options_for_select(%w[Public Private], form.object.visibility),
                     class: "form-control"
     %>
   </div>
@@ -43,7 +43,7 @@
   <div class="mb-3">
     <%= form.label :blog_type, "Blog Type", class: "form-label" %><br>
     <%= form.select :blog_type,
-                    options_for_select(%w[Personal Professional]),
+                    options_for_select(%w[Personal Professional], form.object.blog_type),
                     class: "form-control"
     %>
   </div>

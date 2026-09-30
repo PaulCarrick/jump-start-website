@@ -9,6 +9,7 @@
     <div style="max-width: 50%;">
       <% unless user_signed_in? %>
         <h2 class="mt-5">Login</h2>
+        <%= render "shared/flash_error" %>
         <%= form_with(url: new_user_session_path, scope: :user, local: true) do |form| %>
           <div class="mb-3">
             <%= form.label :email, "Email Address", class: "form-label" %>

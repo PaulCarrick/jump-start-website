@@ -80,6 +80,10 @@ module Api
         end
       end
 
+      def groups
+        render json: ImageFile.where.not(group: [nil, ""]).group(:group).maximum(:slide_order)
+      end
+
       def get_group
         group_param = params[:group] # Ensure group is passed in params
 
