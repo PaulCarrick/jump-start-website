@@ -6,9 +6,9 @@
 import React from "react";
 import DisplayContent from "./DisplayContent";
 import RenderCell from "./RenderCell.jsx";
-import {isTextOnly} from "./getDefaultOptions";
-import {dupObject, isPresent} from "./utilities";
-import PropTypes from 'prop-types';
+import { isTextOnly } from "./getDefaultOptions";
+import { dupObject, isPresent } from "./utilities";
+import PropTypes from "prop-types";
 
 import {
   handleImageGroup,
@@ -17,35 +17,45 @@ import {
   processVideoImageTag,
   imageFileFindByName,
   missingImageUrl,
-} from "./imageProcessingUtilities.jsx"
+} from "./imageProcessingUtilities.jsx";
 
+/**
+ * @param {{ section?: import('../types/dataTypes').Section | null,
+ * editing?: boolean, noBorder?: boolean, noHidden?: boolean,
+ * onChange?: ((cell: import('../types/dataTypes').Cell, action: string) => void) | null }} props
+ */
 const RenderSection = ({
-                         section = null,
-                         editing = false,
-                         noBorder = true,
-                         noHidden = false,
-                         onChange = null
-                       }) => {
-  if (section === null) return; // We can't render what we don't have
+  section = null,
+  editing = false,
+  noBorder = true,
+  noHidden = false,
+  onChange = null,
+}) => {
+  if (section === null) return null; // We can't render what we don't have
 
   const sectionData = dupObject(section);
 
   if (sectionData.cells) {
-    return processCells(sectionData.cells, editing, noBorder, noHidden, onChange)
-  }
-  else {
+    return processCells(
+      sectionData.cells,
+      editing,
+      noBorder,
+      noHidden,
+      onChange,
+    );
+  } else {
     const contents = buildContents(sectionData);
     const sections = [];
 
     processVideoImages(contents);
 
-    contents.forEach(content => {
+    contents.forEach((content) => {
       sections.push(renderSection(content, noBorder, noHidden));
     });
 
-    return (sections);
+    return sections;
   }
-}
+};
 
 // Utility Functions
 
@@ -55,43 +65,52 @@ function renderSection(content, noBorder = false, noHidden) {
   if (noBorder) divClass = "w-100 m-0 p-3";
 
   return (
-      <div className="row mb-2">
-        <div id="sectionAttributes" className={divClass}>
-          <DisplayContent
-              content={content.description}
-              image={content.image}
-              link={content.link}
-              format={content.formatting}
-              sectionId={content.sectionName}
-              textAttributes={content.text_attributes}
-              imageAttributes={content.image_attributes}
-              noHidden={noHidden}
-              onChange={onChange}
-          />
-        </div>
+    <div className="row mb-2">
+      <div id="sectionAttributes" className={divClass}>
+        <DisplayContent
+          content={content.description}
+          image={content.image}
+          link={content.link}
+          format={content.formatting}
+          sectionId={content.sectionName}
+          textAttributes={content.text_attributes}
+          imageAttributes={content.image_attributes}
+          noHidden={noHidden}
+          onChange={onChange}
+        />
       </div>
+    </div>
   );
 }
 
 function buildContents(section) {
-  const sections = processSection(section)
+  const sections = processSection(section);
 
   return sections;
 }
 
-const processCells = (cells, editing = false, noBorder = false, noHidden = true, onChange = null) => {
+const processCells = (
+  cells,
+  editing = false,
+  noBorder = false,
+  noHidden = true,
+  onChange = null,
+) => {
   if (!cells || cells.length === 0) return null;
 
   let containerClasses = "row";
-  let containerId      = "";
+  let containerId = "";
 
-  cells.forEach(cell => {
+  cells.forEach((cell) => {
     containerId = cell.section_name;
 
     if (cell.formatting) {
-      const cellContainerClasses = cell.formatting["container_classes"]
+      const cellContainerClasses = cell.formatting["container_classes"];
 
-      if (cellContainerClasses && !containerClasses.includes(cellContainerClasses))
+      if (
+        cellContainerClasses &&
+        !containerClasses.includes(cellContainerClasses)
+      )
         containerClasses = containerClasses + " " + cellContainerClasses;
     }
 
@@ -99,31 +118,37 @@ const processCells = (cells, editing = false, noBorder = false, noHidden = true,
   });
 
   return (
-      <div className={containerClasses} id={containerId}>
-        {cells.map((cell, index) => (
-            <div
-                key={index}
-                className={cell.container_class || ''}
-                style={{
-                  ...(cell.width === 'auto' ? { flex: 1 } : { width: `${cell.width}` }),
-                }}
-            >
-              <RenderCell cell={cell} editing={editing} noBorder={noBorder} noHidden={noHidden} onChange={onChange} />
-            </div>
-        ))}
-      </div>
+    <div className={containerClasses} id={containerId}>
+      {cells.map((cell, index) => (
+        <div
+          key={index}
+          className={cell.container_class || ""}
+          style={{
+            ...(cell.width === "auto"
+              ? { flex: 1 }
+              : { width: `${cell.width}` }),
+          }}
+        >
+          <RenderCell
+            cell={cell}
+            editing={editing}
+            noBorder={noBorder}
+            noHidden={noHidden}
+            onChange={onChange}
+          />
+        </div>
+      ))}
+    </div>
   );
 };
 
 function processCell(cell) {
-  if (!cell)
-    return;
+  if (!cell) return;
 
   if (cell.content) {
     const match = cell.content.match(/VideoImage:\s*"(.+)"/);
 
-    if (match)
-      cell.content = processVideoImageTag(cell.content, match[1]);
+    if (match) cell.content = processVideoImageTag(cell.content, match[1]);
   }
 
   if (cell.formatting && cell.formatting["classes"]) {
@@ -131,7 +156,7 @@ function processCell(cell) {
     const match = classes.match(/col(?:-(xs|sm|md|lg|xl|xxl))?-(\d{1,2})/);
 
     if (match) {
-      cell.container_class       = match[0];
+      cell.container_class = match[0];
       // Remove the matched string from the classes field
       cell.formatting["classes"] = classes.replace(match[0], "").trim();
     }
@@ -139,69 +164,78 @@ function processCell(cell) {
 }
 
 function processSection(section) {
-  const rowStyle = isPresent(section.row_style) ? section.row_style : section.formatting.row_style;
+  const rowStyle = isPresent(section.row_style)
+    ? section.row_style
+    : section.formatting.row_style;
 
-  if (isTextOnly(rowStyle) || !section.image) // Nothing to do
+  if (isTextOnly(rowStyle) || !section.image)
+    // Nothing to do
     return [section];
 
-  const imageGroupRegex   = /^\s*ImageGroup:\s*(.+)\s*$/;
-  const videoRegex        = /^\s*VideoImage:"\s*(.+)\s*"$/;
-  const imageFileRegex    = /^\s*ImageFile:\s*(.+)\s*$/;
+  const imageGroupRegex = /^\s*ImageGroup:\s*(.+)\s*$/;
+  const videoRegex = /^\s*VideoImage:"\s*(.+)\s*"$/;
+  const imageFileRegex = /^\s*ImageFile:\s*(.+)\s*$/;
   const imageSectionRegex = /^\s*ImageSection:\s*(.+)\s*$/;
-  const imageArrayRegex   = /^\s*\[\s*(.+?)\s*\]\s*$/m;
+  const imageArrayRegex = /^\s*\[\s*(.+?)\s*\]\s*$/m;
 
   let isImageSection = false;
-  let newImages      = section.image.slice().trim();
+  let newImages = section.image.slice().trim();
   let newDescription = section.description;
-  let newFormatting  = dupObject(section.formatting);
-  let subsection     = null;
+  let newFormatting = dupObject(section.formatting);
+  let subsection = null;
   let match;
 
   switch (true) {
     case imageGroupRegex.test(newImages):
-      match                      = newImages.match(imageGroupRegex);
-      [newImages, newFormatting] = handleImageGroup(match[1], section.formatting);
+      match = newImages.match(imageGroupRegex);
+      [newImages, newFormatting] = handleImageGroup(
+        match[1],
+        section.formatting,
+      );
       break;
     case videoRegex.test(newImages):
-      match     = newImages.match(videoRegex);
+      match = newImages.match(videoRegex);
       newImages = handleVideoFile(section, match[1]);
       break;
     case imageFileRegex.test(newImages):
-      match     = newImages.match(imageFileRegex);
+      match = newImages.match(imageFileRegex);
       newImages = handleSingleImageFile(section, match[1]);
       break;
     case imageSectionRegex.test(newImages):
-      isImageSection                                         = true;
-      match                                                  = newImages.match(imageSectionRegex);
-      [newImages, newDescription, subsection, newFormatting] = handleImageSection(section, match[1], section.formatting);
+      isImageSection = true;
+      match = newImages.match(imageSectionRegex);
+      [newImages, newDescription, subsection, newFormatting] =
+        handleImageSection(section, match[1], section.formatting);
       break;
     case imageArrayRegex.test(newImages):
-      match                      = newImages.match(imageArrayRegex);
-      [newImages, newFormatting] = handleImageArray(match[1], section.formatting);
+      match = newImages.match(imageArrayRegex);
+      [newImages, newFormatting] = handleImageArray(
+        match[1],
+        section.formatting,
+      );
       break;
     default:
       newImages = newImages.image_url;
   }
 
   if (isImageSection && isPresent(subsection)) {
-    section.image       = newImages;
+    section.image = newImages;
     section.description = newDescription;
-    section.formatting  = newFormatting;
+    section.formatting = newFormatting;
 
-    return [section, subsection]
-  }
-  else {
-    section.image       = newImages;
+    return [section, subsection];
+  } else {
+    section.image = newImages;
     section.description = newDescription;
-    section.formatting  = newFormatting;
+    section.formatting = newFormatting;
 
-    return [section]
+    return [section];
   }
 }
 
 function handleVideoFile(section, name) {
   const imageFile = imageFileFindByName(name);
-  const results   = imageFile.image_url
+  const results = imageFile.image_url;
 
   section.link = results;
 
@@ -210,7 +244,7 @@ function handleVideoFile(section, name) {
 
 function handleSingleImageFile(section, name) {
   const imageFile = imageFileFindByName(name);
-  const results   = imageFile.image_url
+  const results = imageFile.image_url;
 
   section.link = results;
 
@@ -221,21 +255,23 @@ function handleImageSection(section, name, formatting) {
   const imageFile = imageFileFindByName(name);
 
   if (imageFile.image_url) {
-    const caption                   = imageFile.caption;
+    const caption = imageFile.caption;
     const containsOnlyPTagsOrNoHTML = /^(\s*<p>.*?<\/p>\s*)*$/i.test(caption);
     let description;
 
     if (containsOnlyPTagsOrNoHTML)
       description = `<div class='display-4 fw-bold mb-1 text-dark'>${caption}</div>`;
-    else
-      description = caption;
+    else description = caption;
 
-    section.link                          = imageFile.image_url;
-    const [subsection, updatedFormatting] = buildSubsection(section, imageFile, formatting);
+    section.link = imageFile.image_url;
+    const [subsection, updatedFormatting] = buildSubsection(
+      section,
+      imageFile,
+      formatting,
+    );
 
     return [imageFile.image_url, description, subsection, updatedFormatting];
-  }
-  else {
+  } else {
     return [missingImageUrl(), "", null, null];
   }
 }
@@ -243,12 +279,12 @@ function handleImageSection(section, name, formatting) {
 function buildSubsection(section, imageFile, formatting) {
   const subsection = JSON.parse(JSON.stringify(section));
 
-  subsection.link        = null;
-  subsection.image       = null;
-  subsection.formatting  = flipFormattingSide(formatting);
+  subsection.link = null;
+  subsection.image = null;
+  subsection.formatting = flipFormattingSide(formatting);
   subsection.description = imageFile.description;
 
-  if (formatting && 'expanding_rows' in formatting)
+  if (formatting && "expanding_rows" in formatting)
     delete formatting.expanding_rows;
 
   return [subsection, formatting];
@@ -256,11 +292,14 @@ function buildSubsection(section, imageFile, formatting) {
 
 function swapClasses(formatting) {
   if (formatting.text_classes && formatting.image_classes) {
-    formatting.image_classes = formatting.image_classes.replace(/w-\d{2,3}/g, "");
+    formatting.image_classes = formatting.image_classes.replace(
+      /w-\d{2,3}/g,
+      "",
+    );
 
-    const temp               = formatting.image_classes;
+    const temp = formatting.image_classes;
     formatting.image_classes = formatting.text_classes;
-    formatting.text_classes  = temp;
+    formatting.text_classes = temp;
   }
 
   if (formatting.row_classes) {
@@ -280,8 +319,7 @@ function flipFormattingSide(formatting) {
   if (newFormatting.row_style === "text-left") {
     newFormatting.row_style = "text-right";
     swapClasses(newFormatting);
-  }
-  else {
+  } else {
     newFormatting.row_style = "text-left";
     swapClasses(newFormatting);
   }
@@ -290,30 +328,30 @@ function flipFormattingSide(formatting) {
 }
 
 RenderSection.propTypes = {
-  section:  PropTypes.shape({
-                              content_type:           PropTypes.string,
-                              section_name:           PropTypes.string,
-                              section_order:          PropTypes.number,
-                              image:                  PropTypes.string,
-                              link:                   PropTypes.string,
-                              formatting:             PropTypes.any,
-                              description:            PropTypes.string,
-                              row_style:              PropTypes.string,
-                              text_margin_top:        PropTypes.string,
-                              text_margin_left:       PropTypes.string,
-                              text_margin_right:      PropTypes.string,
-                              text_margin_bottom:     PropTypes.string,
-                              text_background_color:  PropTypes.string,
-                              image_margin_top:       PropTypes.string,
-                              image_margin_left:      PropTypes.string,
-                              image_margin_right:     PropTypes.string,
-                              image_margin_bottom:    PropTypes.string,
-                              image_background_color: PropTypes.string,
-                            }).isRequired, // Use `.isRequired` here,
-  editing:  PropTypes.bool,
+  section: PropTypes.shape({
+    content_type: PropTypes.string,
+    section_name: PropTypes.string,
+    section_order: PropTypes.number,
+    image: PropTypes.string,
+    link: PropTypes.string,
+    formatting: PropTypes.any,
+    description: PropTypes.string,
+    row_style: PropTypes.string,
+    text_margin_top: PropTypes.string,
+    text_margin_left: PropTypes.string,
+    text_margin_right: PropTypes.string,
+    text_margin_bottom: PropTypes.string,
+    text_background_color: PropTypes.string,
+    image_margin_top: PropTypes.string,
+    image_margin_left: PropTypes.string,
+    image_margin_right: PropTypes.string,
+    image_margin_bottom: PropTypes.string,
+    image_background_color: PropTypes.string,
+  }).isRequired, // Use `.isRequired` here,
+  editing: PropTypes.bool,
   noBorder: PropTypes.bool,
   noHidden: PropTypes.bool,
-  onChange: PropTypes.any
+  onChange: PropTypes.any,
 };
 
 export default RenderSection;
