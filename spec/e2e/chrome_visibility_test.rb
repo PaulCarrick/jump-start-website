@@ -22,6 +22,10 @@ class ChromeVisibilityTest < Minitest::Test
       'Text'
     end
     alias all_text visible_text
+    def click(keys = [], **options)
+      raise error if error
+      [keys, options]
+    end
     prepend AdminE2EChromeVisibility
   end
 
@@ -46,6 +50,16 @@ class ChromeVisibilityTest < Minitest::Test
       error = assert_raises(Selenium::WebDriver::Error::UnknownError) { node.public_send(method) }
       assert_same node.error, error
     end
+  end
+
+  def test_click_preserves_arguments_and_translates_only_detached_nodes
+    node = Node.new
+    assert_equal [[:shift], { x: 10 }], node.click([:shift], x: 10)
+    node.error = Selenium::WebDriver::Error::UnknownError.new('Node with given id does not belong to the document')
+    assert_raises(Selenium::WebDriver::Error::StaleElementReferenceError) { node.click }
+    node.error = Selenium::WebDriver::Error::UnknownError.new('browser disconnected')
+    error = assert_raises(Selenium::WebDriver::Error::UnknownError) { node.click }
+    assert_same node.error, error
   end
 
   def test_other_unknown_errors_are_not_hidden
