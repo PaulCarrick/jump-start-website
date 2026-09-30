@@ -1,8 +1,18 @@
 #!/usr/bin/env ruby
 # Fresh dedicated test DB; never replicate or reset development data.
+require "rbconfig"
+root = File.expand_path("..", __dir__)
+ruby_version = File.read(File.join(root, ".ruby-version")).strip
+if RUBY_VERSION != ruby_version
+  candidates = [ File.join(Dir.home, ".rbenv/versions", ruby_version, "bin/ruby"),
+                File.join(Dir.home, ".rubies", "ruby-#{ruby_version}", "bin/ruby") ]
+  ruby = candidates.find { |path| File.executable?(path) }
+  abort "Install Ruby #{ruby_version} (see .ruby-version) before running the suite." unless ruby
+  exec(ruby, File.expand_path(__FILE__), *ARGV)
+end
+ENV["PATH"] = "#{File.dirname(RbConfig.ruby)}#{File::PATH_SEPARATOR}#{ENV.fetch('PATH')}"
 require 'fileutils'
 require 'json'
-root = File.expand_path('..', __dir__)
 Dir.chdir(root)
 ENV['RAILS_ENV'] = 'test'
 ENV['ADMIN_UI_E2E'] = '1'

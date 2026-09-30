@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe Checksum, type: :module do
   include_context "debug setup"
 
-  let(:section) { create(:section) }
-  let(:image_file) { create(:image_file) }
-  let(:other_model) { create(:page) }
+  let(:section) { build(:section) }
+  let(:image_file) { build(:image_file) }
+  let(:other_model) { build(:page) }
 
   describe "populate_checksum" do
     context "when the model is a Section or ImageFile" do
@@ -25,7 +25,7 @@ RSpec.describe Checksum, type: :module do
       end
 
       it "does not set checksum if description is blank" do
-        section = create(:section, description: nil)
+        section = build(:section, description: nil)
 
         expect(section.checksum).to be_nil
       end

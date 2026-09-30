@@ -3,7 +3,9 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.0"
+ruby "4.0.7"
+
+gem "rails", "~> 8.1.4"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use postgresql as the database for Active Record
@@ -22,7 +24,9 @@ gem "cssbundling-rails"
 gem "jbuilder"
 
 gem "nokogiri"
-gem "stringio", "~> 3.1.2"
+gem "stringio", "~> 3.2"
+# Ruby 4 ships benchmark separately; image-processing dependencies still require it.
+gem "benchmark"
 gem "recaptcha", require: "recaptcha/rails"
 gem "devise"
 gem "ransack"
@@ -58,7 +62,6 @@ gem 'active_model_serializers'
 
 group :development, :test do
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
-  gem 'byebug'
   gem 'debug', platforms: [ :mri ]
   gem "brakeman", require: false
   gem 'rspec-rails'

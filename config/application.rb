@@ -24,7 +24,7 @@ Bundler.require(*Rails.groups)
 module RailsWebsite
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 8.0
+    config.load_defaults 8.1
 
     VERSION = "1.0.1".freeze
     config.version = "1.0.1".freeze

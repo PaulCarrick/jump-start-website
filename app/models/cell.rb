@@ -40,28 +40,16 @@ class Cell < ApplicationRecord
     if section
       self.section_id = section.id
     else
-      self.errors ||= []
       error       = "No section ID is present and cannot find session by name."
 
       errors.add(:section_id, error)
       Rails.logger.error error
-      raise ActiveRecord::RecordInvalid, error
+      raise ActiveRecord::RecordInvalid.new(self)
     end
   end
 
   def verify_checksum
-    return unless content.present?
-
-    expected_checksum = generate_checksum(content)
-
-    unless checksum == expected_checksum
-      self.errors ||= []
-      error       = "Checksum mismatch for Cell ##{id}"
-
-      errors.add(:content, error)
-      Rails.logger.error error
-      raise ActiveRecord::RecordInvalid, error
-    end
+    verify_checksum_for(content, :content)
   end
 
   def content_is_valid
@@ -70,12 +58,11 @@ class Cell < ApplicationRecord
     skip_check = content =~ /^\s*<title>/
 
     unless skip_check || validate_html(content, :content)
-      self.errors ||= []
       error       = "Invalid HTML in Content."
 
       errors.add(:content, error)
       Rails.logger.error error
-      raise ActiveRecord::RecordInvalid, error
+      raise ActiveRecord::RecordInvalid.new(self)
     end
   end
 end

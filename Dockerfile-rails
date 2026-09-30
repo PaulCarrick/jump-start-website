@@ -4,7 +4,7 @@
 # check=error=true
 
 # Base Ruby image
-ARG RUBY_VERSION=3.2.6
+ARG RUBY_VERSION=4.0.7
 FROM ruby:${RUBY_VERSION} AS build
 
 ENV PATH="${PWD}/bin:${PATH}"
@@ -126,7 +126,7 @@ RUN rm -rf ./startup/database ./startup/rails
 
 # Install the correct Bundler version
 RUN echo "*** Installing Bundler..."
-RUN gem install bundler -v '~> 2.5'
+RUN gem install bundler -v 4.0.20
 RUN echo "*** Bundler Installed..."
 
 # Set production environment variables

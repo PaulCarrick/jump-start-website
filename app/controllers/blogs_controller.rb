@@ -1,28 +1,27 @@
-# app/controllers/blogs_controller.rb
 # frozen_string_literal: true
 
-include HtmlSanitizer
-
 class BlogsController < ApplicationController
+  include HtmlSanitizer
+
   def index
-    @blog_type = params[:blog_type].present? ? params[:blog_type] : "Personal"
-    @contents = BlogPost.where(blog_type:  @blog_type, visibility: 'Public').map do |blog|
-      blog.content = sanitize_html(blog.content)
+    @blog_type = params[:blog_type].presence || "Personal"
+    @contents = BlogPost.publicly_visible.where(blog_type: @blog_type).map do |blog|
+      sanitize_html(blog.content)
     end
   end
 
   def show
-    @blog_type = params[:blog_type].present? ? params[:blog_type] : "Personal"
+    @blog_type = params[:blog_type].presence || "Personal"
+    visible_posts = signed_in? ? BlogPost.all : BlogPost.publicly_visible
 
     if params[:id] == "latest"
-      @blog = BlogPost.where(blog_type: @blog_type).order(posted: 'desc').first
+      @blog = visible_posts.where(blog_type: @blog_type).order(posted: :desc).first
       @blog.content = sanitize_html(@blog.content) if @blog.present?
-
       render "latest"
-
-      nil
     else
-      @blog = BlogPost.find(params[:id])
+      @blog = visible_posts.find_by(id: params[:id])
+      @blog.content = sanitize_html(@blog.content) if @blog.present?
+      render "show", status: @blog.present? ? :ok : :not_found
     end
   end
 end

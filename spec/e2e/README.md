@@ -86,3 +86,9 @@ The third browser run completed **52 passes and 30 failures** in `tmp/admin-ui-e
 ## Automatic completion review
 
 Each run now atomically writes `run-status.json` beside its artifacts, including running/finished state, phase, exit code, dry-run flag and database cleanup result. This chat has a one-minute scheduled check named Review completed Selenium runs, which reviews each new real run once and stays quiet otherwise. Keep the computer awake and Codex running. Continue using the same `bin/admin-ui-e2e` command; no manual completion message is needed. Runs started before this runner change do not produce the status marker. A forced kill is detected as an interrupted run when the recorded process is absent.
+
+## Public-site coverage
+
+Eight additional browser examples create or change content through admin controls, clear the browser session, and visit public routes as a guest. They check page titles and body updates, canceled edits, page/section/column deletion, rich-text markup and background formatting, header/footer links and deletion, uploaded image loading and metadata updates, public blog edits/deletion, and private-post visibility on the list, latest view, and direct URL. Image/post IDs are read only to locate public routes; content is still created through the UI.
+
+Run these scenarios with `bin/admin-ui-e2e --example 'public website after admin changes'`, or run the full suite with `bin/admin-ui-e2e`. These checks may reveal application defects that admin previews alone do not expose.

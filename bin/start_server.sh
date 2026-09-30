@@ -1,7 +1,13 @@
 #!/bin/sh
 
-USER_HOME=$(eval echo ~)
-export PATH="${USER_HOME}/.rubies/ruby-3.2.2/bin:${PATH}"
+project_directory="$(cd "$(dirname "$0")/.." && pwd)"
+ruby_version=$(cat "${project_directory}/.ruby-version")
+for ruby_directory in "${HOME}/.rubies/ruby-${ruby_version}" "${HOME}/.rbenv/versions/${ruby_version}"; do
+    if [ -x "${ruby_directory}/bin/ruby" ]; then
+        export PATH="${ruby_directory}/bin:${PATH}"
+        break
+    fi
+done
 NOHUP="false"
 DEV="false"
 

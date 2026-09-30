@@ -6,28 +6,13 @@ module Api
       before_action :set_blog, only: %i[show update destroy]
 
       def index
-        # Filter blogs posts based on `visibility`
-        blog_posts = if params[:visibility].present?
-                       if params[:visibility] == "Private"
-                         if params[:blog_type].present?
-                           BlogPost.where(blog_type: params[:blog_type]) # Include all blogs posts (Public, Private, and nil)
-                         else
-                           BlogPost.all # Include all blogs posts (Public, Private, and nil)
-                         end
-                       else
-                         if params[:blog_type].present?
-                           BlogPost.where(blog_type: params[:blog_type]).where.not(visibility: "Private") # Exclude "Private", include "Public" and nil
-                         else
-                           BlogPost.where.not(visibility: "Private") # Exclude "Private", include "Public" and nil
-                         end
-                       end
+        # Private visibility requires an authenticated session, not a query parameter.
+        blog_posts = if params[:visibility] == "Private" && signed_in?
+                       BlogPost.all
                      else
-                       if params[:blog_type].present?
-                         BlogPost.where(blog_type: params[:blog_type]).where.not(visibility: "Private")
-                       else
-                         BlogPost.where.not(visibility: "Private") # Exclude "Private", include "Public" and nil
-                       end
+                       BlogPost.publicly_visible
                      end
+        blog_posts = blog_posts.where(blog_type: params[:blog_type]) if params[:blog_type].present?
 
         # Apply Ransack search on the filtered results
         @q = blog_posts.ransack(params[:q])
@@ -107,7 +92,8 @@ module Api
         return unless params[:id].present?
 
         begin
-          @blog = BlogPost.find(params[:id])
+          posts = action_name == "show" && !signed_in? ? BlogPost.publicly_visible : BlogPost.all
+          @blog = posts.find(params[:id])
         rescue ActiveRecord::RecordNotFound
           render json: { error: "Blog post: #{params[:id]} not found" }, status: :not_found
         end

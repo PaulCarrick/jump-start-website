@@ -39,7 +39,7 @@ RSpec.configure do |config|
   config.include Rails.application.routes.url_helpers
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_paths = [ Rails.root.join("spec/fixtures") ]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -73,7 +73,6 @@ RSpec.configure do |config|
     Rails.application.routes.default_url_options[:host] = "http://#{ENV.fetch('SERVER_HOST', 'localhost')}:#{ENV.fetch('SERVER_PORT', '3000')}"
   end
 
-  Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :request
@@ -108,7 +107,7 @@ RSpec.configure do |config|
         example.run
 
         if example.exception
-          puts "Example #{example.full_description} failed with error: #{e.message}"
+          puts "Example #{example.full_description} failed with error: #{example.exception.message}"
           debugger
         end
       rescue => e

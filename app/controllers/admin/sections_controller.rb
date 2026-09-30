@@ -31,7 +31,7 @@ class Admin::SectionsController < Admin::AbstractAdminController
 
   def create
     begin
-      throw "You are not permitted to change #{class_title}." unless @application_user.admin?
+      raise "You are not permitted to change #{class_title}." unless @application_user.admin?
 
       set_item(true, get_params)
       get_item&.description = Utilities.pretty_print_html(get_item&.description) if get_item&.description.present?
@@ -82,7 +82,7 @@ class Admin::SectionsController < Admin::AbstractAdminController
     data[:description] = Utilities.pretty_print_html(data[:description]) if data[:description].present?
 
     begin
-      throw "You are not permitted to change #{class_title}." unless @application_user.admin?
+      raise "You are not permitted to change #{class_title}." unless @application_user.admin?
 
       set_item
 
@@ -114,7 +114,7 @@ class Admin::SectionsController < Admin::AbstractAdminController
 
   def destroy
     begin
-      throw "You are not permitted to change #{class_title}." unless @application_user.admin?
+      raise "You are not permitted to change #{class_title}." unless @application_user.admin?
 
       set_item
 

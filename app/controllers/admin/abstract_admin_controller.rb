@@ -31,89 +31,75 @@ class Admin::AbstractAdminController < ApplicationController
   end
 
   def index
-    begin
-      set_items
-    rescue => e
-      handle_error(:index, e)
-    end
+    set_items
+  rescue StandardError => e
+    handle_error(:index, e)
   end
 
   def new
-    begin
-      set_item(true)
-    rescue => e
-      handle_error(:index, e)
-    end
+    set_item(true)
+  rescue StandardError => e
+    handle_error(:index, e)
   end
 
   def create
-    begin
-      throw "You are not permitted to change #{class_title}." unless @application_user.admin?
+    raise "You are not permitted to change #{class_title}." unless @application_user.admin?
 
-      result = @model_class.create!(get_params)
+    result = @model_class.create!(get_params)
 
-      if result.persisted?
-        flash[:notice] = "#{controller_name.singularize.titleize} created successfully."
-        redirect_to action: :index, turbo: false
-      else
-        raise("Could not create #{controller_name.singularize.titleize}.")
-      end
-    rescue => e
-      handle_error(:new, e)
+    if result.persisted?
+      flash[:notice] = "#{controller_name.singularize.titleize} created successfully."
+      redirect_to action: :index, turbo: false
+    else
+      raise("Could not create #{controller_name.singularize.titleize}.")
     end
+  rescue StandardError => e
+    handle_error(:new, e)
   end
 
   def update
-    begin
-      throw "You are not permitted to change #{class_title}." unless @application_user.admin?
+    raise "You are not permitted to change #{class_title}." unless @application_user.admin?
 
-      set_item
+    set_item
 
-      if get_record&.update(get_params)
-        flash[:notice] = "#{controller_name.singularize.titleize} updated successfully."
-        # Fetch preserves PATCH across 302; 303 follows the list redirect with GET.
-        redirect_to action: :index, turbo: false, status: :see_other
-      else
-        raise("Could not update #{controller_name.singularize.titleize}, ID: #{params[:id]}.")
-      end
-    rescue => e
-      handle_error(:edit, e)
+    if get_record&.update(get_params)
+      flash[:notice] = "#{controller_name.singularize.titleize} updated successfully."
+      # Fetch preserves PATCH across 302; 303 follows the list redirect with GET.
+      redirect_to action: :index, turbo: false, status: :see_other
+    else
+      raise("Could not update #{controller_name.singularize.titleize}, ID: #{params[:id]}.")
     end
+  rescue StandardError => e
+    handle_error(:edit, e)
   end
 
   def edit
-    begin
-      set_item
-    rescue => e
-      handle_error(:index, e)
-    end
+    set_item
+  rescue StandardError => e
+    handle_error(:index, e)
   end
 
   def show
-    begin
-      set_item
-    rescue => e
-      handle_error(:index, e)
-    end
+    set_item
+  rescue StandardError => e
+    handle_error(:index, e)
   end
 
   def destroy
-    begin
-      throw "You are not permitted to change #{class_title}." unless @application_user.admin?
+    raise "You are not permitted to change #{class_title}." unless @application_user.admin?
 
-      set_item
+    set_item
 
-      result = get_record&.destroy
+    result = get_record&.destroy
 
-      if result&.destroyed?
-        flash[:notice] = "#{controller_name.singularize.titleize} deleted successfully."
-        redirect_to action: :index, turbo: false
-      else
-        raise("Could not delete #{controller_name.singularize.titleize}, ID: #{params[:id]}.")
-      end
-    rescue => e
-      handle_error(:index, e)
+    if result&.destroyed?
+      flash[:notice] = "#{controller_name.singularize.titleize} deleted successfully."
+      redirect_to action: :index, turbo: false
+    else
+      raise("Could not delete #{controller_name.singularize.titleize}, ID: #{params[:id]}.")
     end
+  rescue StandardError => e
+    handle_error(:index, e)
   end
 
   def model_title
@@ -177,36 +163,17 @@ class Admin::AbstractAdminController < ApplicationController
   end
 
   def set_items
-    @results                      = []
     @sort_column, @sort_direction = set_sorting(@default_column, @default_direction, params.deep_dup)
-    @q                            = set_search(params.deep_dup)
+    @q = set_search(params.deep_dup)
+    results = @has_query && @q.present? ? @q.result(distinct: true) : @model_class.all
 
-    if @has_query && @q.present?
-      if @has_sort && @sort_column.present? && @sort_direction.present?
-        @results = @q.result(distinct: true).order("#{ActiveRecord::Base.connection.quote_column_name(@sort_column)} #{@sort_direction}")
-        if @page_limit.present?
-          @pagy, @results = pagy(@results, limit: @page_limit)
-        else
-          @pagy, @results = pagy(@results)
-        end
-      else
-        @results = @q.result(distinct: true)
-
-        if @page_limit.present?
-          @pagy, @results = pagy(@results, limit: @page_limit)
-        else
-          @pagy, @results = pagy(@results)
-        end
-      end
-    else
-      if @sort_column.present? && @sort_direction.present?
-        @pagy, @results = pagy(@model_class.all.order("#{ActiveRecord::Base.connection.quote_column_name(@sort_column)} #{@sort_direction}"))
-      else
-        @pagy, @results = pagy(@model_class.all)
-      end
+    if @sort_column.present? && @sort_direction.present? && (!@has_query || @has_sort)
+      results = results.order(@sort_column => @sort_direction)
     end
 
-    @results = instance_variable_set(get_plural_record_name, @results)
+    options = @page_limit.present? ? { limit: @page_limit } : {}
+    @pagy, @results = pagy(results, **options)
+    instance_variable_set(get_plural_record_name, @results)
   end
 
   def get_params

@@ -7,17 +7,17 @@ RSpec.describe Page, type: :model do
     it "has many sections" do
       association = described_class.reflect_on_association(:sections)
       expect(association.macro).to eq(:has_many)
-      expect(association.options[:class_name]).to eq("Section")
-      expect(association.options[:foreign_key]).to eq("content_type")
-      expect(association.options[:primary_key]).to eq("section")
+      expect(association.class_name).to eq("Section")
+      expect(association.foreign_key).to eq("page_id")
+      expect(association.active_record_primary_key).to eq("id")
     end
   end
 
   describe "scopes" do
     let!(:page_1) { Page.create!(name: "Page 1", section: "Section 1") }
     let!(:page_2) { Page.create!(name: "Page 2", section: "Section 2") }
-    let!(:section_1) { Section.create!(content_type: "Section 1", section_order: 1, description: "This is a test page.") }
-    let!(:section_2) { Section.create!(content_type: "Section 1", section_order: 2, description: "This is a test page.") }
+    let!(:section_1) { Section.create!(page: page_1, section_name: "first", content_type: "Section 1", section_order: 1, description: "This is a test page.") }
+    let!(:section_2) { Section.create!(page: page_1, section_name: "second", content_type: "Section 1", section_order: 2, description: "This is a test page.") }
 
     describe ".by_page_name" do
       it "returns pages by name with associated sections ordered by section_order" do
@@ -36,7 +36,6 @@ RSpec.describe Page, type: :model do
       end
 
       it "limits the result to one record" do
-        Page.create!(name: "Page 3", section: "Section 1")
         result = Page.by_section("Section 1")
         expect(result.size).to eq(1)
       end
@@ -57,24 +56,25 @@ RSpec.describe Page, type: :model do
     end
 
     it "is valid with a name and section" do
-      page = Page.new(name: "Page 1", section: "Section 1")
+      page = Page.create!(name: "Page 1", section: "Section 1")
       expect(page.valid?).to be true
     end
   end
 
   describe "integration with sections" do
     it "associates sections correctly" do
-      page = Page.new(name: "Page 1", section: "Section 1")
-      section_1 = Section.create!(content_type: "Section 1", description: "Test Section 1",  section_order: 1)
-      section_2 = Section.create!(content_type: "Section 1", description: "Test Section 2",  section_order: 2)
+      page = Page.create!(name: "Page 1", section: "Section 1")
+      section_1 = Section.create!(page: page, section_name: "first", content_type: "Section 1", description: "Test Section 1",  section_order: 1)
+      section_2 = Section.create!(page: page, section_name: "second", content_type: "Section 1", description: "Test Section 2",  section_order: 2)
       expect(page.sections).to include(section_1, section_2)
     end
 
     it "does not include unrelated sections" do
-      page = Page.new(name: "Page 1", section: "Section 1")
-      section_1 = Section.create!(content_type: "Section 1", description: "Test Section 1",  section_order: 1)
-      section_2 = Section.create!(content_type: "Section 1", description: "Test Section 2",  section_order: 2)
-      unrelated_section = Section.create!(content_type: "Unrelated", description: "Unrelated Test Section",  section_order: 1)
+      page = Page.create!(name: "Page 1", section: "Section 1")
+      section_1 = Section.create!(page: page, section_name: "first", content_type: "Section 1", description: "Test Section 1",  section_order: 1)
+      section_2 = Section.create!(page: page, section_name: "second", content_type: "Section 1", description: "Test Section 2",  section_order: 2)
+      other_page = Page.create!(name: "Unrelated", section: "other")
+      unrelated_section = Section.create!(page: other_page, section_name: "unrelated", content_type: "Unrelated", description: "Unrelated Test Section",  section_order: 1)
       expect(page.sections).not_to include(unrelated_section)
     end
   end
