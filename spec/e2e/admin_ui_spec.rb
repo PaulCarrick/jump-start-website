@@ -515,16 +515,16 @@ RSpec.describe 'Admin Selenium UI', admin_e2e: true do
         area(resource)
         links = all('a[href*="sort="]').filter_map do |link|
           query = URI(link[:href]).query
-          [link.text, query] if CGI.parse(query || '').key?('sort')
+          [link.text, query] if URI.decode_www_form(query || '').to_h.key?('sort')
         end
         expect(links).not_to be_empty
         links.each do |text, query|
-          column = CGI.parse(query).fetch('sort').first
+          column = URI.decode_www_form(query).to_h.fetch('sort')
           click_link text, exact: true
-          expect(CGI.parse(URI(page.current_url).query || '')['sort']).to eq([column])
-          expect(CGI.parse(URI(page.current_url).query || '')['direction']).to eq(['asc'])
+          expect(URI.decode_www_form(URI(page.current_url).query || '').to_h['sort']).to eq(column)
+          expect(URI.decode_www_form(URI(page.current_url).query || '').to_h['direction']).to eq('asc')
           find("a[href*='sort=#{column}'][href*='direction=desc']").click
-          expect(CGI.parse(URI(page.current_url).query || '')['direction']).to eq(['desc'])
+          expect(URI.decode_www_form(URI(page.current_url).query || '').to_h['direction']).to eq('desc')
           area(resource)
         end
         click_link 'Clear Sort' if page.has_link?('Clear Sort', wait: 0)

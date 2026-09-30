@@ -17,6 +17,10 @@ from .utilities import (
     user_home,
 )
 
+RUBY_VERSION = (
+    (Path(__file__).resolve().parents[2] / ".ruby-version").read_text().strip()
+)
+
 
 def setup_rails(configuration):
     """
@@ -36,7 +40,7 @@ def setup_rails(configuration):
     display_message(0, "Setting configuration to use http...")
     display_message(0, "Installing bundler...")
     run_command(
-        f'cd {rails_dir} && gem install bundler -v "~> 2.5"',
+        f'cd {rails_dir} && gem install bundler -v "~> 4.0"',
         True,
         False,
         None,
@@ -98,20 +102,20 @@ def setup_rails(configuration):
 
 def install_ruby(username):
     """
-    Install Ruby 3.2.2.
+    Install the Ruby version pinned by the application.
 
     Args:
         username (str): The user to install ruby for.
     """
     home_dir = user_home(username)
     rubies_dir = f"{home_dir}/.rubies"
-    install_dir = f"{rubies_dir}/ruby-3.2.2"
+    install_dir = f"{rubies_dir}/ruby-{RUBY_VERSION}"
     path_string = f"PATH={install_dir}/bin:$PATH"
 
     if ruby_installed(username):
         choice = (
             input(
-                "Ruby >= 3.2 is already installed. "
+                f"Ruby {RUBY_VERSION} is already installed. "
                 "Do you want to install it locally anyway "
                 "(this will take a while) (Y/n/q)?: "
             )
@@ -127,11 +131,11 @@ def install_ruby(username):
         elif choice == "n":
             return
 
-    display_message(0, "Installing Ruby 3.2.2...")
+    display_message(0, f"Installing Ruby {RUBY_VERSION}...")
     display_message(0, "Getting required packages...")
     run_command("apt update", True, False)
     run_command(
-        "apt install -y curl build-essential libssl-dev libreadline-dev zlib1g-dev",
+        "apt install -y curl build-essential libssl-dev libreadline-dev zlib1g-dev libyaml-dev",
         True,
         False,
     )
@@ -154,11 +158,13 @@ def install_ruby(username):
     shutil.rmtree(ruby_install_dir)
     display_message(0, "'ruby-install' installed.")
 
-    # Install Ruby 3.2.2
+    # Install Ruby 4.0.7
     cwd = Path.cwd()
 
     os.chdir(home_dir)
-    display_message(0, "Installing Ruby 3.2.2 from source (this will take a while)...")
+    display_message(
+        0, f"Installing Ruby {RUBY_VERSION} from source (this will take a while)..."
+    )
     subprocess.run(
         [
             "ruby-install",
@@ -167,14 +173,14 @@ def install_ruby(username):
             "-j",
             "2",
             "ruby",
-            "3.2.2",
+            RUBY_VERSION,
             "--",
             "--disable-install-rdoc",
         ],
         check=True,
     )
     change_ownership_recursive(install_dir, username, username)
-    display_message(0, "Ruby 3.2.2 installed.")
+    display_message(0, f"Ruby {RUBY_VERSION} installed.")
 
     # Set up environment variables
     if os.path.exists(".profile"):
@@ -367,40 +373,33 @@ def install_service(params):
 
 def ruby_installed(username):
     """
-    Check to see if the Ruby binary is installed and is at version 3.2 or greater
+    Check to see if the Ruby binary is installed and is at the pinned version
 
     Args:
         username (str): The username of the user to check for Ruby.
     Returns:
-        bool: True if the Ruby binary >= 3.2 is installed, False otherwise.
+        bool: True if the pinned Ruby binary is installed, False otherwise.
     """
     result = False
     ruby_path = get_ruby_path(username)
 
     if ruby_path:
-        display_message(
-            0, f"Checking to see if Ruby >= 3.2 is installed at {ruby_path}..."
-        )
+        display_message(0, f"Checking for Ruby {RUBY_VERSION} at {ruby_path}...")
 
-        results = run_command(f"{ruby_path} -v", False, True, 5, username)
+        results = run_command([ruby_path, "-v"], False, True, 5, username)
 
         if results:
             version_match = re.search(r"ruby (\d+)\.(\d+)\.(\d+)", results)
 
             if version_match:
-                major, minor, _patch = [
-                    int(version_match.group(1)),
-                    int(version_match.group(2)),
-                    int(version_match.group(3)),
-                ]
-
-                if (major, minor) >= (3, 2):
-                    result = True
+                installed_version = tuple(map(int, version_match.groups()))
+                required_version = tuple(map(int, RUBY_VERSION.split(".")))
+                result = installed_version == required_version
 
     if result:
-        display_message(0, "Ruby >= 3.2 is installed.")
+        display_message(0, f"Ruby {RUBY_VERSION} is installed.")
     else:
-        display_message(0, "Ruby >= 3.2 is not installed.")
+        display_message(0, f"Ruby {RUBY_VERSION} is not installed.")
 
     return result
 

@@ -252,10 +252,14 @@ class DialogAndRubyTests(unittest.TestCase):
         ):
             self.assertEqual(rails_support.get_ruby_path("owner"), "/ruby/path")
 
-    def test_ruby_four_is_newer_than_three_two(self):
+    def test_pinned_ruby_is_accepted(self):
         with patch.object(
             rails_support, "get_ruby_path", return_value="/ruby"
-        ), patch.object(rails_support, "run_command", return_value="ruby 4.0.0"):
+        ), patch.object(
+            rails_support,
+            "run_command",
+            return_value=f"ruby {rails_support.RUBY_VERSION}",
+        ):
             self.assertTrue(rails_support.ruby_installed("owner"))
 
 
