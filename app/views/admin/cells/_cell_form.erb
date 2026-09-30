@@ -15,15 +15,16 @@
     "CellEditor",
     {
       cell:                  controller.get_item,
-      availableSectionNames: @section_names,
-      availableImages:       @images,
-      availableImageGroups:  @groups,
-      availableVideos:       @videos,
-      submitPath:            controller.get_item&.persisted? ? admin_cell_url(controller.get_item) : admin_cells_url,
-      successPath:           success_path,
-      cancelPath:            cancel_path,
-      readOnlyContentType:   read_only_content_type,
-      newCell:               new_cell
+      editorOptions: {
+        availableSectionNames: @section_names,
+        availableImages: @images,
+        availableImageGroups: @groups,
+        availableVideos: @videos,
+        returnUrl: success_path,
+        cancelUrl: cancel_path,
+        readOnlySectionName: read_only_content_type,
+        newCell: new_cell
+      }
     }
   )
 %>

@@ -106,6 +106,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_200619) do
     t.integer "parent_id"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "page_id"
   end
 
   create_table "image_files", force: :cascade do |t|
@@ -132,6 +133,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_200619) do
     t.integer "parent_id"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "page_id"
   end
 
   create_table "pages", force: :cascade do |t|
@@ -141,6 +143,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_200619) do
     t.string "access"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.integer "menu_item_id"
+    t.integer "footer_item_id"
+    t.index ["footer_item_id"], name: "index_pages_on_footer_item_id"
+    t.index ["menu_item_id"], name: "index_pages_on_menu_item_id"
     t.index ["name"], name: "index_pages_on_name", unique: true
     t.index ["section"], name: "index_pages_on_section", unique: true
   end
@@ -160,7 +166,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_200619) do
   end
 
   create_table "sections", force: :cascade do |t|
-    t.string "content_type", null: false
+    t.string "content_type"
     t.string "section_name", null: false
     t.integer "section_order"
     t.string "image"
@@ -236,5 +242,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_200619) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cells", "sections"
+  add_foreign_key "pages", "footer_items"
+  add_foreign_key "pages", "menu_items"
   add_foreign_key "sections", "pages"
 end

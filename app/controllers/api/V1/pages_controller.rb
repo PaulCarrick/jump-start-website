@@ -4,6 +4,7 @@
 
 module Api
   module V1
+    # noinspection RailsParamDefResolve
     class PagesController < ApplicationController
       def index
         @q            = Page.ransack(params[:q])
@@ -94,35 +95,61 @@ module Api
           :section,
           :title,
           :access,
-          sections_attributes: [
-                                 :id,
-                                 :content_type,
-                                 :section_name,
-                                 :section_order,
-                                 :image,
-                                 :link,
-                                 :description,
-                                 :checksum,
-                                 :row_style,
-                                 :div_ratio,
-                                 :_destroy,
-                                 { image_attributes: {}, text_attributes: {}, formatting: {} }, # Moved hash attributes inside {}
-                                 cells_attributes: [
-                                                     :id,
-                                                     :section_name,
-                                                     :cell_name,
-                                                     :cell_type,
-                                                     :cell_order,
-                                                     :content,
-                                                     :image,
-                                                     :link,
-                                                     :width,
-                                                     :checksum,
-                                                     :_destroy,
-                                                     options:    {},
-                                                     formatting: {}
-                                                   ]
-                               ]
+          menu_item_attributes:   [
+                                    :id,
+                                    :label,
+                                    :menu_type,
+                                    :icon,
+                                    :options,
+                                    :link,
+                                    :access,
+                                    :menu_order,
+                                    :parent_id,
+                                    :page_id
+                                  ],
+          footer_item_attributes: [
+                                    :id,
+                                    :label,
+                                    :icon,
+                                    :options,
+                                    :link,
+                                    :access,
+                                    :footer_order,
+                                    :parent_id,
+                                    :page_id
+                                  ],
+          sections_attributes:    [
+                                    :id,
+                                    :content_type,
+                                    :section_name,
+                                    :section_order,
+                                    :image,
+                                    :link,
+                                    :description,
+                                    :checksum,
+                                    :row_style,
+                                    :div_ratio,
+                                    :_destroy,
+                                    {
+                                      image_attributes: {},
+                                      text_attributes:  {},
+                                      formatting:       {},
+                                      cells_attributes: [
+                                                          :id,
+                                                          :section_name,
+                                                          :cell_name,
+                                                          :cell_type,
+                                                          :cell_order,
+                                                          :content,
+                                                          :image,
+                                                          :link,
+                                                          :width,
+                                                          :checksum,
+                                                          :_destroy,
+                                                          { options: {}, formatting: {} }
+                                                        ]
+                                    }
+                                  ]
         )
       end
     end

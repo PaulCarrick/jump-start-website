@@ -14,6 +14,7 @@
   react_component(
     "SectionEditor",
     {
+<<<<<<< Updated upstream
       section:               controller.get_item,
       availableContentTypes: @content_types,
       availableImages:       @images,
@@ -24,6 +25,19 @@
       cancelPath:            cancel_path,
       readOnlyContentType:   read_only_content_type,
       newSection:            new_section
+=======
+      section:               controller.get_item&.renderable_section,
+      options: {
+        availableSectionNames: @content_types,
+        availableImages: @images,
+        availableImageGroups: @groups,
+        availableVideos: @videos,
+        returnUrl: success_path,
+        cancelUrl: cancel_path,
+        readOnlySectionName: read_only_content_type,
+        newSection: new_section
+      }
+>>>>>>> Stashed changes
     }
   )
 %>

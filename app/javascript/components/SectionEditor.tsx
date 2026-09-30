@@ -67,13 +67,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     }
   }, [ section ]);
 
-  if (!sectionData) {
-    if (section)
-      setSectionData(section as Section);
-    else
-      setError("No section exists to edit!");
-  }
-
   // OnChange/OnBlur Callback
   const setValue = (newValue: any, attribute: string) => {
     setSectionData(prev => {
@@ -174,9 +167,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     }
 
     if (isPresent(sectionData?.id))
-      result = updateSection(sectionData as Section);
+      result = updateSection(sectionData as Section, setError);
     else
-      result = createSection(sectionData as Section);
+      result = createSection(sectionData as Section, setError);
 
     if (result && options.returnUrl) window.location.href = options.returnUrl;
   };
@@ -190,6 +183,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       window.location.href = options.cancelUrl;
     }
   };
+
+  if (!sectionData) return <div>No section exists to edit.</div>;
 
   if (!hasCells(sectionData)) {
     return (

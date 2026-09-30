@@ -39,6 +39,19 @@ export function renderImage(
     availableVideosData: string[] | null,
     setValue: any
 ) {
+  return <ImagePicker image={image} imageType={imageType}
+    availableImagesData={availableImagesData} availableImageGroupsData={availableImageGroupsData}
+    availableVideosData={availableVideosData} setValue={setValue} />;
+}
+
+function ImagePicker({ image, imageType, availableImagesData, availableImageGroupsData, availableVideosData, setValue }: {
+  image: string | null;
+  imageType: ImageType | null;
+  availableImagesData: string[] | null;
+  availableImageGroupsData: string[] | null;
+  availableVideosData: string[] | null;
+  setValue: any;
+}) {
   const [ uploadedImage, setUploadedImage ] = useState<string | null>(null);
   const [ imageName, setImageName ]         = useState<string>(""); // New state for image name
   const [ selectedFile, setSelectedFile ]   = useState<File | null>(null); // Store file before submission

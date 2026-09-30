@@ -80,18 +80,6 @@ const CellEditor: React.FC<CellEditorProps> = ({
     }
   }, [ cell ]);
 
-  if (!cellData) {
-    if (cell) {
-      setCellData(cell as Cell);
-    }
-    else {
-      if (!editorOptions?.newCell)
-        setError("No cell exists to edit!");
-
-      setCellData(genericCell("new-section"));
-    }
-  }
-
   // OnChange/OnBlur Callback
   const setValue = (newValue: any, attribute: string) => {
     if (attribute === "image_type") {
@@ -146,6 +134,8 @@ const CellEditor: React.FC<CellEditorProps> = ({
       window.location.href = editorOptions.cancelUrl;
     }
   };
+
+  if (!cellData) return <div>No column exists to edit.</div>;
 
   return (
       <ErrorBoundary>

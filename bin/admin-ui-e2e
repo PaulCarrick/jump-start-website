@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+# Fresh dedicated test DB; never replicate or reset development data.
+require 'fileutils'
+require 'json'
+root = File.expand_path('..', __dir__)
+Dir.chdir(root)
+ENV['RAILS_ENV'] = 'test'
+ENV['ADMIN_UI_E2E'] = '1'
+ENV['DB_DATABASE'] = "jump_start_ui_e2e_#{Process.pid}_#{Time.now.to_i}"
+ENV.delete('DATABASE_URL'); ENV.delete('DOCKERIZED')
+ENV['SE_CACHE_PATH'] ||= File.join(root, 'tmp/selenium')
+ENV['E2E_ARTIFACTS_DIR'] ||= File.join(root, 'tmp/admin-ui-e2e', "#{Time.now.strftime('%Y%m%d-%H%M%S')}-#{Process.pid}")
+FileUtils.mkdir_p(ENV['E2E_ARTIFACTS_DIR'])
+puts "Selenium artifacts: #{ENV['E2E_ARTIFACTS_DIR']}"
+status = 1
+run_state = { pid: Process.pid, started_at: Time.now.utc.strftime('%Y-%m-%dT%H:%M:%SZ'),
+  artifacts_dir: ENV['E2E_ARTIFACTS_DIR'], dry_run: ARGV.include?('--dry-run'),
+  state: 'running', phase: 'build' }
+status_path = File.join(ENV['E2E_ARTIFACTS_DIR'], 'run-status.json')
+write_status = lambda do
+  temporary_path = "#{status_path}.tmp"
+  File.write(temporary_path, JSON.pretty_generate(run_state))
+  File.rename(temporary_path, status_path)
+end
+write_status.call
+at_exit do
+  exception = $!
+  exit_code = exception.is_a?(SystemExit) ? exception.status : (exception ? 1 : status)
+  run_state.merge!(state: 'finished', finished_at: Time.now.utc.strftime('%Y-%m-%dT%H:%M:%SZ'),
+    exit_code: exit_code, results_path: File.join(ENV['E2E_ARTIFACTS_DIR'], 'results.json'))
+  run_state[:error] = exception.message if exception && !exception.is_a?(SystemExit)
+  write_status.call
+end
+# esbuild resolves TSX directly; do not overwrite the user's generated TypeScript.
+abort 'Could not build front-end assets' unless system('npm', 'run', 'build')
+# esbuild also emits Quill CSS as application.css; restore the full Bootstrap
+# stylesheet after bundling so responsive controls have their real dimensions.
+abort 'Could not build front-end styles' unless system('npm', 'run', 'build:css')
+begin
+  run_state[:phase] = 'database_setup'; write_status.call
+  abort 'Could not prepare disposable E2E database' unless system('bundle', 'exec', 'rails', 'db:create', 'db:schema:load')
+  run_state[:phase] = 'tests'; write_status.call
+  system('bundle', 'exec', 'rspec', 'spec/e2e/admin_ui_spec.rb', '--format', 'documentation', '--format', 'json', '--out', File.join(ENV['E2E_ARTIFACTS_DIR'], 'results.json'), *ARGV)
+  status = $?.exitstatus
+ensure
+  run_state[:cleanup_started_at] = Time.now.utc.strftime('%Y-%m-%dT%H:%M:%SZ'); write_status.call
+  run_state[:database_cleanup_ok] = system('bundle', 'exec', 'rails', 'db:drop')
+end
+exit(status || 1)

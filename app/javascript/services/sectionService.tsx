@@ -150,7 +150,7 @@ export function textSection(
     content: string | null = "Replace with your text",
     order: number | null   = 1
 ): Section {
-  const cells: Cell[]    = generateCells(sectionName, contentType, "text-single", content)
+  const cells: Cell[]    = generateCells(sectionName, "text-single", content)
   const results: Section = genericSection(sectionName, contentType, cells, order);
 
   return results;
@@ -178,7 +178,7 @@ export function textTopSections(
     order: number | null        = 1,
 ): Section[] {
   const results: Section[] = [];
-  let cells: Cell[]        = generateCells(sectionName, contentType, "text-single", content);
+  let cells: Cell[]        = generateCells(sectionName, "text-single", content);
   const textName           = sectionName + "_text";
   const imageName          = sectionName + "_image";
 
@@ -210,7 +210,7 @@ export function textBottomSections(
 
   results.push(genericSection(textName, contentType, cells, order));
 
-  cells = generateCells(textName, contentType, "text-single", content);
+  cells = generateCells(textName, "text-single", content);
 
   results.push(genericSection(imageName, contentType, cells, (order + 1)));
 
@@ -263,7 +263,7 @@ export function headerSections(
 
   results.push(genericSection(topName, contentType, cells, order));
 
-  cells = generateCells(bottomName, contentType, "text-right", content);
+  cells = generateCells(bottomName, "text-right", content);
 
   results.push(genericSection(bottomName, contentType, cells, (order + 1)));
 

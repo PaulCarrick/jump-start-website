@@ -67,8 +67,8 @@ function renderCell(cell, editing = false, noBorder = false, noHidden = false, o
                    onClick={(e) => {
                      e.preventDefault();
 
-                     if (onChange)
-                       onChange(cell.index, "delete");
+                     if (onChange && window.confirm("Are you sure?"))
+                       onChange(cell, "delete");
                    }}>
                   Delete Column
                 </a>
@@ -109,7 +109,9 @@ function renderCell(cell, editing = false, noBorder = false, noHidden = false, o
               </div>
               <div className="col-4">
                 {urls?.delete?.url && (
-                    <a href={urls["delete"]["url"]} data-confirm="Are you sure?">
+                    <a href={urls["delete"]["url"]} data-turbo="false" onClick={(event) => {
+                      if (!window.confirm("Are you sure?")) event.preventDefault();
+                    }}>
                       Delete Column
                     </a>)
                 }
