@@ -540,6 +540,22 @@ RSpec.describe 'Admin Selenium UI', admin_e2e: true do
       expect(page).to have_no_link('Edit Column', exact: true)
     end
 
+    it 'opens the contact form from a public navigation link' do
+      create_link_item('menu_items', 'Contact Form')
+      open_record('menu_items', 'Contact Form', 'Edit')
+      fill_field 'Options', with: ''
+      fill_field 'Link', with: '/contacts/new'
+      click_button 'Save Menu Item'
+      public_visit('/')
+      within('header') { click_link 'Contact Form', exact: true }
+      expect(page).to have_current_path('/contacts/new', ignore_query: true)
+      expect(page).to have_content('Contact Request Form')
+      expect(page).to have_field('Full Name*')
+      expect(page).to have_field('Email Address*')
+      expect(page).to have_css('trix-editor')
+      expect(page).to have_button('Send Message')
+    end
+
     it 'publishes page content and title updates, preserves canceled edits, and removes deleted pages' do
       create_page
       public_visit('/e2e-page')

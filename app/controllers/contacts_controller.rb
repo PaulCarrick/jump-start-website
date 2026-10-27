@@ -17,9 +17,14 @@ class ContactsController < ApplicationController
 
   def create
     begin
-      @contact = Contact.create!(contact_params)
-
-      # raise "Invalid Captcha." unless verify_recaptcha(model: @contact)
+      @contact = Contact.new(contact_params)
+      unless Recaptcha.configuration.site_key.present? && Recaptcha.configuration.secret_key.present? &&
+             verify_recaptcha(model: @contact, action: "contact", minimum_score: 0.5)
+        @error_message = "reCAPTCHA verification failed. Please try again."
+        render :new, status: :unprocessable_content
+        return
+      end
+      @contact.save!
 
       ContactMailer.contact_email(@contact.name,
                                   @contact.email,
