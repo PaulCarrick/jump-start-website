@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Admin::FooterItemsController, type: :controller do
-  FooterItem.delete_all
 
   let!(:admin_user) { create_admin_user }
   include_context "debug setup"

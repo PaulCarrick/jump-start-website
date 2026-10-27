@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe Admin::BlogPostsController, type: :controller do
   include_context "debug setup"
 
-  BlogPost.destroy_all # Clear out existing records for testing
 
   let!(:admin_user) { create_admin_user }
   let!(:blog_post) {

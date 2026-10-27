@@ -42,7 +42,7 @@ class ContactsController < ApplicationController
       @error_message = "You cannot submit the form twice with the exact same information. Please at least change the message."
       flash[:error]  = @error_message
 
-      if @contact.present?
+      if @contact&.persisted?
         @contact.submit_information = @error_message
         @contact.save
       end
@@ -55,7 +55,7 @@ class ContactsController < ApplicationController
       @error_message = e&.message unless @error_message.present?
       flash[:error]  = @error_message
 
-      if @contact.present?
+      if @contact&.persisted?
         @contact.submit_information = @error_message
         @contact.save
       end

@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :page do
-    name { "test" }
+    sequence(:name) { |n| "test-page-#{n}" }
     title { "This is a test." }
-    section { "test" }
+    section { name }
     access { "" }
   end
 end

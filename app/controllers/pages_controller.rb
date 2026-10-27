@@ -33,6 +33,7 @@ class PagesController < ApplicationController
       @contents = renderable_contents
     else
       flash[:alert] = "Can't find page for: #{params[:id]}."
+      render :show, status: :not_found
     end
   end
 

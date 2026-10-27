@@ -4,7 +4,7 @@ RSpec.describe PagesController, type: :controller do
   include_context "debug setup"
 
   let!(:page) { create(:page, name: "home", section: "content") }
-  let!(:section) { create(:section, section_name: "main-section", content_type: "content", image: "ImageFile:sample.jpg", description: "<b>Description</b>") }
+  let!(:section) { create(:section, page: page, section_name: "main-section", content_type: "content", image: "ImageFile:sample.jpg", description: "<b>Description</b>") }
   let!(:image_file) { create(:image_file, name: "sample.jpg", caption: "Sample Caption", description: "Sample Image Description") }
   let(:missing_image_path) { ActionController::Base.helpers.image_path("missing-image.jpg") }
 
@@ -24,7 +24,7 @@ RSpec.describe PagesController, type: :controller do
 
       it "builds contents from the page sections" do
         expect(assigns(:contents)).to be_an(Array)
-        expect(assigns(:contents)).to include(section)
+        expect(assigns(:contents).map { |item| item.fetch("id") }).to include(section.id)
       end
 
       it "renders the show template" do
@@ -35,8 +35,8 @@ RSpec.describe PagesController, type: :controller do
     context "when the page does not exist" do
       before { get :show, params: { id: "non-existent-page" } }
 
-      it "redirects to the root path with an alert" do
-        expect(response).to redirect_to(root_path)
+      it "reports a missing page with an alert" do
+        expect(response).to have_http_status(:not_found)
         expect(flash[:alert]).to eq("Can't find page for: non-existent-page.")
       end
     end

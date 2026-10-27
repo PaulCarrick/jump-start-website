@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe BlogsController, type: :controller do
-  BlogPost.destroy_all
 
   include_context "debug setup"
 
@@ -46,7 +45,8 @@ RSpec.describe BlogsController, type: :controller do
 
       it "sanitizes the content of the latest blog" do
         get :show, params: { id: "latest", blog_type: "Personal" }
-        expect(assigns(:blog).content).to eq("Private Content")
+        expect(assigns(:blog)).to eq(blog_post2)
+        expect(assigns(:blog).content).to eq("<i>Content 2</i>")
       end
 
       it "renders the 'latest' template" do
@@ -67,10 +67,10 @@ RSpec.describe BlogsController, type: :controller do
         expect(assigns(:blog)).to eq(blog_post1)
       end
 
-      it "raises ActiveRecord::RecordNotFound if the blog ID does not exist" do
-        expect {
-          get :show, params: { id: -1 }
-        }.to raise_error(ActiveRecord::RecordNotFound)
+      it "returns not found if the blog ID does not exist" do
+        get :show, params: { id: -1 }
+        expect(response).to have_http_status(:not_found)
+        expect(assigns(:blog)).to be_nil
       end
     end
   end

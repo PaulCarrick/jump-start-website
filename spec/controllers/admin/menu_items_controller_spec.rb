@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe Admin::MenuItemsController, type: :controller do
   include_context "debug setup"
 
-  MenuItem.delete_all
 
   let!(:admin_user) { create_admin_user }
   let(:valid_attributes) {

@@ -28,7 +28,14 @@ RSpec.describe "Contact Form", type: :system do
   end
 
   describe "Submitting the Contact Form" do
-    before { visit new_contact_path }
+    before do
+      allow(Recaptcha.configuration).to receive(:site_key).and_return("test-site-key")
+      allow(Recaptcha.configuration).to receive(:secret_key).and_return("test-secret-key")
+      allow_any_instance_of(ContactsController).to receive(:verify_recaptcha).and_return(true)
+      visit new_contact_path
+      # Stub Google's external client only; the real form and controller still submit.
+      page.execute_script("window.grecaptcha = { ready: function(fn) { fn(); }, execute: function() { return new Promise(function(resolve) { setTimeout(function() { resolve('test-token'); }, 25); }); } };")
+    end
 
     context "when all required fields are filled correctly" do
       it "submits the form successfully and displays a success message" do
@@ -37,7 +44,6 @@ RSpec.describe "Contact Form", type: :system do
         fill_in "Phone Number (optional)", with: "+1 (555) 555-5555"
         fill_in_trix_editor("contact_message", with: "I am interested in your services.")
         click_button "Send Message"
-        sleep 5
         expect(page).to have_content("The contact information was successfully sent.")
         expect(page).to have_title("#{site_setup.site_name} - Contact")
       end

@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe Admin::PagesController, type: :controller do
   include_context "debug setup"
 
-  Page.delete_all
 
   let!(:admin_user) { create_admin_user }
   let(:valid_attributes) { { name: "Test Page", title: "Test Page", section: "test" } }
@@ -18,7 +17,6 @@ RSpec.describe Admin::PagesController, type: :controller do
            section_name:  "section")
   }
 
-  let!(:admin_user) { create_admin_user }
   before do
     allow(controller).to receive(:controller_name).and_return("pages")
   end
@@ -62,7 +60,7 @@ RSpec.describe Admin::PagesController, type: :controller do
     context "with valid attributes" do
       it "creates a new record and redirects to index" do
         expect {
-          post :create, params: { page: valid_attributes }
+          post :create, params: { page: valid_attributes.merge(name: "Another Page", section: "another") }
         }.to change(Page, :count).by(1)
         expect(response).to redirect_to(action: :index, turbo: false)
         expect(flash[:notice]).to eq("Page created successfully.")
@@ -73,7 +71,7 @@ RSpec.describe Admin::PagesController, type: :controller do
       it "does not create a new record and redirects to new" do
         expect {
           post :create, params: { page: invalid_attributes }
-        }.to change(ImageFile, :count).by(0)
+        }.not_to change(Page, :count)
 
         expect(flash[:error]).to be_present
         expect(response).to redirect_to(action: :new, turbo: false)

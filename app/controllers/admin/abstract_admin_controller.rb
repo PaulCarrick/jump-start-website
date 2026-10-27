@@ -6,6 +6,8 @@ class Admin::AbstractAdminController < ApplicationController
   include Pagy::Backend
   include Persistence
 
+  before_action :authenticate_user!
+
   def initialize
     if self.class == Admin::AbstractAdminController
       raise NotImplementedError, "#{self.class} is an abstract class and cannot be instantiated."

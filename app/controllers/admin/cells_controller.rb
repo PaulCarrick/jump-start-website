@@ -92,7 +92,7 @@ class Admin::CellsController < Admin::AbstractAdminController
 
       set_item
 
-      get_record&.update!(get_params)
+      get_record&.update!(data)
 
       if request.headers['Content-Type'] === "application/json"
         render json: { message: 'Cell updated successfully' }, status: :ok
@@ -159,36 +159,19 @@ class Admin::CellsController < Admin::AbstractAdminController
   end
 
   def get_params
-    section = params.require(:section)
-
-    section[:cells_attributes] = section.delete(:cells) if section[:cells].present?
-
-    section.permit(
-      :content_type,
+    params.require(:cell).permit(
+      :section_id,
       :section_name,
-      :section_order,
+      :cell_name,
+      :cell_type,
+      :cell_order,
+      :content,
       :image,
       :link,
-      :description,
+      :width,
       :checksum,
-      :row_style,
-      :div_ratio,
-      image_attributes: {},
-      text_attributes:  {},
-      formatting:       {},
-      cells_attributes: [
-                          :id,
-                          :cell_name,
-                          :cell_type,
-                          :cell_order,
-                          :content,
-                          :image,
-                          :link,
-                          :width,
-                          :_destroy,
-                          formatting: {},
-                          options:    {}
-                        ]
+      formatting: {},
+      options: {}
     )
   end
 end

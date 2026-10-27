@@ -86,7 +86,7 @@ class Admin::SectionsController < Admin::AbstractAdminController
 
       set_item
 
-      get_record&.update!(get_params)
+      get_record&.update!(data)
 
       if request.headers['Content-Type'] === "application/json"
         render json: { message: 'Section updated successfully' }, status: :ok
@@ -194,6 +194,7 @@ class Admin::SectionsController < Admin::AbstractAdminController
 
   def get_params
     params.require(:section).permit(
+      :page_id,
       :content_type,
       :section_name,
       :section_order,

@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe Admin::UsersController, type: :controller do
   include Devise::Test::ControllerHelpers
 
-  User.destroy_all
 
   let!(:admin_user) { create_admin_user }
   let!(:user) { create(:user) }
