@@ -21,7 +21,8 @@ class ContactMailer < ApplicationMailer
       password:             site_information.smtp_password,
       authentication:       site_information.smtp_authentication,
       enable_starttls_auto: true,
-      enable_ssl:           false
+      ssl:                  false,
+      tls:                  false
     )
   end
 end
