@@ -3,8 +3,11 @@
 # Abstract base class for Admin Items
 
 class Admin::AbstractAdminController < ApplicationController
+  include AdminReturnNavigation
   include Pagy::Backend
   include Persistence
+
+  before_action :authenticate_user!
 
   def initialize
     if self.class == Admin::AbstractAdminController
@@ -49,7 +52,7 @@ class Admin::AbstractAdminController < ApplicationController
 
     if result.persisted?
       flash[:notice] = "#{controller_name.singularize.titleize} created successfully."
-      redirect_to action: :index, turbo: false
+      redirect_to admin_return_url, status: :see_other
     else
       raise("Could not create #{controller_name.singularize.titleize}.")
     end
@@ -65,7 +68,7 @@ class Admin::AbstractAdminController < ApplicationController
     if get_record&.update(get_params)
       flash[:notice] = "#{controller_name.singularize.titleize} updated successfully."
       # Fetch preserves PATCH across 302; 303 follows the list redirect with GET.
-      redirect_to action: :index, turbo: false, status: :see_other
+      redirect_to admin_return_url, status: :see_other
     else
       raise("Could not update #{controller_name.singularize.titleize}, ID: #{params[:id]}.")
     end
@@ -94,7 +97,7 @@ class Admin::AbstractAdminController < ApplicationController
 
     if result&.destroyed?
       flash[:notice] = "#{controller_name.singularize.titleize} deleted successfully."
-      redirect_to action: :index, turbo: false
+      redirect_to admin_return_url, status: :see_other
     else
       raise("Could not delete #{controller_name.singularize.titleize}, ID: #{params[:id]}.")
     end
@@ -149,7 +152,7 @@ class Admin::AbstractAdminController < ApplicationController
     @error_message = "There was an error with the #{@model_class}: #{@error_message}"
     flash[:error]  = @error_message
 
-    redirect_to action: action, turbo: false
+    redirect_to url_for(action: action, id: params[:id], return_url: @admin_return_url, only_path: true), status: :see_other
   end
 
   def set_item(create = false, create_params = {})

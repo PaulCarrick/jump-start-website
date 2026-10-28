@@ -64,8 +64,10 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
 
       switch (attribute) {
         case "sectionName":
+        case "section_name":
           return { ...prev, section_name: newValue as string };
         case "sectionOrder":
+        case "section_order":
           return { ...prev, section_order: Number(newValue) };
         default:
           return prev;
@@ -196,6 +198,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           options={options}
           onFinished={cellsGenerated}
         />
+        <button type="button" className="btn btn-secondary mt-2" onClick={handleCancel}>
+          Cancel
+        </button>
       </div>
     );
   } else if (

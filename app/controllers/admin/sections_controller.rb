@@ -23,10 +23,26 @@ class Admin::SectionsController < Admin::AbstractAdminController
 
     setup_options
 
-    @return_url             = params[:return_url].present? ? params[:return_url] : admin_sections_url
-    @cancel_url             = params[:cancel_url].present? ? params[:cancel_url] : admin_sections_url
+    @return_url = admin_return_url
+    @cancel_url = safe_admin_return_url(params[:cancel_url]) || admin_return_url
     @read_only_content_type = params[:read_only_content_type].present? ? params[:read_only_content_type] : false
     @new_section            = params[:new_section].present? ? params[:new_section] : false
+  end
+
+  def duplicate
+    page = Page.find(params[:page_id])
+    unless @application_user&.admin?
+      redirect_to edit_admin_page_path(page, return_url: params[:return_url].present? ? admin_return_url : nil), status: :see_other, alert: "You are not permitted to duplicate sections."
+      return
+    end
+
+    section = page.sections.find(params[:id])
+    copy = section.duplicate!(name: params[:section_name])
+    redirect_to edit_admin_page_path(page, section_name: copy.section_name, return_url: params[:return_url].present? ? admin_return_url : nil),
+                status: :see_other, notice: "Section duplicated successfully."
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique => e
+    redirect_to edit_admin_page_path(page, return_url: params[:return_url].present? ? admin_return_url : nil), status: :see_other,
+                alert: "Could not duplicate section: #{e.message}"
   end
 
   def create
@@ -40,7 +56,7 @@ class Admin::SectionsController < Admin::AbstractAdminController
       if request.headers['Content-Type'] === "application/json"
         render json: { message: 'Section created successfully', id: get_item.id }, status: :ok
       else
-        redirect_to admin_sections_path, turbo: false, notice: "Section created successfully."
+        redirect_to admin_return_url, status: :see_other, notice: "Section created successfully."
       end
     rescue => e
       if request.headers['Content-Type'] === "application/json"
@@ -53,19 +69,15 @@ class Admin::SectionsController < Admin::AbstractAdminController
 
   def edit
     super
-    @return_url = params["return_url"].present? ? params["return_url"] : admin_section_url(get_item)
-    @cancel_url = URI(params["cancel_url"].present? ? params["cancel_url"] : admin_sections_url)
+    @return_url = admin_return_url
+    @cancel_url = URI(safe_admin_return_url(params[:cancel_url]) || admin_return_url)
 
-    if params[:new_section].present? && params[:new_section] == "true"
-      @cancel_url.query = URI.encode_www_form({
-                                                canceled:    true,
-                                                section_id:  get_item.id,
-                                                new_section: params[:new_section]
-                                              })
-    else
-      @cancel_url.query = URI.encode_www_form({ canceled:     true,
-                                                section_id:   get_item.id,
-                                                section_name: get_item.section_name })
+    if params[:new_section] == "true"
+      @cancel_url.query = URI.encode_www_form(
+        URI.decode_www_form(@cancel_url.query.to_s).to_h.merge(
+          canceled: true, section_id: get_item.id, new_section: true
+        )
+      )
     end
 
     @read_only_content_type = params[:read_only_content_type].present? ? params[:read_only_content_type] : false
@@ -86,12 +98,12 @@ class Admin::SectionsController < Admin::AbstractAdminController
 
       set_item
 
-      get_record&.update!(get_params)
+      get_record&.update!(data)
 
       if request.headers['Content-Type'] === "application/json"
         render json: { message: 'Section updated successfully' }, status: :ok
       else
-        redirect_to admin_sections_path, turbo: false, notice: "Section updated successfully."
+        redirect_to admin_return_url, status: :see_other, notice: "Section updated successfully."
       end
     rescue => e
       if request.headers['Content-Type'] === "application/json"
@@ -124,7 +136,7 @@ class Admin::SectionsController < Admin::AbstractAdminController
         flash[:notice] = "#{controller_name.singularize.titleize} deleted successfully."
 
         if params[:return_url].present?
-          redirect_to params[:return_url], turbo: false, target: "_self"
+          redirect_to admin_return_url, status: :see_other
         else
           redirect_to action: :index, turbo: false
         end
@@ -194,6 +206,7 @@ class Admin::SectionsController < Admin::AbstractAdminController
 
   def get_params
     params.require(:section).permit(
+      :page_id,
       :content_type,
       :section_name,
       :section_order,

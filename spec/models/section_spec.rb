@@ -4,44 +4,45 @@ RSpec.describe Section, type: :model do
   include_context "debug setup"
 
   describe "validations" do
-    it "validates presence of at least one field" do
-      section = Section.new
+    it "requires a page" do
+      section = build(:section, page: nil)
       expect(section.valid?).to be false
-      expect(section.errors[:base]).to include("At least one of image, link, or description must be present.")
+      expect(section.errors[:page]).to include("must exist")
     end
 
-    it "adds an error for invalid HTML in description" do
-      section = Section.new(description: "<html><body><p>Invalid HTML")
-      section.valid?
-      expect(section.errors[:base]).to include("Invalid HTML in Description.")
+    it "requires a section name" do
+      section = build(:section, section_name: nil)
+      expect(section.valid?).to be false
+      expect(section.errors[:section_name]).to include("can't be blank")
     end
 
-    it "does not add an error for valid HTML in description" do
-      section = Section.new(description: "<html><body><p>Valid HTML</p></body></html>")
+    it "accepts an empty section before columns are added" do
+      section = build(:section, image: nil, link: nil, description: nil)
       expect(section.valid?).to be true
     end
 
-    it "skips HTML validation if description starts with <title>" do
-      section = Section.new(description: "<title>Valid Title</title>")
-      expect(section.valid?).to be true
+    it "rejects duplicate section names" do
+      existing = create(:section)
+      section = build(:section, section_name: existing.section_name)
+      expect(section.valid?).to be false
+      expect(section.errors[:section_name]).to include("has already been taken")
     end
   end
 
   describe "callbacks" do
     describe "#verify_checksum" do
       it "does not raise an error if checksum matches description" do
-        section = Section.create!(content_type: 'Test', section_name: "Test", description: "<html><body><p>Valid HTML</p></body></html>", formatting: '{"key":"value"}')
-        checksum = Digest::SHA256.hexdigest(section.description)
-        section.update!(checksum: checksum)
+        section = create(:section, description: "<html><body><p>Valid HTML</p></body></html>")
+        expect(section.checksum.length).to eq(512)
         expect { section.reload }.not_to raise_error
       end
     end
   end
 
   describe "scopes" do
-    let!(:section_1) { Section.create!(content_type: "type1", section_name: "section1", description: "Section 1", section_order: 1) }
-    let!(:section_2) { Section.create!(content_type: "type1", section_name: "section2", description: "Section 2", section_order: 2) }
-    let!(:section_3) { Section.create!(content_type: "type2", section_name: "section3", description: "Section 3", section_order: 3) }
+    let!(:section_1) { create(:section, content_type: "type1", section_name: "section1", description: "Section 1", section_order: 1) }
+    let!(:section_2) { create(:section, content_type: "type1", section_name: "section2", description: "Section 2", section_order: 2) }
+    let!(:section_3) { create(:section, content_type: "type2", section_name: "section3", description: "Section 3", section_order: 3) }
 
     describe ".by_content_type" do
       it "returns sections by content type ordered by section_order" do

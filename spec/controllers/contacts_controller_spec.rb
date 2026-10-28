@@ -48,12 +48,7 @@ RSpec.describe ContactsController, type: :controller do
       end
 
       it "sends a contact email" do
-        response = ContactMailer.contact_email("John Doe",
-                                               "john.doe@example.com",
-                                               "123-456-7890",
-                                               "Hello, this is a test message.",
-                                               site_setup).deliver_now
-        post :create, params: valid_params
+        expect { post :create, params: valid_params }.to change { ActionMailer::Base.deliveries.size }.by(1)
       end
 
       it "sets a success flash message" do
@@ -87,7 +82,7 @@ RSpec.describe ContactsController, type: :controller do
 
     context "when an unexpected exception occurs" do
       before do
-        allow(Contact).to receive(:create!).and_raise(StandardError, "Unexpected error")
+        allow_any_instance_of(Contact).to receive(:save!).and_raise(StandardError, "Unexpected error")
       end
 
       it "sets a generic error flash message" do

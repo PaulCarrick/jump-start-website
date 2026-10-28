@@ -17,6 +17,7 @@ import {
 /**
  * @param {{ cell?: import('../types/dataTypes').Cell | null,
  * editing?: boolean, noBorder?: boolean, noHidden?: boolean,
+ * contentAlignment?: string,
  * onChange?: ((cell: import('../types/dataTypes').Cell, action: import('../types/dataTypes').ActionType) => void) | null }} props
  */
 const RenderCell = ({
@@ -25,13 +26,14 @@ const RenderCell = ({
   noBorder = true,
   noHidden = false,
   onChange = null,
+  contentAlignment = undefined,
 }) => {
   if (cell === null) return null; // We can't render what we don't have
 
   const cellData = dupObject(cell);
   const processedCell = processCell(cellData);
 
-  return renderCell(processedCell, editing, noBorder, noHidden, onChange);
+  return renderCell(processedCell, editing, noBorder, noHidden, onChange, contentAlignment);
 };
 
 // Utility Functions
@@ -42,6 +44,7 @@ function renderCell(
   noBorder = false,
   noHidden = false,
   onChange = null,
+  contentAlignment = undefined,
 ) {
   if (cell == null) return "";
 
@@ -57,10 +60,11 @@ function renderCell(
     if (onChange && cell) {
       return (
         <>
-          <div className="row mb-2">
-            <div className="col-4">
+          <div className="d-flex justify-content-end flex-wrap gap-2 mb-2">
+            <div>
               <a
                 href="#"
+                className="btn btn-primary"
                 onClick={(e) => {
                   e.preventDefault();
 
@@ -70,9 +74,10 @@ function renderCell(
                 Edit Column
               </a>
             </div>
-            <div className="col-4">
+            <div>
               <a
                 href="#"
+                className="btn btn-danger"
                 data-confirm="Are you sure?"
                 onClick={(e) => {
                   e.preventDefault();
@@ -84,9 +89,8 @@ function renderCell(
                 Delete Column
               </a>
             </div>
-            <div className="col-4"></div>
           </div>
-          <div className="row mb-2">
+          <div className="row mb-2 flex-grow-1" style={{ alignItems: contentAlignment }}>
             <div key={cell.index} className={divClass}>
               <DisplayContent
                 content={cell.content}
@@ -103,11 +107,22 @@ function renderCell(
     } else if (urls) {
       return (
         <>
-          <div className="row mb-2">
-            <div className="col-4">
+          <div className="d-flex justify-content-end flex-wrap gap-2 mb-2">
+            <div>
               {urls?.edit?.url && (
                 <a
-                  href={urls?.edit?.url}
+                  href={(() => {
+                    const url = new URL(urls.edit.url, window.location.origin);
+                    const caller = new URL(window.location.href);
+                    if (caller.pathname.startsWith("/admin/pages/")) {
+                      caller.searchParams.set("section_name", cell.section_name);
+                      const parentReturn = document.querySelector('input[name="return_url"]')?.value;
+                      if (parentReturn) caller.searchParams.set("return_url", parentReturn);
+                    }
+                    url.searchParams.set("return_url", caller.pathname + caller.search + caller.hash);
+                    return url.href;
+                  })()}
+                  className="btn btn-primary"
                   target="_self"
                   data-turbo="false"
                   data-turbolinks="false"
@@ -116,10 +131,11 @@ function renderCell(
                 </a>
               )}
             </div>
-            <div className="col-4">
+            <div>
               {urls?.delete?.url && (
                 <a
                   href={urls["delete"]["url"]}
+                  className="btn btn-danger"
                   data-turbo="false"
                   onClick={(event) => {
                     if (!window.confirm("Are you sure?"))
@@ -130,9 +146,8 @@ function renderCell(
                 </a>
               )}
             </div>
-            <div className="col-4"></div>
           </div>
-          <div className="row mb-2">
+          <div className="row mb-2 flex-grow-1" style={{ alignItems: contentAlignment }}>
             <div id="cellAttributes" className={divClass}>
               <DisplayContent
                 content={cell.content}
@@ -258,6 +273,7 @@ RenderCell.propTypes = {
   noBorder: PropTypes.bool,
   noHidden: PropTypes.bool,
   onChange: PropTypes.any,
+  contentAlignment: PropTypes.string,
 };
 
 export default RenderCell;

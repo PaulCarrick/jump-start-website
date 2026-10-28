@@ -1,38 +1,30 @@
 require "rails_helper"
 
-RSpec.describe CellsController, type: :routing do
-  describe "routing" do
-    it "routes to #index" do
-      expect(get: "/cells").to route_to("cells#index")
-    end
+RSpec.describe "Cell routes", type: :routing do
+  it "routes the public listing" do
+    expect(get: "/cells").to route_to("cells#index")
+  end
 
-    it "routes to #new" do
-      expect(get: "/cells/new").to route_to("cells#new")
+  { new: [ :get, "/admin/cells/new" ],
+    show: [ :get, "/admin/cells/1" ],
+    edit: [ :get, "/admin/cells/1/edit" ],
+    create: [ :post, "/admin/cells" ],
+    update: [ :patch, "/admin/cells/1" ],
+    destroy: [ :delete, "/admin/cells/1" ] }.each do |action, (verb, path)|
+    it "routes admin #{action}" do
+      target = { controller: "admin/cells", action: action.to_s }
+      target[:id] = "1" if path.include?("/1")
+      expect(verb => path).to route_to(target)
     end
+  end
 
-    it "routes to #show" do
-      expect(get: "/cells/1").to route_to("cells#show", id: "1")
-    end
+  it "routes PUT updates to the admin controller" do
+    expect(put: "/admin/cells/1").to route_to("admin/cells#update", id: "1")
+  end
 
-    it "routes to #edit" do
-      expect(get: "/cells/1/edit").to route_to("cells#edit", id: "1")
-    end
-
-
-    it "routes to #create" do
-      expect(post: "/cells").to route_to("cells#create")
-    end
-
-    it "routes to #update via PUT" do
-      expect(put: "/cells/1").to route_to("cells#update", id: "1")
-    end
-
-    it "routes to #update via PATCH" do
-      expect(patch: "/cells/1").to route_to("cells#update", id: "1")
-    end
-
-    it "routes to #destroy" do
-      expect(delete: "/cells/1").to route_to("cells#destroy", id: "1")
-    end
+  it "does not expose public write routes" do
+    expect(post: "/cells").not_to be_routable
+    expect(patch: "/cells/1").not_to be_routable
+    expect(delete: "/cells/1").not_to be_routable
   end
 end

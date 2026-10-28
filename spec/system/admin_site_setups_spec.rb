@@ -60,7 +60,7 @@ RSpec.describe "Admin Site Setups", type: :system do
 
         click_button "Save Site Setup"
 
-        expect(page).to have_current_path(admin_site_setups_path(turbo: false))
+        expect(page).to have_current_path(admin_site_setups_path)
         expect(page).to have_content("Site Setup created successfully.")
       end
     end
@@ -78,7 +78,7 @@ RSpec.describe "Admin Site Setups", type: :system do
 
         click_button "Save Site Setup"
 
-        expect(page).to have_current_path(admin_site_setups_path(turbo: false))
+        expect(page).to have_current_path(admin_site_setups_path)
         expect(page).to have_content("Site Setup updated successfully.")
         expect(site_setup.reload.owner_name).to eq("Example User")
         expect(site_setup.reload.site_name).to eq("Example")

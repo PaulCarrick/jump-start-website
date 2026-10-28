@@ -117,6 +117,12 @@ const processCells = (
     processCell(cell);
   });
 
+  const alignment = containerClasses.match(
+    /(?:^|\s)align-items-(start|center|end|baseline|stretch)(?:\s|$)/,
+  )?.[1];
+  const contentAlignment =
+    alignment === "start" ? "flex-start" : alignment === "end" ? "flex-end" : alignment;
+
   return (
     <div className={containerClasses} id={containerId}>
       {cells.map((cell, index) => (
@@ -124,6 +130,7 @@ const processCells = (
           key={index}
           className={cell.container_class || ""}
           style={{
+            ...(editing ? { alignSelf: "stretch", display: "flex", flexDirection: "column" } : {}),
             ...(cell.width === "auto"
               ? { flex: 1 }
               : { width: `${cell.width}` }),
@@ -135,6 +142,7 @@ const processCells = (
             noBorder={noBorder}
             noHidden={noHidden}
             onChange={onChange}
+            contentAlignment={editing ? contentAlignment : undefined}
           />
         </div>
       ))}

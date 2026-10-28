@@ -38,12 +38,14 @@ Rails.application.routes.draw do
     get "/cells/:id/delete", to: "cells#destroy", as: "destroy_cell"
     get "/cells/:id/admin_urls", to: "/api/v1/cells#get_admin_urls"
     resources :sections, except: [ :destroy ]
+    post "/pages/:page_id/sections/:id/duplicate", to: "sections#duplicate", as: "duplicate_page_section"
     delete "/sections/:id", to: "sections#destroy", as: "delete_section"
     get "/sections/:id/admin_urls", to: "/api/v1/sections#get_admin_urls"
     get "/sections/:id/delete", to: "sections#destroy", as: "destroy_section"
     get "/page/new_cell/:id", to: "sections#add_cell_to_section", as: "add_cell_to_existing_section"
     get "/page/new_cell", to: "sections#add_cell_to_section", as: "add_cell_to_new_section"
     resources :pages, except: [ :destroy ]
+    post "/pages/:id/renumber_sections", to: "pages#renumber_sections", as: "renumber_page_sections"
     delete "/pages/:id", to: "pages#destroy", as: "delete_page"
     get "/pages/:id/test", to: "pages#test"
     get "/pages/:id/delete", to: "pages#destroy", as: "destroy_page"

@@ -9,26 +9,10 @@ class Contact < ActiveRecord::Base
   }
 
   def unique_combination
-    result = false
     contacts = Contact.by_name_email_phone_message(self.name, self.email, self.phone, self.message)
+    contacts = contacts.where.not(id: id) if persisted?
+    return unless contacts.exists?
 
-    if contacts.any?
-      error_message = "The contact information must be unique. You have already submitted this information. Please at least change the description."
-
-      if self.submit_information.present?
-        if self.submit_information === error_message
-          errors.add(:base, self.submit_information)
-        end
-      else
-        self.submit_information = error_message
-        self.save
-
-        errors.add(:base, self.submit_information)
-      end
-    else
-      result = true
-    end
-
-    result
+    errors.add(:base, "The contact information must be unique. You have already submitted this information. Please at least change the description.")
   end
 end

@@ -5,18 +5,18 @@ RSpec.describe Cell, type: :model do
 
   describe "validations" do
     it "adds an error for invalid HTML in content" do
-      cell = Cell.new(content: "<html><body><p>Invalid HTML")
-      cell.valid?
-      expect(cell.errors[:base]).to include("Invalid HTML in Content.")
+      cell = build(:cell, content: "<html><body><p>Invalid HTML")
+      expect { cell.valid? }.to raise_error(ActiveRecord::RecordInvalid)
+      expect(cell.errors[:content]).to include("Invalid HTML in Content.")
     end
 
     it "does not add an error for valid HTML in content" do
-      cell = Cell.new(cell_name: "Test", section_name: "Test", content: "<html><body><p>Valid HTML</p></body></html>")
+      cell = build(:cell, content: "<html><body><p>Valid HTML</p></body></html>")
       expect(cell.valid?).to be true
     end
 
     it "skips HTML validation if content starts with <title>" do
-      cell = Cell.new(cell_name: "Test", section_name: "Test", content: "<title>Valid Title</title>")
+      cell = build(:cell, content: "<title>Valid Title</title>")
       expect(cell.valid?).to be true
     end
   end
@@ -24,21 +24,22 @@ RSpec.describe Cell, type: :model do
   describe "callbacks" do
     describe "#verify_checksum" do
       it "does not raise an error if checksum matches content" do
-        cell     = Cell.create!(cell_name:    'Test',
+        cell     = Cell.create!(section: create(:section), cell_name:    'Test',
                                 section_name: 'Test',
                                 content:      "<html><body><p>Valid HTML</p></body></html>",
                                 formatting:   '{"key":"value"}')
-        checksum = Digest::SHA256.hexdigest(cell.content)
-        cell.update!(checksum: checksum)
+        checksum = cell.checksum
+        expect(checksum.length).to eq(512)
         expect { cell.reload }.not_to raise_error
       end
     end
   end
 
   describe "scopes" do
-    let!(:cell_1) { Cell.create!(cell_name: "Test 1", section_name: "type1", content: "Cell 1", cell_order: 1) }
-    let!(:cell_2) { Cell.create!(cell_name: "Test 2", section_name: "type1", content: "Cell 2", cell_order: 2) }
-    let!(:cell_3) { Cell.create!(cell_name: "Test 3", section_name: "type2", content: "Cell 3", cell_order: 3) }
+    let(:section) { create(:section, section_name: "type1") }
+    let!(:cell_1) { create(:cell, section: section, cell_name: "Test 1", section_name: "type1", content: "Cell 1", cell_order: 1) }
+    let!(:cell_2) { create(:cell, section: section, cell_name: "Test 2", section_name: "type1", content: "Cell 2", cell_order: 2) }
+    let!(:cell_3) { create(:cell, cell_name: "Test 3", section_name: "type2", content: "Cell 3", cell_order: 3) }
 
     describe ".by_section_name" do
       it "returns cells by content type ordered by cell_order" do

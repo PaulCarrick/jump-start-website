@@ -1,11 +1,13 @@
 <!-- app/views/admin/pages/_page_form.html.erb -->
 
 <%= javascript_include_tag 'views/admin/pages/edit' %>
+<% sections = controller.get_sections %>
 
 <%= form_with(model:  controller.get_item,
               url:    controller.get_item.persisted? ? admin_page_path(controller.get_item) : admin_pages_path,
               method: controller.get_item.persisted? ? :patch : :post,
               local:  true) do |form| %>
+  <%= hidden_field_tag :return_url, admin_return_url %>
 
   <h1>
     <% if controller.get_item&.persisted? %>
@@ -42,11 +44,19 @@
     <%= form.text_field :access, class: "form-control", placeholder: "Enter the access, if any" %>
   </div>
 
-  <h1 class="text-center">Preview</h1>
+  <div class="row align-items-center mb-2">
+    <div class="col-4"></div>
+    <div class="col-4"><h1 class="text-center mb-0">Preview</h1></div>
+    <div class="col-4 text-end">
+      <% if @application_user.admin? && controller.get_item.persisted? %>
+        <%= button_tag "Renumber Sections", type: "submit",
+                       form: "renumber-sections-#{controller.get_item.id}",
+                       class: "btn btn-secondary", disabled: sections.empty? %>
+      <% end %>
+    </div>
+  </div>
   <div>
     <div class="w-100 border border-danger border-width-8 p-2">
-      <% sections = controller.get_sections %>
-
       <% if sections.present? %>
         <% first = true %>
         <% sections.each do |section| %>
@@ -57,7 +67,7 @@
           <% end %>
           <%
             if controller.get_item&.id.present?
-              @return_path = edit_admin_page_path(controller.get_item, section_name: section.section_name, target: "_self")
+              @return_path = edit_admin_page_path(controller.get_item, return_url: admin_return_url, section_name: section.section_name, target: "_self")
             else
               @return_path = new_admin_page_path(target: "_self")
             end
@@ -77,6 +87,11 @@
                             class:  "btn btn-primary" %>
 
                 <% if @application_user.admin? %>
+                  <%= button_tag "Duplicate Section",
+                                 type: "submit",
+                                 id: "duplicate-section-#{section.id}-button",
+                                 form: "duplicate-section-#{section.id}",
+                                 class: "btn btn-secondary ms-2" %>
                   <%= link_to "Delete Section",
                               admin_delete_section_path(section, method: :delete, return_url: @return_path),
                               method:  :delete,
@@ -108,7 +123,7 @@
       <div class="mt-3">
         <%= link_to "Add Section",
                     admin_add_section_to_existing_page_path(controller.get_item,
-                                                            return_url:             @return_path,
+                                                            return_url:             admin_return_url,
                                                             cancel_url:             @return_path,
                                                             new_section:            true,
                                                             read_only_content_type: true),
@@ -120,7 +135,7 @@
         <div class="mt-3">
           <%= link_to "Add Section",
                       admin_add_section_to_new_page_path(controller.get_item,
-                                                         return_url:             @return_path,
+                                                         return_url:             admin_return_url,
                                                          cancel_url:             @return_path,
                                                          read_only_content_type: true,
                                                          new_section:            true,
@@ -136,6 +151,25 @@
   </div>
   <div class="mb-3">
     <%= form.submit "Save Page", class: "btn btn-primary me-3", disabled: !@application_user.admin? %>
-    <%= link_to("Cancel", admin_pages_url, class: "btn btn-secondary", target: "_self") %>
+    <%= link_to("Cancel", admin_return_url, class: "btn btn-secondary", target: "_self") %>
   </div>
+<% end %>
+
+<%# Separate forms avoid nesting POST forms inside the page's PATCH form. %>
+<% if @application_user.admin? && controller.get_item.persisted? %>
+  <%= form_with url: admin_renumber_page_sections_path(controller.get_item),
+                method: :post, local: true,
+                html: { id: "renumber-sections-#{controller.get_item.id}" },
+                data: { turbo: false } do %>
+    <%= hidden_field_tag :return_url, admin_return_url %>
+  <% end %>
+  <% sections.each do |section| %>
+    <%= form_with url: admin_duplicate_page_section_path(page_id: controller.get_item.id, id: section.id),
+                  method: :post, local: true,
+                  html: { id: "duplicate-section-#{section.id}", onsubmit: "return requestSectionDuplicateName(this);" },
+                  data: { turbo: false } do %>
+      <%= hidden_field_tag :return_url, admin_return_url %>
+      <%= hidden_field_tag :section_name %>
+    <% end %>
+  <% end %>
 <% end %>

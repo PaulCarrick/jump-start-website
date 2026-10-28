@@ -36,6 +36,26 @@ class Page < ApplicationRecord
 
   validates :name, :section, presence: true, uniqueness: true
 
+  def ordered_sections
+    return Section.none if section.blank?
+
+    Section.where(content_type: section)
+           .order(Arel.sql("sections.section_order ASC NULLS LAST, sections.id ASC"))
+  end
+
+  def renumber_sections!
+    self.class.transaction do
+      page = self.class.lock.find(id)
+      ordered = page.ordered_sections.lock.to_a
+      ordered.each_with_index do |section, index|
+        unless section.update_columns(section_order: (index + 1) * 10)
+          raise ActiveRecord::RecordNotSaved, "Section order could not be saved."
+        end
+      end
+      ordered.length
+    end
+  end
+
   def self.generate_unique_name(prefix = "new-page_")
     existing_names = Page.where("name ~ ?", "^#{prefix}\\d+$").pluck(:name)
 

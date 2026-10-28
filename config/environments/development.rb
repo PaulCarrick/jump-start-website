@@ -83,8 +83,8 @@ Rails.application.configure do
     user_name:      ENV['SMTP_USERNAME'],
     password:       ENV['SMTP_PASSWORD'],
     authentication: :login, # Authentication type (:plain, :login, :cram_md5)
-    ssl: true, # Enable SSL
-    enable_starttls_auto: false # Disable STARTTLS since SSL is used
+    ssl: false,
+    enable_starttls_auto: true # Upgrade the SMTP connection with STARTTLS on port 587.
   }
 
   # Raise delivery errors in development

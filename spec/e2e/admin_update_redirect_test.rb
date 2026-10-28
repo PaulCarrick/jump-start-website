@@ -1,11 +1,16 @@
 # Standalone test of the actual controller action; no Rails or database startup.
 require 'minitest/autorun'
+require 'active_support/concern'
+require_relative '../../app/controllers/concerns/admin_return_navigation'
 module Admin; end
 module Pagy
   module Backend; end
 end
 module Persistence; end
-class ApplicationController; end
+class ApplicationController
+  def self.before_action(*); end
+  def self.helper_method(*); end
+end
 require_relative '../../app/controllers/admin/abstract_admin_controller'
 
 class AdminUpdateRedirectTest < Minitest::Test
@@ -30,8 +35,9 @@ class AdminUpdateRedirectTest < Minitest::Test
       @updated_params = params
       true
     end
-    def redirect_to(**options); @redirect = options; end
-    def handle_error(action, error); @handled_error = [action, error]; end
+    def admin_return_url; '/admin/image_files'; end
+    def redirect_to(path, **options); @redirect = [ path, options ]; end
+    def handle_error(action, error); @handled_error = [ action, error ]; end
   end
 
   def test_successful_patch_redirects_to_list_with_303
@@ -39,6 +45,6 @@ class AdminUpdateRedirectTest < Minitest::Test
     controller.update
     assert_nil controller.handled_error
     assert_equal({ group: 'Other Gallery', slide_order: 2 }, controller.updated_params)
-    assert_equal({ action: :index, turbo: false, status: :see_other }, controller.redirect)
+    assert_equal([ '/admin/image_files', { status: :see_other } ], controller.redirect)
   end
 end

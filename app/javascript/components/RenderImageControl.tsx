@@ -1,6 +1,8 @@
+import NewImageButton from "./NewImageButton";
+import { useImageChoices } from "../hooks/useImageChoices";
 // app/javascript/components/RenderImageControl.tsx
 
-import React, { useState } from "react";
+import React from "react";
 import { ImageType } from "../types/dataTypes";
 
 interface RenderImageControlProps {
@@ -20,9 +22,10 @@ const RenderImageControl: React.FC<RenderImageControlProps> = ({
                                                    availableVideosData,
                                                    setValue
                                                  }) => {
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [imageName, setImageName] = useState<string>("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const { choices, reload, error } = useImageChoices();
+  availableImagesData = choices?.images ?? availableImagesData;
+  availableImageGroupsData = choices?.groups ?? availableImageGroupsData;
+  availableVideosData = choices?.videos ?? availableVideosData;
 
   let optionsHash: { label: string; value: string }[] = [];
 
@@ -64,6 +67,8 @@ const RenderImageControl: React.FC<RenderImageControlProps> = ({
                 <option key={value} value={value}>{label}</option>
             ))}
           </select>
+          <NewImageButton onReturn={reload} />
+          {error && <div role="alert">{error} <button type="button" className="btn btn-link" onClick={reload}>Retry</button></div>}
         </div>
       </div>
   );

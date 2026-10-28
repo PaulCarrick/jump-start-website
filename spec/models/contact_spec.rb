@@ -46,8 +46,20 @@ RSpec.describe Contact, type: :model do
         message: "This is a message"
       )
 
-      expect(duplicate_contact.valid?).to be false
+      expect { expect(duplicate_contact.valid?).to be false }.not_to change(Contact, :count)
       expect(duplicate_contact.errors[:base]).to include("The contact information must be unique. You have already submitted this information. Please at least change the description.")
+    end
+
+    it "allows updating delivery information on the original contact" do
+      contact = Contact.first
+      expect { contact.update!(submit_information: "Sent successfully") }.not_to change(Contact, :count)
+      expect(contact.reload.submit_information).to eq("Sent successfully")
+    end
+
+    it "does not persist an attempted duplicate" do
+      duplicate = Contact.first.dup
+      expect { expect(duplicate.save).to be(false) }.not_to change(Contact, :count)
+      expect(duplicate).not_to be_persisted
     end
 
     it "does not add an error if the combination is unique" do

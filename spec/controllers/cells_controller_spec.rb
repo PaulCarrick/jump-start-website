@@ -1,14 +1,14 @@
 require 'rails_helper'
 
-RSpec.describe CellsController, section: :controller do
+RSpec.describe CellsController, type: :controller do
   include_context "debug setup"
 
   let!(:section1) { create(:section, content_type: "type1", section_order: 1, description: "<b>Description 1</b>", section_name: "section1") }
   let!(:section2) { create(:section, content_type: "type1", section_order: 2, description: "<i>Description 2</i>", section_name: "section2") }
   let!(:section3) { create(:section, content_type: "type2", section_order: 1, description: "<u>Description 3</u>", section_name: "section3") }
-  let!(:cell1) { create(:cell, section_name: "section1", cell_order: 1, content: "<b>Content 1</b>", cell_name: "cell1") }
-  let!(:cell2) { create(:cell, section_name: "section1", cell_order: 2, content: "<i>Content 2</i>", cell_name: "cell2") }
-  let!(:cell3) { create(:cell, section_name: "section2", cell_order: 1, content: "<u>Content 3</u>", cell_name: "cell3") }
+  let!(:cell1) { create(:cell, section: section1, section_name: "section1", cell_order: 1, content: "<b>Content 1</b>", cell_name: "cell1") }
+  let!(:cell2) { create(:cell, section: section1, section_name: "section1", cell_order: 2, content: "<i>Content 2</i>", cell_name: "cell2") }
+  let!(:cell3) { create(:cell, section: section2, section_name: "section2", cell_order: 1, content: "<u>Content 3</u>", cell_name: "cell3") }
 
   describe "GET #index" do
     context "with valid params" do

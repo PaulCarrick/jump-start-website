@@ -3,7 +3,7 @@ module LoginHelper
     user = create(:user,
                   name:   "Test User",
                   access: "super")
-    user = nil unless controller.signin_user(user)
+    sign_in(user)
 
     user
   end
@@ -12,7 +12,7 @@ module LoginHelper
     user = create(:user,
                   name:   "Test User",
                   access: "regular")
-    user = nil unless controller.signin_user(user)
+    sign_in(user)
 
     user
   end

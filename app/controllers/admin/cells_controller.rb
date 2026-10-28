@@ -24,8 +24,8 @@ class Admin::CellsController < Admin::AbstractAdminController
 
     setup_options
 
-    @return_url             = params[:return_url].present? ? params[:return_url] : admin_cells_url
-    @cancel_url             = params[:cancel_url].present? ? params[:cancel_url] : admin_cells_url
+    @return_url = admin_return_url
+    @cancel_url = safe_admin_return_url(params[:cancel_url]) || admin_return_url
     @read_only_content_type = params[:read_only_content_type].present? ? params[:read_only_content_type] : false
     @new_cell             = params[:new_cell].present? ? params[:new_cell] : false
   end
@@ -41,7 +41,7 @@ class Admin::CellsController < Admin::AbstractAdminController
       if request.headers['Content-Type'] === "application/json"
         render json: { message: 'Cell created successfully', id: get_item.id }, status: :ok
       else
-        redirect_to admin_cells_path, turbo: false, notice: "Cell created successfully."
+        redirect_to admin_return_url, status: :see_other, notice: "Cell created successfully."
       end
     rescue => e
       if request.headers['Content-Type'] === "application/json"
@@ -61,17 +61,15 @@ class Admin::CellsController < Admin::AbstractAdminController
   def edit
     super
 
-    @return_url = params[:return_url].present? ? params[:return_url] : admin_cell_url(get_item)
-    @cancel_url = URI(params[:cancel_url].present? ? params[:cancel_url] : admin_cells_url)
+    @return_url = admin_return_url
+    @cancel_url = URI(safe_admin_return_url(params[:cancel_url]) || admin_return_url)
 
-    if params[:new_cell].present?
-      @cancel_url.query = URI.encode_www_form({
-                                                canceled:   true,
-                                                cell_id:  get_item.id,
-                                                new_cell: params[:new_cell]
-                                              })
-    else
-      @cancel_url.query = URI.encode_www_form({ canceled: true, cell_id: get_item.id })
+    if params[:new_cell] == "true"
+      @cancel_url.query = URI.encode_www_form(
+        URI.decode_www_form(@cancel_url.query.to_s).to_h.merge(
+          canceled: true, cell_id: get_item.id, new_cell: true
+        )
+      )
     end
 
     @read_only_content_type = params[:read_only_content_type].present? ? params[:read_only_content_type] : false
@@ -92,12 +90,12 @@ class Admin::CellsController < Admin::AbstractAdminController
 
       set_item
 
-      get_record&.update!(get_params)
+      get_record&.update!(data)
 
       if request.headers['Content-Type'] === "application/json"
         render json: { message: 'Cell updated successfully' }, status: :ok
       else
-        redirect_to admin_cells_path, turbo: false, notice: "Cell updated successfully."
+        redirect_to admin_return_url, status: :see_other, notice: "Cell updated successfully."
       end
     rescue => e
       if request.headers['Content-Type'] === "application/json"
@@ -130,7 +128,7 @@ class Admin::CellsController < Admin::AbstractAdminController
         flash[:notice] = "#{controller_name.singularize.titleize} deleted successfully."
 
         if params[:return_url].present?
-          redirect_to params[:return_url], turbo: false, target: "_self"
+          redirect_to admin_return_url, status: :see_other
         else
           redirect_to action: :index, turbo: false
         end
@@ -159,36 +157,19 @@ class Admin::CellsController < Admin::AbstractAdminController
   end
 
   def get_params
-    section = params.require(:section)
-
-    section[:cells_attributes] = section.delete(:cells) if section[:cells].present?
-
-    section.permit(
-      :content_type,
+    params.require(:cell).permit(
+      :section_id,
       :section_name,
-      :section_order,
+      :cell_name,
+      :cell_type,
+      :cell_order,
+      :content,
       :image,
       :link,
-      :description,
+      :width,
       :checksum,
-      :row_style,
-      :div_ratio,
-      image_attributes: {},
-      text_attributes:  {},
-      formatting:       {},
-      cells_attributes: [
-                          :id,
-                          :cell_name,
-                          :cell_type,
-                          :cell_order,
-                          :content,
-                          :image,
-                          :link,
-                          :width,
-                          :_destroy,
-                          formatting: {},
-                          options:    {}
-                        ]
+      formatting: {},
+      options: {}
     )
   end
 end

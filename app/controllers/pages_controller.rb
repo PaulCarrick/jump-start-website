@@ -33,6 +33,7 @@ class PagesController < ApplicationController
       @contents = renderable_contents
     else
       flash[:alert] = "Can't find page for: #{params[:id]}."
+      render :show, status: :not_found
     end
   end
 
@@ -106,28 +107,8 @@ class PagesController < ApplicationController
     end
   end
 
-  # TO DO This is a really ugly hack, but at the moment I don't know how to fix it and it's only for testing.
-  # The issue is the test environment isn't running on localhost but in the test environment and nothing I did
-  # changing the test config in config/environments or changing the test environment in RSpec would fix it.
-  # We get the current path and replace it with the test environment host and port.
   def get_image_url(image_file)
-    results = nil
-
-    if Rails.env == "test" && ENV['IMAGE_HACK'] && image_file.present?
-      results = image_file.image_url
-
-      if results.present?
-        image_uri      = URI.parse(results)
-        current_uri    = URI.parse(request.url)
-        image_uri.host = current_uri.host
-        image_uri.port = current_uri.port
-        results        = image_uri.to_s
-      end
-    else
-      results = image_file&.image_url
-    end
-
-    results ||= @missing_image
+    image_file&.image_url.presence || @missing_image
   end
 
   def handle_single_image_file(section, file_name)

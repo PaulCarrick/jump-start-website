@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+# Run backend specs against a disposable database, never development data.
+require "rbconfig"
+require "fileutils"
+
+Dir.chdir(File.expand_path("..", __dir__))
+ENV["PATH"] = "#{File.dirname(RbConfig.ruby)}#{File::PATH_SEPARATOR}#{ENV.fetch('PATH')}"
+ENV["RAILS_ENV"] = "test"
+ENV["DB_HOST"] = "localhost"
+ENV["DB_DATABASE"] = "jump_start_backend_#{Process.pid}_#{Time.now.to_i}"
+ENV["JUMPSTART_TEST_DATABASE"] = ENV.fetch("DB_DATABASE")
+ENV.delete("DATABASE_URL")
+ENV.delete("DOCKERIZED")
+ENV["BUNDLE_FROZEN"] = "true"
+
+artifacts = File.join("tmp/backend-specs", "#{Time.now.strftime('%Y%m%d-%H%M%S')}-#{Process.pid}")
+FileUtils.mkdir_p(artifacts)
+puts "Backend test artifacts: #{File.expand_path(artifacts)}"
+status = 1
+begin
+  if system("bundle", "exec", "rails", "db:create", "db:schema:load")
+    system("bundle", "exec", "rspec", "--exclude-pattern", "spec/{system,e2e}/**/*_spec.rb",
+           "--format", "progress", "--format", "json", "--out", File.join(artifacts, "results.json"), *ARGV)
+    status = $?.exitstatus
+  end
+ensure
+  cleaned = system("bundle", "exec", "rails", "db:drop")
+  status = 1 unless cleaned
+end
+exit(status || 1)

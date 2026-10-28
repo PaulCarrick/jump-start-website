@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html><head><title>Return to image selector</title></head><body>
+<%= javascript_tag nonce: true do %>
+  window.parent.postMessage({type: "jumpstart:image-picker-complete"}, window.location.origin);
+<% end %>
+<p>You can close this image form and return to your editor.</p>
+</body></html>

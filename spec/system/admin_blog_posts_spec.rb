@@ -1,12 +1,18 @@
 require 'rails_helper'
 
 RSpec.describe "Admin Blog Posts", type: :system do
+  def submit_blog_search
+    click_button "Search Blogs"
+    # URL checks do not retain DOM nodes from the outgoing document.
+    expect(page).to have_current_path(%r{\A/admin/blog_posts\?.*q%5B})
+  end
+
   def search_blog_posts(content)
     visit admin_blog_posts_path
 
     expect(page).to have_field(name: 'q[content_cont]')
     fill_in "q[content_cont]", with: content
-    click_button "Search Blogs"
+    submit_blog_search
   end
 
   let(:admin_user) { create(:user, access: "super") }
@@ -35,7 +41,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
 
       expect(page).to have_field(name: 'q[title_cont]')
       fill_in "q[title_cont]", with: "Title One"
-      click_button "Search Blogs"
+      submit_blog_search
       expect(page).to have_content("Title One")
     end
 
@@ -44,7 +50,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
 
       expect(page).to have_field(name: 'q[author_cont]')
       fill_in "q[author_cont]", with: "Author One"
-      click_button "Search Blogs"
+      submit_blog_search
       expect(page).to have_content("Author One")
     end
 
@@ -53,7 +59,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
 
       expect(page).to have_field(name: 'q[content_cont]')
       fill_in "q[content_cont]", with: "Content One"
-      click_button "Search Blogs"
+      submit_blog_search
       expect(page).to have_content("Content One")
     end
 
@@ -64,7 +70,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
 
       expect(page).to have_field(name: 'q[posted_date_eq]')
       fill_in "q[posted_date_eq]", with: formatted_date
-      click_button "Search Blogs"
+      submit_blog_search
       expect(page).to have_content("Test Blog")
     end
   end
@@ -108,7 +114,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
       click_button "Save Blog"
       sleep 2
       expect(page).to have_content("Blog Post created successfully")
-      expect(page).to have_current_path(admin_blog_posts_path(turbo: false))
+      expect(page).to have_current_path(admin_blog_posts_path)
     end
   end
 
@@ -155,11 +161,23 @@ RSpec.describe "Admin Blog Posts", type: :system do
       expect(page).to have_link("Delete", href: "#{admin_blog_post_path(blog_post_1)}/delete")
     end
 
-    it "renders the pagination controls" do
-      expect(page).to have_link("First", href: /page=1/)
-      expect(page).to have_link("Previous")
-      expect(page).to have_link("Next")
-      expect(page).to have_link("Last", href: /page=\d+/)
+    it "renders disabled boundaries and navigates while preserving sorting" do
+      within('nav[aria-label="Pagination"]') do
+        expect(page).to have_text('Page 1 of 1')
+        expect(page).to have_css('[aria-disabled="true"]', count: 4)
+        expect(page).to have_no_link('Next')
+      end
+      create(:blog_post)
+      visit admin_blog_posts_path(sort: 'title', direction: 'asc')
+      within('nav[aria-label="Pagination"]') { click_link 'Next' }
+      expect(page).to have_current_path(admin_blog_posts_path(sort: 'title', direction: 'asc', page: 2))
+      within('nav[aria-label="Pagination"]') do
+        expect(page).to have_text('Page 2 of 2')
+        expect(page).to have_link('First', href: /page=1/)
+        expect(page).to have_link('Previous')
+        expect(page).to have_no_link('Next')
+        expect(page).to have_no_link('Last')
+      end
     end
 
     it "navigates to the new blog page" do
@@ -171,7 +189,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
 
     it "performs a search with the form" do
       fill_in "Author", with: "Author One"
-      click_button "Search Blogs"
+      submit_blog_search
 
       expect(page).to have_content("Author One")
       expect(page).not_to have_content("Author Two")
@@ -179,12 +197,24 @@ RSpec.describe "Admin Blog Posts", type: :system do
 
     it "clears the search results" do
       fill_in "Author", with: "Author One"
-      click_button "Search Blogs"
-      click_link "Clear Search"
-      sleep 1
+      submit_blog_search
 
-      anchor_count = all('a').filter { |anchor| anchor.text == 'Edit' }.size
-      expect(anchor_count).to be > 1
+      # The old page still has a Clear Search link while navigation is in flight.
+      # Wait for the filtered document before locating the link to click.
+      expect(page).to have_current_path(/q%5Bauthor_cont%5D=Author(?:\+|%20)One/)
+      expect(page).to have_no_content("Author Two")
+      expect(page).to have_link("Edit", href: edit_admin_blog_post_path(blog_post_1))
+      click_link "Clear Search"
+
+      expect(page).to have_current_path(admin_blog_posts_path(clear_search: true))
+      expect(page).to have_field("Author", with: "")
+      within ".scrollable-container" do
+        expect(page).to have_content("Author One")
+        expect(page).to have_content("Author Two")
+        [ blog_post, blog_post_1, blog_post_2 ].each do |post|
+          expect(page).to have_link("Edit", href: edit_admin_blog_post_path(post))
+        end
+      end
     end
   end
 

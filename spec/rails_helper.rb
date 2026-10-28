@@ -1,4 +1,5 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
+require_relative 'disposable_database'
 require 'spec_helper'
 require 'rake'
 
@@ -9,6 +10,7 @@ require_relative '../config/environment'
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 require 'shoulda/matchers'
+Capybara.default_max_wait_time = Integer(ENV.fetch("SYSTEM_TEST_WAIT", "6"))
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -85,15 +87,13 @@ RSpec.configure do |config|
 
   config.order = :defined
 
-  config.before(:each, type: :system) do
-    Rails.application.load_tasks unless Rake::Task.task_defined?('db:replicate')
-
-    # Invoke your Rake task
-    begin
-      Rake::Task['db:replicate'].invoke
-    rescue StandardError => e
-      puts "Error: Rake task failed - #{e.message}"
-      raise e
+  config.prepend_before(:each, type: :system) do
+    create(:site_setup)
+    create(:user, name: "guest", access: "guest")
+    { "Site Setups" => "site_setups", "Users" => "users", "Menu Items" => "menu_items",
+      "Footer Items" => "footer_items", "Pages" => "pages", "Sections" => "sections",
+      "Cells" => "cells", "Image Files" => "image_files", "Blogs" => "blog_posts" }.each_with_index do |(label, resource), index|
+      create(:menu_item, menu_type: "Admin", label: label, link: "/admin/#{resource}", menu_order: index)
     end
   end
 

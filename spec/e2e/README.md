@@ -6,7 +6,7 @@ Run from `/Users/paul/src/jump-start-website`:
 bin/admin-ui-e2e
 ```
 
-This is an opt-in RSpec + Capybara + Selenium suite, separate from the existing `rails_helper` system tests. The existing system hook replicates development data; this suite never invokes it.
+This is an opt-in RSpec + Capybara + Selenium suite, separate from the `rails_helper` system tests. Both suites now use disposable databases and synthetic data; neither invokes development-data replication.
 
 ## Database lifecycle
 

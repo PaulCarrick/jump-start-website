@@ -1,8 +1,31 @@
 #!/usr/bin/env sh
 
-if gem list --no-installed --exact --silent foreman; then
+set -e
+
+project_directory="$(cd "$(dirname "$0")/.." && pwd)"
+ruby_version=$(cat "${project_directory}/.ruby-version")
+
+# Use the project runtime even when the terminal still selects an older Ruby.
+for ruby_directory in "${HOME}/.rbenv/versions/${ruby_version}" "${HOME}/.rubies/ruby-${ruby_version}"; do
+  if [ -x "${ruby_directory}/bin/ruby" ]; then
+    export PATH="${ruby_directory}/bin:${PATH}"
+    break
+  fi
+done
+
+# Do not inherit native gems belonging to another Ruby or architecture.
+unset GEM_HOME GEM_PATH
+
+if [ "$(ruby -e 'print RUBY_VERSION')" != "$ruby_version" ]; then
+  echo "Install Ruby ${ruby_version} (see .ruby-version) before running bin/dev." >&2
+  exit 1
+fi
+
+cd "$project_directory"
+
+if ! gem list --installed --exact --silent foreman; then
   echo "Installing foreman..."
-  gem install foreman
+  gem install foreman --no-document
 fi
 
 # Default to port 3000 if not specified

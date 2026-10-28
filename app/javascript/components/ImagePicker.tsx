@@ -1,3 +1,5 @@
+import NewImageButton from "./NewImageButton";
+import { useImageChoices } from "../hooks/useImageChoices";
 import React, { useState } from "react";
 import { createImageFile } from "../services/imageFileService";
 import type { ImageType } from "../types/dataTypes";
@@ -26,6 +28,10 @@ export default function ImagePicker({
   availableVideosData: string[] | null;
   setValue: (value: string, attribute: string) => void;
 }) {
+  const { choices, reload, error } = useImageChoices();
+  availableImagesData = choices?.images ?? availableImagesData;
+  availableImageGroupsData = choices?.groups ?? availableImageGroupsData;
+  availableVideosData = choices?.videos ?? availableVideosData;
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [imageName, setImageName] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -77,6 +83,8 @@ export default function ImagePicker({
       <div className="row mb-2">
         <div className="col-2 d-flex align-items-center">Upload Image:</div>
         <div className="col-7">
+          <NewImageButton onReturn={reload} />
+          {error && <div role="alert">{error}</div>}
           <input
             type="file"
             accept="image/*"
@@ -127,6 +135,8 @@ export default function ImagePicker({
           <div id="imageDiv">
             {renderComboBox("image", image, optionsHash, setValue)}
           </div>
+          <NewImageButton onReturn={reload} />
+          {error && <div role="alert">{error} <button type="button" className="btn btn-link" onClick={reload}>Retry</button></div>}
         </div>
         <div id="imageTypeDiv" className="col-3">
           {renderSelect("image_type", imageType, imageTypeOptions, setValue)}
