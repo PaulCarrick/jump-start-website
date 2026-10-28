@@ -39,6 +39,8 @@ prerequisites, filtering and screenshot locations. Build current assets with
 code changes; the dedicated Selenium runner builds them automatically.
 Ordinary system specs wait up to six seconds for browser state changes; set
 `SYSTEM_TEST_WAIT` to override that on a slower machine.
+The ordinary Chrome drivers request reduced motion so Bootstrap does not animate
+WebDriver's automatic scrolling between form fields and buttons.
 
 The contact system test substitutes synthetic responses for Google's external
 reCAPTCHA client and server verification. It still submits the real browser
