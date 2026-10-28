@@ -101,7 +101,7 @@ RSpec.describe "Admin Sections", type: :system do
       replace_react '#section_name', 'Updated Section Name'
       replace_react '#section_order', '3'
       click_button 'Save Section'
-      expect(page).to have_current_path(admin_section_path(section), ignore_query: true)
+      expect(page).to have_current_path(admin_sections_path, ignore_query: true)
       expect(page).to have_content('Updated Section Name')
       expect(section.reload.section_order).to eq(3)
       expect(section.cells.first.content).to include('Test Description')

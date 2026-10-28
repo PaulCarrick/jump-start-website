@@ -1,13 +1,14 @@
 <% content_for :title, "#{@site_information.site_name} - Admin Dashboard - #{controller.get_item&.persisted? ? "Edit Image" : "New Image"}" %>
 <%= javascript_include_tag 'views/admin/image_files/edit' %>
 
-<%= render layout: "layouts/admin_page" do %>
+<%= render layout: (admin_return_url == admin_image_files_path(image_picker_complete: true) ? "layouts/image_picker" : "layouts/admin_page") do %>
   <%= form_with(model:  controller.get_item,
                 url:    controller.get_item&.persisted? ? admin_image_file_path(controller.get_item) : admin_image_files_path,
                 method: controller.get_item&.persisted? ? :patch : :post,
                 local:  true,
                 html:   { onsubmit: 'return validate(this)' }) do |form|
   %>
+    <%= hidden_field_tag :return_url, admin_return_url %>
     <%= form.hidden_field :caption, id: "image_file_caption", name: "image_file[caption]" %>
     <%= form.hidden_field :description, id: "image_file_description", name: "image_file[description]" %>
 
@@ -105,7 +106,7 @@
 
     <div class="mb-3 pt-3">
       <%= form.submit "Save Image", class: "btn btn-primary me-3", disabled: !@application_user.admin? %>
-      <%= link_to("Cancel", admin_image_files_url, class: "btn btn-secondary", target: "_self") %>
+      <%= link_to("Cancel", admin_return_url, class: "btn btn-secondary", target: "_self") %>
     </div>
   <% end %>
 <% end %>

@@ -1,5 +1,6 @@
 # app/controllers/admin/users_controller.rb
 class Admin::UsersController < ApplicationController
+  include AdminReturnNavigation
   include Pagy::Backend
 
   #  before_action :authenticate_user! # Ensure only authenticated users can access
@@ -56,7 +57,7 @@ class Admin::UsersController < ApplicationController
 
       @user.save!
 
-      redirect_to admin_users_path, turbo: false, notice: "User created successfully."
+      redirect_to admin_return_url, status: :see_other, notice: "User created successfully."
     rescue => e
       handle_error(:new, e)
     end
@@ -71,7 +72,7 @@ class Admin::UsersController < ApplicationController
       throw "You are not permitted to change #{class_title}." unless @application_user.admin?
 
       @user.update!(user_params)
-      redirect_to admin_users_path, turbo: false, notice: "User updated successfully"
+      redirect_to admin_return_url, status: :see_other, notice: "User updated successfully"
     rescue => e
       handle_error(:edit, e)
     end
@@ -85,7 +86,7 @@ class Admin::UsersController < ApplicationController
 
       @user.destroy!
 
-      redirect_to admin_users_path, turbo: false, notice: "User deleted successfully."
+      redirect_to admin_return_url, status: :see_other, notice: "User deleted successfully."
     rescue => e
       handle_error(:index, e)
     end
@@ -102,7 +103,7 @@ class Admin::UsersController < ApplicationController
     @error_message = "There was an error with the User: #{@error_message}"
     flash[:error]  = @error_message
 
-    redirect_to action: action, turbo: false
+    redirect_to url_for(action: action, id: params[:id], return_url: @admin_return_url, only_path: true), status: :see_other
   end
 
   def set_user

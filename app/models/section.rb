@@ -36,6 +36,28 @@ class Section < ApplicationRecord
     self.as_json(include: :cells)
   end
 
+  def duplicate!(name:)
+    self.class.transaction do
+      source = self.class.lock.find(id)
+      # after_find derives display defaults; duplicate the stored values themselves.
+      source.restore_attributes
+      copy = source.dup
+      copy.section_name = name.to_s.strip
+      reserved_names = []
+
+      source.cells.each do |cell|
+        child = cell.dup
+        child.cell_name = copy_name_for(Cell, cell.cell_name, reserved_names)
+        reserved_names << child.cell_name
+        child.section_name = copy.section_name
+        copy.cells << child
+      end
+
+      copy.save!
+      copy
+    end
+  end
+
   def self.generate_unique_name(prefix = "new-section_")
     existing_names = Section.where("section_name ~ ?", "^#{prefix}\\d+$").pluck(:section_name)
 
@@ -120,6 +142,17 @@ class Section < ApplicationRecord
   end
 
   private
+
+  def copy_name_for(model, original, reserved = [])
+    field = model == Section ? :section_name : :cell_name
+    number = 1
+    loop do
+      name = number == 1 ? "#{original} Copy" : "#{original} #{number} Copy"
+      return name unless reserved.include?(name) || model.exists?(field => name)
+
+      number += 1
+    end
+  end
 
   def get_percentages(text_classes, image_classes)
     results = [ nil, nil ]

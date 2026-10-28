@@ -84,7 +84,7 @@ RSpec.describe Admin::BlogPostsController, type: :controller do
           post :create, params: { blog_post: valid_attributes }
         }.to change(BlogPost, :count).by(1)
 
-        expect(response).to redirect_to(action: :index, turbo: false)
+        expect(response).to redirect_to(action: :index)
         expect(flash[:notice]).to eq("Blog Post created successfully.")
       end
     end
@@ -96,7 +96,7 @@ RSpec.describe Admin::BlogPostsController, type: :controller do
         }.not_to change(BlogPost, :count)
 
         expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :new, turbo: false)
+        expect(response).to redirect_to(action: :new)
       end
     end
   end
@@ -114,7 +114,7 @@ RSpec.describe Admin::BlogPostsController, type: :controller do
         patch :update, params: { id: blog_post.id, blog_post: { title: "Updated Blog Post" } }
         blog_post.reload
         expect(blog_post.title).to eq("Updated Blog Post")
-        expect(response).to redirect_to(action: :index, turbo: false)
+        expect(response).to redirect_to(action: :index)
         expect(flash[:notice]).to eq("Blog Post updated successfully.")
       end
     end
@@ -124,7 +124,7 @@ RSpec.describe Admin::BlogPostsController, type: :controller do
         patch :update, params: { id: blog_post.id, blog_post: invalid_attributes }
         expect(blog_post.title).to eq("Test Blog")
         expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :edit, turbo: false)
+        expect(response).to redirect_to(action: :edit)
       end
     end
   end
@@ -142,7 +142,7 @@ RSpec.describe Admin::BlogPostsController, type: :controller do
         delete :destroy, params: { id: blog_post.id }
       }.to change(BlogPost, :count).by(-1)
 
-      expect(response).to redirect_to(action: :index, turbo: false)
+      expect(response).to redirect_to(action: :index)
       expect(flash[:notice]).to eq("Blog Post deleted successfully.")
     end
   end

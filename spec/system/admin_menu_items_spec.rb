@@ -37,7 +37,7 @@ RSpec.describe "Admin Menu Items", type: :system do
         select "Main", from: "menu_item[menu_type]"
         fill_in "menu_item[menu_order]", with: 2
         click_button "Save Menu Item"
-        expect(page).to have_current_path(admin_menu_items_path(turbo: false))
+        expect(page).to have_current_path(admin_menu_items_path)
         expect(page).to have_content("Menu Item created successfully.")
       end
     end
@@ -61,7 +61,7 @@ RSpec.describe "Admin Menu Items", type: :system do
         fill_in "menu_item[label]", with: "Updated Menu"
         click_button "Save Menu Item"
 
-        expect(page).to have_current_path(admin_menu_items_path(turbo: false))
+        expect(page).to have_current_path(admin_menu_items_path)
         expect(page).to have_content("Menu Item updated successfully.")
         expect(existing_menu_item.reload.label).to eq("Updated Menu")
       end

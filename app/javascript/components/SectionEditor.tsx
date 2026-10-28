@@ -198,6 +198,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           options={options}
           onFinished={cellsGenerated}
         />
+        <button type="button" className="btn btn-secondary mt-2" onClick={handleCancel}>
+          Cancel
+        </button>
       </div>
     );
   } else if (

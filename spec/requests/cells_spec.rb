@@ -74,7 +74,7 @@ RSpec.describe "Cells", type: :request do
 
     it "rejects creation without a name" do
       expect { post admin_cells_path, params: { cell: attributes.merge(cell_name: nil) } }.not_to change(Cell, :count)
-      expect(response).to redirect_to(new_admin_cell_path(turbo: false))
+      expect(response).to redirect_to(new_admin_cell_path)
       expect(flash[:error]).to include("Cell name")
     end
 

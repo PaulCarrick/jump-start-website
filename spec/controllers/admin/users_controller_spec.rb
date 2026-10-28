@@ -75,7 +75,7 @@ RSpec.describe Admin::UsersController, type: :controller do
         expect {
           post :create, params: { user: invalid_attributes }
         }.not_to change(User, :count)
-        expect(response).to redirect_to(new_admin_user_path(turbo: false))
+        expect(response).to redirect_to(new_admin_user_path)
       end
     end
   end
@@ -101,7 +101,7 @@ RSpec.describe Admin::UsersController, type: :controller do
     context "with invalid attributes" do
       it "does not update the user and renders the edit template" do
         patch :update, params: { id: user.id, user: { email: nil } }
-        expect(response).to redirect_to(edit_admin_user_path(user, turbo: false))
+        expect(response).to redirect_to(edit_admin_user_path(user))
       end
     end
   end

@@ -37,6 +37,23 @@ class Admin::PagesController < Admin::AbstractAdminController
     super
   end
 
+  def renumber_sections
+    page = Page.find(params[:id])
+    unless @application_user&.admin?
+      redirect_to edit_admin_page_path(page, return_url: params[:return_url].present? ? admin_return_url : nil), status: :see_other,
+                  alert: "You are not permitted to renumber sections."
+      return
+    end
+
+    page.renumber_sections!
+    redirect_to edit_admin_page_path(page, return_url: params[:return_url].present? ? admin_return_url : nil), status: :see_other,
+                notice: "Sections renumbered successfully."
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved, ActiveRecord::StatementInvalid => e
+    Rails.logger.error("Could not renumber sections: #{e.message}")
+    redirect_to edit_admin_page_path(page, return_url: params[:return_url].present? ? admin_return_url : nil), status: :see_other,
+                alert: "Could not renumber sections. No changes were saved."
+  end
+
   def add_section_to_page
     page = set_item
 
@@ -76,17 +93,15 @@ class Admin::PagesController < Admin::AbstractAdminController
     redirect_to edit_admin_section_path(section,
                                         read_only_content_type: @read_only_content_type,
                                         new_section:            @new_section,
-                                        return_url:             edit_admin_page_path(page),
-                                        cancel_url:             edit_admin_page_path(page, new_section: true),
+                                        return_url:             edit_admin_page_path(page, section_name: section.section_name, return_url: admin_return_url),
+                                        cancel_url:             edit_admin_page_path(page, return_url: admin_return_url, new_section: true),
                                         turbo:                  false)
   end
 
   def get_sections
     page         = set_item
-    section_name = page.section if page&.section.present?
-
-    if section_name.present?
-      @sections = Section.by_content_type(section_name).includes(:cells)
+    if page.present?
+      @sections = page.ordered_sections.includes(:cells)
     else
       @sections = []
     end

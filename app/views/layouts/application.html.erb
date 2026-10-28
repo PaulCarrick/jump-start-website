@@ -6,6 +6,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <%= csrf_meta_tags %>
+  <% if controller.controller_path.start_with?("admin/") && @application_user&.admin? %>
+    <meta name="admin-image-create" content="true">
+  <% end %>
   <%= csp_meta_tag %>
 
   <%= yield :head %>

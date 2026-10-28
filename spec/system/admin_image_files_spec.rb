@@ -80,7 +80,7 @@ RSpec.describe "Admin Image Files", type: :system do
       fill_in_quill_editor("image-file-description", with: "New Description")
       click_button "Save Image"
 
-      expect(page).to have_current_path(admin_image_files_path(turbo: false))
+      expect(page).to have_current_path(admin_image_files_path)
       expect(page).to have_content("New Image")
     end
   end
@@ -102,7 +102,7 @@ RSpec.describe "Admin Image Files", type: :system do
       fill_in_quill_editor("image-file-caption", with: "New Caption")
       click_button "Save Image"
 
-      expect(page).to have_current_path(admin_image_files_path(turbo: false))
+      expect(page).to have_current_path(admin_image_files_path)
       expect(page).to have_content("Image File updated successfully.")
     end
   end

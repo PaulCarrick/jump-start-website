@@ -89,6 +89,8 @@ RSpec.describe "Admin Users", type: :system do
       original_password = user.encrypted_password
       fill_in "user[name]", with: "Updated User"
       select("Regular", from: "user[access]")
+      # Close Chrome's native select popup before clicking the submit button.
+      find('select[name="user[access]"]').send_keys(:tab)
       expect(page).to have_select("user[access]", selected: "Regular")
       expect(page).to have_field("user[name]", with: "Updated User")
       click_button "Save User"

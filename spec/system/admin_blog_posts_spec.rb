@@ -114,7 +114,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
       click_button "Save Blog"
       sleep 2
       expect(page).to have_content("Blog Post created successfully")
-      expect(page).to have_current_path(admin_blog_posts_path(turbo: false))
+      expect(page).to have_current_path(admin_blog_posts_path)
     end
   end
 
@@ -161,11 +161,23 @@ RSpec.describe "Admin Blog Posts", type: :system do
       expect(page).to have_link("Delete", href: "#{admin_blog_post_path(blog_post_1)}/delete")
     end
 
-    it "renders the pagination controls" do
-      expect(page).to have_link("First", href: /page=1/)
-      expect(page).to have_link("Previous")
-      expect(page).to have_link("Next")
-      expect(page).to have_link("Last", href: /page=\d+/)
+    it "renders disabled boundaries and navigates while preserving sorting" do
+      within('nav[aria-label="Pagination"]') do
+        expect(page).to have_text('Page 1 of 1')
+        expect(page).to have_css('[aria-disabled="true"]', count: 4)
+        expect(page).to have_no_link('Next')
+      end
+      create(:blog_post)
+      visit admin_blog_posts_path(sort: 'title', direction: 'asc')
+      within('nav[aria-label="Pagination"]') { click_link 'Next' }
+      expect(page).to have_current_path(admin_blog_posts_path(sort: 'title', direction: 'asc', page: 2))
+      within('nav[aria-label="Pagination"]') do
+        expect(page).to have_text('Page 2 of 2')
+        expect(page).to have_link('First', href: /page=1/)
+        expect(page).to have_link('Previous')
+        expect(page).to have_no_link('Next')
+        expect(page).to have_no_link('Last')
+      end
     end
 
     it "navigates to the new blog page" do

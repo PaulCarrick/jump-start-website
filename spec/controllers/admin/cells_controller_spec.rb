@@ -94,7 +94,7 @@ RSpec.describe Admin::CellsController, type: :controller do
         }.not_to change(Cell, :count)
 
         expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :new, turbo: false)
+        expect(response).to redirect_to(action: :new)
       end
     end
   end
@@ -131,7 +131,7 @@ RSpec.describe Admin::CellsController, type: :controller do
         patch :update, params: { id: cell.id, cell: { cell_name: nil } }
         expect(cell.reload.cell_name).to eq("Test Cell")
         expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :edit, turbo: false)
+        expect(response).to redirect_to(action: :edit)
       end
     end
   end

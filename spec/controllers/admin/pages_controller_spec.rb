@@ -62,7 +62,7 @@ RSpec.describe Admin::PagesController, type: :controller do
         expect {
           post :create, params: { page: valid_attributes.merge(name: "Another Page", section: "another") }
         }.to change(Page, :count).by(1)
-        expect(response).to redirect_to(action: :index, turbo: false)
+        expect(response).to redirect_to(action: :index)
         expect(flash[:notice]).to eq("Page created successfully.")
       end
     end
@@ -74,7 +74,7 @@ RSpec.describe Admin::PagesController, type: :controller do
         }.not_to change(Page, :count)
 
         expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :new, turbo: false)
+        expect(response).to redirect_to(action: :new)
       end
     end
   end
@@ -91,8 +91,8 @@ RSpec.describe Admin::PagesController, type: :controller do
       expect(added_section.section_order).to eq(section.section_order + 1)
       expect(response).to redirect_to(edit_admin_section_path(added_section,
         read_only_content_type: true, new_section: true,
-        return_url: edit_admin_page_path(page),
-        cancel_url: edit_admin_page_path(page, new_section: true), turbo: false))
+        return_url: edit_admin_page_path(page, section_name: added_section.section_name, return_url: admin_pages_path),
+        cancel_url: edit_admin_page_path(page, return_url: admin_pages_path, new_section: true), turbo: false))
     end
 
     it "uses distinct names for repeated additions" do
@@ -128,7 +128,7 @@ RSpec.describe Admin::PagesController, type: :controller do
         patch :update, params: { id: page.id, page: { name: "Updated Page" } }
         page.reload
         expect(page.name).to eq("Updated Page")
-        expect(response).to redirect_to(action: :index, turbo: false)
+        expect(response).to redirect_to(action: :index)
         expect(flash[:notice]).to eq("Page updated successfully.")
       end
     end
@@ -138,7 +138,7 @@ RSpec.describe Admin::PagesController, type: :controller do
         patch :update, params: { id: page.id, page: invalid_attributes }
         expect(page.name).to eq("Test Page")
         expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :edit, turbo: false)
+        expect(response).to redirect_to(action: :edit)
       end
     end
   end
@@ -156,7 +156,7 @@ RSpec.describe Admin::PagesController, type: :controller do
         delete :destroy, params: { id: page.id }
       }.to change(Page, :count).by(-1)
 
-      expect(response).to redirect_to(action: :index, turbo: false)
+      expect(response).to redirect_to(action: :index)
       expect(flash[:notice]).to eq("Page deleted successfully.")
     end
   end

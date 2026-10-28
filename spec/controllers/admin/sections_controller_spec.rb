@@ -77,7 +77,7 @@ RSpec.describe Admin::SectionsController, type: :controller do
         }.not_to change(Section, :count)
 
         expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :new, turbo: false)
+        expect(response).to redirect_to(action: :new)
       end
     end
   end
@@ -114,7 +114,7 @@ RSpec.describe Admin::SectionsController, type: :controller do
         patch :update, params: { id: section.id, section: invalid_attributes }
         expect(section.section_name).to eq("Test Section")
         expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :edit, turbo: false)
+        expect(response).to redirect_to(action: :edit)
       end
     end
   end
