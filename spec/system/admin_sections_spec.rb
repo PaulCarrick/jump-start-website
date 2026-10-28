@@ -57,8 +57,8 @@ RSpec.describe "Admin Sections", type: :system do
     end
 
     it "offers column templates and content generation" do
-      expect(page).to have_select('cellTemplates', with_options: ['Text Only', 'Image Only',
-        'Dual Column - Text Left', 'Dual Column - Text Right', 'Three Column', 'Four Column', 'Five Column'])
+      expect(page).to have_select('cellTemplates', with_options: [ 'Text Only', 'Image Only',
+        'Dual Column - Text Left', 'Dual Column - Text Right', 'Three Column', 'Four Column', 'Five Column' ])
       select 'Text Only', from: 'cellTemplates'
       expect(page).to have_css('.ql-editor[contenteditable=true]')
       expect(page).to have_button('Generate Columns')

@@ -67,7 +67,7 @@ RSpec.describe 'Admin Selenium UI', admin_e2e: true do
         'Email server username'=>'fake-user', 'Email server password'=>'fake-password',
         'Email server default domain'=>'e2e.example', 'Contact email from address'=>'from@e2e.example',
         'Contact email to address'=>'to@e2e.example', 'Contact Email subject line'=>'E2E Subject',
-        'Background Image'=>'none', 'Copyright'=>'E2E Copyright' }.each { |field,value| fill_field field, with: value }
+        'Background Image'=>'none', 'Copyright'=>'E2E Copyright' }.each { |field, value| fill_field field, with: value }
       select 'Plain', from: 'SMTP Server Authentication'
       %w[Header Footer Container].each do |part|
         select 'Blue', from: "#{part} Background Color*"
@@ -131,7 +131,7 @@ RSpec.describe 'Admin Selenium UI', admin_e2e: true do
       expect(page).to have_content(/already been taken/i)
     end
 
-    %w[Regular Administrator].concat(['Read Only','Post Blogs','Super User']).each do |access|
+    %w[Regular Administrator].concat([ 'Read Only', 'Post Blogs', 'Super User' ]).each do |access|
       it "persists the #{access} access option" do
         create_user; open_record('users', 'E2E Member', 'Edit')
         select access, from: 'Access'; click_button 'Save User'
@@ -230,7 +230,7 @@ RSpec.describe 'Admin Selenium UI', admin_e2e: true do
       expect(page).to have_css('img')
       area('image_files'); open_record('image_files', 'e2e-image', 'Edit')
       expect(find_field('Name*')[:readonly]).to be_truthy
-      expect(find_field('Upload Image*')[:required]).not_to be_in([true, 'true', 'required'])
+      expect(find_field('Upload Image*')[:required]).not_to be_in([ true, 'true', 'required' ])
       quill('Updated caption', index: 0); quill('Updated description', index: 1)
       fill_field 'slide-order-field', with: '2'; click_button 'Save Image'
       expect(find('.scrollable-container')).to have_content('Updated caption')
@@ -269,7 +269,7 @@ RSpec.describe 'Admin Selenium UI', admin_e2e: true do
       cancel; expect(page).to have_current_path('/admin/image_files', ignore_query: true)
     end
 
-    { 'q_name_cont'=>'e2e-image', 'q_group_cont'=>'E2E Gallery', 'q_caption_cont'=>'Caption e2e-image', 'q_description_cont'=>'Description e2e-image' }.each do |field,value|
+    { 'q_name_cont'=>'e2e-image', 'q_group_cont'=>'E2E Gallery', 'q_caption_cont'=>'Caption e2e-image', 'q_description_cont'=>'Description e2e-image' }.each do |field, value|
       it "filters images by #{field} and clears search" do
         create_image; fill_field field, with: value; click_button 'Search Images'
         expect(find('.scrollable-container')).to have_content('e2e-image')
@@ -313,7 +313,7 @@ RSpec.describe 'Admin Selenium UI', admin_e2e: true do
       expect(Section.count).to eq(1)
     end
 
-    ['Text Only','Image Only','Dual Column - Text Left','Dual Column - Text Right','Three Column','Four Column','Five Column'].each do |template|
+    [ 'Text Only', 'Image Only', 'Dual Column - Text Left', 'Dual Column - Text Right', 'Three Column', 'Four Column', 'Five Column' ].each do |template|
       it "generates the #{template} column template and saves it" do
         create_image if template.include?('Image') || template.include?('Dual')
         create_page; open_record('pages', 'e2e-page', 'Edit'); click_link 'Add Section'
@@ -366,7 +366,7 @@ RSpec.describe 'Admin Selenium UI', admin_e2e: true do
     end
 
     { 'sections'=>%w[q_content_type_cont q_section_name_cont q_image_cont q_link_cont q_description_cont],
-      'cells'=>%w[q_section_name_cont q_cell_name_cont q_image_cont q_link_cont q_content_cont] }.each do |resource,fields|
+      'cells'=>%w[q_section_name_cont q_cell_name_cont q_image_cont q_link_cont q_content_cont] }.each do |resource, fields|
       fields.each do |field|
         it "searches #{resource} with #{field} and clears empty results" do
           create_page; area(resource)
@@ -515,7 +515,7 @@ RSpec.describe 'Admin Selenium UI', admin_e2e: true do
         area(resource)
         links = all('a[href*="sort="]').filter_map do |link|
           query = URI(link[:href]).query
-          [link.text, query] if URI.decode_www_form(query || '').to_h.key?('sort')
+          [ link.text, query ] if URI.decode_www_form(query || '').to_h.key?('sort')
         end
         expect(links).not_to be_empty
         links.each do |text, query|

@@ -100,7 +100,7 @@ RSpec.describe Admin::PagesController, type: :controller do
 
       names = page.sections.pluck(:section_name)
       expect(names.uniq).to eq(names)
-      expect(page.sections.order(:section_order).pluck(:section_order)).to eq([1, 2, 3])
+      expect(page.sections.order(:section_order).pluck(:section_order)).to eq([ 1, 2, 3 ])
     end
 
     it "removes the newly added section when editing is canceled" do

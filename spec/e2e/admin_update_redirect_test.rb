@@ -31,7 +31,7 @@ class AdminUpdateRedirectTest < Minitest::Test
       true
     end
     def redirect_to(**options); @redirect = options; end
-    def handle_error(action, error); @handled_error = [action, error]; end
+    def handle_error(action, error); @handled_error = [ action, error ]; end
   end
 
   def test_successful_patch_redirects_to_list_with_303

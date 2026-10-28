@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe BlogsController, type: :controller do
-
   include_context "debug setup"
 
   let!(:blog_post1) { create(:blog_post, blog_type: "Personal", visibility: "Public", posted: Time.now - 1.day, content: "<b>Content 1</b>") }

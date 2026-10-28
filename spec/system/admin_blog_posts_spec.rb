@@ -199,7 +199,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
       within ".scrollable-container" do
         expect(page).to have_content("Author One")
         expect(page).to have_content("Author Two")
-        [blog_post, blog_post_1, blog_post_2].each do |post|
+        [ blog_post, blog_post_1, blog_post_2 ].each do |post|
           expect(page).to have_link("Edit", href: edit_admin_blog_post_path(post))
         end
       end

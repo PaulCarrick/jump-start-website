@@ -115,7 +115,7 @@ module AdminE2E
   def replace_field(input, value)
     modifier = RbConfig::CONFIG['host_os'].include?('darwin') ? :command : :control
     input.click
-    input.send_keys([modifier, 'a'], :backspace)
+    input.send_keys([ modifier, 'a' ], :backspace)
     input.send_keys(value) unless value.empty?
     input.send_keys(:tab)
     if input[:type] == 'number' && !value.empty?
@@ -130,7 +130,7 @@ module AdminE2E
   def quill(text, index: 0)
     editor = all('.ql-editor[contenteditable=true]', minimum: index+1)[index]
     modifier = RbConfig::CONFIG['host_os'].include?('darwin') ? :command : :control
-    editor.click; editor.send_keys([modifier, 'a'], text, :tab)
+    editor.click; editor.send_keys([ modifier, 'a' ], text, :tab)
     expect(editor).to have_text(text)
   end
 
@@ -205,7 +205,7 @@ Capybara.register_driver :admin_e2e_chrome do |app|
   options.add_argument("--user-data-dir=#{File.join(ENV.fetch('E2E_ARTIFACTS_DIR'), 'chrome-profile')}")
   options.add_argument('--no-sandbox') if ENV['CI']
   options.binary = ENV['CHROME_BINARY'] if ENV['CHROME_BINARY']
-  service = Selenium::WebDriver::Chrome::Service.new(args: ['--verbose'], log: File.join(ENV.fetch('E2E_ARTIFACTS_DIR'), 'chromedriver.log'))
+  service = Selenium::WebDriver::Chrome::Service.new(args: [ '--verbose' ], log: File.join(ENV.fetch('E2E_ARTIFACTS_DIR'), 'chromedriver.log'))
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options, service: service)
 end
 Capybara.app = Rails.application
