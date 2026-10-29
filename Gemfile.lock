@@ -483,6 +483,7 @@ DEPENDENCIES
   rails-controller-testing
   ransack
   react-rails
+  rdoc (~> 6.7)
   recaptcha
   rspec-rails
   rubocop-rails-omakase

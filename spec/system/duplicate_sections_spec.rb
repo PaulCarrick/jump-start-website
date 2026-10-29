@@ -64,7 +64,7 @@ RSpec.describe "Duplicate a section from the page editor", type: :system do
     expect(section.page.sections.where(section_group: "New overview group").count).to eq(2)
     expect(section.page.sections.where(section_group: "Overview group").count).to eq(2)
     expect(page).to have_button("Duplicate Group", count: 4)
-    expect(section.page.sections.where(section_group: "New overview group").pluck(:section_order)).to eq([20, 30])
+    expect(section.page.sections.where(section_group: "New overview group").pluck(:section_order)).to eq([ 20, 30 ])
     section_ids = page.all('[data-react-class="RenderSection"]').map do |element|
       JSON.parse(element['data-react-props']).fetch('section').fetch('id')
     end

@@ -54,7 +54,7 @@ class Section < ApplicationRecord
         last_order = self.class.where(page_id: source.page_id).maximum(:section_order) || 0
         copy = nil
         members.each_with_index do |member, index|
-          member_name = member.id == source.id ? name : copy_name_for(self.class, member.section_name, [name])
+          member_name = member.id == source.id ? name : copy_name_for(self.class, member.section_name, [ name ])
           member_copy = duplicate_record!(member, name: member_name, group: name,
             section_order: last_order + (index + 1) * 10)
           copy = member_copy if member.id == source.id

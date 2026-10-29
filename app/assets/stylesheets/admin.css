@@ -162,3 +162,23 @@
 .admin-main .admin-list-record {
   padding-bottom: .5rem;
 }
+
+.admin-help {
+  max-width: 75ch;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.admin-help h2 {
+  margin-top: 2.5rem;
+  padding-top: .75rem;
+  border-top: 1px solid #ccc;
+  scroll-margin-top: 1rem;
+}
+.admin-help h3 {
+  margin-top: 1.5rem;
+  scroll-margin-top: 1rem;
+}
+@media print {
+  .admin-sidebar { display: none; }
+  .admin-help { max-width: none; }
+}

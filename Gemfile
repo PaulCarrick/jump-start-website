@@ -24,6 +24,8 @@ gem "cssbundling-rails"
 gem "jbuilder"
 
 gem "nokogiri"
+# Render the Markdown admin guide in every environment.
+gem "rdoc", "~> 6.7", require: false
 gem "stringio", "~> 3.2"
 # Ruby 4 ships benchmark separately; image-processing dependencies still require it.
 gem "benchmark"

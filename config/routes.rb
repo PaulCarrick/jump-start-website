@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    get "help", to: "help#show", as: :help
     root "dashboard#index" # Admin dashboard
     resources :blog_posts, except: [ :destroy ]
     delete "/blog_posts/:id", to: "blog_posts#destroy", as: "delete_blog_post"

@@ -57,6 +57,6 @@ RSpec.describe "Duplicate a page section", type: :request do
       .to change(Section, :count).by(2).and change(Cell, :count).by(2)
     expect(response).to redirect_to(edit_admin_page_path(section.page, section_name: "New details group"))
     expect(flash[:notice]).to eq("Section group duplicated successfully.")
-    expect(section.page.sections.where(section_group: "New details group").pluck(:section_order)).to eq([20, 30])
+    expect(section.page.sections.where(section_group: "New details group").pluck(:section_order)).to eq([ 20, 30 ])
   end
 end

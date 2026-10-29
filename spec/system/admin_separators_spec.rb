@@ -8,7 +8,7 @@ RSpec.describe "Admin section separators", type: :system do
 
   it "separates adjacent groups, sections and columns without outside lines" do
     website_page = create(:page)
-    sections = ["Work", "Work", "Travel", nil].each_with_index.map do |group, index|
+    sections = [ "Work", "Work", "Travel", nil ].each_with_index.map do |group, index|
       create(:section, page: website_page, section_group: group, section_order: index * 10)
     end
     sections.each { |section| create(:cell, image: nil, link: nil, section: section, formatting: { classes: "col-6" }, content: "<p>Column content</p>") }
@@ -21,7 +21,7 @@ RSpec.describe "Admin section separators", type: :system do
     expect(page).to have_css(".admin-section-cell", count: 5)
     expect(page).to have_css(".admin-section-actions", count: 4)
     expect(page).to have_css(".admin-cell-divider", count: 1)
-    expect(page.evaluate_script(<<~JS)).to eq(["0px", "2px", "0px", "0px", "0px"])
+    expect(page.evaluate_script(<<~JS)).to eq([ "0px", "2px", "0px", "0px", "0px" ])
       Array.from(document.querySelectorAll('.admin-section-cell')).map(cell => getComputedStyle(cell).borderLeftWidth)
     JS
     expect(page.evaluate_script("getComputedStyle(document.querySelector('.admin-sidebar')).alignItems")).to eq("flex-start")
