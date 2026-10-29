@@ -49,10 +49,15 @@ class Section < ApplicationRecord
         end
 
         members = self.class.where(page_id: source.page_id, section_group: source.section_group)
-                            .order(:id).lock.to_a
-        copy = duplicate_record!(source, name: name, group: name)
-        members.reject { |member| member.id == source.id }.each do |member|
-          duplicate_record!(member, name: copy_name_for(self.class, member.section_name), group: name)
+                            .order(self.class.arel_table[:section_order].asc.nulls_last, self.class.arel_table[:id].asc)
+                            .lock.to_a
+        last_order = self.class.where(page_id: source.page_id).maximum(:section_order) || 0
+        copy = nil
+        members.each_with_index do |member, index|
+          member_name = member.id == source.id ? name : copy_name_for(self.class, member.section_name, [name])
+          member_copy = duplicate_record!(member, name: member_name, group: name,
+            section_order: last_order + (index + 1) * 10)
+          copy = member_copy if member.id == source.id
         end
         copy
       else
@@ -146,12 +151,13 @@ class Section < ApplicationRecord
 
   private
 
-  def duplicate_record!(source, name:, group:)
+  def duplicate_record!(source, name:, group:, section_order: source.section_order)
     # after_find derives display defaults; duplicate the stored values themselves.
     source.restore_attributes
     copy = source.dup
     copy.section_name = name
     copy.section_group = group
+    copy.section_order = section_order
     reserved_names = []
 
     source.cells.each do |cell|

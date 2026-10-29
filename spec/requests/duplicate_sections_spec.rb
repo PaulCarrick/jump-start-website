@@ -49,7 +49,7 @@ RSpec.describe "Duplicate a page section", type: :request do
   it "duplicates all group members on the page and returns to the selected copy" do
     sign_in create(:user, access: "super")
     section.update!(section_group: "Details group")
-    sibling = create(:section, page: section.page, section_group: section.section_group)
+    sibling = create(:section, page: section.page, section_group: section.section_group, section_order: 10)
     create(:cell, section: sibling)
     create(:section, section_group: section.section_group)
 
@@ -57,6 +57,6 @@ RSpec.describe "Duplicate a page section", type: :request do
       .to change(Section, :count).by(2).and change(Cell, :count).by(2)
     expect(response).to redirect_to(edit_admin_page_path(section.page, section_name: "New details group"))
     expect(flash[:notice]).to eq("Section group duplicated successfully.")
-    expect(section.page.sections.where(section_group: "New details group").count).to eq(2)
+    expect(section.page.sections.where(section_group: "New details group").pluck(:section_order)).to eq([20, 30])
   end
 end

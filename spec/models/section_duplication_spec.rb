@@ -88,9 +88,9 @@ RSpec.describe "Section duplication", type: :model do
     end
     let!(:sibling_cell) { create(:cell, section: sibling, cell_name: "Details column", content: "<p>Details</p>") }
 
-    it "copies the whole group on this page into a new group, preserving content and order" do
-      create(:section, section_group: section.section_group)
-      create(:section, page: section.page, section_group: "Other group")
+    it "appends the copied group after all current sections, preserving content and relative order" do
+      create(:section, section_group: section.section_group, section_order: 1000)
+      create(:section, page: section.page, section_group: "Other group", section_order: 170)
       original_attributes = [ section.reload.attributes, sibling.reload.attributes ]
       copy = nil
       expect { copy = section.duplicate!(name: "New introduction") }
@@ -98,9 +98,10 @@ RSpec.describe "Section duplication", type: :model do
 
       copies = section.page.sections.where(section_group: "New introduction").order(:section_order)
       expect(copies.pluck(:section_name)).to eq([ "New introduction", "Details Copy" ])
+      expect(copies.pluck(:section_order)).to eq([180, 190])
       expect(copy).to eq(copies.first)
       copies.zip([ section, sibling ]).each do |duplicate, original|
-        ignored = %w[id created_at updated_at section_name section_group]
+        ignored = %w[id created_at updated_at section_name section_group section_order]
         expect(duplicate.attributes.except(*ignored)).to eq(original.attributes.except(*ignored))
         expect(duplicate.cells.map(&:content)).to eq(original.cells.map(&:content))
         expect(duplicate.cells.pluck(:section_name)).to all(eq(duplicate.section_name))
@@ -110,8 +111,12 @@ RSpec.describe "Section duplication", type: :model do
     end
 
     it "copies the same complete group when started from another member" do
-      expect { sibling.duplicate!(name: "New details") }.to change(Section, :count).by(2)
-      expect(section.page.sections.where(section_group: "New details").pluck(:section_order)).to contain_exactly(7, 11)
+      copy = nil
+      expect { copy = sibling.duplicate!(name: "New details") }.to change(Section, :count).by(2)
+      copies = section.page.sections.where(section_group: "New details")
+      expect(copies.pluck(:section_order)).to eq([21, 31])
+      expect(copies.pluck(:section_name)).to eq(["Introduction Copy", "New details"])
+      expect(copy).to eq(copies.last)
     end
 
     it "keeps repeated copies separate from the original and previous copies" do
@@ -120,12 +125,52 @@ RSpec.describe "Section duplication", type: :model do
       expect(section.page.sections.where(section_group: "Introduction group").count).to eq(2)
       expect(section.page.sections.where(section_group: "First group").count).to eq(2)
       expect(section.page.sections.where(section_group: "Second group").count).to eq(2)
+      expect(section.page.sections.where(section_group: "First group").pluck(:section_order)).to eq([21, 31])
+      expect(section.page.sections.where(section_group: "Second group").pluck(:section_order)).to eq([41, 51])
       expect(Cell.pluck(:cell_name).uniq.length).to eq(Cell.count)
     end
 
     it "duplicates a copied group without including originals" do
       first = section.duplicate!(name: "First group")
       expect { first.duplicate!(name: "Second group") }.to change(Section, :count).by(2)
+    end
+
+    it "preserves display order for out-of-order creation, ties and unnumbered members" do
+      section.update!(section_order: 30)
+      sibling.update!(section_order: 10)
+      create(:section, page: section.page, section_group: section.section_group,
+        section_name: "More details", section_order: 10)
+      create(:section, page: section.page, section_group: section.section_group,
+        section_name: "Unnumbered", section_order: nil)
+      create(:section, page: section.page, section_order: 200)
+
+      section.duplicate!(name: "New introduction")
+      copies = section.page.sections.where(section_group: "New introduction")
+      expect(copies.pluck(:section_name)).to eq(["Details Copy", "More details Copy", "New introduction", "Unnumbered Copy"])
+      expect(copies.pluck(:section_order)).to eq([210, 220, 230, 240])
+    end
+
+    it "starts at ten when all current section orders are unset" do
+      section.update!(section_order: nil)
+      sibling.update!(section_order: nil)
+      section.duplicate!(name: "New introduction")
+      expect(section.page.sections.where(section_group: "New introduction").pluck(:section_order)).to eq([10, 20])
+    end
+
+    it "starts exactly ten after a negative maximum" do
+      section.update!(section_order: -30)
+      sibling.update!(section_order: -20)
+      section.duplicate!(name: "New introduction")
+      expect(section.page.sections.where(section_group: "New introduction").pluck(:section_order)).to eq([-10, 0])
+    end
+
+    it "reserves the entered name when a preceding member would otherwise generate it" do
+      section.update!(section_order: 50)
+      sibling.update!(section_order: 10)
+      copy = section.duplicate!(name: "Details Copy")
+      expect(copy.section_name).to eq("Details Copy")
+      expect(section.page.sections.where(section_group: "Details Copy").pluck(:section_name)).to eq(["Details 2 Copy", "Details Copy"])
+      expect(copy.section_order).to eq(70)
     end
 
     it "rejects an existing group name without creating a partial copy" do
