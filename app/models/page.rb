@@ -1,5 +1,5 @@
 class Page < ApplicationRecord
-  has_many :sections, dependent: :destroy
+  has_many :sections, -> { order(Section.arel_table[:section_order].asc.nulls_last, Section.arel_table[:id].asc) }, dependent: :destroy
   accepts_nested_attributes_for :sections, allow_destroy: true
   has_one :menu_item, dependent: :destroy
   accepts_nested_attributes_for :menu_item, allow_destroy: true
@@ -8,31 +8,23 @@ class Page < ApplicationRecord
 
   scope :by_id, ->(id) {
     where(id: id)
-      .left_joins(sections: :cells)
-      .includes(:menu_item, :footer_item, sections: :cells)
-      .references(:menu_item, :footer_item, :sections, :cells)
-      .order("sections.section_order ASC NULLS LAST, cells.cell_order ASC NULLS LAST")
+      .preload(:menu_item, :footer_item, sections: :cells)
       .limit(1)
   }
 
   scope :by_page_name, ->(name) {
     where(name: name)
-      .left_joins(sections: :cells)
-      .includes(:menu_item, :footer_item, sections: :cells)
-      .references(:menu_item, :footer_item, :sections, :cells)
-      .order("sections.section_order ASC NULLS LAST, cells.cell_order ASC NULLS LAST")
+      .preload(:menu_item, :footer_item, sections: :cells)
       .limit(1)
   }
 
   scope :by_section, ->(section) {
     where(section: section)
-      .includes(:menu_item, :footer_item, sections: :cells)
-      .references(:menu_item, :footer_item, :sections, :cells)
-      .order("sections.section_order ASC NULLS LAST, cells.cell_order ASC NULLS LAST")
+      .preload(:menu_item, :footer_item, sections: :cells)
       .limit(1)
   }
 
-  scope :sections, ->(page) { page.sections.distinct.order(:section_name).pluck(:section_name) }
+  scope :sections, ->(page) { page.sections.distinct.reorder(:section_name).pluck(:section_name) }
 
   validates :name, :section, presence: true, uniqueness: true
 

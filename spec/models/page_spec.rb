@@ -80,4 +80,54 @@ RSpec.describe Page, type: :model do
       expect(page.sections).not_to include(unrelated_section)
     end
   end
+
+  describe "section ordering" do
+    let!(:page_record) { create(:page) }
+    let!(:last) { create(:section, page: page_record, section_order: 20) }
+    let!(:unnumbered) { create(:section, page: page_record, section_order: nil) }
+    let!(:second) { create(:section, page: page_record, section_order: 10) }
+    let!(:first) { create(:section, page: page_record, section_order: -5) }
+    let!(:tied) { create(:section, page: page_record, section_order: 10) }
+    let(:expected_ids) { [first.id, second.id, tied.id, last.id, unnumbered.id] }
+
+    it "orders lazily loaded sections with stable ties and unnumbered sections last" do
+      expect(Page.find(page_record.id).sections.map(&:id)).to eq(expected_ids)
+    end
+
+    it "supports reverse lookup of the last section" do
+      expect(Page.find(page_record.id).sections.last).to eq(unnumbered)
+    end
+
+    it "still lists distinct section names alphabetically" do
+      names = [last, unnumbered, second, first, tied].map(&:section_name).sort
+      expect(Page.sections(page_record)).to eq(names)
+    end
+
+    it "preserves section ordering when sections are preloaded" do
+      record = Page.preload(:sections).find(page_record.id)
+      expect(record.association(:sections)).to be_loaded
+      expect(record.sections.map(&:id)).to eq(expected_ids)
+    end
+
+    %i[by_id by_page_name by_section].each do |scope|
+      [false, true].each do |with_cells|
+        it "orders #{scope} sections #{with_cells ? 'with' : 'without'} columns" do
+          if with_cells
+            create(:cell, section: second, cell_order: 50)
+            create(:cell, section: second, cell_order: 2)
+            create(:cell, section: tied, cell_order: 1)
+            create(:cell, section: first, cell_order: 99)
+          end
+          key = { by_id: page_record.id, by_page_name: page_record.name, by_section: page_record.section }.fetch(scope)
+          record = Page.public_send(scope, key).first
+          expect(record.association(:sections)).to be_loaded
+          expect(record.sections.map(&:id)).to eq(expected_ids)
+          if with_cells
+            expect(record.sections.find { |section| section.id == second.id }.cells.map(&:cell_order)).to eq([2, 50])
+          end
+        end
+      end
+    end
+  end
+
 end
