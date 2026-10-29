@@ -127,7 +127,7 @@ RSpec.describe Admin::CellsController, type: :controller do
 
     context "with invalid attributes" do
       it "does not update the record and redirects to edit" do
-        patch :update, params: { id: cell.id, cell: { section_name: nil } }
+        patch :update, params: { id: cell.id, cell: { cell_name: nil } }
         expect(cell.cell_name).to eq("Test Cell")
         expect(flash[:error]).to be_present
         expect(response).to redirect_to(action: :edit, turbo: false)

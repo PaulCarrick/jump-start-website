@@ -159,36 +159,16 @@ class Admin::CellsController < Admin::AbstractAdminController
   end
 
   def get_params
-    section = params.require(:section)
-
-    section[:cells_attributes] = section.delete(:cells) if section[:cells].present?
-
-    section.permit(
-      :content_type,
-      :section_name,
-      :section_order,
-      :image,
-      :link,
-      :description,
-      :checksum,
-      :row_style,
-      :div_ratio,
-      image_attributes: {},
-      text_attributes:  {},
-      formatting:       {},
-      cells_attributes: [
-                          :id,
-                          :cell_name,
-                          :cell_type,
-                          :cell_order,
-                          :content,
-                          :image,
-                          :link,
-                          :width,
-                          :_destroy,
-                          formatting: {},
-                          options:    {}
-                        ]
+    attributes = params.require(:cell).permit(
+      :section_id, :section_name, :cell_name, :cell_type, :cell_order,
+      :content, :image, :link, :width, :checksum,
+      options: {}, formatting: {}
     )
+
+    if attributes.key?(:section_name)
+      attributes[:section_id] = Section.find_by(section_name: attributes[:section_name])&.id
+    end
+
+    attributes
   end
 end

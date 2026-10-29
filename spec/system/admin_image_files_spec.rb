@@ -7,6 +7,7 @@ RSpec.describe "Admin Image Files", type: :system do
     expect(page).to have_field(name: 'q[name_cont]')
     fill_in "q[name_cont]", with: name
     click_button "Search Images"
+    expect(page).to have_current_path(/[?&]q(?:%5B|\[)/)
   end
 
   let(:admin_user) { create(:user, access: "super") }
@@ -112,8 +113,10 @@ RSpec.describe "Admin Image Files", type: :system do
     it "deletes an image file successfully" do
       search_image_files("Test Image")
 
-      click_link "Delete", href: "#{admin_destroy_image_file_path(image_file)}"
-      page.driver.browser.switch_to.alert.accept # Confirm alert
+      expect(page).to have_current_path(/q%5Bname_cont%5D=Test(?:\+|%20)Image/)
+      accept_confirm do
+        click_link "Delete", href: admin_destroy_image_file_path(image_file)
+      end
       expect(page).not_to have_content("Test Image")
     end
   end

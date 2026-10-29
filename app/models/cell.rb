@@ -75,7 +75,6 @@ class Cell < ApplicationRecord
 
       errors.add(:content, error)
       Rails.logger.error error
-      raise ActiveRecord::RecordInvalid, error
     end
   end
 end

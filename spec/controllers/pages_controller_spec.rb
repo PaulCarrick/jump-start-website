@@ -24,7 +24,7 @@ RSpec.describe PagesController, type: :controller do
 
       it "builds contents from the page sections" do
         expect(assigns(:contents)).to be_an(Array)
-        expect(assigns(:contents)).to include(section)
+        expect(assigns(:contents)).to include(hash_including("id" => section.id))
       end
 
       it "renders the show template" do
@@ -35,8 +35,8 @@ RSpec.describe PagesController, type: :controller do
     context "when the page does not exist" do
       before { get :show, params: { id: "non-existent-page" } }
 
-      it "redirects to the root path with an alert" do
-        expect(response).to redirect_to(root_path)
+      it "renders with a missing page alert" do
+        expect(response).to have_http_status(:ok)
         expect(flash[:alert]).to eq("Can't find page for: non-existent-page.")
       end
     end

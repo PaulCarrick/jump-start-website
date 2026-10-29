@@ -54,6 +54,7 @@ export type Section = {
   index?: number | null;
   id?: number | null;
   section_name: string;
+  section_group?: string | null;
   section_order?: number | null;
   content_type?: string | null;
   image?: string | null;

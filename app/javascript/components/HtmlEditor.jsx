@@ -101,8 +101,8 @@ const HtmlEditor = ({
     if (typeof onChange === "function") {
       onChange(content, attribute);
     }
-    else if (onChange && typeof onChange === "string") {
-      const callable = new Function("editorContent", attribute, onChange);
+    else if (onChange && typeof onChange === "string" && attribute !== "useHtmlView") {
+      const callable = new Function("editorContent", "id", onChange);
 
       callable(content, attribute);
     }
@@ -170,7 +170,7 @@ const HtmlEditor = ({
 
   const handleBlur = () => {
     const quill   = quillRef.current?.getEditor();
-    const content = quill?.root.innerHTML;
+    const content = isHtmlView ? editorContent : quill?.root.innerHTML;
 
     if (typeof onBlur === "function") {
       onBlur(content, id);

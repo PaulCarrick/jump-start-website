@@ -194,8 +194,10 @@ class Admin::SectionsController < Admin::AbstractAdminController
 
   def get_params
     params.require(:section).permit(
+      :page_id,
       :content_type,
       :section_name,
+      :section_group,
       :section_order,
       :image,
       :link,

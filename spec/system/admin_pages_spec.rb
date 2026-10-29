@@ -81,22 +81,21 @@ RSpec.describe "Admin Pages", type: :system do
     end
 
     it "renders the form with required fields" do
-      expect(page).to have_field("page[name]", type: "text")
-      expect(page).to have_field("Section", type: "text")
-      expect(page).to have_field("Title", type: "text")
-      expect(page).to have_field("Access", type: "text")
+      expect(page).to have_field("name", type: "text")
+      expect(page).to have_field("section_name", type: "text")
+      expect(page).to have_field("title", type: "text")
+      expect(page).to have_field("access", type: "text")
     end
 
     it "creates a new page successfully" do
-      fill_in "page[name]", with: "New Page"
-      fill_in "Section", with: "New Section"
-      fill_in "Title", with: "New Title"
-      fill_in "Access", with: "Private"
+      fill_in "name", with: "New Page"
+      fill_in "title", with: "New Title"
+      fill_in "access", with: "Private"
       click_button "Save Page"
 
-      expect(page).to have_current_path(admin_pages_path(turbo: false))
-      expect(page).to have_content("New Page")
-      expect(page).to have_content("Private")
+      expect(page).to have_current_path(admin_pages_path)
+      expect(Page.find_by!(name: "New Page").access).to eq("Private")
+      expect(page).to have_content("New Title")
     end
   end
 
@@ -142,7 +141,8 @@ RSpec.describe "Admin Pages", type: :system do
     it "deletes an page successfully" do
       click_link "Delete", href: "#{admin_destroy_page_path(page_record)}"
       page.driver.browser.switch_to.alert.accept # Confirm alert
-      expect(page).not_to have_content("Test Page")
+      expect(page).not_to have_link("View", href: admin_page_path(page_record))
+      expect(Page.exists?(page_record.id)).to be(false)
     end
   end
 end

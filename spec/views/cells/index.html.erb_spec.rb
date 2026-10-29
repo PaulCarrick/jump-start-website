@@ -1,44 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe "cells/index", type: :view do
-  before(:each) do
-    assign(:cells, [
-      Cell.create!(
-        section_name: "Section Name",
-        cell_order: 2,
-        description: "MyText",
-        image: "Image",
-        link: "Link",
-        options: "",
-        formatting: "",
-        width: "Width",
-        checksum: "MyText"
-      ),
-      Cell.create!(
-        section_name: "Section Name",
-        cell_order: 2,
-        description: "MyText",
-        image: "Image",
-        link: "Link",
-        options: "",
-        formatting: "",
-        width: "Width",
-        checksum: "MyText"
-      )
-    ])
-  end
+  it "renders cell links and content" do
+    assign(:site_information, double(site_name: "Test site"))
+    assign(:cells, [ { cell_name: "Example cell", url: "/example", content: "<p>Cell content</p>" } ])
+    stub_template "layouts/_header.html.erb" => ""
+    stub_template "layouts/_footer.html.erb" => ""
+    stub_template "shared/_page_navigation.html.erb" => ""
 
-  it "renders a list of cells" do
     render
-    cell_selector = 'div>p'
-    assert_select cell_selector, text: Regexp.new("Section Name".to_s), count: 2
-    assert_select cell_selector, text: Regexp.new(2.to_s), count: 2
-    assert_select cell_selector, text: Regexp.new("MyText".to_s), count: 2
-    assert_select cell_selector, text: Regexp.new("Image".to_s), count: 2
-    assert_select cell_selector, text: Regexp.new("Link".to_s), count: 2
-    assert_select cell_selector, text: Regexp.new("".to_s), count: 2
-    assert_select cell_selector, text: Regexp.new("".to_s), count: 2
-    assert_select cell_selector, text: Regexp.new("Width".to_s), count: 2
-    assert_select cell_selector, text: Regexp.new("MyText".to_s), count: 2
+
+    assert_select 'a[href="/example"]', text: "Example cell"
+    assert_select 'p', text: "Cell content"
   end
 end

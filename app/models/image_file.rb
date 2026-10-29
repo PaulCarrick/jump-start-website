@@ -26,7 +26,7 @@ class ImageFile < ApplicationRecord
   end
 
   def image_url
-    Rails.application.routes.url_helpers.url_for(self.image) if self.image.attached?
+    rails_blob_path(image, only_path: true) if image.attached?
   end
 
   def as_json(options = {})

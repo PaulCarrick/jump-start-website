@@ -88,7 +88,7 @@ RSpec.describe "Admin Users", type: :system do
     it "updates a user successfully" do
       fill_in "user[name]", with: "Updated User"
       select("Regular", from: "user[access]")
-      click_button "Save User"
+      find_button("Save User").send_keys(:enter)
 
       expect(page).to have_current_path(admin_users_path)
       expect(page).to have_content("Updated User")

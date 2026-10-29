@@ -39,7 +39,7 @@ RSpec.configure do |config|
   config.include Rails.application.routes.url_helpers
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_paths = [ "#{::Rails.root}/spec/fixtures" ]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -86,16 +86,27 @@ RSpec.configure do |config|
 
   config.order = :defined
 
-  config.before(:each, type: :system) do
+  config.before(:context, type: :system) do
     Rails.application.load_tasks unless Rake::Task.task_defined?('db:replicate')
 
     # Invoke your Rake task
     begin
-      Rake::Task['db:replicate'].invoke
+      unless Rake::Task['db:replicate'].already_invoked
+        Rake::Task['db:replicate'].invoke
+        # Restoration changes table definitions; discard connections and cached schemas before examples.
+        ActiveRecord::Base.connection_pool.disconnect!
+        ActiveRecord::Base.connection_pool.schema_cache.clear!
+        ApplicationRecord.descendants.each(&:reset_column_information)
+      end
     rescue StandardError => e
       puts "Error: Rake task failed - #{e.message}"
       raise e
     end
+  end
+
+  config.after(:suite) do
+    # Replication copies development metadata; restore the test marker outside example transactions.
+    ActiveRecord::Base.connection_pool.internal_metadata[:environment] = Rails.env
   end
 
   config.before(:each, type: :system) do

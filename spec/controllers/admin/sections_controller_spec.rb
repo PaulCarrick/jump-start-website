@@ -26,7 +26,7 @@ RSpec.describe Admin::SectionsController, type: :controller do
     }
   }
 
-  let!(:section) { create(:section, valid_attributes) }
+  let!(:section) { create(:section, valid_attributes.merge(page: create(:page))) }
 
   before do
     allow(controller).to receive(:controller_name).and_return("sections")
@@ -61,7 +61,7 @@ RSpec.describe Admin::SectionsController, type: :controller do
     context "with valid attributes" do
       it "creates a new section and redirects to index" do
         expect {
-          post :create, params: { section: valid_attributes }
+          post :create, params: { section: valid_attributes.merge(section_name: "New Section", page_id: section.page_id) }
         }.to change(Section, :count).by(1)
 
         expect(response).to redirect_to(admin_sections_path)
@@ -106,6 +106,14 @@ RSpec.describe Admin::SectionsController, type: :controller do
 
         expect(section.description).to eq("<div>Test Description</div>")
       end
+    end
+
+    it "saves and clears the section group" do
+      patch :update, params: { id: section.id, section: { section_group: "Introduction" } }
+      expect(section.reload.section_group).to eq("Introduction")
+
+      patch :update, params: { id: section.id, section: { section_group: "" } }
+      expect(section.reload.section_group).to eq("")
     end
 
     context "with invalid attributes" do

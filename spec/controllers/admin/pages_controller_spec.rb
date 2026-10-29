@@ -62,7 +62,7 @@ RSpec.describe Admin::PagesController, type: :controller do
     context "with valid attributes" do
       it "creates a new record and redirects to index" do
         expect {
-          post :create, params: { page: valid_attributes }
+          post :create, params: { page: valid_attributes.merge(name: "New Page", section: "new-page") }
         }.to change(Page, :count).by(1)
         expect(response).to redirect_to(action: :index, turbo: false)
         expect(flash[:notice]).to eq("Page created successfully.")
@@ -102,7 +102,7 @@ RSpec.describe Admin::PagesController, type: :controller do
 
       names = page.sections.pluck(:section_name)
       expect(names.uniq).to eq(names)
-      expect(page.sections.order(:section_order).pluck(:section_order)).to eq([1, 2, 3])
+      expect(page.sections.order(:section_order).pluck(:section_order)).to eq([ 1, 2, 3 ])
     end
 
     it "removes the newly added section when editing is canceled" do

@@ -69,6 +69,7 @@ export function newSection(params: Partial<Section> = {}): Section {
   return {
     content_type:     params.content_type || null,
     section_name:     params.section_name || "new-section",
+    section_group:    params.section_group ?? null,
     section_order:    params.section_order || null,
     image:            params.image || null,
     link:             params.link || null,

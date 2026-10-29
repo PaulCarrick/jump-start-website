@@ -45,6 +45,17 @@ Rails.application.configure do
     port: ENV.fetch('INTERNAL_PORT', '3000')
   }
 
+  # Log to log/production.log with the current request id as a default log tag.
+  config.log_tags = [ :request_id ]
+
+  file_logger = ActiveSupport::Logger.new(Rails.root.join("log", "development.log"), 5, 50 * 1024 * 1024)
+  file_logger.formatter = ::Logger::Formatter.new
+
+  config.logger = ActiveSupport::TaggedLogging.new(file_logger)
+
+  # Change to "debug" to log everything (including potentially personally-identifiable information!)
+  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 

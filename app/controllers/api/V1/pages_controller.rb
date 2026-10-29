@@ -98,6 +98,7 @@ module Api
                                  :id,
                                  :content_type,
                                  :section_name,
+                                 :section_group,
                                  :section_order,
                                  :image,
                                  :link,

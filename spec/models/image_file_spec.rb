@@ -78,7 +78,8 @@ RSpec.describe ImageFile, type: :model do
 
     describe "#image_url" do
       it "returns the URL for the attached image if present" do
-        expect(image_file.image_url).to be_present
+        expect(image_file.image_url).to eq(rails_blob_path(image_file.image, only_path: true))
+        expect(URI.parse(image_file.image_url).host).to be_nil
       end
 
       it "returns nil if the image is not attached" do
@@ -90,8 +91,7 @@ RSpec.describe ImageFile, type: :model do
     describe "#as_json" do
       it "includes the image URL in the JSON representation" do
         json = image_file.as_json
-        uri = URI.parse(json[:image_url])
-        expect(uri).to be_a(URI::HTTP).or be_a(URI::HTTPS) # Checks for valid HTTP/HTTPS URL
+        expect(json[:image_url]).to eq(rails_blob_path(image_file.image, only_path: true))
       end
     end
   end

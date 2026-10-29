@@ -29,8 +29,6 @@ RSpec.describe "Pages", type: :system do
   let!(:pact_video) { create(:image_file, :pact_video) }
 
   before do
-    ENV['IMAGE_HACK'] = true.to_s
-
     if ENV["DEBUG"].present? || ENV["RSPEC_DEBUG"].present?
       driven_by(:selenium_chrome)
     else
@@ -50,8 +48,8 @@ RSpec.describe "Pages", type: :system do
     before { visit page_path("html_page") }
 
     it "displays the html page correctly" do
-      rendered_html            = page.evaluate_script('document.querySelector(".col-12").innerHTML').strip
-      expected_html            = "<div><div>#{html_section.description.strip}</div></div>"
+      rendered_html            = find('[data-react-class="RenderSection"] #contents > div > div', match: :first).native.attribute("innerHTML").strip
+      expected_html            = html_section.description.strip
       rendered_html_normalized = Nokogiri::HTML.fragment(rendered_html).to_html
       expected_html_normalized = Nokogiri::HTML.fragment(expected_html).to_html
 

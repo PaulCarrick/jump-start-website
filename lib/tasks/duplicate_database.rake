@@ -40,7 +40,7 @@ namespace :db do
 
     if $?.success?
       puts "#{source_db} Database dumped successfully. Restoring to #{destination_db}..."
-      system("pg_restore --verbose --clean --no-acl --no-owner -h localhost -U #{db_user} -d \"#{destination_db}\" #{dump_file}")
+      system("pg_restore --verbose --clean --if-exists --no-acl --no-owner -h localhost -U #{db_user} -d \"#{destination_db}\" #{dump_file}")
 
       if $?.success?
         puts "#{destination_db} database restored successfully."

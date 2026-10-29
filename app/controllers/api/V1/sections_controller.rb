@@ -103,6 +103,7 @@ module Api
         section.permit(
           :content_type,
           :section_name,
+          :section_group,
           :section_order,
           :image,
           :link,

@@ -82,6 +82,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
       switch (attribute) {
         case "sectionName":
           return { ...prev, section_name: newValue as string };
+        case "sectionGroup":
+          return { ...prev, section_group: newValue as string };
         case "sectionOrder":
           return { ...prev, section_order: Number(newValue) };
         default:
@@ -227,6 +229,23 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                           </div>)
             }
             {renderSectionName(sectionData?.section_name, options.availableSectionNames, setValue, options.readOnlySectionName)}
+            <div className="row mb-2">
+              <label htmlFor="sectionGroup" className="col-2 d-flex align-items-center">Section group:</label>
+              <div className="col-5">
+                <input
+                    type="text"
+                    id="sectionGroup"
+                    name="section_group"
+                    className="form-control"
+                    value={sectionData?.section_group ?? ""}
+                    onChange={event => setValue(event.target.value, "sectionGroup")}
+                    aria-describedby="sectionGroupHelp"
+                />
+                <div id="sectionGroupHelp" className="form-text">
+                  Use the same group name for sections that belong together. Leave blank for no group.
+                </div>
+              </div>
+            </div>
             {renderSectionOrder(sectionData?.section_order, setValue)}
 
             <div className="row mb-2">

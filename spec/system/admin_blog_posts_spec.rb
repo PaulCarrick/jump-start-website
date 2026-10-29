@@ -7,6 +7,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
     expect(page).to have_field(name: 'q[content_cont]')
     fill_in "q[content_cont]", with: content
     click_button "Search Blogs"
+    expect(page).to have_current_path(/[?&]q(?:%5B|\[)/)
   end
 
   let(:admin_user) { create(:user, access: "super") }
@@ -36,6 +37,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
       expect(page).to have_field(name: 'q[title_cont]')
       fill_in "q[title_cont]", with: "Title One"
       click_button "Search Blogs"
+      expect(page).to have_current_path(/[?&]q(?:%5B|\[)/)
       expect(page).to have_content("Title One")
     end
 
@@ -45,6 +47,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
       expect(page).to have_field(name: 'q[author_cont]')
       fill_in "q[author_cont]", with: "Author One"
       click_button "Search Blogs"
+      expect(page).to have_current_path(/[?&]q(?:%5B|\[)/)
       expect(page).to have_content("Author One")
     end
 
@@ -54,6 +57,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
       expect(page).to have_field(name: 'q[content_cont]')
       fill_in "q[content_cont]", with: "Content One"
       click_button "Search Blogs"
+      expect(page).to have_current_path(/[?&]q(?:%5B|\[)/)
       expect(page).to have_content("Content One")
     end
 
@@ -65,6 +69,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
       expect(page).to have_field(name: 'q[posted_date_eq]')
       fill_in "q[posted_date_eq]", with: formatted_date
       click_button "Search Blogs"
+      expect(page).to have_current_path(/[?&]q(?:%5B|\[)/)
       expect(page).to have_content("Test Blog")
     end
   end
@@ -172,6 +177,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
     it "performs a search with the form" do
       fill_in "Author", with: "Author One"
       click_button "Search Blogs"
+      expect(page).to have_current_path(/[?&]q(?:%5B|\[)/)
 
       expect(page).to have_content("Author One")
       expect(page).not_to have_content("Author Two")
@@ -180,6 +186,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
     it "clears the search results" do
       fill_in "Author", with: "Author One"
       click_button "Search Blogs"
+      expect(page).to have_current_path(/[?&]q(?:%5B|\[)/)
       click_link "Clear Search"
       sleep 1
 

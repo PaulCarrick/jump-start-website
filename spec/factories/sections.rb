@@ -18,8 +18,9 @@ end
 
 FactoryBot.define do
   factory :section do
+    association :page
     content_type { "Test" }
-    section_name { "Test" }
+    sequence(:section_name) { |n| "test-section-#{n}" }
     section_order { 1 }
     image { "ImageFile:test" }
     link { "/images/test.jpg" }
