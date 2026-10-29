@@ -59,5 +59,4 @@ RSpec.describe "Duplicate a page section", type: :request do
     expect(flash[:notice]).to eq("Section group duplicated successfully.")
     expect(section.page.sections.where(section_group: "New details group").count).to eq(2)
   end
-
 end

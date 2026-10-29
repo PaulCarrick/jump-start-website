@@ -91,22 +91,22 @@ RSpec.describe "Section duplication", type: :model do
     it "copies the whole group on this page into a new group, preserving content and order" do
       create(:section, section_group: section.section_group)
       create(:section, page: section.page, section_group: "Other group")
-      original_attributes = [section.reload.attributes, sibling.reload.attributes]
+      original_attributes = [ section.reload.attributes, sibling.reload.attributes ]
       copy = nil
       expect { copy = section.duplicate!(name: "New introduction") }
         .to change(Section, :count).by(2).and change(Cell, :count).by(3)
 
       copies = section.page.sections.where(section_group: "New introduction").order(:section_order)
-      expect(copies.pluck(:section_name)).to eq(["New introduction", "Details Copy"])
+      expect(copies.pluck(:section_name)).to eq([ "New introduction", "Details Copy" ])
       expect(copy).to eq(copies.first)
-      copies.zip([section, sibling]).each do |duplicate, original|
+      copies.zip([ section, sibling ]).each do |duplicate, original|
         ignored = %w[id created_at updated_at section_name section_group]
         expect(duplicate.attributes.except(*ignored)).to eq(original.attributes.except(*ignored))
         expect(duplicate.cells.map(&:content)).to eq(original.cells.map(&:content))
         expect(duplicate.cells.pluck(:section_name)).to all(eq(duplicate.section_name))
         expect(duplicate.cells.pluck(:section_id)).to all(eq(duplicate.id))
       end
-      expect([section.reload.attributes, sibling.reload.attributes]).to eq(original_attributes)
+      expect([ section.reload.attributes, sibling.reload.attributes ]).to eq(original_attributes)
     end
 
     it "copies the same complete group when started from another member" do
@@ -132,7 +132,7 @@ RSpec.describe "Section duplication", type: :model do
       create(:section, page: section.page, section_group: "Existing group")
       expect {
         expect { section.duplicate!(name: "Existing group") }.to raise_error(ActiveRecord::RecordInvalid, /already exists/)
-      }.not_to change { [Section.count, Cell.count] }
+      }.not_to change { [ Section.count, Cell.count ] }
     end
 
     it "rolls back all copied sections and columns if a later member fails" do
@@ -145,16 +145,15 @@ RSpec.describe "Section duplication", type: :model do
       end
       expect {
         expect { section.duplicate!(name: "New introduction") }.to raise_error(ActiveRecord::RecordInvalid)
-      }.not_to change { [Section.count, Cell.count] }
+      }.not_to change { [ Section.count, Cell.count ] }
     end
   end
 
-  ["", "  "].each do |blank_group|
+  [ "", "  " ].each do |blank_group|
     it "keeps single-section duplication for a #{blank_group.inspect} group" do
       section.update!(section_group: blank_group)
       create(:section, page: section.page, section_group: blank_group)
       expect { section.duplicate!(name: "New introduction") }.to change(Section, :count).by(1)
     end
   end
-
 end

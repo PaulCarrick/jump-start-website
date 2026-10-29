@@ -88,7 +88,7 @@ RSpec.describe Page, type: :model do
     let!(:second) { create(:section, page: page_record, section_order: 10) }
     let!(:first) { create(:section, page: page_record, section_order: -5) }
     let!(:tied) { create(:section, page: page_record, section_order: 10) }
-    let(:expected_ids) { [first.id, second.id, tied.id, last.id, unnumbered.id] }
+    let(:expected_ids) { [ first.id, second.id, tied.id, last.id, unnumbered.id ] }
 
     it "orders lazily loaded sections with stable ties and unnumbered sections last" do
       expect(Page.find(page_record.id).sections.map(&:id)).to eq(expected_ids)
@@ -99,7 +99,7 @@ RSpec.describe Page, type: :model do
     end
 
     it "still lists distinct section names alphabetically" do
-      names = [last, unnumbered, second, first, tied].map(&:section_name).sort
+      names = [ last, unnumbered, second, first, tied ].map(&:section_name).sort
       expect(Page.sections(page_record)).to eq(names)
     end
 
@@ -110,7 +110,7 @@ RSpec.describe Page, type: :model do
     end
 
     %i[by_id by_page_name by_section].each do |scope|
-      [false, true].each do |with_cells|
+      [ false, true ].each do |with_cells|
         it "orders #{scope} sections #{with_cells ? 'with' : 'without'} columns" do
           if with_cells
             create(:cell, section: second, cell_order: 50)
@@ -123,11 +123,10 @@ RSpec.describe Page, type: :model do
           expect(record.association(:sections)).to be_loaded
           expect(record.sections.map(&:id)).to eq(expected_ids)
           if with_cells
-            expect(record.sections.find { |section| section.id == second.id }.cells.map(&:cell_order)).to eq([2, 50])
+            expect(record.sections.find { |section| section.id == second.id }.cells.map(&:cell_order)).to eq([ 2, 50 ])
           end
         end
       end
     end
   end
-
 end

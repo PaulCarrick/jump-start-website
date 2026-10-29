@@ -65,5 +65,4 @@ RSpec.describe "Duplicate a section from the page editor", type: :system do
     expect(page).to have_button("Duplicate Group", count: 4)
     page.save_screenshot(Rails.root.join("tmp/grouped-section-duplication.png"))
   end
-
 end
