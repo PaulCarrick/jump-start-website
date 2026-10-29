@@ -27,7 +27,18 @@
 .admin-section-actions {
   border-bottom: 1px solid #ccc;
   padding-bottom: .75rem;
+  margin-bottom: 0 !important;
 }
 .admin-section-cells > .admin-cell-divider {
   border-left: 2px solid #666;
+}
+
+/* Column controls and their vertical dividers meet the section action rule. */
+.admin-section-cells {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+.admin-section-cells > .admin-section-cell {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
