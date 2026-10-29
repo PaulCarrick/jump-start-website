@@ -76,7 +76,11 @@ RSpec.describe "Admin Users", type: :system do
   end
 
   describe "Edit User Page" do
-    before { visit edit_admin_user_path(user) }
+    before do
+      # Isolate native input state left by earlier browser tests.
+      page.driver.quit
+      visit edit_admin_user_path(user)
+    end
 
     it "pre-fills the form with existing data" do
       expect(page).to have_field("user[email]", with: "test@example.com")
