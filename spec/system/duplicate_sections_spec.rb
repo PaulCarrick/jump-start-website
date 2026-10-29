@@ -48,4 +48,22 @@ RSpec.describe "Duplicate a section from the page editor", type: :system do
     expect(page).to have_content("has already been taken")
     expect(section.page.sections.count).to eq(1)
   end
+
+  it "offers group duplication and copies every member into the named group" do
+    section.update!(section_group: "Overview group")
+    sibling = create(:section, page: section.page, section_group: section.section_group, section_name: "Details")
+    create(:cell, section: sibling, content: "<p>Grouped details</p>")
+    visit edit_admin_page_path(section.page)
+    expect(page).to have_button("Duplicate Group", count: 2)
+
+    accept_prompt("Name for the duplicated section group:", with: "New overview group") do
+      click_button "duplicate-section-#{section.id}-button"
+    end
+    expect(page).to have_content("Section group duplicated successfully.")
+    expect(section.page.sections.where(section_group: "New overview group").count).to eq(2)
+    expect(section.page.sections.where(section_group: "Overview group").count).to eq(2)
+    expect(page).to have_button("Duplicate Group", count: 4)
+    page.save_screenshot(Rails.root.join("tmp/grouped-section-duplication.png"))
+  end
+
 end

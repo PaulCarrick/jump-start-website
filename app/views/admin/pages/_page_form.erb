@@ -87,11 +87,11 @@
                             class:  "btn btn-primary" %>
 
                 <% if @application_user.admin? %>
-                  <%= button_tag "Duplicate Section",
+                  <%= button_tag(section.section_group.present? ? "Duplicate Group" : "Duplicate Section",
                                  type: "submit",
                                  id: "duplicate-section-#{section.id}-button",
                                  form: "duplicate-section-#{section.id}",
-                                 class: "btn btn-secondary ms-2" %>
+                                 class: "btn btn-secondary ms-2") %>
                   <%= link_to "Delete Section",
                               admin_delete_section_path(section, method: :delete, return_url: @return_path),
                               method:  :delete,
@@ -167,7 +167,7 @@
     <%= form_with url: admin_duplicate_page_section_path(page_id: controller.get_item.id, id: section.id),
                   method: :post, local: true,
                   html: { id: "duplicate-section-#{section.id}", onsubmit: "return requestSectionDuplicateName(this);" },
-                  data: { turbo: false } do %>
+                  data: { turbo: false, section_group: section.section_group.presence } do %>
       <%= hidden_field_tag :return_url, admin_return_url %>
       <%= hidden_field_tag :section_name %>
     <% end %>

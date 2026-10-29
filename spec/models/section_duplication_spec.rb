@@ -79,4 +79,82 @@ RSpec.describe "Section duplication", type: :model do
       expect { section.duplicate!(name: "New introduction") }.to raise_error(ActiveRecord::RecordInvalid)
     }.not_to change { [ Section.count, Cell.count ] }
   end
+
+  context "with a section group" do
+    let!(:sibling) do
+      section.update!(section_group: "Introduction group")
+      create(:section, page: section.page, section_group: "Introduction group",
+        section_name: "Details", section_order: 11)
+    end
+    let!(:sibling_cell) { create(:cell, section: sibling, cell_name: "Details column", content: "<p>Details</p>") }
+
+    it "copies the whole group on this page into a new group, preserving content and order" do
+      create(:section, section_group: section.section_group)
+      create(:section, page: section.page, section_group: "Other group")
+      original_attributes = [section.reload.attributes, sibling.reload.attributes]
+      copy = nil
+      expect { copy = section.duplicate!(name: "New introduction") }
+        .to change(Section, :count).by(2).and change(Cell, :count).by(3)
+
+      copies = section.page.sections.where(section_group: "New introduction").order(:section_order)
+      expect(copies.pluck(:section_name)).to eq(["New introduction", "Details Copy"])
+      expect(copy).to eq(copies.first)
+      copies.zip([section, sibling]).each do |duplicate, original|
+        ignored = %w[id created_at updated_at section_name section_group]
+        expect(duplicate.attributes.except(*ignored)).to eq(original.attributes.except(*ignored))
+        expect(duplicate.cells.map(&:content)).to eq(original.cells.map(&:content))
+        expect(duplicate.cells.pluck(:section_name)).to all(eq(duplicate.section_name))
+        expect(duplicate.cells.pluck(:section_id)).to all(eq(duplicate.id))
+      end
+      expect([section.reload.attributes, sibling.reload.attributes]).to eq(original_attributes)
+    end
+
+    it "copies the same complete group when started from another member" do
+      expect { sibling.duplicate!(name: "New details") }.to change(Section, :count).by(2)
+      expect(section.page.sections.where(section_group: "New details").pluck(:section_order)).to contain_exactly(7, 11)
+    end
+
+    it "keeps repeated copies separate from the original and previous copies" do
+      section.duplicate!(name: "First group")
+      expect { section.duplicate!(name: "Second group") }.to change(Section, :count).by(2)
+      expect(section.page.sections.where(section_group: "Introduction group").count).to eq(2)
+      expect(section.page.sections.where(section_group: "First group").count).to eq(2)
+      expect(section.page.sections.where(section_group: "Second group").count).to eq(2)
+      expect(Cell.pluck(:cell_name).uniq.length).to eq(Cell.count)
+    end
+
+    it "duplicates a copied group without including originals" do
+      first = section.duplicate!(name: "First group")
+      expect { first.duplicate!(name: "Second group") }.to change(Section, :count).by(2)
+    end
+
+    it "rejects an existing group name without creating a partial copy" do
+      create(:section, page: section.page, section_group: "Existing group")
+      expect {
+        expect { section.duplicate!(name: "Existing group") }.to raise_error(ActiveRecord::RecordInvalid, /already exists/)
+      }.not_to change { [Section.count, Cell.count] }
+    end
+
+    it "rolls back all copied sections and columns if a later member fails" do
+      allow_any_instance_of(Cell).to receive(:save).and_wrap_original do |method, *args, **kwargs|
+        if method.receiver.cell_name == "Details column Copy"
+          method.receiver.errors.add(:base, "Cannot save group member")
+          raise ActiveRecord::RecordInvalid.new(method.receiver)
+        end
+        method.call(*args, **kwargs)
+      end
+      expect {
+        expect { section.duplicate!(name: "New introduction") }.to raise_error(ActiveRecord::RecordInvalid)
+      }.not_to change { [Section.count, Cell.count] }
+    end
+  end
+
+  ["", "  "].each do |blank_group|
+    it "keeps single-section duplication for a #{blank_group.inspect} group" do
+      section.update!(section_group: blank_group)
+      create(:section, page: section.page, section_group: blank_group)
+      expect { section.duplicate!(name: "New introduction") }.to change(Section, :count).by(1)
+    end
+  end
+
 end

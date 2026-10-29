@@ -45,4 +45,19 @@ RSpec.describe "Duplicate a page section", type: :request do
     expect { post path, params: { section_name: section.section_name } }.not_to change { [ Section.count, Cell.count ] }
     expect(flash[:alert]).to include("has already been taken")
   end
+
+  it "duplicates all group members on the page and returns to the selected copy" do
+    sign_in create(:user, access: "super")
+    section.update!(section_group: "Details group")
+    sibling = create(:section, page: section.page, section_group: section.section_group)
+    create(:cell, section: sibling)
+    create(:section, section_group: section.section_group)
+
+    expect { post path, params: { section_name: "New details group" } }
+      .to change(Section, :count).by(2).and change(Cell, :count).by(2)
+    expect(response).to redirect_to(edit_admin_page_path(section.page, section_name: "New details group"))
+    expect(flash[:notice]).to eq("Section group duplicated successfully.")
+    expect(section.page.sections.where(section_group: "New details group").count).to eq(2)
+  end
+
 end

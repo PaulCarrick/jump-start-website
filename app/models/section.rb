@@ -38,23 +38,26 @@ class Section < ApplicationRecord
 
   def duplicate!(name:)
     self.class.transaction do
+      Page.lock.find(page_id)
       source = self.class.lock.find(id)
-      # after_find derives display defaults; duplicate the stored values themselves.
-      source.restore_attributes
-      copy = source.dup
-      copy.section_name = name.to_s.strip
-      reserved_names = []
+      name = name.to_s.strip
 
-      source.cells.each do |cell|
-        child = cell.dup
-        child.cell_name = copy_name_for(Cell, cell.cell_name, reserved_names)
-        reserved_names << child.cell_name
-        child.section_name = copy.section_name
-        copy.cells << child
+      if source.section_group.present?
+        if self.class.where(page_id: source.page_id, section_group: name).exists?
+          source.errors.add(:section_group, "already exists on this page")
+          raise ActiveRecord::RecordInvalid.new(source)
+        end
+
+        members = self.class.where(page_id: source.page_id, section_group: source.section_group)
+                            .order(:id).lock.to_a
+        copy = duplicate_record!(source, name: name, group: name)
+        members.reject { |member| member.id == source.id }.each do |member|
+          duplicate_record!(member, name: copy_name_for(self.class, member.section_name), group: name)
+        end
+        copy
+      else
+        duplicate_record!(source, name: name, group: source.section_group)
       end
-
-      copy.save!
-      copy
     end
   end
 
@@ -142,6 +145,26 @@ class Section < ApplicationRecord
   end
 
   private
+
+  def duplicate_record!(source, name:, group:)
+    # after_find derives display defaults; duplicate the stored values themselves.
+    source.restore_attributes
+    copy = source.dup
+    copy.section_name = name
+    copy.section_group = group
+    reserved_names = []
+
+    source.cells.each do |cell|
+      child = cell.dup
+      child.cell_name = copy_name_for(Cell, cell.cell_name, reserved_names)
+      reserved_names << child.cell_name
+      child.section_name = copy.section_name
+      copy.cells << child
+    end
+
+    copy.save!
+    copy
+  end
 
   def copy_name_for(model, original, reserved = [])
     field = model == Section ? :section_name : :cell_name
