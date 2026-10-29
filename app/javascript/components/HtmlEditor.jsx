@@ -112,15 +112,9 @@ const HtmlEditor = ({
   }, [isHtmlView, id]);
 
   const sendChange = (content, attribute) => {
-    if (typeof onChange === "function") {
-      onChange(content, attribute);
-    }
-    else if (onChange && typeof onChange === "string" && attribute !== "useHtmlView") {
-      const callable = new Function("editorContent", "id", onChange);
-
-      callable(content, attribute);
-    }
+    if (typeof onChange === "string" && attribute === "useHtmlView") return;
     changeCallback?.(content, attribute);
+  };
 
   const toggleView = () => {
     const nextView = !isHtmlView;

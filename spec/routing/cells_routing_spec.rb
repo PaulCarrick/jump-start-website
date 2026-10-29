@@ -21,15 +21,4 @@ RSpec.describe "Cell routes", type: :routing do
     expect(delete: "/cells/1").not_to be_routable
   end
 
-  end
-
-  it "routes PUT updates to the admin controller" do
-    expect(put: "/admin/cells/1").to route_to("admin/cells#update", id: "1")
-  end
-
-  it "does not expose public write routes" do
-    expect(post: "/cells").not_to be_routable
-    expect(patch: "/cells/1").not_to be_routable
-    expect(delete: "/cells/1").not_to be_routable
-  end
 end

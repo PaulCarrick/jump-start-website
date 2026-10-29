@@ -35,8 +35,8 @@ RSpec.describe PagesController, type: :controller do
     context "when the page does not exist" do
       before { get :show, params: { id: "non-existent-page" } }
 
-      it "renders with a missing page alert" do
-        expect(response).to have_http_status(:ok)
+      it "returns not found with a missing page alert" do
+        expect(response).to have_http_status(:not_found)
 
         expect(flash[:alert]).to eq("Can't find page for: non-existent-page.")
       end

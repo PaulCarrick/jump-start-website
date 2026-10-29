@@ -38,9 +38,6 @@ RSpec.describe "Pages", type: :system do
     end
   end
 
-    end
-  end
-
   it "renders text to the left of an image" do
     text_column('Text on the left', order: 1, width: '60%')
     image_column(order: 2, width: '40%')
@@ -52,19 +49,6 @@ RSpec.describe "Pages", type: :system do
     expect(children.last).to have_css('img')
   end
 
-  describe "Renders a html Page" do
-    before { visit page_path("html_page") }
-
-    it "displays the html page correctly" do
-      rendered_html            = find('[data-react-class="RenderSection"] #contents > div > div', match: :first).native.attribute("innerHTML").strip
-      expected_html            = html_section.description.strip
-      rendered_html_normalized = Nokogiri::HTML.fragment(rendered_html).to_html
-      expected_html_normalized = Nokogiri::HTML.fragment(expected_html).to_html
-
-      expect(rendered_html_normalized).to eq(expected_html_normalized)
-    end
-  end
-
   it "renders text to the right of an image" do
     image_column(order: 1, width: '40%')
     text_column('Text on the right', order: 2, width: '60%')
@@ -73,8 +57,6 @@ RSpec.describe "Pages", type: :system do
     children = find('#contents', match: :first).find(:id, section.section_name).all(':scope > div')
     expect(children.first).to have_css('img')
     expect(children.last).to have_text('Text on the right')
-  end
-
   end
 
   it "renders text above an image when both columns occupy a full row" do

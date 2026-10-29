@@ -223,15 +223,19 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
     );
   } else {
     return (
-        <ErrorBoundary>
-          <div>
-            {
-                error && (
-                          <div className="row">
-                            <div className="error-box">{error}</div>
-                          </div>)
-            }
-            {renderSectionName(sectionData?.section_name, options.availableSectionNames, setValue, options.readOnlySectionName)}
+      <ErrorBoundary>
+        <div>
+          {error && (
+            <div className="row">
+              <div className="error-box">{error}</div>
+            </div>
+          )}
+          {renderSectionName(
+            sectionData?.section_name,
+            options.availableSectionNames,
+            setValue,
+            options.readOnlySectionName,
+          )}
             <div className="row mb-2">
               <label htmlFor="sectionGroup" className="col-2 d-flex align-items-center">Section group:</label>
               <div className="col-5">
@@ -249,25 +253,6 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
                 </div>
               </div>
             </div>
-            {renderSectionOrder(sectionData?.section_order, setValue)}
-
-            <div className="row mb-2">
-              <div id="sectionPreview" className="w-100 border border-danger border-width-8">
-                {!sectionData ? (
-                    <h1 className="text-center">No Contents</h1>
-                ) : (
-                     <RenderSection section={sectionData as any} editing={true} noBorder={true} noHidden={false}
-                                    onChange={handleAction as any}/>
-                 )}
-              </div>
-            </div>
-          )}
-          {renderSectionName(
-            sectionData?.section_name,
-            options.availableSectionNames,
-            setValue,
-            options.readOnlySectionName,
-          )}
           {renderSectionOrder(sectionData?.section_order, setValue)}
 
           <div className="row mb-2">

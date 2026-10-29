@@ -18,7 +18,7 @@ end
 
 FactoryBot.define do
   factory :cell do
-    section { Section.find_by(section_name: section_name) || association(:section, section_name: section_name) }
+    association :section
     section_name { section&.section_name || "Test" }
     sequence(:cell_name) { |n| "test-cell-#{n}" }
     cell_order { 1 }

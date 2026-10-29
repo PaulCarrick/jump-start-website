@@ -37,7 +37,6 @@ RSpec.describe Section, type: :model do
       expect(section.valid?).to be false
       expect(section.errors[:section_name]).to include("has already been taken")
     end
-    end
   end
 
   describe "callbacks" do
@@ -46,7 +45,6 @@ RSpec.describe Section, type: :model do
         section = create(:section, content_type: 'Test', section_name: "Test", description: "<html><body><p>Valid HTML</p></body></html>", formatting: '{"key":"value"}')
         checksum = section.send(:generate_checksum, section.description)
         section.update!(checksum: checksum)
-        expect { section.reload }.not_to raise_error
         expect { section.reload }.not_to raise_error
       end
     end

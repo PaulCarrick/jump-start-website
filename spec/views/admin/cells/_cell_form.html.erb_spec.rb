@@ -9,7 +9,7 @@ RSpec.describe "admin/cells/_cell_form", type: :view do
   end
 
   [ false, true ].each do |persisted|
-    it "passes #{persisted ? 'existing' : 'new'} cell content and save URLs to the editor" do
+    it "passes #{persisted ? 'existing' : 'new'} cell content and navigation options to the editor" do
       cell = persisted ? create(:cell, content: "Cell editor content") : build(:cell, content: "Cell editor content")
       allow(admin_controller).to receive(:get_item).and_return(cell)
       render partial: "admin/cells/cell_form"
@@ -18,7 +18,7 @@ RSpec.describe "admin/cells/_cell_form", type: :view do
       expect(editor).to be_present
       props = JSON.parse(editor['data-react-props'])
       expect(props['cell']['content']).to eq("Cell editor content")
-      expect(props['submitPath']).to eq(persisted ? admin_cell_url(cell) : admin_cells_url)
+      expect(props.fetch('editorOptions').fetch('returnUrl')).to eq(persisted ? admin_cell_url(cell) : admin_cells_url)
     end
   end
 end

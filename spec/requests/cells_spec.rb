@@ -76,7 +76,7 @@ RSpec.describe "Cell administration", type: :request do
     expect {
       post admin_cells_path, params: { cell: { section_name: section.section_name, cell_name: "" } }
     }.not_to change(Cell, :count)
-    expect(response).to redirect_to(new_admin_cell_path(turbo: false))
+    expect(response).to redirect_to(new_admin_cell_path)
   end
 
   it "rejects creation without a name" do
@@ -112,6 +112,7 @@ RSpec.describe "Cell administration", type: :request do
   end
 
   it "requires login to open the admin editor" do
+    sign_out :user
     get edit_admin_cell_path(cell)
     expect(response).to redirect_to(new_user_session_path)
   end
@@ -147,8 +148,5 @@ RSpec.describe "Cell administration", type: :request do
       expect(response).to have_http_status(:ok)
       expect(Nokogiri::HTML(response.body).at_css('input[name="q[cell_name_cont]"]')).to be_present
     end
-  end
-end
-
   end
 end

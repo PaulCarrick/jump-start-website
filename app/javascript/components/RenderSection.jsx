@@ -46,7 +46,6 @@ const RenderSection = ({
     contents.forEach((content) => {
       sections.push(renderSection(content, noBorder, noHidden, onChange));
     });
-    });
 
     return sections;
   }

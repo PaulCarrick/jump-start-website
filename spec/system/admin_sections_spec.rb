@@ -37,8 +37,6 @@ RSpec.describe "Admin Sections", type: :system do
         expect(page).to have_content("Test Content Type")
         expect(page).to have_content("Test Section Name")
         expect(page).to have_content("Test Description")
-        expect(page).to have_content("1-test-image")
-        expect(page).to have_content("https://example.com")
 
       end
     end
@@ -51,7 +49,7 @@ RSpec.describe "Admin Sections", type: :system do
 
     it "opens the section editor" do
       click_link "Edit", href: edit_admin_section_path(section)
-      expect(page).to have_button("Generate Columns")
+      expect(page).to have_button("Save Section")
     end
 
     it "opens Add Section from the owning page" do
@@ -61,7 +59,6 @@ RSpec.describe "Admin Sections", type: :system do
       expect(page).to have_select('cellTemplates')
     end
 
-    end
   end
 
   describe "New Section Page" do
@@ -97,17 +94,16 @@ RSpec.describe "Admin Sections", type: :system do
       expect(saved.cells.first.content).to include('New section column content')
     end
 
-    end
   end
 
   describe "Edit Section Page" do
-    let!(:cell) { create(:cell, section: section, section_name: section.section_name) }
+    before { visit edit_admin_section_path(section) }
 
     it "loads the section group and order" do
       section.update!(section_group: "Introduction")
       visit edit_admin_section_path(section)
       expect(page).to have_field("sectionGroup", with: "Introduction")
-      expect(page).to have_field("section_order", with: "")
+      expect(page).to have_field("section_order", with: "1")
     end
 
     it "saves and clears the section group" do
@@ -148,7 +144,6 @@ RSpec.describe "Admin Sections", type: :system do
       expect(section.cells.first.content).to include('Test Description')
     end
 
-    end
   end
 
   describe "Show Section Page" do

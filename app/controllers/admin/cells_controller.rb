@@ -163,7 +163,6 @@ class Admin::CellsController < Admin::AbstractAdminController
       formatting: {},
       options: {}
     )
-    )
 
     if attributes.key?(:section_name)
       attributes[:section_id] = Section.find_by(section_name: attributes[:section_name])&.id

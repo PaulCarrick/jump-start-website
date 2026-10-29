@@ -105,8 +105,6 @@ RSpec.describe "Admin Pages", type: :system do
       expect(page).to have_content("New Page")
       expect(page).to have_content("Private")
     end
-
-    end
   end
 
   describe "Edit Page" do
