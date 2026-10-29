@@ -8,7 +8,6 @@ RSpec.describe "Admin Image Files", type: :system do
     fill_in "q[name_cont]", with: name
     click_button "Search Images"
     expect(page).to have_current_path(%r{\A/admin/image_files\?.*q%5B})
-
   end
 
   let(:admin_user) { create(:user, access: "super") }

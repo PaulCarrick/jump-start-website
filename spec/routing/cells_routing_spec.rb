@@ -20,5 +20,4 @@ RSpec.describe "Cell routes", type: :routing do
     expect(patch: "/cells/1").not_to be_routable
     expect(delete: "/cells/1").not_to be_routable
   end
-
 end

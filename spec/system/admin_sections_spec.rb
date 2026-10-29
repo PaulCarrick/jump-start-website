@@ -37,7 +37,6 @@ RSpec.describe "Admin Sections", type: :system do
         expect(page).to have_content("Test Content Type")
         expect(page).to have_content("Test Section Name")
         expect(page).to have_content("Test Description")
-
       end
     end
 
@@ -58,7 +57,6 @@ RSpec.describe "Admin Sections", type: :system do
       expect(page).to have_current_path(%r{/admin/sections/\d+/edit}, ignore_query: true)
       expect(page).to have_select('cellTemplates')
     end
-
   end
 
   describe "New Section Page" do
@@ -93,7 +91,6 @@ RSpec.describe "Admin Sections", type: :system do
       expect(saved.id).not_to eq(section.id)
       expect(saved.cells.first.content).to include('New section column content')
     end
-
   end
 
   describe "Edit Section Page" do
@@ -143,7 +140,6 @@ RSpec.describe "Admin Sections", type: :system do
       expect(section.reload.section_order).to eq(3)
       expect(section.cells.first.content).to include('Test Description')
     end
-
   end
 
   describe "Show Section Page" do

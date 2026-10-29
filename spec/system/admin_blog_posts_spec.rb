@@ -13,7 +13,6 @@ RSpec.describe "Admin Blog Posts", type: :system do
     expect(page).to have_field(name: 'q[content_cont]')
     fill_in "q[content_cont]", with: content
     submit_blog_search
-
   end
 
   let(:admin_user) { create(:user, access: "super") }

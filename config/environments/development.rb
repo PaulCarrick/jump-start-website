@@ -45,7 +45,7 @@ Rails.application.configure do
     port: ENV.fetch('INTERNAL_PORT', '3000')
   }
 
-  # Log to log/production.log with the current request id as a default log tag.
+  # Log to log/development.log with the current request id as a default log tag.
   config.log_tags = [ :request_id ]
 
   file_logger = ActiveSupport::Logger.new(Rails.root.join("log", "development.log"), 5, 50 * 1024 * 1024)
