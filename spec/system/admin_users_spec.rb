@@ -87,14 +87,18 @@ RSpec.describe "Admin Users", type: :system do
 
     it "updates a user successfully" do
       original_password = user.encrypted_password
-      fill_in "user[name]", with: "Updated User"
       select("Regular", from: "user[access]")
-      # Close Chrome's native select popup before clicking the submit button.
-      find('select[name="user[access]"]').send_keys(:tab)
+      # Dismiss the native dropdown before focusing a text input.
+      find('select[name="user[access]"]').send_keys(:escape, :tab)
       expect(page).to have_select("user[access]", selected: "Regular")
+      # Focus explicitly and clear with keystrokes; avoid Selenium's scripted text selection.
+      name_field = find_field("user[name]")
+      name_field.click
+      name_field.set("Updated User", clear: :backspace)
+      name_field.send_keys(:tab)
       expect(page).to have_field("user[name]", with: "Updated User")
+      expect(page).to have_select("user[access]", selected: "Regular")
       click_button "Save User"
-
 
       expect(page).to have_current_path(admin_users_path)
       expect(page).to have_content("Updated User")
