@@ -14,7 +14,6 @@ import { deleteFooterItem } from "../services/footerItemService";
 import React, { useState, useCallback } from "react";
 import {
   createPage,
-  hasSections,
   newPage,
   updatePage,
 } from "../services/pageService";
@@ -324,77 +323,34 @@ const PageEditor: React.FC<PageEditorProps> = ({
             </div>
           </div>
         </div>
-        {canSave() && (
-          <div className="row mb-2">
-            {hasSections(pageData) ? (
-              <>
-                <div className="col-2">
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    style={{ minWidth: "8em", maxWidth: "8em" }}
-                    onClick={handleSubmit}
-                  >
-                    Save Page
-                  </button>
-                </div>
-                <div className="col-5">
-                  {options.cancelUrl && (
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      style={{ minWidth: "8em", maxWidth: "8em" }}
-                      onClick={handleCancel}
-                    >
-                      Cancel
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    className="btn btn-secondary ms-2"
-                    style={{ minWidth: "8em", maxWidth: "8em" }}
-                    onClick={createNewSection}
-                  >
-                    New Section
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="col-2">
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    style={{ minWidth: "8em", maxWidth: "8em" }}
-                    onClick={createNewSection}
-                  >
-                    New Section
-                  </button>
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-secondary ms-2"
-                  style={{ minWidth: "8em", maxWidth: "8em" }}
-                  onClick={handleSubmit}
-                >
-                  Save Page
-                </button>
-                <div className="col-5">
-                  {options.cancelUrl && (
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      style={{ minWidth: "8em", maxWidth: "8em" }}
-                      onClick={handleCancel}
-                    >
-                      Cancel
-                    </button>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
-        )}
+        <div className="d-flex flex-wrap gap-2 mb-2">
+          <button
+            type="button"
+            className="btn btn-primary"
+            disabled={!canSave()}
+            onClick={handleSubmit}
+          >
+            Save Page
+          </button>
+          {options.cancelUrl && (
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+          )}
+          {canSave() && (
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={createNewSection}
+            >
+              New Section
+            </button>
+          )}
+        </div>
       </ErrorBoundary>
     );
   }

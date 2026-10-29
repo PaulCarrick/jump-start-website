@@ -1,79 +1,53 @@
 <!-- app/views/admin/cells/index.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
-  <div class="auto-size p-2 border-bottom border-dark">
-    <% controller.get_items.each do |cell| %>
-      <div class="row align-content-bottom d-flex align-items-center" style="min-height: 3em; max-height: 3em;">
-        <div class="col-2 m-0 p-0">
-          <h2>Cell</h2>
-        </div>
-        <div class="col-10 mt-2" style="min-height: 3em; max-height: 3em;">
-          <div class="d-flex justify-content-end">
-            <div class="mt-2">
-              <%= link_to 'Clear Sort', admin_cells_path(clear_sort: true), class: "action-links", target: "_self" %>
+  <div class="d-flex justify-content-end align-items-start flex-wrap gap-2 mb-3">
+    <%= link_to 'Clear Sort', admin_cells_path(clear_sort: true), class: "btn btn-secondary", target: "_self" %>
+    <%= render 'shared/top_page_navigation' %>
+  </div>
+  <div class="table-responsive">
+    <table class="table admin-cells-table">
+      <colgroup>
+        <col style="width: 10%">
+        <col style="width: 12%">
+        <col style="width: 9%">
+        <col style="width: 10%">
+        <col style="width: 7%">
+        <col style="width: 34%">
+        <col style="width: 18%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col"><%= sortable_column('Section', 'section_name', "cells") %></th>
+          <th scope="col"><%= sortable_column('Name', 'cell_name', "cells") %></th>
+          <th scope="col"><%= sortable_column('Order', 'cell_order', "cells") %></th>
+          <th scope="col"><%= sortable_column('Image', 'image', "cells") %></th>
+          <th scope="col"><%= sortable_column('Type', 'cell_type', "cells") %></th>
+          <th scope="col"><%= column_heading("Cell") %></th>
+          <th scope="col"><span class="visually-hidden">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% controller.get_items.each do |cell| %>
+          <tr class="admin-cell-record">
+            <td><%= cell.section_name %></td>
+            <td><%= cell.cell_name %></td>
+            <td><%= cell.cell_order %></td>
+            <td><%= cell.image %></td>
+            <td><%= cell.cell_type %></td>
+            <td class="admin-cell-preview">
+              <%= react_component("RenderCell", { cell: cell, editing: false, noBorder: true, noHidden: true }) %>
+            </td>
+            <td>
               <% delete_path = admin_cell_path(cell).to_s + "/delete" %>
-              <%= action_links(cell,
-                               admin_cell_path(cell),
-                               edit_admin_cell_path(cell),
-                               delete_path) %>
-            </div>
-            <%= render 'shared/top_page_navigation' %>
-          </div>
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-12">
-          <%= react_component("RenderCell", { cell: cell, editing: false, noBorder: false, noHidden: true }) %>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-2">
-          <%= sortable_column('Section', 'section_name', "cells") %>
-        </div>
-        <div class="col-2">
-          <%= sortable_column('Name', 'cell_name', "cells") %>
-        </div>
-        <div class="col-2">
-          <%= sortable_column('Order:', 'cell_order', "cells") %>
-        </div>
-        <div class="col-4">
-          <%= sortable_column('Image:', 'image', "cells") %>
-        </div>
-        <div class="col-2">
-          <%= sortable_column('Type:', 'cell_type', "cells") %>
-        </div>
-      </div>
-      <hr style="border: none; height: 5px; background-color: blue; box-shadow: 2px 2px 10px rgba(0, 0, 128, 0.5);">
-      <div class="row">
-        <div class="col-2">
-          <b>
-            <%= cell.section_name %>
-          </b>
-        </div>
-        <div class="col-2">
-          <b>
-          <%= cell.cell_name %>
-          </b>
-        </div>
-        <div class="col-2">
-          <b>
-          <%= cell.cell_order %>
-          </b>
-        </div>
-        <div class="col-4">
-          <b>
-          <%= cell.image %>
-          </b>
-        </div>
-        <div class="col-2">
-          <b>
-          <%= cell.cell_type %>
-          </b>
-        </div>
-      </div>
-    <% end %>
+              <%= action_links(cell, admin_cell_path(cell), edit_admin_cell_path(cell), delete_path) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   </div>
   <div class="row mt-3">
-    <div class="col-10 justify-content-end">
+    <div class="col-12 justify-content-end">
       <%= render 'shared/page_navigation' %>
     </div>
   </div>

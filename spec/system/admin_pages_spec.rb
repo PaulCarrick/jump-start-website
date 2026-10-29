@@ -89,6 +89,16 @@ RSpec.describe "Admin Pages", type: :system do
       expect(page).to have_css("#access")
     end
 
+    it "keeps Save and Cancel visible before required fields are filled" do
+      expect(page).to have_button("Save Page", disabled: true)
+      expect(page).to have_button("Cancel")
+      replace_react "#name", "New Page"
+      replace_react "#section", "New Section"
+      expect(page).to have_button("Save Page", disabled: false)
+      click_button "Cancel"
+      expect(page).to have_current_path(admin_pages_path, ignore_query: true)
+    end
+
     it "creates a new page successfully" do
       replace_react "#name", "New Page"
       replace_react "#section", "New Section"

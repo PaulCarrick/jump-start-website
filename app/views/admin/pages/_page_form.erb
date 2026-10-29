@@ -68,9 +68,9 @@
             end
           %>
           <div id="<%= section.section_name %>">
-            <div class="row mb-3 <%= "admin-section-actions" if section.cells.any? %>">
-              <div class="col-8"></div>
-              <div class="col-4 text-end">
+            <div class="admin-section-actions">
+              <div id="section-<%= section.id %>-cell-actions" class="admin-column-actions"></div>
+              <div class="admin-section-buttons">
                 <%= link_to "Edit Section",
                             edit_admin_section_path(section,
                                                     return_url:             @return_path,
@@ -102,7 +102,8 @@
                                   section:  section.renderable_section,
                                   editing:  true,
                                   noBorder: true,
-                                  noHidden: true
+                                  noHidden: true,
+                                  actionsTargetId: "section-#{section.id}-cell-actions"
                                 }
                 )
             %>
@@ -122,7 +123,7 @@
                                                             cancel_url:             @return_path,
                                                             new_section:            true,
                                                             read_only_content_type: true),
-                    class:  "btn btn-good",
+                    class:  "btn btn-primary",
                     target: "_self" %>
       </div>
     <% else %>
@@ -135,7 +136,7 @@
                                                          read_only_content_type: true,
                                                          new_section:            true,
                                                          target:                 "_self"),
-                      class:  "btn btn-good",
+                      class:  "btn btn-primary",
                       target: "_self" %>
         </div>
       <% end %>

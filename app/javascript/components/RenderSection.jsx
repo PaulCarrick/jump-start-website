@@ -30,13 +30,14 @@ const RenderSection = ({
   noBorder = true,
   noHidden = false,
   onChange = null,
+  actionsTargetId = null,
 }) => {
   if (section === null) return null; // We can't render what we don't have
 
   const sectionData = dupObject(section);
 
   if (sectionData.cells?.length > 0) {
-    return processCells(sectionData.cells, editing, noBorder, noHidden, onChange);
+    return processCells(sectionData.cells, editing, noBorder, noHidden, onChange, actionsTargetId);
   } else {
     const contents = buildContents(sectionData);
     const sections = [];
@@ -84,7 +85,7 @@ function buildContents(section) {
 }
 
 // Mark only columns that have a neighbour to their left, including after resizing.
-function CellRow({ editing, className, id, children }) {
+function CellRow({ editing, className, id, children, actionsTargetId }) {
   const row = useRef(null);
   useLayoutEffect(() => {
     if (!editing) return;
@@ -95,12 +96,29 @@ function CellRow({ editing, className, id, children }) {
         const previous = columns[index - 1];
         column.classList.toggle("admin-cell-divider", !!previous && column.offsetLeft > previous.offsetLeft);
       });
+      const actions = actionsTargetId && document.getElementById(actionsTargetId);
+      if (actions) {
+        const toolbar = actions.parentElement;
+        const bounds = element.getBoundingClientRect();
+        actions.style.width = `${bounds.width}px`;
+        actions.style.marginLeft = `${bounds.left - toolbar.getBoundingClientRect().left}px`;
+        actions.style.gridTemplateColumns = columns.map(column => `${column.getBoundingClientRect().width}px`).join(" ");
+        Array.from(actions.children).forEach((control, index) => {
+          if (columns[index]) control.style.paddingLeft = getComputedStyle(columns[index]).paddingLeft;
+        });
+        const sectionButtons = toolbar.querySelector(".admin-section-buttons");
+        const lastControl = actions.lastElementChild?.lastElementChild;
+        if (sectionButtons && lastControl) {
+          const availableLeft = toolbar.getBoundingClientRect().right - sectionButtons.getBoundingClientRect().width;
+          toolbar.classList.toggle("admin-actions-wrap", lastControl.getBoundingClientRect().right + 16 > availableLeft);
+        }
+      }
     };
     const observer = new ResizeObserver(updateDividers);
     observer.observe(element);
     updateDividers();
     return () => observer.disconnect();
-  }, [editing, children]);
+  }, [editing, children, actionsTargetId]);
   return <div ref={row} className={className} id={id}>{children}</div>;
 }
 
@@ -110,6 +128,7 @@ const processCells = (
   noBorder = false,
   noHidden = true,
   onChange = null,
+  actionsTargetId = null,
 ) => {
   if (!cells || cells.length === 0) return null;
 
@@ -139,7 +158,7 @@ const processCells = (
     alignment === "start" ? "flex-start" : alignment === "end" ? "flex-end" : alignment;
 
   return (
-    <CellRow editing={editing} className={`${containerClasses}${editing ? " admin-section-cells" : ""}`} id={containerId}>
+    <CellRow editing={editing} actionsTargetId={actionsTargetId} className={`${containerClasses}${editing ? " admin-section-cells" : ""}`} id={containerId}>
       {cells.map((cell, index) => (
         <div
           key={index}
@@ -153,6 +172,7 @@ const processCells = (
         >
           <RenderCell
             cell={cell}
+            actionsTargetId={actionsTargetId}
             editing={editing}
             noBorder={noBorder}
             noHidden={noHidden}

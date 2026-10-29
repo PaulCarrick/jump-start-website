@@ -7,7 +7,7 @@ class Admin::CellsController < Admin::AbstractAdminController
   def initialize
     super
 
-    @page_limit        = 1
+    @page_limit        = 5
     @default_column    = 'cell_order'
     @default_direction = 'desc'
     @has_query         = true

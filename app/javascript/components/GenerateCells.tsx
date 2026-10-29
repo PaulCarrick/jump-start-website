@@ -104,7 +104,7 @@ const GenerateCells: React.FC<GenerateCellsProps> = ({
                 setValue={setValue}
             />
         )}
-        <div className="row">
+        <div className="d-flex">
           <button onClick={handleGenerate} className="btn btn-primary me-2" style={{ maxWidth: "12em" }}>
             Generate Columns
           </button>

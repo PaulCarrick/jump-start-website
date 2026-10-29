@@ -59,7 +59,7 @@ RSpec.describe Admin::CellsController, type: :controller do
 
     it "sets the correct default attributes" do
       get :index
-      expect(controller.instance_variable_get(:@page_limit)).to eq(1)
+      expect(controller.instance_variable_get(:@page_limit)).to eq(5)
       expect(controller.instance_variable_get(:@default_column)).to eq('cell_order')
       expect(controller.instance_variable_get(:@has_query)).to be(true)
       expect(controller.instance_variable_get(:@has_sort)).to be(true)

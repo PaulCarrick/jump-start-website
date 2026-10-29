@@ -1,9 +1,10 @@
 <!-- Shared listing pagination -->
 <% if @pagy.present? %>
+  <% button_size = controller.controller_path.start_with?("admin/") ? "" : "btn-sm" %>
   <nav aria-label="Pagination">
     <ul class="pagination d-flex flex-wrap align-items-center justify-content-end gap-2 mb-0">
       <li class="list-unstyled">
-        <span class="btn btn-sm btn-light border text-secondary" aria-current="page">
+        <span class="btn <%= button_size %> btn-light border text-secondary" aria-current="page">
           Page <%= @pagy.page %> of <%= @pagy.last %>
         </span>
       </li>
@@ -16,9 +17,9 @@
         <li class="list-unstyled">
           <% if enabled %>
             <%= link_to label, url_for(params.to_unsafe_h.merge(page: number)),
-                        class: "btn btn-sm btn-primary", accesskey: shortcut, target: "_self" %>
+                        class: "btn #{button_size} btn-primary", accesskey: shortcut, target: "_self" %>
           <% else %>
-            <span class="btn btn-sm btn-outline-secondary disabled" aria-disabled="true"><%= label %></span>
+            <span class="btn <%= button_size %> btn-outline-secondary disabled" aria-disabled="true"><%= label %></span>
           <% end %>
         </li>
       <% end %>

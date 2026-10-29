@@ -59,6 +59,7 @@ RSpec.describe "Duplicate a section from the page editor", type: :system do
     accept_prompt("Name for the duplicated section group:", with: "New overview group") do
       click_button "duplicate-section-#{section.id}-button"
     end
+    expect(page).to have_current_path(edit_admin_page_path(section.page, section_name: "New overview group", return_url: admin_pages_path))
     expect(page).to have_content("Section group duplicated successfully.")
     expect(section.page.sections.where(section_group: "New overview group").count).to eq(2)
     expect(section.page.sections.where(section_group: "Overview group").count).to eq(2)

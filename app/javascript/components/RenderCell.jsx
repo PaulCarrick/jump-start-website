@@ -4,6 +4,7 @@
 // Component to Display Cell Records
 
 import React from "react";
+import { createPortal } from "react-dom";
 import DisplayContent from "./DisplayContent";
 import { dupObject } from "./utilities";
 import { getAdminPaths } from "../services/utilities";
@@ -27,14 +28,22 @@ const RenderCell = ({
   noHidden = false,
   onChange = null,
   contentAlignment = undefined,
+  actionsTargetId = null,
 }) => {
   if (cell === null) return null; // We can't render what we don't have
 
   const cellData = dupObject(cell);
   const processedCell = processCell(cellData);
 
-  return renderCell(processedCell, editing, noBorder, noHidden, onChange, contentAlignment);
+  return renderCell(processedCell, editing, noBorder, noHidden, onChange, contentAlignment, actionsTargetId);
 };
+
+// Keep the existing links and handlers when placing controls in the shared toolbar.
+function CellActions({ targetId, children }) {
+  const target = targetId ? document.getElementById(targetId) : null;
+  const controls = <div className="admin-cell-actions d-flex justify-content-start flex-wrap gap-2">{children}</div>;
+  return target ? createPortal(controls, target) : controls;
+}
 
 // Utility Functions
 
@@ -45,6 +54,7 @@ function renderCell(
   noHidden = false,
   onChange = null,
   contentAlignment = undefined,
+  actionsTargetId = null,
 ) {
   if (cell == null) return "";
 
@@ -60,7 +70,7 @@ function renderCell(
     if (onChange && cell) {
       return (
         <>
-          <div className="d-flex justify-content-end flex-wrap gap-2 mb-2">
+          <CellActions targetId={actionsTargetId}>
             <div>
               <a
                 href="#"
@@ -89,7 +99,7 @@ function renderCell(
                 Delete Column
               </a>
             </div>
-          </div>
+          </CellActions>
           <div className="row mb-2 flex-grow-1" style={{ alignItems: contentAlignment }}>
             <div key={cell.index} className={divClass}>
               <DisplayContent
@@ -107,7 +117,7 @@ function renderCell(
     } else if (urls) {
       return (
         <>
-          <div className="d-flex justify-content-end flex-wrap gap-2 mb-2">
+          <CellActions targetId={actionsTargetId}>
             <div>
               {urls?.edit?.url && (
                 <a
@@ -146,7 +156,7 @@ function renderCell(
                 </a>
               )}
             </div>
-          </div>
+          </CellActions>
           <div className="row mb-2 flex-grow-1" style={{ alignItems: contentAlignment }}>
             <div id="cellAttributes" className={divClass}>
               <DisplayContent

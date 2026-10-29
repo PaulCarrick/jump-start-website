@@ -24,21 +24,141 @@
 .admin-member-divider {
   border-top: 2px solid #666;
 }
+/* Column controls and section controls share one compact toolbar. */
 .admin-section-actions {
-  border-bottom: 1px solid #ccc;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem;
   padding-bottom: .75rem;
+  border-bottom: 1px solid #ccc;
   margin-bottom: 0 !important;
+}
+.admin-section-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+}
+.admin-column-actions {
+  display: grid;
+  flex: 0 0 auto;
+  align-items: start;
+}
+.admin-column-actions > .admin-cell-actions {
+  min-width: 0;
+  align-content: start;
+}
+.admin-section-buttons {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-left: auto;
+}
+.admin-actions-wrap .admin-section-buttons,
+.admin-column-actions:empty + .admin-section-buttons {
+  position: static;
+}
+.admin-column-actions:empty {
+  display: none;
+}
+.admin-section-buttons .btn {
+  margin-left: 0 !important;
+}
+/* Inset only the controls so the column divider still starts at the top. */
+.admin-cell-actions {
+  padding-top: .5rem;
+}
+.admin-main .admin-sort-button {
+  margin-bottom: .5rem;
+}
+.admin-cell-actions .btn {
+  white-space: nowrap;
 }
 .admin-section-cells > .admin-cell-divider {
   border-left: 2px solid #666;
 }
 
-/* Column controls and their vertical dividers meet the section action rule. */
-.admin-section-cells {
+/* Saved public-page spacing must not introduce a gap below the toolbar. */
+.admin-section-actions + [data-react-class] {
   margin-top: 0 !important;
   padding-top: 0 !important;
 }
-.admin-section-cells > .admin-section-cell {
+.admin-main .admin-section-cells,
+.admin-main .admin-section-cells > .admin-section-cell {
   margin-top: 0 !important;
   padding-top: 0 !important;
+}
+
+/* Listing controls use all remaining header space, up to the content edge. */
+.admin-list-header {
+  gap: .75rem;
+  width: 100%;
+}
+.admin-list-toolbar {
+  min-width: 0;
+  margin-left: auto;
+}
+
+/* Sorting and pagination controls share a top edge and bottom inset. */
+.admin-main .admin-sort-header {
+  align-items: flex-start;
+  padding-bottom: .5rem;
+}
+.admin-main .admin-sort-header .admin-sort-button {
+  margin-bottom: 0;
+}
+
+/* Keep cell previews inside their list column, including saved wide media. */
+.admin-cells-table {
+  table-layout: fixed;
+  min-width: 1100px;
+}
+.admin-cells-table th,
+.admin-cells-table td {
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.admin-cells-table .admin-record-actions {
+  flex-wrap: nowrap !important;
+  white-space: nowrap;
+}
+.admin-cell-preview,
+.admin-cell-preview * {
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+.admin-cell-preview img,
+.admin-cell-preview video {
+  height: auto !important;
+  object-fit: contain;
+}
+.admin-cell-preview .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.admin-main .admin-sort-button,
+.admin-main .admin-column-heading {
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+.admin-main .admin-column-heading {
+  cursor: default;
+  margin-bottom: .5rem;
+  color: #fff;
+  background-color: #a3a8ad;
+  border-color: #a3a8ad;
+  pointer-events: none;
+}
+.admin-main .admin-sort-header .admin-column-heading {
+  margin-bottom: 0;
+}
+
+/* Separate record rows while keeping actions aligned with their text. */
+.admin-main .admin-list-record {
+  padding-bottom: .5rem;
 }

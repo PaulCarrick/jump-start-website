@@ -200,9 +200,14 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
           options={options}
           onFinished={cellsGenerated}
         />
-        <button type="button" className="btn btn-secondary mt-2" onClick={handleCancel}>
-          Cancel
-        </button>
+        <div className="d-flex flex-wrap gap-2 mt-2">
+          <button type="button" className="btn btn-primary" disabled>
+            Save Section
+          </button>
+          <button type="button" className="btn btn-secondary" onClick={handleCancel}>
+            Cancel
+          </button>
+        </div>
       </div>
     );
   } else if (

@@ -1,7 +1,10 @@
 <%= render layout: "layouts/admin_page" do %>
   <div class="row mb-2">
     <h1>Manage Users</h1>
-    <div class="row border-bottom border-dark mb-2">
+    <div class="mb-3">
+      <%= link_to("New User", new_admin_user_path, class: "btn btn-primary", target: "_self") %>
+    </div>
+    <div class="row admin-sort-header border-bottom border-dark mb-2">
       <div class="col-3">
         <%= sortable_column('Email', 'email', "users") %>
       </div>
@@ -20,7 +23,7 @@
     <div class="scrollable-container p-2 border-bottom border-dark" style="max-height: 60%">
       <% if @users.present? %>
         <% @users.each do |user| %>
-          <div class="row">
+          <div class="row admin-list-record">
             <div class="col-3">
               <%= user.email %>
             </div>
@@ -49,11 +52,7 @@
     </div>
 
     <div class="row mt-3 mb-3">
-      <div class="col-2">
-        <%= link_to("New User", new_admin_user_path, class: "btn btn-primary", target: "_self") %>
-      </div>
-      <div class="col-3"></div>
-      <div class="col-7 justify-content-end">
+      <div class="col-12 justify-content-end">
         <%= render "shared/page_navigation" %>
       </div>
     </div>
