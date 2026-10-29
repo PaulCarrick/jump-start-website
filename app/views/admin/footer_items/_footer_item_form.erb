@@ -3,6 +3,7 @@
               url:    controller.get_item.persisted? ? admin_footer_item_path(controller.get_item) : admin_footer_items_path,
               method: controller.get_item.persisted? ? :patch : :post,
               local:  true) do |form| %>
+  <%= hidden_field_tag :return_url, admin_return_url %>
 
   <h1>
     <% if controller.get_item&.persisted? %>
@@ -80,6 +81,6 @@
   </div>
   <div class="mb-3">
     <%= form.submit "Save Footer Item", class: "btn btn-primary me-3", disabled: !@application_user.admin? %>
-    <%= link_to("Cancel", admin_footer_items_url, class: "btn btn-primary", target: "_self") %>
+    <%= link_to("Cancel", admin_return_url, class: "btn btn-primary", target: "_self") %>
   </div>
 <% end %>

@@ -5,13 +5,21 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from types import SimpleNamespace
 
 from .database import Database
-from .utilities import display_message, run_command, \
-    run_long_command, user_home, append_to_file, \
-    change_ownership_recursive, replace_values_in_file, \
-    process_template
+from .utilities import (
+    append_to_file,
+    change_ownership_recursive,
+    display_message,
+    process_template,
+    run_command,
+    run_long_command,
+    user_home,
+)
+
+RUBY_VERSION = (
+    (Path(__file__).resolve().parents[2] / ".ruby-version").read_text().strip()
+)
 
 
 def setup_rails(configuration):
@@ -31,54 +39,89 @@ def setup_rails(configuration):
     display_message(0, "nodejs and npm installed.")
     display_message(0, "Setting configuration to use http...")
     display_message(0, "Installing bundler...")
-    run_command(f"cd {rails_dir} && gem install bundler -v \"~> 2.5\"", True, False, None, username)
+    run_command(
+        f'cd {rails_dir} && gem install bundler -v "~> 4.0"',
+        True,
+        False,
+        None,
+        username,
+    )
     display_message(0, "Bundler installed.")
     display_message(0, "Installing gems...")
-    run_long_command(f"cd {rails_dir} && BUNDLE_TIMEOUT=600 bundle install --jobs=2", True, False, None, username)
+    run_long_command(
+        f"cd {rails_dir} && BUNDLE_TIMEOUT=600 bundle install --jobs=2",
+        True,
+        False,
+        None,
+        username,
+    )
     display_message(0, "Bundler installed.")
 
     if sql_file:
         display_message(0, f"Seeding the database from {sql_file}...")
 
-        database = Database(configuration.db_database,
-                            configuration.db_username,
-                            configuration.db_password,
-                            configuration.db_host,
-                            configuration.db_port,
-                            True)
+        database = Database(
+            configuration.db_database,
+            configuration.db_username,
+            configuration.db_password,
+            configuration.db_host,
+            configuration.db_port,
+            True,
+        )
 
         database.process_sql_file(sql_file, True)
         database.close_database_connection()
         display_message(0, "Database Seeded.")
 
     display_message(0, "Running database migrations...")
-    run_command(f"cd {rails_dir} && set -a && . {configuration.env_file} && set +a && exec rails db:migrate",
-                True, False, None, username)
+    run_command(
+        f"cd {rails_dir} && set -a && . {configuration.env_file} && set +a && exec rails db:migrate",
+        True,
+        False,
+        None,
+        username,
+    )
     display_message(0, "Database migrations run.")
     display_message(0, "Precompiling assets for production...")
-    run_command(f"cd {rails_dir} && set -a && . ./.env && set +a && bundle exec rails assets:precompile",
-                True, False, None, username)
+    run_command(
+        f"cd {rails_dir} && set -a && . ./.env && set +a && bundle exec rails assets:precompile",
+        True,
+        False,
+        None,
+        username,
+    )
     display_message(0, "Assets precompiled.")
-    run_command(f"cd {rails_dir} && set -a && . ./.env && set +a && bundle exec rake html:clean",
-                True, False, None, username)
+    run_command(
+        f"cd {rails_dir} && set -a && . ./.env && set +a && bundle exec rake html:clean",
+        True,
+        False,
+        None,
+        username,
+    )
 
 
 def install_ruby(username):
     """
-    Install Ruby 3.2.2.
+    Install the Ruby version pinned by the application.
 
     Args:
         username (str): The user to install ruby for.
     """
     home_dir = user_home(username)
     rubies_dir = f"{home_dir}/.rubies"
-    install_dir = f"{rubies_dir}/ruby-3.2.2"
+    install_dir = f"{rubies_dir}/ruby-{RUBY_VERSION}"
     path_string = f"PATH={install_dir}/bin:$PATH"
 
     if ruby_installed(username):
-        choice = input("Ruby >= 3.2 is already installed. "
-                       "Do you want to install it locally anyway "
-                       "(this will take a while) (Y/n/q)?: ").strip().lower()
+        choice = (
+            input(
+                f"Ruby {RUBY_VERSION} is already installed. "
+                "Do you want to install it locally anyway "
+                "(this will take a while) (Y/n/q)?: "
+            )
+            .strip()
+            .lower()
+        )
 
         if len(choice) > 1:
             choice = choice[0]
@@ -88,16 +131,23 @@ def install_ruby(username):
         elif choice == "n":
             return
 
-    display_message(0, "Installing Ruby 3.2.2...")
+    display_message(0, f"Installing Ruby {RUBY_VERSION}...")
     display_message(0, "Getting required packages...")
     run_command("apt update", True, False)
-    run_command("apt install -y curl build-essential libssl-dev libreadline-dev zlib1g-dev", True, False)
+    run_command(
+        "apt install -y curl build-essential libssl-dev libreadline-dev zlib1g-dev libyaml-dev",
+        True,
+        False,
+    )
     display_message(0, "Installed required packages.")
 
     # Download and install ruby-install
     display_message(0, "Downloading and installing ruby-install...")
-    run_command("curl -L https://github.com/postmodern/ruby-install/archive/refs/tags/v0.9.1.tar.gz | tar -xz",
-                True, True)
+    run_command(
+        "curl -L https://github.com/postmodern/ruby-install/archive/refs/tags/v0.9.1.tar.gz | tar -xz",
+        True,
+        True,
+    )
 
     cwd = os.getcwd()
     ruby_install_dir = "ruby-install-0.9.1"
@@ -108,23 +158,29 @@ def install_ruby(username):
     shutil.rmtree(ruby_install_dir)
     display_message(0, "'ruby-install' installed.")
 
-    # Install Ruby 3.2.2
+    # Install Ruby 4.0.7
     cwd = Path.cwd()
 
     os.chdir(home_dir)
-    display_message(0, "Installing Ruby 3.2.2 from source (this will take a while)...")
-    subprocess.run(["ruby-install",
-                    "-i",
-                    install_dir,
-                    "-j",
-                    "2",
-                    "ruby",
-                    "3.2.2",
-                    "--",
-                    "--disable-install-rdoc"],
-                   check=True)
+    display_message(
+        0, f"Installing Ruby {RUBY_VERSION} from source (this will take a while)..."
+    )
+    subprocess.run(
+        [
+            "ruby-install",
+            "-i",
+            install_dir,
+            "-j",
+            "2",
+            "ruby",
+            RUBY_VERSION,
+            "--",
+            "--disable-install-rdoc",
+        ],
+        check=True,
+    )
     change_ownership_recursive(install_dir, username, username)
-    display_message(0, "Ruby 3.2.2 installed.")
+    display_message(0, f"Ruby {RUBY_VERSION} installed.")
 
     # Set up environment variables
     if os.path.exists(".profile"):
@@ -147,8 +203,13 @@ def install_postgres(postgres_password):
         postgres_password (str): The password for the postgres user.
     """
     if os.path.exists("/etc/postgresql/15"):
-        display_message(0, ("PostgreSQL is already installed. "
-                            "if you want to replace it remove it first."))
+        display_message(
+            0,
+            (
+                "PostgreSQL is already installed. "
+                "if you want to replace it remove it first."
+            ),
+        )
 
         # Even if they have postgres already installed make sure that have the dev package for the pg gem
         run_command("apt update", True, False)
@@ -156,13 +217,18 @@ def install_postgres(postgres_password):
     else:
         display_message(0, "Installing PostgreSQL...")
         run_command("apt update", True, False)
-        run_long_command("apt install -y postgresql postgresql-contrib libpq-dev", True, False)
+        run_long_command(
+            "apt install -y postgresql postgresql-contrib libpq-dev", True, False
+        )
         run_command("systemctl start postgresql", True, False)
         run_command("systemctl enable postgresql", True, False)
         display_message(0, "Installed PostgreSQL.")
         display_message(0, "Setting up Postgres user...")
-        run_command(f"echo \"ALTER USER postgres WITH PASSWORD '{postgres_password}';\" | sudo -u postgres psql",
-                    True, False)
+        run_command(
+            f"echo \"ALTER USER postgres WITH PASSWORD '{postgres_password}';\" | sudo -u postgres psql",
+            True,
+            False,
+        )
         display_message(0, "Postgres user set up.")
 
 
@@ -182,8 +248,13 @@ def install_nginx(params):
     template_file = f"{params.install_directory}/installation/nginx.conf"
 
     if os.path.exists(nginx_enabled_file):
-        display_message(0, ("Nginx is already installed. "
-                            "if you want to replace it remove it first."))
+        display_message(
+            0,
+            (
+                "Nginx is already installed. "
+                "if you want to replace it remove it first."
+            ),
+        )
     else:
         display_message(0, "Installing Nginx...")
         run_command("apt update", True, False)
@@ -232,21 +303,30 @@ def generate_certificate(install_directory, server_domain, owner, direct_install
     key_file = f"{secrets_dir}/ssl.key"
 
     if os.path.exists(cert_file):
-        display_message(0, ("A certificate is already installed. "
-                            "if you want to replace it remove it first."))
+        display_message(
+            0,
+            (
+                "A certificate is already installed. "
+                "if you want to replace it remove it first."
+            ),
+        )
         return
 
     run_command("apt update")
     run_command("sudo apt install certbot -y")
-    subprocess.run(["certbot",
-                    "certonly",
-                    "--standalone",
-                    "-d",
-                    server_domain,
-                    "-d",
-                    f"www.{server_domain}"],
-                   check=True,
-                   stdin=sys.stdin)
+    subprocess.run(
+        [
+            "certbot",
+            "certonly",
+            "--standalone",
+            "-d",
+            server_domain,
+            "-d",
+            f"www.{server_domain}",
+        ],
+        check=True,
+        stdin=sys.stdin,
+    )
     os.makedirs(secrets_dir, exist_ok=True)
     shutil.copy(lets_encrypt_cert_file, cert_file)
     os.chmod(cert_file, 0o644)
@@ -261,10 +341,10 @@ def generate_certificate(install_directory, server_domain, owner, direct_install
 
 def install_service(params):
     """
-        Install Jump Start Website as a service.
+    Install Jump Start Website as a service.
 
-        Args:
-            params (SimpleNamespace): THe parameters for the installation.
+    Args:
+        params (SimpleNamespace): THe parameters for the installation.
     """
     service_file = "/etc/systemd/system/jumpstartwebsite.service"
     template_file = f"{params.install_directory}/installation/jumpstartwebsite.service"
@@ -272,8 +352,13 @@ def install_service(params):
     display_message(0, "Setting up service...")
 
     if os.path.exists(service_file):
-        display_message(0, ("Service is already installed. "
-                            "if you want to replace it remove it first."))
+        display_message(
+            0,
+            (
+                "Service is already installed. "
+                "if you want to replace it remove it first."
+            ),
+        )
     else:
         results = process_template(template_file, params)
 
@@ -288,37 +373,36 @@ def install_service(params):
 
 def ruby_installed(username):
     """
-    Check to see if the Ruby binary is installed and is at version 3.2 or greater
+    Check to see if the Ruby binary is installed and is at the pinned version
 
     Args:
         username (str): The username of the user to check for Ruby.
     Returns:
-        bool: True if the Ruby binary >= 3.2 is installed, False otherwise.
+        bool: True if the pinned Ruby binary is installed, False otherwise.
     """
     result = False
     ruby_path = get_ruby_path(username)
 
     if ruby_path:
-        display_message(0, f"Checking to see if Ruby >= 3.2 is installed at {ruby_path}...")
+        display_message(0, f"Checking for Ruby {RUBY_VERSION} at {ruby_path}...")
 
-        results = run_command(f"{ruby_path} -v", False, True, 5, username)
+        results = run_command([ruby_path, "-v"], False, True, 5, username)
 
         if results:
             version_match = re.search(r"ruby (\d+)\.(\d+)\.(\d+)", results)
 
             if version_match:
-                major, minor, patch = [int(version_match.group(1)), int(version_match.group(2)),
-                                       int(version_match.group(3))]
-
-                if (major >= 3) and (minor >= 2):
-                    result = True
+                installed_version = tuple(map(int, version_match.groups()))
+                required_version = tuple(map(int, RUBY_VERSION.split(".")))
+                result = installed_version == required_version
 
     if result:
-        display_message(0, "Ruby >= 3.2 is installed.")
+        display_message(0, f"Ruby {RUBY_VERSION} is installed.")
     else:
-        display_message(0, "Ruby >= 3.2 is not installed.")
+        display_message(0, f"Ruby {RUBY_VERSION} is not installed.")
 
     return result
+
 
 def get_ruby_path(username):
     """
@@ -339,7 +423,7 @@ def get_ruby_path(username):
 
         if ruby_path:
             display_message(0, f"Found ruby at {ruby_path}.")
-            return ruby_path.stdout.strip()
+            return ruby_path.strip()
 
     # Check if RVM is installed
     rvm_version = run_command("rvm --version", False, True, 5, username)
@@ -349,14 +433,14 @@ def get_ruby_path(username):
 
         if ruby_path:
             display_message(0, f"Found ruby at {ruby_path}.")
-            return ruby_path.stdout.strip()
+            return ruby_path.strip()
 
     # Finally, check for system-wide Ruby
     system_ruby_path = run_command("which ruby", False, True, 5, username)
 
     if system_ruby_path:
         display_message(0, f"Found ruby at {system_ruby_path}.")
-        return system_ruby_path
+        return system_ruby_path.strip()
 
     display_message(0, "Didn't find any ruby installs.")
 

@@ -15,12 +15,6 @@
   <% end %>
 </style>
 
-<% if @page.present? %>
-  <title><%= "#{@site_information.site_name} - #{@page.title}" %></title>
-<% else %>
-  <title><%= "#{@site_information.site_name}" %></title>
-<% end %>
-
 <%= render layout: "layouts/header" do %>
 <% end %>
 

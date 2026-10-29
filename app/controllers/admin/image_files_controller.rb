@@ -1,6 +1,20 @@
 # /app/controllers/admin/image_files
 
 class Admin::ImageFilesController < Admin::AbstractAdminController
+  def index
+    if params[:image_picker_complete] == "true"
+      render :picker_complete, layout: false
+    elsif params[:image_picker_choices] == "true"
+      render json: {
+        images: ImageFile.images,
+        videos: ImageFile.videos,
+        groups: ImageFile.where.not(group: [ nil, "" ]).distinct.order(:group).pluck(:group)
+      }
+    else
+      super
+    end
+  end
+
   def initialize
     super
 

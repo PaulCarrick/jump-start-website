@@ -61,7 +61,7 @@ function incrementSessionStorage(key) {
 }
 
 function handleEditorChange(content, id) {
-  if (!content || !id) return;
+  if (content == null || !id) return;
 
   const hiddenFieldName = id.replace(/-/g, "_");
   const hiddenField     = document.getElementById(hiddenFieldName);

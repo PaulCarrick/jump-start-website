@@ -1,4 +1,5 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
+require_relative 'disposable_database'
 require 'spec_helper'
 require 'rake'
 
@@ -9,6 +10,7 @@ require_relative '../config/environment'
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 require 'shoulda/matchers'
+Capybara.default_max_wait_time = Integer(ENV.fetch("SYSTEM_TEST_WAIT", "6"))
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -39,7 +41,7 @@ RSpec.configure do |config|
   config.include Rails.application.routes.url_helpers
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_paths = [ "#{::Rails.root}/spec/fixtures" ]
+  config.fixture_paths = [ Rails.root.join("spec/fixtures") ]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -73,7 +75,6 @@ RSpec.configure do |config|
     Rails.application.routes.default_url_options[:host] = "http://#{ENV.fetch('SERVER_HOST', 'localhost')}:#{ENV.fetch('SERVER_PORT', '3000')}"
   end
 
-  Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::IntegrationHelpers, type: :request
@@ -104,6 +105,18 @@ RSpec.configure do |config|
     end
   end
 
+  config.prepend_before(:each, type: :system) do
+    create(:site_setup)
+    create(:user, name: "guest", access: "guest")
+    { "Site Setups" => "site_setups", "Users" => "users", "Menu Items" => "menu_items",
+      "Footer Items" => "footer_items", "Pages" => "pages", "Sections" => "sections",
+      "Cells" => "cells", "Image Files" => "image_files", "Blogs" => "blog_posts" }.each_with_index do |(label, resource), index|
+      create(:menu_item, menu_type: "Admin", label: label, link: "/admin/#{resource}", menu_order: index)
+    end
+  end
+    end
+  end
+
   config.after(:suite) do
     # Replication copies development metadata; restore the test marker outside example transactions.
     ActiveRecord::Base.connection_pool.internal_metadata[:environment] = Rails.env
@@ -119,7 +132,7 @@ RSpec.configure do |config|
         example.run
 
         if example.exception
-          puts "Example #{example.full_description} failed with error: #{e.message}"
+          puts "Example #{example.full_description} failed with error: #{example.exception.message}"
           debugger
         end
       rescue => e

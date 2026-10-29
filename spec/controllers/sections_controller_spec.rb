@@ -5,9 +5,9 @@ RSpec.describe SectionController, type: :controller do
 
   let!(:page1) { create(:page, name: "page1", title: "Page 1", section: "type1") }
   let!(:page2) { create(:page, name: "page2", title: "Page 2", section: "type2") }
-  let!(:section1) { create(:section, content_type: "type1", section_order: 1, description: "<b>Description 1</b>", section_name: "section1") }
-  let!(:section2) { create(:section, content_type: "type1", section_order: 2, description: "<i>Description 2</i>", section_name: "section2") }
-  let!(:section3) { create(:section, content_type: "type2", section_order: 1, description: "<u>Description 3</u>", section_name: "section3") }
+  let!(:section1) { create(:section, page: page1, content_type: "type1", section_order: 1, description: "<b>Description 1</b>", section_name: "section1") }
+  let!(:section2) { create(:section, page: page1, content_type: "type1", section_order: 2, description: "<i>Description 2</i>", section_name: "section2") }
+  let!(:section3) { create(:section, page: page2, content_type: "type2", section_order: 1, description: "<u>Description 3</u>", section_name: "section3") }
 
   describe "GET #index" do
     context "with valid params" do
@@ -37,27 +37,14 @@ RSpec.describe SectionController, type: :controller do
 
         expect(rows).to be_an(Array)
         expect(rows.size).to eq(3)
-        first_row = rows[0]
-
-        begin
-          expect(first_row[:title]).to eq("Page 1")
-        rescue RSpec::Expectations::ExpectationNotMetError => e
-          expect(first_row[:title]).to eq("Page 2")
-        end
-
-        begin
-          expect(first_row[:description]).to eq("<b>Description 1</b>")
-        rescue RSpec::Expectations::ExpectationNotMetError => e
-          expect(first_row[:description]).to eq("<i>Description 2</i>")
-        end
-
-        begin
-          expect(first_row[:url]).to eq(page_path("page1", section_name: "section1"))
-        rescue RSpec::Expectations::ExpectationNotMetError => e
-          expect(first_row[:url]).to eq(page_path("page2", section_name: "section2"))
-        end
-
-        expect(first_row[:index]).to eq(0)
+        expect(rows).to contain_exactly(
+          { title: "Page 1", description: "<b>Description 1</b>",
+            url: page_path("page1", section_name: "section1"), index: 0 },
+          { title: "Page 1", description: "<i>Description 2</i>",
+            url: page_path("page1", section_name: "section2"), index: 0 },
+          { title: "Page 2", description: "Description 3",
+            url: page_path("page2", section_name: "section3"), index: 0 }
+        )
       end
     end
 

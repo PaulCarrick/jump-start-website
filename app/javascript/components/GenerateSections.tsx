@@ -1,27 +1,25 @@
 // app/javascript/components/GenerateSections.tsx
 
-import RenderImageControl from "./RenderImageControl";
-import { isPresent }      from "./utilities";
-import { renderSelect }   from "./renderControlFunctions";
-import {
-  generateSections,
-  generateRandomSectionName
-}                         from "../services/sectionService";
+import RenderImageControl   from "./RenderImageControl";
+import { isPresent }        from "./utilities";
+import { renderSelect }     from "./renderControlFunctions";
+import { generateSections } from "../services/sectionService";
 import {
   renderContent,
   renderSectionName
-}                         from "./renderUtilities";
+}                           from "./renderUtilities";
 import React, {
   RefObject,
   useEffect,
   useRef,
   useState
-}                         from "react";
+}                           from "react";
 import {
   ImageType,
   Page, PageOptions,
   Section
-}                         from "../types/dataTypes";
+}                           from "../types/dataTypes";
+import ErrorBoundary        from "./ErrorBoundary";
 
 interface GenerateSectionsProps {
   name?: string | null;
@@ -36,8 +34,7 @@ const GenerateSections: React.FC<GenerateSectionsProps> = ({
                                                              options = {},
                                                              onFinished = null
                                                            }) => {
-  const [ sectionName, setSectionName ]         = useState<string>(name ||
-                                                                   generateRandomSectionName);
+  const [ sectionName, setSectionName ]         = useState<string | null>(name);
   const [ sectionOrder, setSectionOrder ]       = useState<number>(1);
   const [ sectionTemplate, setSectionTemplate ] = useState<string>("");
   const [ needImage, setNeedImage ]             = useState<boolean>(false);
@@ -46,6 +43,7 @@ const GenerateSections: React.FC<GenerateSectionsProps> = ({
   const [ caption, setCaption ]                 = useState<string | null>(null);
   const [ image, setImage ]                     = useState<string | null>(null);
   const [ imageMode, setImageMode ]             = useState<ImageType>("Images");
+  const [ error, setError ]                     = useState<string | null>(null);
   const textTemplates: string[]                 = [
     "text-single",
     "text-top",
@@ -116,6 +114,11 @@ const GenerateSections: React.FC<GenerateSectionsProps> = ({
   }
 
   const handleGenerate = () => {
+    if (!sectionName || !isPresent(sectionName)) {
+      setError("You cannot save a section without a name");
+      return;
+    }
+
     const contentType: string | null = page?.section ? page.section : null;
     const sections: Section[]        = isPresent(sectionTemplate) ?
                                        generateSections(sectionName,
@@ -141,31 +144,38 @@ const GenerateSections: React.FC<GenerateSectionsProps> = ({
   };
 
   return (
-      <div id="GenerateSections">
-        {renderSectionName(sectionName, null, setValue)}
-        <div className="row">
-          <div className="col-12">{selectSectionTemplates(sectionTemplate, setValue)}</div>
-        </div>
-        {needContent && renderContent("content", content, setValue)}
-        {(sectionTemplate === "header-section") && renderContent("caption", caption, setValue)}
-        {needImage && (
-            <RenderImageControl
-                image={image}
-                imageType={imageMode}
-                availableImagesData={options?.availableImages || []}
-                availableImageGroupsData={options?.availableImageGroups || []}
-                availableVideosData={options?.availableVideos || []}
-                setValue={setValue}
-            />
-        )}
-        {canGenerate() && (
+      <ErrorBoundary>
+        {error && (
             <div className="row">
-              <button onClick={handleGenerate} className="btn btn-primary me-2" style={{ maxWidth: "12em" }}>
-                Generate Sections
-              </button>
+              <div className="error-box">{error}</div>
             </div>
         )}
-      </div>
+        <div id="GenerateSections">
+          {renderSectionName(sectionName, null, setValue)}
+          <div className="row">
+            <div className="col-12">{selectSectionTemplates(sectionTemplate, setValue)}</div>
+          </div>
+          {needContent && renderContent("content", content, setValue)}
+          {(sectionTemplate === "header-section") && renderContent("caption", caption, setValue)}
+          {needImage && (
+              <RenderImageControl
+                  image={image}
+                  imageType={imageMode}
+                  availableImagesData={options?.availableImages || []}
+                  availableImageGroupsData={options?.availableImageGroups || []}
+                  availableVideosData={options?.availableVideos || []}
+                  setValue={setValue}
+              />
+          )}
+          {canGenerate() && (
+              <div className="row">
+                <button onClick={handleGenerate} className="btn btn-primary me-2" style={{ maxWidth: "12em" }}>
+                  Generate Sections
+                </button>
+              </div>
+          )}
+        </div>
+      </ErrorBoundary>
   );
 };
 
@@ -185,7 +195,7 @@ export function selectSectionTemplates(value: string, setValue: (newValue: strin
             { label: "Four Column", value: "four-column" },
             { label: "Five Column", value: "five-column" },
             { label: "Dual Row - Text Top", value: "text-top" },
-            { label: "Dual Row - Text Bottom", value: "text--bottom" },
+            { label: "Dual Row - Text Bottom", value: "text-bottom" },
             { label: "Header Section", value: "header-section" }
           ], setValue)}
         </div>

@@ -5,9 +5,9 @@
 <%= render layout: "layouts/admin_page" do %>
   <div class="auto-size">
     <div class="row border-bottom border-dark mb-2 d-flex align-items-center">
-      <div class="col-5 text-center" style="font-size: 10pt">Preview</div>
-      <div class="col-2" style="font-size: 10pt"><%= sortable_column('Name', 'name', "image_files") %></div>
-      <div class="col-1" style="font-size: 10pt"><%= sortable_column('Group', 'group', "image_files") %></div>
+      <div class="col-5 text-center">Preview</div>
+      <div class="col-2"><%= sortable_column('Name', 'name', "image_files") %></div>
+      <div class="col-1"><%= sortable_column('Group', 'group', "image_files") %></div>
       <div class="col-4 d-flex  align-items-center justify-content-end">
         <%= link_to "Clear Sort", '#', class: "me-5", style: "font-size: 10pt", onclick: "clearSort()" %>
         <div class="mt-3">
@@ -59,8 +59,8 @@
               "<p>No image available</p>"
             <% end %>
           </div>
-          <div class="col-2" style="font-size: 12pt"><%= image_file.name %></div>
-          <div class="col-1" style="font-size: 12pt"><%= image_file.group %></div>
+          <div class="col-2"><%= image_file.name %></div>
+          <div class="col-1"><%= image_file.group %></div>
           <div class="col-4" style="min-height: 2em;">
             <% delete_path = admin_image_file_path(image_file).to_s + "/delete" %>
             <button class="btn btn-link action-links" onclick="addToGroup(<%= image_file.id %>)">

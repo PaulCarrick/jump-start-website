@@ -40,7 +40,7 @@ RSpec.describe "Admin Footer Items", type: :system do
         click_button "Save Footer Item"
         sleep 3
 
-        expect(page).to have_current_path(admin_footer_items_path(turbo: false))
+        expect(page).to have_current_path(admin_footer_items_path)
         expect(page).to have_content("Footer Item created successfully.")
       end
     end
@@ -66,7 +66,7 @@ RSpec.describe "Admin Footer Items", type: :system do
         click_button "Save Footer Item"
         sleep 2
 
-        expect(page).to have_current_path(admin_footer_items_path(turbo: false))
+        expect(page).to have_current_path(admin_footer_items_path)
         expect(page).to have_content("Footer Item updated successfully.")
         expect(existing_footer_item.reload.label).to eq("Updated Footer")
       end

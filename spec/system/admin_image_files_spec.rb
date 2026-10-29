@@ -7,7 +7,8 @@ RSpec.describe "Admin Image Files", type: :system do
     expect(page).to have_field(name: 'q[name_cont]')
     fill_in "q[name_cont]", with: name
     click_button "Search Images"
-    expect(page).to have_current_path(/[?&]q(?:%5B|\[)/)
+    expect(page).to have_current_path(%r{\A/admin/image_files\?.*q%5B})
+
   end
 
   let(:admin_user) { create(:user, access: "super") }
@@ -80,7 +81,7 @@ RSpec.describe "Admin Image Files", type: :system do
       fill_in_quill_editor("image-file-description", with: "New Description")
       click_button "Save Image"
 
-      expect(page).to have_current_path(admin_image_files_path(turbo: false))
+      expect(page).to have_current_path(admin_image_files_path)
       expect(page).to have_content("New Image")
     end
   end
@@ -102,7 +103,7 @@ RSpec.describe "Admin Image Files", type: :system do
       fill_in_quill_editor("image-file-caption", with: "New Caption")
       click_button "Save Image"
 
-      expect(page).to have_current_path(admin_image_files_path(turbo: false))
+      expect(page).to have_current_path(admin_image_files_path)
       expect(page).to have_content("Image File updated successfully.")
     end
   end

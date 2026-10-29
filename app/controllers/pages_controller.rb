@@ -17,6 +17,7 @@ class PagesController < ApplicationController
     @page = Page.by_page_name(params[:id]).first
 
     if @page.present?
+      set_title("#{@site_information.site_name} - #{@page.title}")
       setup_defaults
 
       @contents = build_contents
@@ -32,6 +33,7 @@ class PagesController < ApplicationController
       @contents = renderable_contents
     else
       flash[:alert] = "Can't find page for: #{params[:id]}."
+      render :show, status: :not_found
     end
   end
 

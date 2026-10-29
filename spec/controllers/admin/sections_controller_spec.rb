@@ -3,11 +3,12 @@ require 'rails_helper'
 RSpec.describe Admin::SectionsController, type: :controller do
   include_context "debug setup"
 
-  Section.delete_all
 
   let!(:admin_user) { create_admin_user }
+  let(:page) { create(:page) }
   let(:valid_attributes) {
     {
+      page_id: page.id,
       content_type: "Test Content Type",
       section_name: "Test Section",
       description:  "<div>Test Description</div>",
@@ -76,7 +77,7 @@ RSpec.describe Admin::SectionsController, type: :controller do
         }.not_to change(Section, :count)
 
         expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :new, turbo: false)
+        expect(response).to redirect_to(action: :new)
       end
     end
   end
@@ -104,7 +105,7 @@ RSpec.describe Admin::SectionsController, type: :controller do
         patch :update, params: { id: section.id, section: valid_attributes }
         section.reload
 
-        expect(section.description).to eq("<div>Test Description</div>")
+        expect(section.description).to eq("<div>\n  Test Description\n</div>")
       end
     end
 
@@ -121,7 +122,7 @@ RSpec.describe Admin::SectionsController, type: :controller do
         patch :update, params: { id: section.id, section: invalid_attributes }
         expect(section.section_name).to eq("Test Section")
         expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :edit, turbo: false)
+        expect(response).to redirect_to(action: :edit)
       end
     end
   end

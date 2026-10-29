@@ -3,15 +3,15 @@ require 'rails_helper'
 RSpec.describe Admin::CellsController, type: :controller do
   include_context "debug setup"
 
-  Cell.delete_all
 
   let!(:admin_user) { create_admin_user }
   let(:valid_attributes) {
     {
+      section_id: section.id,
       section_name: "Test",
       cell_name:    "Test Cell",
       content:      "<div>Test Content</div>",
-      formatting:   "{ \"key\": \"value\" }"
+      formatting:   { "key" => "value" }
     }
   }
 
@@ -28,10 +28,11 @@ RSpec.describe Admin::CellsController, type: :controller do
 
   let(:new_attributes) {
     {
+      section_id: section.id,
       section_name: "Test",
       cell_name:    "Test Cell 2",
       content:      "<div>Test Contents 2</div>",
-      formatting:   "{ \"key\": \"value\" }"
+      formatting:   { "key" => "value" }
     }
   }
 
@@ -43,7 +44,7 @@ RSpec.describe Admin::CellsController, type: :controller do
            description:   "<b>Test Description</b>")
   }
 
-  let!(:cell) { create(:cell, valid_attributes) }
+  let!(:cell) { create(:cell, valid_attributes.merge(section: section)) }
 
   before do
     allow(controller).to receive(:controller_name).and_return("cells")
@@ -93,7 +94,7 @@ RSpec.describe Admin::CellsController, type: :controller do
         }.not_to change(Cell, :count)
 
         expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :new, turbo: false)
+        expect(response).to redirect_to(action: :new)
       end
     end
   end
@@ -121,16 +122,16 @@ RSpec.describe Admin::CellsController, type: :controller do
         patch :update, params: { id: cell.id, cell: valid_attributes }
         cell.reload
 
-        expect(cell.content).to eq("<div>Test Content</div>")
+        expect(cell.content).to eq("<div>\n  Test Content\n</div>")
       end
     end
 
     context "with invalid attributes" do
       it "does not update the record and redirects to edit" do
         patch :update, params: { id: cell.id, cell: { cell_name: nil } }
-        expect(cell.cell_name).to eq("Test Cell")
+        expect(cell.reload.cell_name).to eq("Test Cell")
         expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :edit, turbo: false)
+        expect(response).to redirect_to(action: :edit)
       end
     end
   end

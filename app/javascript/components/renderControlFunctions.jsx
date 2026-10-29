@@ -54,8 +54,15 @@ export function renderSelect(id, value, options, setValue, controlClass = "form-
 }
 
 export function renderInput(
-    id, value, onChange = null, onBlur = null, options = {}, placeHolder = "Please enter a value", type = "text",
-    controlClass                                                                                        = "form-control", dataOptions = {}
+    id,
+    value,
+    onChange     = null,
+    onBlur       = null,
+    options      = {},
+    placeHolder  = "Please enter a value",
+    type         = "text",
+    controlClass = "form-control",
+    dataOptions  = {}
 ) {
   const getBooleanOption = (option) => {
     let result = false;

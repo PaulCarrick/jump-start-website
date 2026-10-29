@@ -1,6 +1,6 @@
 <header>
   <div class="bg-light">
-    <nav class="header-bg navbar navbar-dark navbar-expand-lg py-4">
+    <nav class="header-bg navbar navbar-dark navbar-expand-lg py-4" data-controller="navigation">
       <div class="header-bg container">
         <!-- Brand Name -->
         <%= link_to @site_information.site_name,
@@ -13,13 +13,13 @@
         <!-- Toggler Button for Hamburger Menu -->
         <%= button_tag type:  "button",
                        class: "navbar-toggler",
-                       data:  { bs_toggle: "collapse", bs_target: "#navbarNav" },
+                       data:  { action: "navigation#toggle", navigation_target: "toggle" },
                        aria:  { controls: "navbarNav", expanded: "false", label: "Toggle navigation" } do %>
           <span class="navbar-toggler-icon"></span>
         <% end %>
 
         <!-- Collapsible Menu -->
-        <div class="header-bg collapse navbar-collapse" id="navbarNav">
+        <div class="header-bg collapse navbar-collapse" id="navbarNav" data-navigation-target="menu">
           <ul class="header-bg ms-auto navbar-nav">
             <% @main_menu_items.each_with_index do |menu_item, index| %>
               <% next if menu_item.access == 'admin' && !controller.current_user_is_admin? %>

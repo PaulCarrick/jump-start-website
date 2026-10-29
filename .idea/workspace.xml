@@ -72,8 +72,8 @@
         <option value="JavaScript File" />
         <option value="Python Script" />
         <option value="JSX File" />
-        <option value="TypeScript File" />
         <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -167,8 +167,8 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;database.data.extractors.current.export.id&quot;: &quot;SQL Inserts&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/paul/src/jump-start-website/config&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;updated__new&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Volumes/paul/src/jump-start-website&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -178,7 +178,7 @@
     &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
     &quot;ruby.structure.view.model.defaults.configured&quot;: &quot;true&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;vcs.Git&quot;,
     &quot;settings.editor.splitter.proportion&quot;: &quot;0.2631579&quot;,
     &quot;ts.external.directory.path&quot;: &quot;/Applications/RubyMine.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
     &quot;two.files.diff.last.used.file&quot;: &quot;/Users/paul/src/jump-start-website Saved/app/javascript/services/pageService.tsx&quot;,
@@ -204,11 +204,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/javascript/components" />
+      <recent name="$PROJECT_DIR$/bin" />
+      <recent name="$PROJECT_DIR$/app/javascript/services" />
       <recent name="$PROJECT_DIR$/config" />
       <recent name="$PROJECT_DIR$/app" />
-      <recent name="$PROJECT_DIR$/app/javascript/components" />
-      <recent name="$PROJECT_DIR$/app/javascript/services" />
-      <recent name="$PROJECT_DIR$/app/javascript/types" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app" />
@@ -223,7 +223,7 @@
       <command value="Newhall2Eastsound!" />
     </option>
   </component>
-  <component name="RunManager" selected="Rails.Debug Rails">
+  <component name="RunManager" selected="JavaScript Debug.Debug JavaScript">
     <configuration name="Debug Chrome (Dev)" type="JavascriptDebugType" uri="http://localhost:3000/" useFirstLineBreakpoints="true">
       <method v="2">
         <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_OpenServer (Dev)" />
@@ -570,7 +570,25 @@
       <workItem from="1742389974264" duration="41553000" />
       <workItem from="1743791759853" duration="4493000" />
       <workItem from="1744391218309" duration="73617000" />
-      <workItem from="1744907410675" duration="26643000" />
+      <workItem from="1744907410675" duration="89330000" />
+      <workItem from="1745517265441" duration="705000" />
+      <workItem from="1745519693082" duration="1452000" />
+      <workItem from="1745530072260" duration="1000" />
+      <workItem from="1746647557608" duration="287000" />
+      <workItem from="1752606618377" duration="2836000" />
+      <workItem from="1756841724603" duration="608000" />
+      <workItem from="1769283178402" duration="6000" />
+      <workItem from="1777300893519" duration="1259000" />
+      <workItem from="1785787591892" duration="5103000" />
+      <workItem from="1785879845880" duration="17000" />
+      <workItem from="1787338407606" duration="1855000" />
+      <workItem from="1790606125455" duration="6207000" />
+      <workItem from="1790629851599" duration="4000" />
+      <workItem from="1790630399161" duration="884000" />
+      <workItem from="1790709395495" duration="6277000" />
+      <workItem from="1793119593081" duration="1363000" />
+      <workItem from="1793122936262" duration="1832000" />
+      <workItem from="1793192986206" duration="5448000" />
       <workItem from="1793283810344" duration="2376000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
@@ -692,6 +710,18 @@
     <option name="LAST_COMMIT_MESSAGE" value="Polishing things." />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="ruby-line">
+          <url>file://$PROJECT_DIR$/app/controllers/api/V1/pages_controller.rb</url>
+          <line>35</line>
+          <properties myBlockOrdinal="-1">
+            <option name="block-ordinal" value="-1" />
+          </properties>
+          <option name="timeStamp" value="188" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="RailsRunConfigurationType">
         <watch expression="request.url" />
@@ -699,7 +729,7 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/jump_start_website@Debug_Rails.rcov" NAME="Debug Rails Coverage Results" MODIFIED="1744994838778" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="rails-website" />
+    <SUITE FILE_PATH="coverage/jump_start_website@Debug_Rails.rcov" NAME="Debug Rails Coverage Results" MODIFIED="1745257442367" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="rails-website" />
     <SUITE FILE_PATH="coverage/jump_start_website@Debug_Rails_and_Javascript.rcov" NAME="Debug Rails Coverage Results" MODIFIED="1744906759721" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="rcov" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" MODULE_NAME="rails-website" />
   </component>
 </project>

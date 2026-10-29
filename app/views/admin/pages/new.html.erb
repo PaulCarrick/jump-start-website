@@ -10,8 +10,8 @@
       defaultPageName:       @default_page_name,
       defaultSectionName:    @default_section_name,
       defaultCellName:       @default_cell_name,
-      returnUrl:             admin_pages_url,
-      cancelUrl:             admin_pages_url,
+      returnUrl:             admin_return_url,
+      cancelUrl:             admin_return_url,
     }
   %>
   <%= react_component("PageEditor", { page: controller.get_item, options: options }) %>

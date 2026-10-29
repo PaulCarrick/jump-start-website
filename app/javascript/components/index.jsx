@@ -34,6 +34,7 @@ import GenerateCells from "./GenerateCells";
 import RenderPage from "./RenderPage";
 import PageEditor from "./PageEditor";
 import RenderImageControl from "./RenderImageControl";
+import AddPageToMenu from "./AddPageToMenu";
 
 try {
   ReactRailsUJS.register({
@@ -63,7 +64,8 @@ try {
                            GenerateCells,
                            RenderPage,
                            PageEditor,
-                           RenderImageControl
+                           RenderImageControl,
+                           AddPageToMenu
                          });
 }
 catch (error) {

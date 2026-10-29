@@ -8,6 +8,7 @@ RSpec.describe Cell, type: :model do
       cell = build(:cell, content: "<html><body><p>Invalid HTML")
       cell.valid?
       expect(cell.errors[:content]).to include("Invalid HTML in Content.")
+      expect(cell.errors[:content]).to include("Invalid HTML in Content.")
     end
 
     it "does not add an error for valid HTML in content" do
@@ -24,20 +25,21 @@ RSpec.describe Cell, type: :model do
   describe "callbacks" do
     describe "#verify_checksum" do
       it "does not raise an error if checksum matches content" do
-        cell     = create(:cell, cell_name:    'Test',
-                                section_name: 'Test',
+        cell = Cell.create!(section: create(:section), cell_name: 'Test', section_name: 'Test',
                                 content:      "<html><body><p>Valid HTML</p></body></html>",
                                 formatting:   '{"key":"value"}')
         checksum = cell.send(:generate_checksum, cell.content)
         cell.update!(checksum: checksum)
+        expect { cell.reload }.not_to raise_error
         expect { cell.reload }.not_to raise_error
       end
     end
   end
 
   describe "scopes" do
-    let!(:cell_1) { create(:cell, cell_name: "Test 1", section_name: "type1", content: "Cell 1", cell_order: 1) }
-    let!(:cell_2) { create(:cell, cell_name: "Test 2", section_name: "type1", content: "Cell 2", cell_order: 2) }
+    let(:section) { create(:section, section_name: "type1") }
+    let!(:cell_1) { create(:cell, section: section, cell_name: "Test 1", section_name: "type1", content: "Cell 1", cell_order: 1) }
+    let!(:cell_2) { create(:cell, section: section, cell_name: "Test 2", section_name: "type1", content: "Cell 2", cell_order: 2) }
     let!(:cell_3) { create(:cell, cell_name: "Test 3", section_name: "type2", content: "Cell 3", cell_order: 3) }
 
     describe ".by_section_name" do

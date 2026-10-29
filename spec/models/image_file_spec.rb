@@ -91,7 +91,8 @@ RSpec.describe ImageFile, type: :model do
     describe "#as_json" do
       it "includes the image URL in the JSON representation" do
         json = image_file.as_json
-        expect(json[:image_url]).to eq(rails_blob_path(image_file.image, only_path: true))
+        expect(json[:image_url]).to eq(image_file.image_url)
+        expect(URI.parse(json[:image_url]).path).to start_with("/rails/active_storage/blobs/")
       end
     end
   end

@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Cell routes", type: :routing do
-  it "routes the public cell listing" do
+  it "routes the public listing" do
     expect(get: "/cells").to route_to("cells#index")
   end
 
@@ -16,6 +16,18 @@ RSpec.describe "Cell routes", type: :routing do
   end
 
   it "does not expose public cell writes" do
+    expect(post: "/cells").not_to be_routable
+    expect(patch: "/cells/1").not_to be_routable
+    expect(delete: "/cells/1").not_to be_routable
+  end
+
+  end
+
+  it "routes PUT updates to the admin controller" do
+    expect(put: "/admin/cells/1").to route_to("admin/cells#update", id: "1")
+  end
+
+  it "does not expose public write routes" do
     expect(post: "/cells").not_to be_routable
     expect(patch: "/cells/1").not_to be_routable
     expect(delete: "/cells/1").not_to be_routable

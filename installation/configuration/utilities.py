@@ -2,19 +2,17 @@
 
 # Utility functions
 
-import sys
+import grp
+import itertools
 import os
 import pwd
-import grp
-import subprocess
-import time
-import threading
-import itertools
+import shlex
 import socket
-
+import subprocess
+import sys
+import threading
 from pathlib import Path
 from types import SimpleNamespace
-
 
 # ANSI color codes for terminal messages
 GREEN = "\033[32m"
@@ -77,81 +75,58 @@ def display_message(error_level, message):
             sys.exit(error_level - 19)
 
 
-def run_command(command, flag_error=True, capture_output=True, timeout=None, as_user=None):
+def run_command(
+    command, flag_error=True, capture_output=True, timeout=None, as_user=None
+):
+    """Run argv directly, or a shell expression when supplied as a string.
+
+    Preserve the installer API: captured output on success, otherwise a boolean.
+    A failed optional command returns an empty string or False.
     """
-    Execute a shell command and return the output.
-
-    Args:
-        command (str|list): The command to run.
-        capture_output (bool): Capture the output.
-        flag_error (bool): Flag whether to exit with an error.
-        timeout (float|None): Optional timeout for command execution.
-        as_user (str|None): User to run the command as.
-
-    Returns:
-        A string or a boolean based on capture_output.
-    """
-    if isinstance(command, list):
-        command_str = " ".join(command)
-    else:
-        command_str = command
-
+    use_shell = isinstance(command, str)
+    command_args = command if use_shell else list(command)
     if as_user:
-        command_str = f"su - {as_user} -c '{command_str}'"
-
+        shell_command = command if use_shell else shlex.join(command_args)
+        command_args = ["su", "-", as_user, "-c", shell_command]
+        use_shell = False
     try:
         result = subprocess.run(
-            command_str,
+            command_args,
             timeout=timeout,
-            shell=True,
+            shell=use_shell,
             capture_output=True,
             text=True,
-            env=os.environ
+            env=os.environ,
         )
-
-        if result.returncode != 0:
-            if flag_error:
-                display_message(89, f"Command '{command_str}' failed with exit code {result.returncode}.")
-                display_message(89, f"Error: {result.stderr}")
-            return "" if capture_output else False
-
-        return result.stdout if capture_output else True
-
     except subprocess.TimeoutExpired:
         return "" if capture_output else False
-    except subprocess.CalledProcessError as e:
-        display_message(90, f"Error: Error running {command_str}. Error: {str(e)}")
+    except OSError as error:
+        if flag_error:
+            display_message(90, f"Unable to start command: {error}")
         return "" if capture_output else False
+    if result.returncode:
+        if flag_error:
+            display_message(
+                89,
+                f"Command failed with exit code {result.returncode}: {result.stderr.strip()}",
+            )
+        return "" if capture_output else False
+    return result.stdout if capture_output else True
 
 
-def run_long_command(command, flag_error=True, capture_output=True, timeout=None, as_user=None):
-    """
-    Execute a shell command and return the output.
-    This command displays a spinner and is used for long-running commands.
-
-    Args:
-        command (str): The command to run.
-        capture_output (bool=False): Capture the output.
-        flag_error (bool=False): Flag whether to exit with an error.
-        timeout (float|None): Optional timeout for command execution.
-        as_user (str|None): User to run the command as.
-
-    Returns:
-        A string or a boolean based on capture output.
-    """
-
+def run_long_command(
+    command, flag_error=True, capture_output=True, timeout=None, as_user=None
+):
+    """Run a command with a spinner that always stops, including on failure."""
     stop_event = threading.Event()
-    spinner_thread = threading.Thread(target=spinner, args=(stop_event,))
-
-    spinner_thread.start()  # Start spinner
-
-    result = run_command(command, flag_error, capture_output, timeout, as_user)
-
-    stop_event.set()  # Stop spinner
-    spinner_thread.join()  # Wait for spinner to finish
-    sys.stdout.write('\n')  # Move to new line after completion
-
-    return result
+    spinner_thread = threading.Thread(target=spinner, args=(stop_event,), daemon=True)
+    spinner_thread.start()
+    try:
+        return run_command(command, flag_error, capture_output, timeout, as_user)
+    finally:
+        stop_event.set()
+        spinner_thread.join()
+        sys.stdout.write("\n")
 
 
 def spinner(stop_event):
@@ -161,15 +136,15 @@ def spinner(stop_event):
     Args:
         stop_event (StopEvent): The event to stop the spinner.
     """
-    spinner_symbols = itertools.cycle(['-', '\\', '|', '/'])
+    spinner_symbols = itertools.cycle(["-", "\\", "|", "/"])
 
     while not stop_event.is_set():  # Run until stop_event is set
         sys.stdout.write(next(spinner_symbols))
         sys.stdout.flush()
-        time.sleep(0.5)
-        sys.stdout.write('\b')
+        stop_event.wait(0.5)
+        sys.stdout.write("\b")
 
-    sys.stdout.write('\b')
+    sys.stdout.write("\b")
     sys.stdout.flush()
 
 
@@ -183,7 +158,7 @@ def user_exists(username):
     Returns:
         bool: True if the user exists in the system.
     """
-    return bool(run_command(f"id {username}", flag_error=False))
+    return bool(run_command(["id", username], flag_error=False))
 
 
 def directory_exists(path, level=0):
@@ -219,7 +194,7 @@ def present(value):
     Returns:
         bool: True if the value is present.
     """
-    return value is not None and value.strip() != ""
+    return value is not None and str(value).strip() != ""
 
 
 def valid_integer(value):
@@ -231,7 +206,7 @@ def valid_integer(value):
     Returns:
         bool: True if the string contains a valid integer.
     """
-    return value.isdigit()
+    return isinstance(value, str) and value.isdigit()
 
 
 def valid_boolean_response(response):
@@ -257,7 +232,7 @@ def generate_env(env_filename, variables):
     try:
         with open(env_filename, "w") as file:
             for key, value in variables.items():
-                file.write(f"{key.upper()}=\"{value}\"\n")
+                file.write(f'{key.upper()}="{value}"\n')
     except Exception as e:
         display_message(91, f"Cannot write {env_filename}: {str(e)}.")
 
@@ -280,7 +255,9 @@ def create_user(username, password):
     try:
         display_message(0, f"Setting password for user: {username}...")
 
-        process = subprocess.Popen(["sudo", "chpasswd"], stdin=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+            ["sudo", "chpasswd"], stdin=subprocess.PIPE, text=True
+        )
         process.communicate(input=f"{username}:{password}")
 
         if process.returncode == 0:
@@ -375,7 +352,7 @@ def replace_values_in_file(filename, values):
         elif isinstance(values, SimpleNamespace):
             iterator = vars(values).items()
         else:
-            iterator = values
+            iterator = list(values)
 
         with open(filename, "r") as file:
             lines = file.readlines()

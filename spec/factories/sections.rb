@@ -19,7 +19,7 @@ end
 FactoryBot.define do
   factory :section do
     association :page
-    content_type { "Test" }
+    content_type { page&.section || "Test" }
     sequence(:section_name) { |n| "test-section-#{n}" }
     section_order { 1 }
     image { "ImageFile:test" }

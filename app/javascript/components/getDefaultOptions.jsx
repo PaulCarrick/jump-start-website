@@ -93,6 +93,12 @@ const getDefaultOptions = (
     }
   }
 
+  // The column editor stores its background directly on formatting.
+  // Preserve any other inline styles while applying that saved color.
+  if (isPresent(formatOptions["background-color"])) {
+    options.styles = { ...options.styles, backgroundColor: formatOptions["background-color"] };
+  }
+
   const hasExistingCellDefinitions = /col\-\d{1,2}/.test(options.text_classes) ||
                                      /col\-\d{1,2}/.test(options.image_classes)
 

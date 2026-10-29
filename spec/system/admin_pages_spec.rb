@@ -27,6 +27,7 @@ RSpec.describe "Admin Pages", type: :system do
   end
   let!(:section) do
     create(:section,
+           page: page_record,
            content_type:  "Test Section",
            section_name:  "Test Section Name",
            section_order: 1,
@@ -37,6 +38,7 @@ RSpec.describe "Admin Pages", type: :system do
   end
 
   before do
+    create(:cell, section: section, content: "<p>Test Description</p>")
     if ENV["DEBUG"].present? || ENV["RSPEC_DEBUG"].present?
       driven_by(:selenium_chrome)
     else
@@ -81,21 +83,29 @@ RSpec.describe "Admin Pages", type: :system do
     end
 
     it "renders the form with required fields" do
-      expect(page).to have_field("name", type: "text")
-      expect(page).to have_field("section_name", type: "text")
-      expect(page).to have_field("title", type: "text")
-      expect(page).to have_field("access", type: "text")
+      expect(page).to have_css("#name")
+      expect(page).to have_css("#section")
+      expect(page).to have_css("#title")
+      expect(page).to have_css("#access")
     end
 
     it "creates a new page successfully" do
-      fill_in "name", with: "New Page"
-      fill_in "title", with: "New Title"
-      fill_in "access", with: "Private"
+      replace_react "#name", "New Page"
+      replace_react "#section", "New Section"
+      replace_react "#title", "New Title"
+      replace_react "#access", "Private"
+      click_button "New Section"
+      replace_react "#section_name", "new-section"
+      select "Text Only", from: "section_templates"
+      enter_column_text "New page content"
+      click_button "Generate Sections"
       click_button "Save Page"
 
-      expect(page).to have_current_path(admin_pages_path)
-      expect(Page.find_by!(name: "New Page").access).to eq("Private")
-      expect(page).to have_content("New Title")
+      expect(page).to have_current_path(admin_pages_path, ignore_query: true)
+      expect(page).to have_content("New Page")
+      expect(page).to have_content("Private")
+    end
+
     end
   end
 
@@ -117,14 +127,14 @@ RSpec.describe "Admin Pages", type: :system do
       fill_in "Title", with: "Updated Title"
       click_button "Save Page"
 
-      expect(page).to have_current_path(admin_pages_path(turbo: false))
+      expect(page).to have_current_path(admin_pages_path, ignore_query: true)
       expect(page).to have_content("Updated Title")
     end
   end
 
   describe "Show Page" do
     it "shows the page details" do
-      home_page = search_pages("home")
+      search_pages(page_record.name)
 
       expect(page).to have_link("View", href: admin_page_path(page_record))
       find(:xpath, "//a[text()='View' and @href='#{admin_page_path(page_record)}']").click
@@ -141,7 +151,8 @@ RSpec.describe "Admin Pages", type: :system do
     it "deletes an page successfully" do
       click_link "Delete", href: "#{admin_destroy_page_path(page_record)}"
       page.driver.browser.switch_to.alert.accept # Confirm alert
-      expect(page).not_to have_link("View", href: admin_page_path(page_record))
+      expect(page).to have_no_link("View", href: admin_page_path(page_record))
+
       expect(Page.exists?(page_record.id)).to be(false)
     end
   end

@@ -1,47 +1,47 @@
 <!-- app/views/admin/site_setups/index.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
   <div class="row border-bottom border-dark mb-2">
-    <div class="col-2" style="font-size: 10pt">
+    <div class="col-2">
       <%= sortable_column('Configuration Name', 'configuration_name', "site_setups") %>
     </div>
-    <div class="col-2" style="font-size: 10pt">
+    <div class="col-2">
       <%= sortable_column('Site Name', 'site_name', "site_setups") %>
     </div>
-    <div class="col-1" style="font-size: 10pt">
+    <div class="col-1">
       <%= sortable_column('Owner', 'owner_name', "site_setups") %>
     </div>
-    <div class="col-2" style="font-size: 10pt">
+    <div class="col-2">
       <%= sortable_column('Domain', 'site_domain', "site_setups") %>
     </div>
-    <div class="col-1" style="font-size: 10pt">
+    <div class="col-1">
       <%= sortable_column('Host', 'site_host', "site_setups") %>
     </div>
-    <div class="col-2" style="font-size: 10pt">
+    <div class="col-2">
       <%= sortable_column('URL', 'site_url', "site_setups") %>
     </div>
-    <div class="col-2" style="font-size: 10pt">
+    <div class="col-2">
       <%= link_to "Clear Sort", '#', class: "action-links", onclick: "clearSort()" %>
     </div>
   </div>
   <div class="scrollable-container p-2">
     <% controller.get_items.each do |site_setup| %>
-      <div class="row" style="font-size: 10pt">
+      <div class="row">
         <div class="col-2">
           <%= site_setup.configuration_name %>
         </div>
-        <div class="col-2" style="font-size: 10pt">
+        <div class="col-2">
           <%= site_setup.site_name %>
         </div>
-        <div class="col-1" style="font-size: 10pt">
+        <div class="col-1">
           <%= site_setup.owner_name %>
         </div>
-        <div class="col-2" style="font-size: 10pt">
+        <div class="col-2">
           <%= site_setup.site_domain %>
         </div>
-        <div class="col-1" style="font-size: 10pt">
+        <div class="col-1">
           <%= site_setup.site_host %>
         </div>
-        <div class="col-2" style="font-size: 10pt">
+        <div class="col-2">
           <%= site_setup.site_url %>
         </div>
         <div class="col-2" style="min-height: 2em;">

@@ -23,12 +23,12 @@ module ApplicationHelper
     links       = [
       link_to("View",
               show_path,
-              class: "btn-link me-2",
+              class: "btn btn-secondary btn-sm",
               accesskey: "v",
               target: "_self"),
       link_to("Edit",
               edit_path,
-              class: "btn-link me-2",
+              class: "btn btn-primary btn-sm",
               accesskey: "e",
               target: "_self")
     ]
@@ -38,12 +38,12 @@ module ApplicationHelper
                        delete_path,
                        method:  :delete,
                        data:    { confirm: "Are you sure?" },
-                       class:   "btn-link",
-                       style:   "color: red",
+                       class:   "btn btn-danger btn-sm",
+                       target:  "_self",
                        onclick: "if (!confirm('Are you sure you want to delete this?')) { return false; }")
     end
 
-    content_tag(:div, class: "action-links") { links.join.html_safe }
+    content_tag(:div, class: "admin-record-actions d-flex justify-content-end flex-wrap gap-2 py-1") { safe_join(links) }
   end
 
   def quil_editor(id, value_name, classes = "", styles = "")

@@ -86,13 +86,22 @@ RSpec.describe "Admin Users", type: :system do
     end
 
     it "updates a user successfully" do
+      original_password = user.encrypted_password
       fill_in "user[name]", with: "Updated User"
       select("Regular", from: "user[access]")
-      find_button("Save User").send_keys(:enter)
+      # Close Chrome's native select popup before clicking the submit button.
+      find('select[name="user[access]"]').send_keys(:tab)
+      expect(page).to have_select("user[access]", selected: "Regular")
+      expect(page).to have_field("user[name]", with: "Updated User")
+      click_button "Save User"
+
 
       expect(page).to have_current_path(admin_users_path)
       expect(page).to have_content("Updated User")
-      expect(page).to have_content("regular") # Admin
+      expect(page).to have_content("regular")
+      expect(user.reload.name).to eq("Updated User")
+      expect(user.access).to eq("regular")
+      expect(user.encrypted_password).to eq(original_password)
     end
   end
 

@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Admin::FooterItemsController, type: :controller do
-  FooterItem.delete_all
-
   let!(:admin_user) { create_admin_user }
   include_context "debug setup"
 
@@ -76,7 +74,7 @@ RSpec.describe Admin::FooterItemsController, type: :controller do
           post :create, params: { footer_item: valid_attributes }
         }.to change(FooterItem, :count).by(1)
 
-        expect(response).to redirect_to(action: :index, turbo: false)
+        expect(response).to redirect_to(action: :index)
         expect(flash[:notice]).to eq("Footer Item created successfully.")
       end
     end
@@ -88,7 +86,7 @@ RSpec.describe Admin::FooterItemsController, type: :controller do
         }.not_to change(FooterItem, :count)
 
         expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :new, turbo: false)
+        expect(response).to redirect_to(action: :new)
       end
     end
   end
@@ -106,7 +104,7 @@ RSpec.describe Admin::FooterItemsController, type: :controller do
         patch :update, params: { id: footer_item.id, footer_item: { label: "Updated Footer Item" } }
         footer_item.reload
         expect(footer_item.label).to eq("Updated Footer Item")
-        expect(response).to redirect_to(action: :index, turbo: false)
+        expect(response).to redirect_to(action: :index)
         expect(flash[:notice]).to eq("Footer Item updated successfully.")
       end
     end
@@ -116,7 +114,7 @@ RSpec.describe Admin::FooterItemsController, type: :controller do
         patch :update, params: { id: footer_item.id, footer_item: invalid_attributes }
         expect(footer_item.label).to eq("Test Footer Item")
         expect(flash[:error]).to be_present
-        expect(response).to redirect_to(action: :edit, turbo: false)
+        expect(response).to redirect_to(action: :edit)
       end
     end
   end
@@ -134,7 +132,7 @@ RSpec.describe Admin::FooterItemsController, type: :controller do
         delete :destroy, params: { id: footer_item.id }
       }.to change(FooterItem, :count).by(-1)
 
-      expect(response).to redirect_to(action: :index, turbo: false)
+      expect(response).to redirect_to(action: :index)
       expect(flash[:notice]).to eq("Footer Item deleted successfully.")
     end
   end

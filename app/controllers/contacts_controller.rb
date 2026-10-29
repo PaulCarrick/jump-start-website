@@ -17,9 +17,14 @@ class ContactsController < ApplicationController
 
   def create
     begin
-      @contact = Contact.create!(contact_params)
-
-      # raise "Invalid Captcha." unless verify_recaptcha(model: @contact)
+      @contact = Contact.new(contact_params)
+      unless Recaptcha.configuration.site_key.present? && Recaptcha.configuration.secret_key.present? &&
+             verify_recaptcha(model: @contact, action: "contact", minimum_score: 0.5)
+        @error_message = "reCAPTCHA verification failed. Please try again."
+        render :new, status: :unprocessable_content
+        return
+      end
+      @contact.save!
 
       ContactMailer.contact_email(@contact.name,
                                   @contact.email,
@@ -37,7 +42,7 @@ class ContactsController < ApplicationController
       @error_message = "You cannot submit the form twice with the exact same information. Please at least change the message."
       flash[:error]  = @error_message
 
-      if @contact.present?
+      if @contact&.persisted?
         @contact.submit_information = @error_message
         @contact.save
       end
@@ -50,7 +55,7 @@ class ContactsController < ApplicationController
       @error_message = e&.message unless @error_message.present?
       flash[:error]  = @error_message
 
-      if @contact.present?
+      if @contact&.persisted?
         @contact.submit_information = @error_message
         @contact.save
       end

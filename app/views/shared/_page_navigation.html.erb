@@ -1,34 +1,27 @@
-<!-- app/views/shared/_page_navigation.html.erb -->
-<nav aria-label="Pagination">
-  <ul class="pagination justify-content-end">
-    <% if @pagy.present? %>
-      <!-- Page Indicator -->
-      <li class="page-item disabled">
-        <span class="page-link">
+<!-- Shared listing pagination -->
+<% if @pagy.present? %>
+  <nav aria-label="Pagination">
+    <ul class="pagination d-flex flex-wrap align-items-center justify-content-end gap-2 mb-0">
+      <li class="list-unstyled">
+        <span class="btn btn-sm btn-light border text-secondary" aria-current="page">
           Page <%= @pagy.page %> of <%= @pagy.last %>
         </span>
       </li>
-
-      <!-- First Page Link -->
-      <li class="page-item <%= 'disabled' unless @pagy.page > 1 %>">
-        <%= link_to 'First',
-                    url_for(params.permit!.to_h.merge(page: 1, sort: params[:sort], direction: params[:direction]).merge(q: params[:q]&.to_unsafe_h)), class: 'page-link', accesskey: "f", target: "_self" %>
-      </li>
-
-      <!-- Previous Page Link -->
-      <li class="page-item <%= 'disabled' unless @pagy.prev %>">
-        <%= link_to 'Previous', url_for(params.permit!.to_h.merge(page: @pagy.prev, sort: params[:sort], direction: params[:direction]).merge(q: params[:q]&.to_unsafe_h)), class: 'page-link', accesskey: "p",  target: "_self" %>
-      </li>
-
-      <!-- Next Page Link -->
-      <li class="page-item <%= 'disabled' unless @pagy.next %>">
-        <%= link_to 'Next', url_for(params.permit!.to_h.merge(page: @pagy.next, sort: params[:sort], direction: params[:direction]).merge(q: params[:q]&.to_unsafe_h)), class: 'page-link', accesskey: "n", target: "_self" %>
-      </li>
-
-      <!-- Last Page Link -->
-      <li class="page-item <%= 'disabled' unless @pagy.page < @pagy.last %>">
-        <%= link_to 'Last', url_for(params.permit!.to_h.merge(page: @pagy.last, sort: params[:sort], direction: params[:direction]).merge(q: params[:q]&.to_unsafe_h)), class: 'page-link', accesskey: "l", target: "_self" %>
-      </li>
-    <% end %>
-  </ul>
-</nav>
+      <% [
+           ["First", 1, @pagy.page > 1, "f"],
+           ["Previous", @pagy.prev, @pagy.prev.present?, "p"],
+           ["Next", @pagy.next, @pagy.next.present?, "n"],
+           ["Last", @pagy.last, @pagy.page < @pagy.last, "l"]
+         ].each do |label, number, enabled, shortcut| %>
+        <li class="list-unstyled">
+          <% if enabled %>
+            <%= link_to label, url_for(params.to_unsafe_h.merge(page: number)),
+                        class: "btn btn-sm btn-primary", accesskey: shortcut, target: "_self" %>
+          <% else %>
+            <span class="btn btn-sm btn-outline-secondary disabled" aria-disabled="true"><%= label %></span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+<% end %>

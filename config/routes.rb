@@ -3,15 +3,19 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      resources :menu_items, only: %i[index show]
-      resources :footer_items, only: %i[index show]
+      resources :menu_items, only: %i[index show create update destroy]
+      resources :footer_items, only: %i[index show create update destroy]
       resources :pages, only: %i[index show create update destroy]
       resources :sections, only: %i[index show create update destroy]
       resources :cells, only: %i[index show create update destroy]
       resources :blog_posts
       resources :post_comments
-      resources :image_files
+      resources :image_files do
+        get :groups, on: :collection
+      end
 
+      get "/menu_item/:id", to: "menu_items#get"
+      get "/footer_item/:id", to: "footer_items#get"
       post 'validate_html', to: 'validations#validate_html'
     end
   end
@@ -34,12 +38,14 @@ Rails.application.routes.draw do
     get "/cells/:id/delete", to: "cells#destroy", as: "destroy_cell"
     get "/cells/:id/admin_urls", to: "/api/v1/cells#get_admin_urls"
     resources :sections, except: [ :destroy ]
+    post "/pages/:page_id/sections/:id/duplicate", to: "sections#duplicate", as: "duplicate_page_section"
     delete "/sections/:id", to: "sections#destroy", as: "delete_section"
     get "/sections/:id/admin_urls", to: "/api/v1/sections#get_admin_urls"
     get "/sections/:id/delete", to: "sections#destroy", as: "destroy_section"
     get "/page/new_cell/:id", to: "sections#add_cell_to_section", as: "add_cell_to_existing_section"
     get "/page/new_cell", to: "sections#add_cell_to_section", as: "add_cell_to_new_section"
     resources :pages, except: [ :destroy ]
+    post "/pages/:id/renumber_sections", to: "pages#renumber_sections", as: "renumber_page_sections"
     delete "/pages/:id", to: "pages#destroy", as: "delete_page"
     get "/pages/:id/test", to: "pages#test"
     get "/pages/:id/delete", to: "pages#destroy", as: "destroy_page"

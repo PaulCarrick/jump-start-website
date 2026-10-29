@@ -16,13 +16,15 @@ async function addToGroup(imageFileId) {
     if (group && groups[group] !== undefined) {
       const maxSlideOrder = groups[group];
 
+      // Rails omits CSRF meta tags when forgery protection is disabled (test).
+      const headers = { "Content-Type": "application/json" };
+      const csrfToken = document.querySelector("[name='csrf-token']")?.content;
+      if (csrfToken) headers["X-CSRF-Token"] = csrfToken;
+
       // Update record via Rails
-      await fetch(`/admin/image_files/${imageFileId}`, {
+      const updateResponse = await fetch(`/admin/image_files/${imageFileId}`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": document.querySelector("[name='csrf-token']").content,
-        },
+        headers,
         body: JSON.stringify({
           image_file: {
             group: group,
@@ -31,10 +33,13 @@ async function addToGroup(imageFileId) {
         }),
       });
 
+      if (!updateResponse.ok) throw new Error("Failed to update image group");
+
       // Reload page to reflect changes
       location.reload();
     }
   } catch (error) {
-    console.log("An error occurred: " + error.message);
+    console.error("An error occurred: " + error.message);
+    alert("Could not update image group: " + error.message);
   }
 }
