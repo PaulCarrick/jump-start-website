@@ -1,0 +1,33 @@
+/* Admin navigation stays aligned with the content panel. */
+.admin-layout .admin-sidebar {
+  align-items: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+.admin-sidebar .nav-link,
+.admin-sidebar .dropdown-item {
+  white-space: nowrap;
+}
+.admin-main {
+  min-width: 0;
+}
+
+/* Each boundary owns exactly one separator, with no outside edges. */
+.admin-section-divider {
+  border: 0;
+  opacity: 1;
+  margin: 1rem 0;
+}
+.admin-group-divider {
+  border-top: 4px solid #000;
+}
+.admin-member-divider {
+  border-top: 2px solid #666;
+}
+.admin-section-actions {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: .75rem;
+}
+.admin-section-cells > .admin-cell-divider {
+  border-left: 2px solid #666;
+}

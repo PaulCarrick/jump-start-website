@@ -3,7 +3,7 @@
 
 // Component to Display Section Records
 
-import React from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import DisplayContent from "./DisplayContent";
 import RenderCell from "./RenderCell.jsx";
 import { isTextOnly } from "./getDefaultOptions";
@@ -83,6 +83,27 @@ function buildContents(section) {
   return sections;
 }
 
+// Mark only columns that have a neighbour to their left, including after resizing.
+function CellRow({ editing, className, id, children }) {
+  const row = useRef(null);
+  useLayoutEffect(() => {
+    if (!editing) return;
+    const element = row.current;
+    const updateDividers = () => {
+      const columns = Array.from(element.children);
+      columns.forEach((column, index) => {
+        const previous = columns[index - 1];
+        column.classList.toggle("admin-cell-divider", !!previous && column.offsetLeft > previous.offsetLeft);
+      });
+    };
+    const observer = new ResizeObserver(updateDividers);
+    observer.observe(element);
+    updateDividers();
+    return () => observer.disconnect();
+  }, [editing, children]);
+  return <div ref={row} className={className} id={id}>{children}</div>;
+}
+
 const processCells = (
   cells,
   editing = false,
@@ -118,11 +139,11 @@ const processCells = (
     alignment === "start" ? "flex-start" : alignment === "end" ? "flex-end" : alignment;
 
   return (
-    <div className={containerClasses} id={containerId}>
+    <CellRow editing={editing} className={`${containerClasses}${editing ? " admin-section-cells" : ""}`} id={containerId}>
       {cells.map((cell, index) => (
         <div
           key={index}
-          className={cell.container_class || ""}
+          className={`${cell.container_class || ""}${editing ? " admin-section-cell" : ""}`}
           style={{
             ...(editing ? { alignSelf: "stretch", display: "flex", flexDirection: "column" } : {}),
             ...(cell.width === "auto"
@@ -140,7 +161,7 @@ const processCells = (
           />
         </div>
       ))}
-    </div>
+    </CellRow>
   );
 };
 

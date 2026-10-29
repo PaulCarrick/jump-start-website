@@ -1,0 +1,3 @@
+<% same_group = previous.section_group.present? && previous.section_group == section.section_group && previous.page_id == section.page_id %>
+<% group_boundary = !same_group && (previous.section_group.present? || section.section_group.present?) %>
+<hr class="admin-section-divider <%= group_boundary ? "admin-group-divider" : "admin-member-divider" %>">

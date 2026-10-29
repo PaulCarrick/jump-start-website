@@ -3,7 +3,8 @@
   <div>
     <% sections = controller.get_sections %>
     <% if sections.present? %>
-      <% sections.each do |section| %>
+      <% sections.each_with_index do |section, index| %>
+        <%= render "admin/sections/divider", previous: sections[index - 1], section: section if index.positive? %>
         <%= react_component("RenderSection",
                             {
                               section:  section.renderable_section,

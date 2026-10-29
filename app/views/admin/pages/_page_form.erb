@@ -58,13 +58,8 @@
   <div>
     <div class="w-100 border border-danger border-width-8 p-2">
       <% if sections.present? %>
-        <% first = true %>
-        <% sections.each do |section| %>
-          <% if first %>
-            <% first = false %>
-          <% else %>
-            <hr>
-          <% end %>
+        <% sections.each_with_index do |section, index| %>
+          <%= render "admin/sections/divider", previous: sections[index - 1], section: section if index.positive? %>
           <%
             if controller.get_item&.id.present?
               @return_path = edit_admin_page_path(controller.get_item, return_url: admin_return_url, section_name: section.section_name, target: "_self")
@@ -73,7 +68,7 @@
             end
           %>
           <div id="<%= section.section_name %>">
-            <div class="row mb-3">
+            <div class="row mb-3 <%= "admin-section-actions" if section.cells.any? %>">
               <div class="col-8"></div>
               <div class="col-4 text-end">
                 <%= link_to "Edit Section",
@@ -111,8 +106,8 @@
                                 }
                 )
             %>
+          </div>
         <% end %>
-        </div>
       <% else %>
         <h1>No Content</h1>
       <% end %>

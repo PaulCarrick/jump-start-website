@@ -1,12 +1,14 @@
 <!-- app/views/admin/sections/index.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
-  <div class="auto-size p-2 border-bottom border-dark">
-    <% controller.get_items.each do |section| %>
-      <div class="row align-content-bottom d-flex align-items-center" style="min-height: 3em; max-height: 3em;">
+  <div class="auto-size p-2">
+    <% sections = controller.get_items.to_a %>
+    <% sections.each_with_index do |section, index| %>
+      <%= render "admin/sections/divider", previous: sections[index - 1], section: section if index.positive? %>
+      <div class="row align-content-bottom d-flex align-items-center <%= "admin-section-actions" if section.cells.any? %>" style="min-height: 3em;">
         <div class="col-2 m-0 p-0">
           <h2>Section</h2>
         </div>
-        <div class="col-10 mt-2" style="min-height: 3em; max-height: 3em;">
+        <div class="col-10 mt-2" style="min-height: 3em;">
           <div class="d-flex justify-content-end">
             <div class="mt-2">
               <%= link_to 'Clear Sort', admin_sections_path(clear_sort: true), class: "action-links", target: "_self" %>
