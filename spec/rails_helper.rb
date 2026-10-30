@@ -85,6 +85,11 @@ RSpec.configure do |config|
   config.include HtmlTools, type: :system
   config.include Utilities, type: :system
 
+  # Assertions outside requests inspect the privileged working set. Each request
+  # establishes its own live/admin scope, and production defaults to live reads.
+  config.before(:each) { PublishingContext.live = false }
+  config.after(:each) { PublishingContext.reset }
+
   config.order = :defined
 
   config.prepend_before(:each, type: :system) do

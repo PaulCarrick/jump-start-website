@@ -3,9 +3,10 @@
 # noinspection RubyTooManyMethodsInspection
 class Section < ApplicationRecord
   include Enableable
-  has_many :cells, -> { order(cell_order: :asc) }, dependent: :destroy
+  include BitemporalRecord
+  has_many :cells, -> { order(cell_order: :asc) }, dependent: :destroy, primary_key: :id, foreign_key: :section_id, inverse_of: :section
   accepts_nested_attributes_for :cells, allow_destroy: true
-  belongs_to :page
+  belongs_to :page, primary_key: :id, foreign_key: :page_id, inverse_of: :sections
 
   after_find :verify_checksum, unless: -> { Thread.current[:skip_checksum_verification] }
   after_find :setup_formatting
@@ -23,7 +24,7 @@ class Section < ApplicationRecord
   scope :content_types, ->() { all.distinct.order(:content_type).pluck(:content_type) }
   scope :names, ->() { all.distinct.order(:section_name).pluck(:section_name) }
 
-  validates :section_name, presence: true, uniqueness: true
+  validates :section_name, presence: true, uniqueness: { conditions: -> { working_or_live } }
 
   def self.ransackable_attributes(auth_object = nil)
     %w[content_type section_name image link description]

@@ -91,8 +91,8 @@ RSpec.describe Admin::UsersController, type: :controller do
     context "with valid attributes" do
       it "updates the user and redirects to index" do
         patch :update, params: { id: user.id, user: { name: "Updated Name" } }
-        user.reload
-        expect(user.name).to eq("Updated Name")
+
+        expect(user.class.find(user.id).name).to eq("Updated Name")
         expect(response).to redirect_to(admin_users_path)
         expect(flash[:notice]).to eq("User updated successfully")
       end

@@ -46,8 +46,8 @@ RSpec.describe 'Create images while editing', type: :system do
     expect(page).to have_css('.ql-editor', text: 'Unsaved column content')
     click_button 'Save Column'
     expect(page).to have_current_path(admin_cells_path)
-    expect(column.reload.content).to include('Unsaved column content')
-    expect(column.image).to include('Created from column')
+    expect(column.class.find(column.id).content).to include('Unsaved column content')
+    expect(column.class.find(column.id).image).to include('Created from column')
   end
 
   it 'refreshes the generator image list and preserves the new page draft' do
@@ -88,7 +88,7 @@ RSpec.describe 'Create images while editing', type: :system do
     expect(find('#section_order').value).to eq('70')
     click_button 'Save Section'
     expect(page).to have_current_path(admin_sections_path)
-    expect(section.reload.section_order).to eq(70)
-    expect(column.reload.content).to include('Nested unsaved content')
+    expect(section.class.find(section.id).section_order).to eq(70)
+    expect(column.class.find(column.id).content).to include('Nested unsaved content')
   end
 end

@@ -60,15 +60,15 @@ RSpec.describe "Cell administration", type: :request do
 
   it "updates content" do
     patch admin_cell_path(cell), params: { cell: { content: "Updated content" } }
-    expect(cell.reload.content).to eq("Updated content")
+    expect(cell.class.find(cell.id).content).to eq("Updated content")
     expect(response).to redirect_to(admin_cells_path)
   end
 
   it "persists edits without changing the parent" do
     patch admin_cell_path(cell), params: { cell: { cell_name: "Renamed column", content: "<p>Edited</p>" } }
-    expect(cell.reload.cell_name).to eq("Renamed column")
-    expect(cell.content).to include("Edited")
-    expect(cell.section).to eq(section)
+    expect(cell.class.find(cell.id).cell_name).to eq("Renamed column")
+    expect(cell.class.find(cell.id).content).to include("Edited")
+    expect(cell.class.find(cell.id).section).to eq(section)
     expect(response).to redirect_to(admin_cells_path)
   end
 

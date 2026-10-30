@@ -1,14 +1,15 @@
 # app/models/cell.rb
 class Cell < ApplicationRecord
   include Enableable
-  belongs_to :section
+  include BitemporalRecord
+  belongs_to :section, primary_key: :id, foreign_key: :section_id, inverse_of: :cells
 
   after_find :verify_checksum, unless: -> { Thread.current[:skip_checksum_verification] }
 
   include Checksum
   include Validation
 
-  validates :cell_name, presence: true, uniqueness: true
+  validates :cell_name, presence: true, uniqueness: { conditions: -> { working_or_live } }
   validate :content_is_valid
 
   scope :by_section_name, ->(name) { where(section_name: name).order(:cell_order) }

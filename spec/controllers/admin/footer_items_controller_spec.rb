@@ -102,8 +102,8 @@ RSpec.describe Admin::FooterItemsController, type: :controller do
     context "with valid attributes" do
       it "updates the record and redirects to index" do
         patch :update, params: { id: footer_item.id, footer_item: { label: "Updated Footer Item" } }
-        footer_item.reload
-        expect(footer_item.label).to eq("Updated Footer Item")
+
+        expect(footer_item.class.find(footer_item.id).label).to eq("Updated Footer Item")
         expect(response).to redirect_to(action: :index)
         expect(flash[:notice]).to eq("Footer Item updated successfully.")
       end
@@ -112,7 +112,7 @@ RSpec.describe Admin::FooterItemsController, type: :controller do
     context "with invalid attributes" do
       it "does not update the record and redirects to edit" do
         patch :update, params: { id: footer_item.id, footer_item: invalid_attributes }
-        expect(footer_item.label).to eq("Test Footer Item")
+        expect(footer_item.class.find(footer_item.id).label).to eq("Test Footer Item")
         expect(flash[:error]).to be_present
         expect(response).to redirect_to(action: :edit)
       end

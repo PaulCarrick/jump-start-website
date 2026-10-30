@@ -109,12 +109,12 @@ RSpec.describe "Admin Sections", type: :system do
       visit edit_admin_section_path(section)
       fill_in "sectionGroup", with: "Introduction"
       click_button "Save Section"
-      expect(section.reload.section_group).to eq("Introduction")
+      expect(section.class.find(section.id).section_group).to eq("Introduction")
 
       visit edit_admin_section_path(section)
       fill_in "sectionGroup", with: ""
       click_button "Save Section"
-      expect(section.reload.section_group).to eq("")
+      expect(section.class.find(section.id).section_group).to eq("")
     end
 
     it "has a CSRF token" do
@@ -139,8 +139,8 @@ RSpec.describe "Admin Sections", type: :system do
       click_button 'Save Section'
       expect(page).to have_current_path(admin_sections_path, ignore_query: true)
       expect(page).to have_content('Updated Section Name')
-      expect(section.reload.section_order).to eq(3)
-      expect(section.cells.first.content).to include('Test Description')
+      expect(section.class.find(section.id).section_order).to eq(3)
+      expect(section.class.find(section.id).cells.first.content).to include('Test Description')
     end
   end
 

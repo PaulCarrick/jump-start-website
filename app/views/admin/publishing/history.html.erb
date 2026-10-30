@@ -1,0 +1,14 @@
+<%= render layout: "layouts/admin_page" do %>
+  <h1><%= @model.model_name.human %> <%= @record_id %> history</h1>
+  <p>Valid time describes when content applies on the website. Recorded time describes when the database knew that version. Drafts have no valid period until deployment.</p>
+  <p>Restore stages a draft for review; it does not publish immediately. Passwords, reset tokens, and secret credentials are not restored.</p>
+  <table class="table">
+    <thead><tr><th>Version</th><th>State</th><th>Valid period</th><th>Recorded period</th><th>Deployment</th><th>Restore</th></tr></thead>
+    <tbody>
+      <% @versions.each do |version| %>
+        <tr><td><%= version[:version] %></td><td><%= version[:temporal_state] %></td><td><%= version[:validity] || 'Unpublished' %></td><td><%= version[:system_period] %></td><td><%= version[:deployment_id] %></td><td><%= button_to 'Restore as Draft', admin_restore_publishing_path(model: @model.name, record_id: @record_id, version: version[:version], recorded_at: version[:system_period].begin.iso8601(6)), method: :post, class: 'btn btn-secondary' %></td></tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%= link_to 'Back to Deploy Changes', admin_publishing_path, class: 'btn btn-secondary' %>
+<% end %>

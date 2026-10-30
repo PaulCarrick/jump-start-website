@@ -80,8 +80,8 @@ RSpec.describe "Admin Site Setups", type: :system do
 
         expect(page).to have_current_path(admin_site_setups_path)
         expect(page).to have_content("Site Setup updated successfully.")
-        expect(site_setup.reload.owner_name).to eq("Example User")
-        expect(site_setup.reload.site_name).to eq("Example")
+        expect(site_setup.class.find(site_setup.id).owner_name).to eq("Example User")
+        expect(site_setup.class.find(site_setup.id).site_name).to eq("Example")
       end
     end
   end

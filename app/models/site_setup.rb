@@ -1,6 +1,7 @@
 # /app/models/site_setup.rb
 class SiteSetup < ActiveRecord::Base
   include Enableable
+  include BitemporalRecord
   validates :configuration_name, :site_name, :site_domain, :site_host, :site_url,  presence: true
   validates :contact_email_from, format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }, allow_blank: true
   validates :contact_email_to, format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }, allow_blank: true

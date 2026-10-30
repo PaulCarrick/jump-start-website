@@ -126,8 +126,7 @@ RSpec.describe Admin::PagesController, type: :controller do
     context "with valid attributes" do
       it "updates the record and redirects to index" do
         patch :update, params: { id: page.id, page: { name: "Updated Page" } }
-        page.reload
-        expect(page.name).to eq("Updated Page")
+        expect(Page.find(page.id).name).to eq("Updated Page")
         expect(response).to redirect_to(action: :index)
         expect(flash[:notice]).to eq("Page updated successfully.")
       end

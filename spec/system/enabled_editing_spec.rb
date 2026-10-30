@@ -12,7 +12,7 @@ RSpec.describe 'Enabled switches', type: :system do
     uncheck 'Enabled'
     click_button 'Save Page'
     expect(page).to have_current_path(admin_pages_path, ignore_query: true)
-    expect(record.reload.enabled).to be(false)
+    expect(record.class.find(record.id).enabled).to be(false)
     visit edit_admin_page_path(record)
     expect(page).to have_unchecked_field('Enabled')
   end
@@ -23,7 +23,7 @@ RSpec.describe 'Enabled switches', type: :system do
     uncheck 'Enabled'
     click_button 'Save Column'
     expect(page).to have_current_path(admin_cells_path, ignore_query: true)
-    expect(cell.reload.enabled).to be(false)
+    expect(cell.class.find(cell.id).enabled).to be(false)
     visit edit_admin_cell_path(cell)
     expect(page).to have_unchecked_field('Enabled')
   end
@@ -35,9 +35,8 @@ RSpec.describe 'Enabled switches', type: :system do
     expect(page).to have_unchecked_field('Enabled')
     click_button 'Save Section'
     expect(page).to have_current_path(admin_sections_path, ignore_query: true)
-    expect(section.reload.enabled).to be(false)
+    expect(section.class.find(section.id).enabled).to be(false)
     visit edit_admin_section_path(section)
     expect(page).to have_unchecked_field('Enabled')
   end
-
 end

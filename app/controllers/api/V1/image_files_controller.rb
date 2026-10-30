@@ -57,7 +57,6 @@ module Api
 
         begin
           if params[:image_file][:image].present?
-            @image_file.image.purge if @image_file.image.attached?
             @image_file.image.attach(params[:image_file][:image])
           end
 

@@ -103,8 +103,8 @@ RSpec.describe Admin::MenuItemsController, type: :controller do
     context "with valid attributes" do
       it "updates the record and redirects to index" do
         patch :update, params: { id: menu_item.id, menu_item: { label: "Updated Menu Item" } }
-        menu_item.reload
-        expect(menu_item.label).to eq("Updated Menu Item")
+
+        expect(menu_item.class.find(menu_item.id).label).to eq("Updated Menu Item")
         expect(response).to redirect_to(action: :index)
         expect(flash[:notice]).to eq("Menu Item updated successfully.")
       end
@@ -113,7 +113,7 @@ RSpec.describe Admin::MenuItemsController, type: :controller do
     context "with invalid attributes" do
       it "does not update the record and redirects to edit" do
         patch :update, params: { id: menu_item.id, menu_item: invalid_attributes }
-        expect(menu_item.label).to eq("Test Menu Item")
+        expect(menu_item.class.find(menu_item.id).label).to eq("Test Menu Item")
         expect(flash[:error]).to be_present
         expect(response).to redirect_to(action: :edit)
       end

@@ -1,11 +1,12 @@
 class PostComment < ApplicationRecord
   include Enableable
+  include BitemporalRecord
   after_find :verify_checksum, unless: -> { Thread.current[:skip_checksum_verification] }
 
   include Checksum
   include Validation
 
-  belongs_to :blog_post
+  belongs_to :blog_post, primary_key: :id, foreign_key: :blog_post_id, inverse_of: :post_comments
 
   validates :title, :author, :posted, :content, presence: true
   validate :content_is_valid

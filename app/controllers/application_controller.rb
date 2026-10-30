@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::Base
   include Pagy::Backend
+  include PublishingRequests
 
   # Only allow modern browsers supporting webp image_files, web push, badges, import maps, CSS nesting, and CSS :has.
   #  allow_browser versions: :modern

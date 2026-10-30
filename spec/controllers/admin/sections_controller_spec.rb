@@ -94,33 +94,31 @@ RSpec.describe Admin::SectionsController, type: :controller do
     context "with valid attributes" do
       it "updates the record and redirects to index" do
         patch :update, params: { id: section.id, section: { section_name: "Updated Section" } }
-        section.reload
 
-        expect(section.section_name).to eq("Updated Section")
+        expect(section.class.find(section.id).section_name).to eq("Updated Section")
         expect(response).to redirect_to(admin_sections_path)
         expect(flash[:notice]).to eq("Section updated successfully.")
       end
 
       it "prettifies the description before saving" do
         patch :update, params: { id: section.id, section: valid_attributes }
-        section.reload
 
-        expect(section.description).to eq("<div>\n  Test Description\n</div>")
+        expect(section.class.find(section.id).description).to eq("<div>\n  Test Description\n</div>")
       end
     end
 
     it "saves and clears the section group" do
       patch :update, params: { id: section.id, section: { section_group: "Introduction" } }
-      expect(section.reload.section_group).to eq("Introduction")
+      expect(section.class.find(section.id).section_group).to eq("Introduction")
 
       patch :update, params: { id: section.id, section: { section_group: "" } }
-      expect(section.reload.section_group).to eq("")
+      expect(section.class.find(section.id).section_group).to eq("")
     end
 
     context "with invalid attributes" do
       it "does not update the record and redirects to edit" do
         patch :update, params: { id: section.id, section: invalid_attributes }
-        expect(section.section_name).to eq("Test Section")
+        expect(section.class.find(section.id).section_name).to eq("Test Section")
         expect(flash[:error]).to be_present
         expect(response).to redirect_to(action: :edit)
       end

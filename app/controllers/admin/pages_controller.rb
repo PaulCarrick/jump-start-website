@@ -14,7 +14,12 @@ class Admin::PagesController < Admin::AbstractAdminController
 
   def show
     set_item
-    redirect_to page_path(get_item.name), status: :see_other
+    live_page = Page.live_versions.where(id: get_item.id, temporal_deleted: false).first
+    if live_page
+      redirect_to page_path(live_page.name), status: :see_other
+    else
+      redirect_to admin_publishing_path, alert: 'This page has not been deployed yet.', status: :see_other
+    end
   rescue StandardError => e
     handle_error(:index, e)
   end
@@ -38,7 +43,7 @@ class Admin::PagesController < Admin::AbstractAdminController
 
   def edit
     if (params[:canceled] == "true") && (params[:new_section] == "true") && params[:section_id].present?
-      Section.delete(params[:section_id])
+      Section.find_by(id: params[:section_id])&.destroy
     end
 
     super

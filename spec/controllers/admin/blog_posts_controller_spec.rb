@@ -112,8 +112,8 @@ RSpec.describe Admin::BlogPostsController, type: :controller do
     context "with valid attributes" do
       it "updates the record and redirects to index" do
         patch :update, params: { id: blog_post.id, blog_post: { title: "Updated Blog Post" } }
-        blog_post.reload
-        expect(blog_post.title).to eq("Updated Blog Post")
+
+        expect(blog_post.class.find(blog_post.id).title).to eq("Updated Blog Post")
         expect(response).to redirect_to(action: :index)
         expect(flash[:notice]).to eq("Blog Post updated successfully.")
       end
@@ -122,7 +122,7 @@ RSpec.describe Admin::BlogPostsController, type: :controller do
     context "with invalid attributes" do
       it "does not update the record and redirects to edit" do
         patch :update, params: { id: blog_post.id, blog_post: invalid_attributes }
-        expect(blog_post.title).to eq("Test Blog")
+        expect(blog_post.class.find(blog_post.id).title).to eq("Test Blog")
         expect(flash[:error]).to be_present
         expect(response).to redirect_to(action: :edit)
       end

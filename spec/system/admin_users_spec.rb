@@ -107,9 +107,9 @@ RSpec.describe "Admin Users", type: :system do
       expect(page).to have_current_path(admin_users_path)
       expect(page).to have_content("Updated User")
       expect(page).to have_content("regular")
-      expect(user.reload.name).to eq("Updated User")
-      expect(user.access).to eq("regular")
-      expect(user.encrypted_password).to eq(original_password)
+      expect(user.class.find(user.id).name).to eq("Updated User")
+      expect(user.class.find(user.id).access).to eq("regular")
+      expect(user.class.find(user.id).encrypted_password).to eq(original_password)
     end
   end
 

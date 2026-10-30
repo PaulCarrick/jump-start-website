@@ -10,6 +10,8 @@ gem "rails", "~> 8.1.4"
 gem "propshaft"
 # Use postgresql as the database for Active Record
 gem "pg", "~> 1.1"
+# Pin the temporal beta: upgrades require migration/compatibility review.
+gem "activerecord-temporal", "0.4.0", require: "activerecord/temporal"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 # Bundle and transpile JavaScript [https://github.com/rails/jsbundling-rails]

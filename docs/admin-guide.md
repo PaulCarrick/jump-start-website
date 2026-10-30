@@ -22,6 +22,20 @@ Use this guide to maintain the website through the admin sidebar. It covers crea
 
 ## Getting started
 
+### Saving drafts and deploying changes
+
+Admin edits are saved as drafts. Existing live content stays unchanged until you choose **Deploy Changes** in the sidebar. New records and deletions are also pending changes.
+
+1. Edit and save the records you want to change. Related page, section, column, menu, footer, and image changes can be prepared together.
+2. Open **Deploy Changes** to review the shared workspace. It includes pending changes made by all administrators.
+3. Use **Edit Draft** or **Preview Draft** to review content. Draft previews require an administrator account and are never public.
+4. Enter a deployment summary and select **Deploy Changes**. The complete group is validated and published in one transaction; if any record fails, nothing is published.
+5. Use **History** to see application validity and database recording periods, or **Restore as Draft** to prepare a previous version for review and redeployment. Secret credentials are excluded from restoration. Existing IDs and public addresses remain stable unless you deliberately rename a page.
+
+**Discard All Drafts** removes unpublished changes and leaves the live website unchanged. It discards the shared workspace, so coordinate with other administrators first. Deleted records remain recoverable in temporal history; deleting from admin marks a pending deletion until deployment.
+
+Changing an account's password or access in admin is also pending until deployment. History pages show timing metadata and do not display passwords, tokens, or email credentials.
+
 Sign in with an account that has access to administration. Use the sidebar to choose the kind of record you want to work on. The sidebar entries come from the site's Admin menu, so their labels and order may vary.
 
 A typical content change is:

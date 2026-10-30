@@ -26,14 +26,14 @@ RSpec.describe "Duplicate a section from the page editor", type: :system do
     accept_prompt(with: "Another overview") { click_button button }
     expect(page).to have_current_path(edit_admin_page_path(section.page, section_name: "Another overview", return_url: admin_pages_path))
     expect(page).to have_button("Duplicate Section", count: 3)
-    expect(section.reload.cells.count).to eq(1)
+    expect(section.class.find(section.id).cells.count).to eq(1)
   end
 
   it "creates nothing when the name prompt is canceled" do
     visit edit_admin_page_path(section.page)
     dismiss_prompt { click_button "duplicate-section-#{section.id}-button" }
     expect(page).to have_current_path(edit_admin_page_path(section.page))
-    expect(section.page.sections.count).to eq(1)
+    expect(section.class.find(section.id).page.sections.count).to eq(1)
   end
 
   it "handles blank and already-used names without creating copies" do
@@ -42,11 +42,11 @@ RSpec.describe "Duplicate a section from the page editor", type: :system do
     accept_alert("Please enter a section name.") do
       accept_prompt(with: "  ") { click_button button }
     end
-    expect(section.page.sections.count).to eq(1)
+    expect(section.class.find(section.id).page.sections.count).to eq(1)
     accept_prompt(with: section.section_name) { click_button button }
     expect(page).to have_current_path(edit_admin_page_path(section.page, return_url: admin_pages_path))
     expect(page).to have_content("has already been taken")
-    expect(section.page.sections.count).to eq(1)
+    expect(section.class.find(section.id).page.sections.count).to eq(1)
   end
 
   it "offers group duplication and copies every member into the named group" do
@@ -61,10 +61,10 @@ RSpec.describe "Duplicate a section from the page editor", type: :system do
     end
     expect(page).to have_current_path(edit_admin_page_path(section.page, section_name: "New overview group", return_url: admin_pages_path))
     expect(page).to have_content("Section group duplicated successfully.")
-    expect(section.page.sections.where(section_group: "New overview group").count).to eq(2)
-    expect(section.page.sections.where(section_group: "Overview group").count).to eq(2)
+    expect(section.class.find(section.id).page.sections.where(section_group: "New overview group").count).to eq(2)
+    expect(section.class.find(section.id).page.sections.where(section_group: "Overview group").count).to eq(2)
     expect(page).to have_button("Duplicate Group", count: 4)
-    expect(section.page.sections.where(section_group: "New overview group").pluck(:section_order)).to eq([ 20, 30 ])
+    expect(section.class.find(section.id).page.sections.where(section_group: "New overview group").pluck(:section_order)).to eq([ 20, 30 ])
     section_ids = page.all('[data-react-class="RenderSection"]').map do |element|
       JSON.parse(element['data-react-props']).fetch('section').fetch('id')
     end

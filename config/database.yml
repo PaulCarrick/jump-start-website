@@ -86,14 +86,17 @@ production:
     <<: *default
   cache:
     <<: *primary_production
+    schema_format: ruby
     database: <%= ENV.fetch("DB_DATABASE", "jump_start") %>_cache
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
+    schema_format: ruby
     database: <%= ENV.fetch("DB_DATABASE", "jump_start") %>_cache
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
+    schema_format: ruby
     database: <%= ENV.fetch("DB_DATABASE", "jump_start") %>_cache_cable
     migrations_paths: db/cable_migrate
 

@@ -10,13 +10,13 @@ RSpec.describe "Renumber page sections", type: :request do
     post path
     expect(response).to have_http_status(:see_other)
     expect(response).to redirect_to(edit_admin_page_path(section.page))
-    expect([ section.reload.section_order, second.reload.section_order ]).to eq([ 10, 20 ])
+    expect([ section.class.find(section.id).section_order, second.class.find(second.id).section_order ]).to eq([ 10, 20 ])
   end
 
   it "requires login" do
     post path
     expect(response).to redirect_to(new_user_session_path)
-    expect(section.reload.section_order).to eq(-10)
+    expect(section.class.find(section.id).section_order).to eq(-10)
   end
 
   it "hides the button and rejects the action for a read-only user" do
@@ -26,7 +26,7 @@ RSpec.describe "Renumber page sections", type: :request do
     post path
     expect(response).to redirect_to(edit_admin_page_path(section.page))
     expect(flash[:alert]).to include("not permitted")
-    expect([ section.reload.section_order, second.reload.section_order ]).to eq([ -10, 75 ])
+    expect([ section.class.find(section.id).section_order, second.class.find(second.id).section_order ]).to eq([ -10, 75 ])
   end
 
   it "reports a failed update without a success notice" do
@@ -36,6 +36,6 @@ RSpec.describe "Renumber page sections", type: :request do
     expect(response).to redirect_to(edit_admin_page_path(section.page))
     expect(flash[:alert]).to include("No changes were saved")
     expect(flash[:notice]).to be_nil
-    expect(section.reload.section_order).to eq(-10)
+    expect(section.class.find(section.id).section_order).to eq(-10)
   end
 end

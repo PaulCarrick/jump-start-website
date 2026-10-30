@@ -39,7 +39,7 @@ const PostList = ({
       .join('&');
     const url = `/api/v1/blog_posts?include_comments=true&blog_type=${blog_type}&visibility=${user.logged_in ? "Private" : "Public"}&page=${page}&limit=3${queryParams ? `&${queryParams}` : ''}`;
 
-    fetch(url)
+    fetch(`${url}${url.includes("?") ? "&" : "?"}public_view=true${new URLSearchParams(window.location.search).get("preview") === "draft" ? "&preview=draft" : ""}`)
       .then((response) => {
         const totalPages = parseInt(response.headers.get('total-Pages'), 10) || 1;
         const currentPage = parseInt(response.headers.get('current-page'), 10) || 1;

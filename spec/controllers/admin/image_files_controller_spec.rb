@@ -117,8 +117,8 @@ RSpec.describe Admin::ImageFilesController, type: :controller do
     context "with valid attributes" do
       it "updates the record and redirects to index" do
         patch :update, params: { id: image_file.id, image_file: { name: "Updated Image" } }
-        image_file.reload
-        expect(image_file.name).to eq("Updated Image")
+
+        expect(image_file.class.find(image_file.id).name).to eq("Updated Image")
         expect(response).to redirect_to(action: :index)
         expect(flash[:notice]).to eq("Image File updated successfully.")
       end
@@ -127,7 +127,7 @@ RSpec.describe Admin::ImageFilesController, type: :controller do
     context "with invalid attributes" do
       it "does not update the record and redirects to edit" do
         patch :update, params: { id: image_file.id, image_file: invalid_attributes }
-        expect(image_file.name).to eq("Test Image")
+        expect(image_file.class.find(image_file.id).name).to eq("Test Image")
         expect(flash[:error]).to be_present
         expect(response).to redirect_to(action: :edit)
       end

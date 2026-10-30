@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include Enableable
+  include BitemporalRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
 
   validates :password, presence: true, on: :create

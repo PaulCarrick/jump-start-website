@@ -111,25 +111,23 @@ RSpec.describe Admin::CellsController, type: :controller do
     context "with valid attributes" do
       it "updates the record and redirects to index" do
         patch :update, params: { id: cell.id, cell: { cell_name: "Updated Cell" } }
-        cell.reload
 
-        expect(cell.cell_name).to eq("Updated Cell")
+        expect(cell.class.find(cell.id).cell_name).to eq("Updated Cell")
         expect(response).to redirect_to(admin_cells_path)
         expect(flash[:notice]).to eq("Cell updated successfully.")
       end
 
       it "prettifies the content before saving" do
         patch :update, params: { id: cell.id, cell: valid_attributes }
-        cell.reload
 
-        expect(cell.content).to eq("<div>\n  Test Content\n</div>")
+        expect(cell.class.find(cell.id).content).to eq("<div>\n  Test Content\n</div>")
       end
     end
 
     context "with invalid attributes" do
       it "does not update the record and redirects to edit" do
         patch :update, params: { id: cell.id, cell: { cell_name: nil } }
-        expect(cell.reload.cell_name).to eq("Test Cell")
+        expect(cell.class.find(cell.id).cell_name).to eq("Test Cell")
         expect(flash[:error]).to be_present
         expect(response).to redirect_to(action: :edit)
       end

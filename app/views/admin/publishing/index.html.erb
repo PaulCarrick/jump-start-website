@@ -1,0 +1,47 @@
+<%= render layout: "layouts/admin_page" do %>
+  <h1>Deploy Changes</h1>
+  <p>Saving in admin saves a draft. The public website continues to show the live version until you deploy. This is a shared workspace: deployment includes all pending changes below.</p>
+  <% if @pending.empty? %>
+    <p>No pending changes.</p>
+  <% else %>
+    <div class="table-responsive">
+      <table class="table">
+        <thead><tr><th>Record</th><th>ID</th><th>Version</th><th>Change</th><th>Review</th></tr></thead>
+        <tbody>
+        <% @pending.each do |record| %>
+          <tr>
+            <td><%= record.class.model_name.human %>
+              <details><summary>Review draft values</summary>
+                <% Publishing.review_attributes(record).each do |field, value| %>
+                  <p><strong><%= field.humanize %>:</strong> <%= value.to_s.truncate(3000) %></p>
+                <% end %>
+              </details>
+            </td>
+            <td><%= record.id %></td>
+            <td><%= record.version %></td>
+            <td><%= record.temporal_deleted? ? 'Delete' : record.base_version.present? ? 'Update' : 'New' %></td>
+            <td class="d-flex flex-wrap gap-2">
+              <% unless record.temporal_deleted? || %w[Contact PostComment].include?(record.class.name) %>
+                <%= link_to 'Edit Draft', url_for(controller: "admin/#{record.class.table_name}", action: :edit, id: record.id), class: 'btn btn-primary' %>
+              <% end %>
+              <% page = record.is_a?(Page) ? record : record.is_a?(Section) ? record.page : record.is_a?(Cell) ? record.section.page : nil %>
+              <% if page %><%= link_to 'Preview Draft', page_path(page.name, preview: 'draft'), class: 'btn btn-secondary', target: '_blank', rel: 'noopener' %><% end %>
+              <%= link_to 'History', admin_publishing_history_path(model: record.class.name, record_id: record.id), class: 'btn btn-secondary' %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+    <%= form_with url: admin_deploy_publishing_path, method: :post, local: true do |form| %>
+      <%= form.label :summary, 'Deployment summary', class: 'form-label' %>
+      <%= form.text_field :summary, maxlength: 1000, class: 'form-control mb-3' %>
+      <%= form.submit 'Deploy Changes', class: 'btn btn-primary' %>
+    <% end %>
+    <%= button_to 'Discard All Drafts', admin_discard_publishing_path, method: :post, class: 'btn btn-danger mt-3', form: { data: { turbo_confirm: 'Discard all pending changes? Live content will stay unchanged.' } } %>
+  <% end %>
+  <h2 class="mt-4">Recent deployments</h2>
+  <% @deployments.each do |deployment| %>
+    <p><strong>#<%= deployment.id %></strong> — <%= deployment.effective_at %> — <%= deployment.summary %></p>
+  <% end %>
+<% end %>

@@ -44,6 +44,8 @@ const PostEditor = ({
       body: JSON.stringify({
                              blog_post: {
                                enabled,
+                               version: post?.version,
+                               updated_at: post?.updated_at,
                                title,
                                author,
                                blog_type,

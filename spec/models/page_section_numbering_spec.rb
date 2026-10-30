@@ -12,21 +12,21 @@ RSpec.describe "Page section numbering", type: :model do
     unnumbered = create(:section, page: page_record, section_order: nil)
     other = create(:section, section_order: -100)
     expected = [ first, zero, tied_first, tied_second, last, unnumbered ]
-    previous = expected.to_h { |section| [ section.id, section.reload.attributes.except("section_order") ] }
+    previous = expected.to_h { |section| [ section.id, section.reload.attributes.except("section_order", "updated_at") ] }
 
     expect(page_record.ordered_sections.pluck(:id)).to eq(expected.map(&:id))
     expect(page_record.renumber_sections!).to eq(6)
     expect(page_record.ordered_sections.pluck(:id, :section_order)).to eq(
       expected.each_with_index.map { |section, index| [ section.id, (index + 1) * 10 ] }
     )
-    expected.each { |section| expect(section.reload.attributes.except("section_order")).to eq(previous.fetch(section.id)) }
+    expected.each { |section| expect(section.reload.attributes.except("section_order", "updated_at")).to eq(previous.fetch(section.id)) }
     expect(other.reload.section_order).to eq(-100)
   end
 
   it "rolls back earlier updates if a later section cannot be updated" do
     first = create(:section, page: page_record, section_order: -5)
     second = create(:section, page: page_record, section_order: 400)
-    allow_any_instance_of(Section).to receive(:update_columns).and_wrap_original do |method, *args, **kwargs|
+    allow_any_instance_of(Section).to receive(:update).and_wrap_original do |method, *args, **kwargs|
       raise ActiveRecord::RecordNotSaved, "Cannot update section" if method.receiver.id == second.id
       method.call(*args, **kwargs)
     end

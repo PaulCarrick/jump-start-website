@@ -1,10 +1,11 @@
 class Page < ApplicationRecord
   include Enableable
-  has_many :sections, -> { order(Section.arel_table[:section_order].asc.nulls_last, Section.arel_table[:id].asc) }, dependent: :destroy
+  include BitemporalRecord
+  has_many :sections, -> { order(arel_table[:section_order].asc.nulls_last, arel_table[:id].asc) }, dependent: :destroy, primary_key: :id, foreign_key: :page_id, inverse_of: :page
   accepts_nested_attributes_for :sections, allow_destroy: true
-  has_one :menu_item, dependent: :destroy
+  has_one :menu_item, dependent: :destroy, primary_key: :id, foreign_key: :page_id, inverse_of: :page
   accepts_nested_attributes_for :menu_item, allow_destroy: true
-  has_one :footer_item, dependent: :destroy
+  has_one :footer_item, dependent: :destroy, primary_key: :id, foreign_key: :page_id, inverse_of: :page
   accepts_nested_attributes_for :footer_item, allow_destroy: true
 
   scope :by_id, ->(id) {
@@ -27,7 +28,7 @@ class Page < ApplicationRecord
 
   scope :sections, ->(page) { page.sections.distinct.reorder(:section_name).pluck(:section_name) }
 
-  validates :name, :section, presence: true, uniqueness: true
+  validates :name, :section, presence: true, uniqueness: { conditions: -> { working_or_live } }
 
   def ordered_sections
     return Section.none if section.blank?
@@ -41,7 +42,8 @@ class Page < ApplicationRecord
       page = self.class.lock.find(id)
       ordered = page.ordered_sections.lock.to_a
       ordered.each_with_index do |section, index|
-        unless section.update_columns(section_order: (index + 1) * 10)
+        section.restore_attributes
+        unless section.update(section_order: (index + 1) * 10)
           raise ActiveRecord::RecordNotSaved, "Section order could not be saved."
         end
       end

@@ -10,7 +10,7 @@ export function sendRequest(url: string, setError: SetErrorCallback | null = nul
   const request    = new XMLHttpRequest();
 
   if (method === "GET" && !window.location.pathname.startsWith("/admin/")) {
-    url += `${url.includes("?") ? "&" : "?"}public_view=true`;
+    url += `${url.includes("?") ? "&" : "?"}public_view=true${new URLSearchParams(window.location.search).get("preview") === "draft" ? "&preview=draft" : ""}`;
   }
   request.open(method, url, false);
   request.setRequestHeader("Content-Type", "application/json");
@@ -27,7 +27,8 @@ export function sendRequest(url: string, setError: SetErrorCallback | null = nul
     let message: string = "";
 
     try {
-      message = JSON.parse(request.responseText).errors;
+      const payload = JSON.parse(request.responseText);
+      message = payload.errors || payload.error || "The request could not be saved.";
     }
     catch (e) {
       message = "Unknown error.";

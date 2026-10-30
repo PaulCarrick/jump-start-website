@@ -29,6 +29,11 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    get 'publishing', to: 'publishing#index', as: :publishing
+    post 'publishing/deploy', to: 'publishing#deploy', as: :deploy_publishing
+    post 'publishing/restore', to: 'publishing#restore', as: :restore_publishing
+    post 'publishing/discard', to: 'publishing#discard', as: :discard_publishing
+    get 'publishing/history', to: 'publishing#history', as: :publishing_history
     get "help", to: "help#show", as: :help
     root "dashboard#index" # Admin dashboard
     resources :blog_posts, except: [ :destroy ]

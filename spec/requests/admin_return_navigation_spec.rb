@@ -37,7 +37,7 @@ RSpec.describe "Admin return navigation", type: :request do
         end
         patch record_path, params: { return_url: caller_url, key => { field => value } }
         expect(response).to redirect_to(caller_url)
-        expect(record.reload.public_send(field)).to include(value)
+        expect(record.class.find(record.id).public_send(field)).to include(value)
       end
 
       it "returns a newly created record to the caller" do

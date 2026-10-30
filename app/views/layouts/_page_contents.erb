@@ -1,4 +1,7 @@
 <!-- /app/views/layouts/_page_contents.erb -->
+<% if PublishingContext.preview %>
+  <aside class="alert alert-warning">Draft preview — visible only to administrators. <%= link_to 'Review changes', admin_publishing_path, class: 'btn btn-primary ms-2' %></aside>
+<% end %>
 
 <style>
   <% if @site_information.present? %>

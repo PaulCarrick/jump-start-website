@@ -122,7 +122,7 @@ class PagesController < ApplicationController
 
   def handle_image_section(section, file_name, formatting)
     image_file = ImageFile.enabled.find_by(name: file_name)
-    return [nil, "", nil, formatting] unless image_file
+    return [ nil, "", nil, formatting ] unless image_file
     image_url  = get_image_url(image_file)
 
     if image_url.present?

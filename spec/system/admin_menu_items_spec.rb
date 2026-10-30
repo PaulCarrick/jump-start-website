@@ -63,7 +63,7 @@ RSpec.describe "Admin Menu Items", type: :system do
 
         expect(page).to have_current_path(admin_menu_items_path)
         expect(page).to have_content("Menu Item updated successfully.")
-        expect(existing_menu_item.reload.label).to eq("Updated Menu")
+        expect(existing_menu_item.class.find(existing_menu_item.id).label).to eq("Updated Menu")
       end
     end
   end

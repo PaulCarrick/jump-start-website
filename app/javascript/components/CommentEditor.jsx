@@ -43,7 +43,7 @@ const CommentEditor = ({
         'X-CSRF-Token': getCsrfToken(), // Include the CSRF token here
       },
       body: JSON.stringify({
-        post_comment: { enabled, blog_post_id: blogPostId, title, author, content, posted }, // Include all fields
+        post_comment: { version: comment?.version, updated_at: comment?.updated_at, enabled, blog_post_id: blogPostId, title, author, content, posted }, // Include all fields
       }),
     })
       .then((response) => {

@@ -23,12 +23,12 @@ RSpec.describe "Returning from admin editors", type: :system do
     click_button 'Save Column'
     expect_page_section
     expect(page).to have_content('Changed directly from page')
-    expect(column.reload.content).to include('Changed directly from page')
+    expect(column.class.find(column.id).content).to include('Changed directly from page')
     click_link 'Edit Column'
     enter_column_text 'Unsaved column'
     click_button 'Cancel'
     expect_page_section
-    expect(column.reload.content).not_to include('Unsaved column')
+    expect(column.class.find(column.id).content).not_to include('Unsaved column')
     click_button 'Save Page'
     expect(page).to have_current_path(admin_pages_path)
   end
@@ -43,7 +43,7 @@ RSpec.describe "Returning from admin editors", type: :system do
     expect(page).to have_content('Nested column change')
     click_button 'Save Section'
     expect_page_section
-    expect(column.reload.content).to include('Nested column change')
+    expect(column.class.find(column.id).content).to include('Nested column change')
     click_link 'Edit Section'
     click_link 'Edit Column'
     click_button 'Cancel'

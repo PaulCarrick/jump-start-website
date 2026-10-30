@@ -1,11 +1,12 @@
 class BlogPost < ApplicationRecord
   include Enableable
+  include BitemporalRecord
   after_find :verify_checksum, unless: -> { Thread.current[:skip_checksum_verification] }
 
   include Checksum
   include Validation
 
-  has_many :post_comments, dependent: :destroy
+  has_many :post_comments, dependent: :destroy, primary_key: :id, foreign_key: :blog_post_id, inverse_of: :blog_post
 
   scope :publicly_visible, -> { where(visibility: "Public") }
 

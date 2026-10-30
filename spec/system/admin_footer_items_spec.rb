@@ -68,7 +68,7 @@ RSpec.describe "Admin Footer Items", type: :system do
 
         expect(page).to have_current_path(admin_footer_items_path)
         expect(page).to have_content("Footer Item updated successfully.")
-        expect(existing_footer_item.reload.label).to eq("Updated Footer")
+        expect(existing_footer_item.class.find(existing_footer_item.id).label).to eq("Updated Footer")
       end
     end
   end

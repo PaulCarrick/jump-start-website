@@ -21,7 +21,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_120000) do
     t.bigint "record_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+    t.index [ "record_type", "record_id", "name" ], name: "index_action_text_rich_texts_uniqueness", unique: true
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -30,8 +30,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_120000) do
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
-    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+    t.index [ "blob_id" ], name: "index_active_storage_attachments_on_blob_id"
+    t.index [ "record_type", "record_id", "name", "blob_id" ], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
@@ -43,13 +43,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_120000) do
     t.bigint "byte_size", null: false
     t.string "checksum"
     t.datetime "created_at", null: false
-    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+    t.index [ "key" ], name: "index_active_storage_blobs_on_key", unique: true
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
-    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+    t.index [ "blob_id", "variation_digest" ], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "blog_posts", force: :cascade do |t|
@@ -63,8 +63,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_120000) do
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.boolean "enabled", default: true, null: false
-    t.index ["author"], name: "index_blog_posts_on_author"
-    t.index ["title"], name: "index_blog_posts_on_title"
+    t.index [ "author" ], name: "index_blog_posts_on_author"
+    t.index [ "title" ], name: "index_blog_posts_on_title"
   end
 
   create_table "cells", force: :cascade do |t|
@@ -83,8 +83,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_120000) do
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "section_id", null: false
     t.boolean "enabled", default: true, null: false
-    t.index ["cell_name", "section_name"], name: "index_cells_on_cell_name_and_section_name", unique: true
-    t.index ["section_id"], name: "index_cells_on_section_id"
+    t.index [ "cell_name", "section_name" ], name: "index_cells_on_cell_name_and_section_name", unique: true
+    t.index [ "section_id" ], name: "index_cells_on_section_id"
   end
 
   create_table "contacts", force: :cascade do |t|
@@ -96,7 +96,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_120000) do
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.boolean "enabled", default: true, null: false
-    t.index ["name", "email", "phone", "message"], name: "index_contacts_on_name_email_phone_and_message"
+    t.index [ "name", "email", "phone", "message" ], name: "index_contacts_on_name_email_phone_and_message"
   end
 
   create_table "footer_items", force: :cascade do |t|
@@ -124,7 +124,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_120000) do
     t.integer "slide_order"
     t.string "checksum", limit: 512
     t.boolean "enabled", default: true, null: false
-    t.index ["name"], name: "index_image_files_on_name", unique: true
+    t.index [ "name" ], name: "index_image_files_on_name", unique: true
   end
 
   create_table "menu_items", force: :cascade do |t|
@@ -152,10 +152,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_120000) do
     t.integer "menu_item_id"
     t.integer "footer_item_id"
     t.boolean "enabled", default: true, null: false
-    t.index ["footer_item_id"], name: "index_pages_on_footer_item_id"
-    t.index ["menu_item_id"], name: "index_pages_on_menu_item_id"
-    t.index ["name"], name: "index_pages_on_name", unique: true
-    t.index ["section"], name: "index_pages_on_section", unique: true
+    t.index [ "footer_item_id" ], name: "index_pages_on_footer_item_id"
+    t.index [ "menu_item_id" ], name: "index_pages_on_menu_item_id"
+    t.index [ "name" ], name: "index_pages_on_name", unique: true
+    t.index [ "section" ], name: "index_pages_on_section", unique: true
   end
 
   create_table "post_comments", force: :cascade do |t|
@@ -168,9 +168,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_120000) do
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.string "checksum", limit: 512
     t.boolean "enabled", default: true, null: false
-    t.index ["author"], name: "index_post_comments_on_author"
-    t.index ["blog_post_id"], name: "index_post_comments_on_blog_post_id"
-    t.index ["title"], name: "index_post_comments_on_title"
+    t.index [ "author" ], name: "index_post_comments_on_author"
+    t.index [ "blog_post_id" ], name: "index_post_comments_on_blog_post_id"
+    t.index [ "title" ], name: "index_post_comments_on_title"
   end
 
   create_table "sections", force: :cascade do |t|
@@ -191,8 +191,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_120000) do
     t.integer "page_id", null: false
     t.string "section_group"
     t.boolean "enabled", default: true, null: false
-    t.index ["page_id"], name: "index_sections_on_page_id"
-    t.index ["section_name"], name: "index_sections_on_section_name", unique: true
+    t.index [ "page_id" ], name: "index_sections_on_page_id"
+    t.index [ "section_name" ], name: "index_sections_on_section_name", unique: true
   end
 
   create_table "site_setups", force: :cascade do |t|
@@ -247,8 +247,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_30_120000) do
     t.boolean "approved", default: false
     t.string "access"
     t.boolean "enabled", default: true, null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index [ "email" ], name: "index_users_on_email", unique: true
+    t.index [ "reset_password_token" ], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

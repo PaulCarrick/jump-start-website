@@ -2,3 +2,7 @@
   <%= form.check_box :enabled, class: "form-check-input", role: "switch" %>
   <%= form.label :enabled, "Enabled", class: "form-check-label" %>
 </div>
+<% if form.object.respond_to?(:version) && form.object.persisted? %>
+  <%= form.hidden_field :version %>
+  <%= form.hidden_field :updated_at, value: form.object.updated_at&.iso8601(6) %>
+<% end %>

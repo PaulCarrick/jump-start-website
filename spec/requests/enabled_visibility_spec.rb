@@ -8,7 +8,7 @@ RSpec.describe 'Enabled content visibility', type: :request do
   let!(:hidden_cell) { create(:cell, section: section, image: nil, link: nil, enabled: false, content: '<p>Hidden draft content</p>') }
 
   it 'defaults all editable records to enabled and retains timestamps' do
-    [BlogPost, Cell, Contact, FooterItem, ImageFile, MenuItem, Page, PostComment, Section, SiteSetup, User].each do |model|
+    [ BlogPost, Cell, Contact, FooterItem, ImageFile, MenuItem, Page, PostComment, Section, SiteSetup, User ].each do |model|
       expect(model.new.enabled).to be(true)
       expect(model.column_names).to include('created_at', 'updated_at')
     end
@@ -50,13 +50,13 @@ RSpec.describe 'Enabled nested saves and navigation', type: :request do
     cell = create(:cell, section: section, image: nil, link: nil)
     patch "/api/v1/pages/#{record.id}", params: {
       page: { enabled: false, sections_attributes: [
-        { id: section.id, enabled: false, cells_attributes: [{ id: cell.id, enabled: false }] }
+        { id: section.id, enabled: false, cells_attributes: [ { id: cell.id, enabled: false } ] }
       ] }
     }, as: :json
     expect(response).to have_http_status(:ok)
-    expect(record.reload.enabled).to be(false)
-    expect(section.reload.enabled).to be(false)
-    expect(cell.reload.enabled).to be(false)
+    expect(record.class.find(record.id).enabled).to be(false)
+    expect(section.class.find(section.id).enabled).to be(false)
+    expect(cell.class.find(cell.id).enabled).to be(false)
   end
 
   it 'excludes disabled media from public lookups while preserving admin lookups' do
