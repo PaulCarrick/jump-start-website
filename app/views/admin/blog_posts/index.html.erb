@@ -1,6 +1,7 @@
 <!-- app/views/admin/blog_posts/index.html.erb -->
 <%= javascript_include_tag 'views/admin/blog_posts/index' %>
 <%= render layout: "layouts/admin_page" do %>
+  <h1 class="mb-3">Manage Blogs</h1>
   <div class="mb-3">
     <%= link_to("New Blog", new_admin_blog_post_path, class: "btn btn-primary", target: "_self" ) %>
   </div>

@@ -3,6 +3,7 @@
 <%= javascript_include_tag 'views/admin/image_files/index' %>
 
 <%= render layout: "layouts/admin_page" do %>
+  <h1 class="mb-3">Manage Image Files</h1>
   <div class="mb-3">
     <%= link_to("New Image", new_admin_image_file_path, class: "btn btn-primary", target: "_self") %>
   </div>

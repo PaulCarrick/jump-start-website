@@ -1,9 +1,6 @@
 <!-- app/views/admin/cells/index.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
-  <div class="d-flex justify-content-end align-items-start flex-wrap gap-2 mb-3">
-    <%= link_to 'Clear Sort', admin_cells_path(clear_sort: true), class: "btn btn-secondary", target: "_self" %>
-    <%= render 'shared/top_page_navigation' %>
-  </div>
+  <h1 class="mb-3">Manage Cells</h1>
   <div class="table-responsive">
     <table class="table admin-cells-table">
       <colgroup>
@@ -22,8 +19,15 @@
           <th scope="col"><%= sortable_column('Order', 'cell_order', "cells") %></th>
           <th scope="col"><%= sortable_column('Image', 'image', "cells") %></th>
           <th scope="col"><%= sortable_column('Type', 'cell_type', "cells") %></th>
-          <th scope="col"><%= column_heading("Cell") %></th>
-          <th scope="col"><span class="visually-hidden">Actions</span></th>
+          <th scope="col" colspan="2">
+            <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
+              <%= column_heading("Cell") %>
+              <div class="d-flex align-items-start justify-content-end flex-wrap gap-2 ms-auto">
+                <%= link_to 'Clear Sort', admin_cells_path(clear_sort: true), class: "btn btn-secondary", target: "_self" %>
+                <%= render 'shared/top_page_navigation' %>
+              </div>
+            </div>
+          </th>
         </tr>
       </thead>
       <tbody>

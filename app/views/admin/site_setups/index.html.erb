@@ -1,5 +1,6 @@
 <!-- app/views/admin/site_setups/index.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
+  <h1 class="mb-3">Manage Site Setups</h1>
   <div class="mb-3">
     <%= link_to("New #{controller.model_title}", new_admin_site_setup_path, class: "btn btn-primary", target: "_self") %>
   </div>
