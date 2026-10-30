@@ -14,4 +14,15 @@ RSpec.describe 'Rich text cell display', type: :system do
     ordinary_size = page.evaluate_script("parseFloat(getComputedStyle(document.querySelector('.rich-text-content .ordinary-text')).fontSize)")
     expect(huge_size).to be > ordinary_size * 2
   end
+  it 'does not count source newlines after br tags as extra visible lines' do
+    record = create(:page)
+    section = create(:section, page: record, content_type: record.section)
+    create(:cell, section: section, image: nil, link: nil,
+           content: "<p style=\"line-height: 20px;\"><span class=\"spacing-first\">First line</span><br>\n  <span class=\"spacing-second\">Second line</span></p>")
+    visit page_path(record.name)
+    expect(page).to have_css('.spacing-second', text: 'Second line')
+    distance = page.evaluate_script("document.querySelector('.spacing-second').getBoundingClientRect().top - document.querySelector('.spacing-first').getBoundingClientRect().top")
+    expect(distance).to be_within(1).of(20)
+  end
+
 end

@@ -409,6 +409,8 @@ body .btn.admin-navigation-readonly:disabled {
 /* Use Quill's saved formatting in read-only cell content without editor chrome. */
 .ql-editor.rich-text-content {
   height: auto;
+  max-height: none;
+  white-space: normal;
   min-height: 0;
   padding: 0;
   overflow: visible;
