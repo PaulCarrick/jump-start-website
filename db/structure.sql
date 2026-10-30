@@ -2767,7 +2767,7 @@ ALTER TABLE ONLY public.image_files
 --
 
 ALTER TABLE ONLY public.cells
-    ADD CONSTRAINT index_cells_on_cell_name_and_section_name_period EXCLUDE USING gist (cell_name WITH =, section_name WITH =, validity WITH &&);
+    ADD CONSTRAINT index_cells_on_cell_name_and_section_name_period EXCLUDE USING gist (cell_name WITH =, section_name WITH =, validity WITH &&) WHERE ((NOT temporal_deleted));
 
 
 --
@@ -2775,7 +2775,7 @@ ALTER TABLE ONLY public.cells
 --
 
 ALTER TABLE ONLY public.image_files
-    ADD CONSTRAINT index_image_files_on_name_period EXCLUDE USING gist (name WITH =, validity WITH &&);
+    ADD CONSTRAINT index_image_files_on_name_period EXCLUDE USING gist (name WITH =, validity WITH &&) WHERE ((NOT temporal_deleted));
 
 
 --
@@ -2783,7 +2783,7 @@ ALTER TABLE ONLY public.image_files
 --
 
 ALTER TABLE ONLY public.pages
-    ADD CONSTRAINT index_pages_on_name_period EXCLUDE USING gist (name WITH =, validity WITH &&);
+    ADD CONSTRAINT index_pages_on_name_period EXCLUDE USING gist (name WITH =, validity WITH &&) WHERE ((NOT temporal_deleted));
 
 
 --
@@ -2791,7 +2791,7 @@ ALTER TABLE ONLY public.pages
 --
 
 ALTER TABLE ONLY public.pages
-    ADD CONSTRAINT index_pages_on_section_period EXCLUDE USING gist (section WITH =, validity WITH &&);
+    ADD CONSTRAINT index_pages_on_section_period EXCLUDE USING gist (section WITH =, validity WITH &&) WHERE ((NOT temporal_deleted));
 
 
 --
@@ -2799,7 +2799,7 @@ ALTER TABLE ONLY public.pages
 --
 
 ALTER TABLE ONLY public.sections
-    ADD CONSTRAINT index_sections_on_section_name_period EXCLUDE USING gist (section_name WITH =, validity WITH &&);
+    ADD CONSTRAINT index_sections_on_section_name_period EXCLUDE USING gist (section_name WITH =, validity WITH &&) WHERE ((NOT temporal_deleted));
 
 
 --
@@ -2807,7 +2807,7 @@ ALTER TABLE ONLY public.sections
 --
 
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT index_users_on_email_period EXCLUDE USING gist (email WITH =, validity WITH &&);
+    ADD CONSTRAINT index_users_on_email_period EXCLUDE USING gist (email WITH =, validity WITH &&) WHERE ((NOT temporal_deleted));
 
 
 --
@@ -2815,7 +2815,7 @@ ALTER TABLE ONLY public.users
 --
 
 ALTER TABLE ONLY public.users
-    ADD CONSTRAINT index_users_on_reset_password_token_period EXCLUDE USING gist (reset_password_token WITH =, validity WITH &&);
+    ADD CONSTRAINT index_users_on_reset_password_token_period EXCLUDE USING gist (reset_password_token WITH =, validity WITH &&) WHERE ((NOT temporal_deleted));
 
 
 --
@@ -3622,6 +3622,7 @@ ALTER TABLE ONLY public.cells
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261030200000'),
 ('20261030180000'),
 ('20261030140000'),
 ('20261030120000'),

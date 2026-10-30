@@ -27,6 +27,32 @@ RSpec.describe 'Bitemporal publishing' do
     end
   end
 
+  it 'publishes replacement images with the same names as deleted unpublished uploads' do
+    admin = create(:user, access: 'super')
+    PublishingContext.editing = true
+    old = create(:image_file, name: 'replacement-image')
+    old.destroy!
+    replacement = create(:image_file, name: 'replacement-image')
+    PublishingContext.editing = false
+    Publishing.deploy!(actor: admin, summary: 'Replace upload')
+    PublishingContext.live = true
+    expect(ImageFile.find_by(name: 'replacement-image').id).to eq(replacement.id)
+    expect(ImageFile.find_by(id: old.id)).to be_nil
+  end
+
+  it 'releases the name of a deleted live page for a replacement in the same deployment' do
+    admin = create(:user, access: 'super')
+    old = create(:page)
+    PublishingContext.editing = true
+    old.destroy!
+    replacement = create(:page, name: old.name, section: old.section)
+    PublishingContext.editing = false
+    Publishing.deploy!(actor: admin, summary: 'Replace page')
+    PublishingContext.live = true
+    expect(Page.find_by(name: old.name).id).to eq(replacement.id)
+    expect(Page.find_by(id: old.id)).to be_nil
+  end
+
   it 'keeps new records unpublished and discards them without affecting live content' do
     PublishingContext.editing = true
     record = create(:page)

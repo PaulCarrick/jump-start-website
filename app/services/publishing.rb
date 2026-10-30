@@ -41,7 +41,7 @@ class Publishing
         draft.temporal_state = 'live'
         draft.set_time_dimension_start(now)
         draft.deployment_id = deployment.id
-        draft.save!
+        draft.save!(validate: !draft.temporal_deleted?)
       end
       # Check all associations after all members are promoted, before COMMIT.
       # Foreign keys ensure identities exist; this additionally checks that

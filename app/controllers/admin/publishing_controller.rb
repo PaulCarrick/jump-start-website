@@ -46,7 +46,10 @@ class Admin::PublishingController < ApplicationController
              when ActiveRecord::RecordInvalid then error.record.errors.full_messages.join(', ').truncate(240)
              else 'A database error prevented this change. Your drafts are still available. Please check the application log.'
              end
-    Rails.logger.error("Publishing failed: #{error.class.name}")
+    constraint = if error.cause.respond_to?(:result)
+                   error.cause.result&.error_field(PG::Result::PG_DIAG_CONSTRAINT_NAME)
+                 end
+    Rails.logger.error("Publishing failed: #{error.class.name}; constraint=#{constraint || 'none'}")
     "#{prefix}: #{detail}"
   end
 
