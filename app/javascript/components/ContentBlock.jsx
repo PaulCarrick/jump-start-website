@@ -14,7 +14,7 @@ const ContentBlock = ({
                       }) => {
   return (
       <>
-        <div dangerouslySetInnerHTML={{ __html: content }}/>
+        <div className="ql-editor rich-text-content" dangerouslySetInnerHTML={{ __html: content }}/>
         {options.expanding_rows &&
          <button id={toggleId} className={toggleClass}>Show More</button>}
         {options.expanding_cells &&

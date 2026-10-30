@@ -197,12 +197,20 @@ function renderEntry(
     <input
       type="text"
       id={styleName}
-      value={isPresent(value) ? value : ""}
+      value={styleName.endsWith("styles") ? styleText(value) : (isPresent(value) ? value : "")}
       placeholder={`Enter value for ${styleName}`}
       className="form-control mb-2"
       onChange={(event) => onChange(event.target.value, styleName)}
     />
   );
+}
+
+function styleText(value: any): string {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  return Object.entries(value).map(([key, entry]) =>
+    `${key.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)}: ${entry};`
+  ).join(" ");
 }
 
 function renderAttributes(formatting: Record<string, any>, setValue: any) {
@@ -218,6 +226,23 @@ function renderAttributes(formatting: Record<string, any>, setValue: any) {
 
   return (
     <>
+      <div className="row mb-2">
+        <label htmlFor="imageClasses" className="col-2 d-flex align-items-center">Image Classes:</label>
+        <div className="col-10">
+          <input id="imageClasses" className="form-control" value={formatting.image_classes || ""}
+            aria-describedby="imageClassesHelp" onChange={event => setValue(event.target.value, "image_classes")} />
+          <div id="imageClassesHelp" className="form-text">Example: rounded shadow. Leave blank for no additional image classes.</div>
+        </div>
+      </div>
+      <div className="row mb-2">
+        <label htmlFor="imageStyles" className="col-2 d-flex align-items-center">Image Styles:</label>
+        <div className="col-10">
+          <input id="imageStyles" className="form-control" value={styleText(formatting.image_styles)}
+            aria-describedby="imageStylesHelp"
+            onChange={event => setValue(event.target.value, "image_styles")} />
+          <div id="imageStylesHelp" className="form-text">Applies directly to the image. Example: max-width: 400px; border-radius: 12px;</div>
+        </div>
+      </div>
       <div className="row">
         <div className="col-2 d-flex align-items-center">Margin Top:</div>
         <div className="col-10">
@@ -271,6 +296,10 @@ function renderAttributes(formatting: Record<string, any>, setValue: any) {
 
 export function formattingOptions(formattingData: Record<string, any>) {
   const fields = [];
+  if (!isPresent(formattingData?.image_classes))
+    fields.push({ label: "Image Classes", value: "image_classes" });
+  if (!isPresent(formattingData?.image_styles))
+    fields.push({ label: "Image Styles", value: "image_styles" });
 
   if (!isPresent(formattingData?.container_classes))
     fields.push({ label: "Container Classes", value: "container_classes" });

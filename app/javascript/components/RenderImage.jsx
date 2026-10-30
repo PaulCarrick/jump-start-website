@@ -20,6 +20,7 @@ const RenderImage = ({
             images={options.slide_show_images}
             captions={content}
             slideType={options.slide_show_type}
+            options={options}
         />
     );
   }

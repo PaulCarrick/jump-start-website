@@ -405,3 +405,14 @@ body .btn.admin-navigation-readonly:disabled {
   border-color: #d3d6d8;
   opacity: 1;
 }
+
+/* Use Quill's saved formatting in read-only cell content without editor chrome. */
+.ql-editor.rich-text-content {
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  overflow: visible;
+  font-size: inherit;
+  line-height: inherit;
+  text-align: inherit;
+}

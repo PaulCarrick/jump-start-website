@@ -1,4 +1,5 @@
 import EnabledSwitch from "./EnabledSwitch";
+import DivRatioEditor from "./DivRatioEditor";
 // app/javascript/components/SectionEditor.tsx
 
 import RenderSection from "./RenderSection";
@@ -262,6 +263,16 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               </div>
             </div>
           {renderSectionOrder(sectionData?.section_order, setValue)}
+          {sectionData?.cells?.length === 2 && (
+            <DivRatioEditor
+              widths={sectionData.cells.map(cell => cell.width)}
+              onChange={widths => setSectionData(previous => previous ? {
+                ...previous,
+                formatting: { ...(previous.formatting || {}), div_ratio: widths.map(width => width.replace('%', '')).join(':') },
+                cells: previous.cells.map((cell, index) => ({ ...cell, width: widths[index] })),
+              } : previous)}
+            />
+          )}
 
           <div className="row mb-2">
             <div

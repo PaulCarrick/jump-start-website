@@ -8,11 +8,12 @@ import SlideShow from "./SlideShow";
 
 const RenderSlideShow = ({
                              images = [],
-                             slideType = "Topic"
+                             slideType = "Topic",
+                             options = {}
                          }) => {
   return (
     <div className="slideshow-container">
-      <SlideShow images={images} slideType={slideType || "topic"}/>
+      <SlideShow images={images} slideType={slideType || "topic"} options={options}/>
     </div>
   );
 };

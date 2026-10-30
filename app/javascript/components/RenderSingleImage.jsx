@@ -39,7 +39,7 @@ function renderVideo(image) {
 
 function renderImage(image, options) {
   return (
-      <img src={image} alt="" className="img-fluid" style={options.image_styles}/>
+      <img src={image} alt="" className={["img-fluid", options.image_classes].filter(Boolean).join(" ")} style={options.image_styles}/>
   );
 }
 
@@ -72,7 +72,7 @@ function addDescription(content, description, options) {
 function renderDescription(description, expandable, toggleId, toggleClass) {
   return (
       <>
-        <div dangerouslySetInnerHTML={{ __html: description }}/>
+        <div className="ql-editor rich-text-content" dangerouslySetInnerHTML={{ __html: description }}/>
         {expandable && (
             <div>
               <button id={toggleId} className={toggleClass}>
@@ -106,6 +106,7 @@ RenderSingleImage.propTypes = {
   link:    PropTypes.string,
   options: PropTypes.shape({
                              image_styles:         PropTypes.object,
+                             image_classes:        PropTypes.string,
                              caption_classes:      PropTypes.string,
                              image_caption:        PropTypes.string,
                              caption_position:     PropTypes.oneOf(["top", "bottom", null]),

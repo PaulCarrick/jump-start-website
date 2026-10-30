@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { captionText } from './captionText.js';
 import {handleVideoImageTag} from "./imageProcessingUtilities.jsx";
 
-const SlideShow = ({ images = [], slideType = "Topic" }) => {
+const SlideShow = ({ images = [], slideType = "Topic", options = {} }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [dropdownValue, setDropdownValue] = useState("");
 
@@ -76,13 +76,14 @@ const SlideShow = ({ images = [], slideType = "Topic" }) => {
           <img
             src={images[currentIndex].image_url}
             alt={`Slide ${currentIndex}`}
-            style={{ maxWidth: '100%', maxHeight: '640px', height: 'auto' }}
+            className={["img-fluid", options.image_classes].filter(Boolean).join(" ")}
+            style={{ maxWidth: '100%', maxHeight: '640px', height: 'auto', ...options.image_styles }}
           />
         </a>
 
         {description && (
           <div className="text-start">
-            <div dangerouslySetInnerHTML={{ __html: description }} />
+            <div className="ql-editor rich-text-content" dangerouslySetInnerHTML={{ __html: description }} />
           </div>
         )}
       </div>
