@@ -151,10 +151,16 @@ RSpec.describe "Admin Sections", type: :system do
       expect(page).to have_title("#{site_setup.site_name} - Admin Dashboard: Sections")
     end
 
-    it "shows the section metadata and rendered column" do
-      expect(page).to have_content('Test Content Type')
-      expect(page).to have_content('Test Section Name')
-      expect(page).to have_content('Test Description')
+    it "shows the rendered column without metadata or editing controls" do
+      within('.admin-main') do
+        expect(page).to have_content('Test Description')
+        expect(page).to have_no_content('Content Type:')
+        expect(page).to have_no_content('Formatting:')
+        expect(page).to have_no_link('Edit Section')
+        expect(page).to have_no_link('Edit Column')
+        expect(page).to have_no_link('Delete Column')
+        expect(page).to have_link('Back to Sections')
+      end
     end
   end
 end

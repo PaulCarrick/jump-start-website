@@ -136,11 +136,16 @@ RSpec.describe "Cell administration", type: :request do
       expect(JSON.parse(editor['data-react-props']).fetch("cell").fetch("id")).to eq(cell.id)
     end
 
-    it "renders the column preview and its edit link" do
+    it "renders a read-only column preview without an edit link" do
       get admin_cell_path(cell)
       expect(response).to have_http_status(:ok)
-      expect(response.body).to include(cell.cell_name, edit_admin_cell_path(cell))
-      expect(Nokogiri::HTML(response.body).at_css('[data-react-class="RenderCell"]')).to be_present
+      document = Nokogiri::HTML(response.body)
+      preview = document.at_css('[data-react-class="RenderCell"]')
+      expect(preview).to be_present
+      props = JSON.parse(preview['data-react-props'])
+      expect(props.fetch('cell').fetch('id')).to eq(cell.id)
+      expect(props.fetch('editing')).to be(false)
+      expect(document.at_css("a[href='#{edit_admin_cell_path(cell)}']")).to be_nil
     end
 
     it "lists columns and exposes their search controls" do

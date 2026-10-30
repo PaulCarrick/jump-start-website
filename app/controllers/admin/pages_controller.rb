@@ -12,6 +12,13 @@ class Admin::PagesController < Admin::AbstractAdminController
     @read_only_content_type = true
   end
 
+  def show
+    set_item
+    redirect_to page_path(get_item.name), status: :see_other
+  rescue StandardError => e
+    handle_error(:index, e)
+  end
+
   def test
     setup_options
 

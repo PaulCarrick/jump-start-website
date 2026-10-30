@@ -8,36 +8,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/assets/stylesheets/admin.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/assets/stylesheets/admin.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/helpers/application_helper.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/helpers/application_helper.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/application.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/application.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/GenerateCells.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/GenerateCells.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/PageEditor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/PageEditor.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderCell.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderCell.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderSection.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/SectionEditor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/SectionEditor.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/blog_posts/_blog_form.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/blog_posts/_blog_form.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/blog_posts/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/blog_posts/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/cells/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/cells/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/footer_items/_footer_item_form.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/footer_items/_footer_item_form.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/footer_items/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/footer_items/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/image_files/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/image_files/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/menu_items/_menu_item_form.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/menu_items/_menu_item_form.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/menu_items/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/menu_items/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/pages/_page_form.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/pages/_page_form.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/pages/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/pages/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/sections/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/sections/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/site_setups/_site_setup_form.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/site_setups/_site_setup_form.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/site_setups/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/site_setups/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/users/_user_form.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/users/_user_form.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/users/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/users/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/shared/_page_navigation.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/shared/_page_navigation.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/shared/_top_page_navigation.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/shared/_top_page_navigation.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/system/admin_pages_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/system/admin_pages_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/system/admin_sections_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/system/admin_sections_spec.rb" afterDir="false" />
-    </list>
+    <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
