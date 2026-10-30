@@ -1,3 +1,4 @@
+import { captionText } from './captionText.js';
 // /app/javascript/components/RenderSingleImage.jsx
 
 // Render a single Image
@@ -95,7 +96,7 @@ function addCaption(content, caption, options) {
 
 function renderCaption(caption, options) {
   if (caption) {
-    return <div className={options.caption_classes}>{caption}</div>;
+    return <div className={options.caption_classes}>{captionText(caption)}</div>;
   }
   return null;
 }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { captionText } from './captionText.js';
 import {handleVideoImageTag} from "./imageProcessingUtilities.jsx";
 
 const SlideShow = ({ images = [], slideType = "Topic" }) => {
@@ -68,7 +69,7 @@ const SlideShow = ({ images = [], slideType = "Topic" }) => {
               fontSize: '1.25em',
             }}
           >
-            {images[currentIndex].caption}
+            {captionText(images[currentIndex].caption)}
           </p>
         )}
         <a href={images[currentIndex].image_url} target="_blank" rel="noopener noreferrer">
@@ -110,7 +111,7 @@ const SlideShow = ({ images = [], slideType = "Topic" }) => {
           </option>
           {uniqueCaptions.map((title, index) => (
             <option key={index} value={title}>
-              {title}
+              {captionText(title)}
             </option>
           ))}
         </select>
