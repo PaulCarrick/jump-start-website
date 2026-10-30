@@ -207,7 +207,7 @@ function renderCell(
 }
 
 function processCell(cell) {
-  if (cell === null || cell.image === null) return cell;
+  if (cell === null || !cell.image) return cell;
 
   const imageGroupRegex = /^\s*ImageGroup:\s*(.+)\s*$/;
   const videoRegex = /^\s*VideoImage:"(.+)"$/;

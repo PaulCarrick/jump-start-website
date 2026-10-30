@@ -5,6 +5,19 @@ import { createImageFile } from "../services/imageFileService";
 import type { ImageType } from "../types/dataTypes";
 import { renderComboBox, renderSelect } from "./renderControlFunctions";
 
+export function savedImageType(image: string | null | undefined): ImageType {
+  if (image?.startsWith('ImageGroup:')) return 'Groups';
+  if (image?.startsWith('ImageSection:')) return 'Section';
+  if (image?.startsWith('VideoImage:')) return 'Videos';
+  return 'Images';
+}
+
+function imageChoice(image: string | null): string | null {
+  if (!image) return null;
+  const video = image.match(/^VideoImage:\s*"(.*)"$/);
+  return video ? video[1] : image.replace(/^(ImageFile|ImageGroup|ImageSection):\s*/, '');
+}
+
 const imageTypeOptions = [
   { label: "Image", value: "Images" },
   { label: "Image Section", value: "Section" },
@@ -20,7 +33,9 @@ export default function ImagePicker({
   availableImageGroupsData,
   availableVideosData,
   setValue,
+  referenceValues = false,
 }: {
+  referenceValues?: boolean;
   image: string | null;
   imageType: ImageType | null;
   availableImagesData: string[] | null;
@@ -46,6 +61,18 @@ export default function ImagePicker({
     label: value,
     value,
   }));
+
+  const chooseImage = (value: string, attribute: string) => {
+    if (attribute !== 'image' || !referenceValues || !value) {
+      setValue(value, attribute);
+      return;
+    }
+    const reference = imageType === 'Groups' ? `ImageGroup:${value}`
+      : imageType === 'Section' ? `ImageSection:${value}`
+      : imageType === 'Videos' ? `VideoImage:"${value}"`
+      : /^(https?:|\/|ImageFile:)/.test(value) ? value : `ImageFile:${value}`;
+    setValue(reference, attribute);
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file: File | undefined = event.target.files?.[0];
@@ -133,9 +160,13 @@ export default function ImagePicker({
         <div className="col-2 d-flex align-items-center">Image:</div>
         <div className="col-7">
           <div id="imageDiv">
-            {renderComboBox("image", image, optionsHash, setValue)}
+            {renderComboBox("image", imageChoice(image), optionsHash, chooseImage)}
           </div>
-          <NewImageButton onReturn={reload} />
+          {image && <div className="form-text mb-1">Current image: {imageChoice(image)}</div>}
+          <div className="d-flex gap-2 mt-1">
+            <NewImageButton onReturn={reload} />
+            {image && <button type="button" className="btn btn-secondary" onClick={() => setValue('', 'image')}>Remove Image</button>}
+          </div>
           {error && <div role="alert">{error} <button type="button" className="btn btn-link" onClick={reload}>Retry</button></div>}
         </div>
         <div id="imageTypeDiv" className="col-3">

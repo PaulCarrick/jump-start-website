@@ -51,6 +51,7 @@ export function renderImage(
   return (
     <ImagePicker
       image={image}
+      referenceValues={true}
       imageType={imageType}
       availableImagesData={availableImagesData}
       availableImageGroupsData={availableImageGroupsData}

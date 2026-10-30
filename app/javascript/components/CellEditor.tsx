@@ -20,6 +20,7 @@ import {
   renderCellName,
 } from "./renderUtilities";
 import FormattingEditor from "./FormattingEditor";
+import { savedImageType } from "./ImagePicker";
 import { useEditorDraft } from "../hooks/useEditorDraft";
 
 // Define types for Cell and Section
@@ -59,7 +60,7 @@ const CellEditor: React.FC<CellEditorProps> = ({
         ? genericCell(sectionName || "new-section")
         : null),
   );
-  const [imageMode, setImageMode] = useState<ImageType>("Images");
+  const [imageMode, setImageMode] = useState<ImageType>(() => savedImageType(cellData?.image));
   const [error, setError] = useState<string | null>(null);
 
   // OnChange/OnBlur Callback
@@ -76,6 +77,11 @@ const CellEditor: React.FC<CellEditorProps> = ({
       setCellData((prev) => {
         if (!prev) return null;
 
+        if (attribute === "image" && !newValue) {
+          const formatting = { ...(prev.formatting || {}) };
+          delete formatting.slide_show_images;
+          return { ...prev, image: null, formatting };
+        }
         if (attribute === "useHtmlView") {
           return {
             ...prev,
