@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_29_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_30_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,6 +62,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_29_120000) do
     t.string "checksum", limit: 512
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.boolean "enabled", default: true, null: false
     t.index ["author"], name: "index_blog_posts_on_author"
     t.index ["title"], name: "index_blog_posts_on_title"
   end
@@ -81,6 +82,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_29_120000) do
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "section_id", null: false
+    t.boolean "enabled", default: true, null: false
     t.index ["cell_name", "section_name"], name: "index_cells_on_cell_name_and_section_name", unique: true
     t.index ["section_id"], name: "index_cells_on_section_id"
   end
@@ -93,6 +95,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_29_120000) do
     t.string "submit_information"
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.boolean "enabled", default: true, null: false
     t.index ["name", "email", "phone", "message"], name: "index_contacts_on_name_email_phone_and_message"
   end
 
@@ -107,6 +110,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_29_120000) do
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "page_id"
+    t.boolean "enabled", default: true, null: false
   end
 
   create_table "image_files", force: :cascade do |t|
@@ -119,6 +123,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_29_120000) do
     t.string "group"
     t.integer "slide_order"
     t.string "checksum", limit: 512
+    t.boolean "enabled", default: true, null: false
     t.index ["name"], name: "index_image_files_on_name", unique: true
   end
 
@@ -134,6 +139,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_29_120000) do
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "page_id"
+    t.boolean "enabled", default: true, null: false
   end
 
   create_table "pages", force: :cascade do |t|
@@ -145,6 +151,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_29_120000) do
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.integer "menu_item_id"
     t.integer "footer_item_id"
+    t.boolean "enabled", default: true, null: false
     t.index ["footer_item_id"], name: "index_pages_on_footer_item_id"
     t.index ["menu_item_id"], name: "index_pages_on_menu_item_id"
     t.index ["name"], name: "index_pages_on_name", unique: true
@@ -160,6 +167,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_29_120000) do
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.string "checksum", limit: 512
+    t.boolean "enabled", default: true, null: false
     t.index ["author"], name: "index_post_comments_on_author"
     t.index ["blog_post_id"], name: "index_post_comments_on_blog_post_id"
     t.index ["title"], name: "index_post_comments_on_title"
@@ -182,6 +190,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_29_120000) do
     t.jsonb "formatting", default: {}, null: false
     t.integer "page_id", null: false
     t.string "section_group"
+    t.boolean "enabled", default: true, null: false
     t.index ["page_id"], name: "index_sections_on_page_id"
     t.index ["section_name"], name: "index_sections_on_section_name", unique: true
   end
@@ -222,6 +231,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_29_120000) do
     t.string "contact_email_subject"
     t.string "captcha_site_key"
     t.string "captcha_secret_key"
+    t.boolean "enabled", default: true, null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -236,6 +246,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_29_120000) do
     t.string "roles"
     t.boolean "approved", default: false
     t.string "access"
+    t.boolean "enabled", default: true, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

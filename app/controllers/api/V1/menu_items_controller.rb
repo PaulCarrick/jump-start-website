@@ -81,7 +81,7 @@ module Api
       private
 
       def get_params
-        params.require(:menu_item).permit(
+        params.require(:menu_item).permit(:enabled,
           :id,
           :menu_type,
           :label,

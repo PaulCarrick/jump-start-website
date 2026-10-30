@@ -8,6 +8,7 @@
                 local:  true,
                 html:   { onsubmit: 'return validate(this)' }) do |form|
   %>
+    <%= render "shared/enabled_switch", form: form %>
     <%= hidden_field_tag :return_url, admin_return_url %>
     <%= form.hidden_field :caption, id: "image_file_caption", name: "image_file[caption]" %>
     <%= form.hidden_field :description, id: "image_file_description", name: "image_file[description]" %>

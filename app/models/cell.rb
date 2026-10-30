@@ -1,5 +1,6 @@
 # app/models/cell.rb
 class Cell < ApplicationRecord
+  include Enableable
   belongs_to :section
 
   after_find :verify_checksum, unless: -> { Thread.current[:skip_checksum_verification] }

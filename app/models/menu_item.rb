@@ -2,11 +2,14 @@
 
 # app/models/menu_item.rb
 class MenuItem < ApplicationRecord
+  include Enableable
   has_many :sub_items, class_name: "MenuItem", foreign_key: "parent_id"
   belongs_to :parent, class_name: "MenuItem", optional: true
   belongs_to :page, class_name: "Page", optional: true
 
   scope :root_main_menu_items, -> { where(menu_type: "Main", parent_id: nil).order(:menu_order) }
+
+  scope :publicly_enabled, -> { enabled.left_joins(:page).where("pages.id IS NULL OR pages.enabled = ?", true) }
 
   validates :label, presence: true
 end

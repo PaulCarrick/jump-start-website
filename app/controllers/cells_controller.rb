@@ -4,7 +4,7 @@ class CellsController < ApplicationController
   include HtmlSanitizer
 
   def index
-    @q = Cell.ransack(params[:q])
+    @q = Cell.enabled.joins(section: :page).where(sections: { enabled: true }, pages: { enabled: true }).ransack(params[:q])
     @pagy, @results = pagy(@q.result(distinct: true), limit: 3)
 
     @cells = @results.includes(section: :page).map do |cell|

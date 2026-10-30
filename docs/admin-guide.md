@@ -32,6 +32,8 @@ A typical content change is:
 4. Change the content and save it.
 5. Review the page on the website.
 
+The **Enabled** switch controls whether a record appears on the public website. New and existing records start enabled. Switch it off and save to hide content without deleting it; it remains visible and editable in admin. Disabling a page hides its sections and cells from that page. Disabled sections hide their cells, and disabled images are excluded from public image lookups and groups. Public navigation and blogs also honor Enabled. The user switch controls the record's enabled status; it does not change the account's access level or password.
+
 Fields marked with an asterisk are required. Some editors keep Save disabled until the necessary data is available. A disabled Save button cannot be activated with its keyboard shortcut.
 
 **Cancel** returns from an editor without saving its current changes. It does not undo changes you have already saved. When an editor opens inside another editor, saving may return the updated draft to the parent editor; save the parent too to finish the operation.

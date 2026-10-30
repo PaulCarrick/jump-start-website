@@ -47,6 +47,7 @@ module Api
       end
 
       def update
+        page = Page.find(params[:id])
         if page.update(get_params)
           render json: page
         else
@@ -89,13 +90,13 @@ module Api
       private
 
       def get_params
-        params.require(:page).permit(
+        params.require(:page).permit(:enabled,
           :id,
           :name,
           :section,
           :title,
           :access,
-          menu_item_attributes:   [
+          menu_item_attributes:   [ :enabled,
                                     :id,
                                     :label,
                                     :menu_type,
@@ -107,7 +108,7 @@ module Api
                                     :parent_id,
                                     :page_id
                                   ],
-          footer_item_attributes: [
+          footer_item_attributes: [ :enabled,
                                     :id,
                                     :label,
                                     :icon,
@@ -118,7 +119,7 @@ module Api
                                     :parent_id,
                                     :page_id
                                   ],
-          sections_attributes:    [
+          sections_attributes:    [ :enabled,
                                     :id,
                                     :content_type,
                                     :section_name,
@@ -135,7 +136,7 @@ module Api
                                       image_attributes: {},
                                       text_attributes:  {},
                                       formatting:       {},
-                                      cells_attributes: [
+                                      cells_attributes: [ :enabled,
                                                           :id,
                                                           :section_name,
                                                           :cell_name,

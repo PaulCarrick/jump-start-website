@@ -1,4 +1,5 @@
 class Page < ApplicationRecord
+  include Enableable
   has_many :sections, -> { order(Section.arel_table[:section_order].asc.nulls_last, Section.arel_table[:id].asc) }, dependent: :destroy
   accepts_nested_attributes_for :sections, allow_destroy: true
   has_one :menu_item, dependent: :destroy

@@ -1,3 +1,4 @@
+import EnabledSwitch from "./EnabledSwitch";
 // app/javascript/components/CellEditor.tsx
 
 import RenderCell from "./RenderCell";
@@ -126,6 +127,7 @@ const CellEditor: React.FC<CellEditorProps> = ({
             <div className="error-box">{error}</div>
           </div>
         )}
+        <EnabledSwitch enabled={cellData?.enabled} onChange={enabled => setCellData(previous => previous ? { ...previous, enabled } : previous)} />
         {renderSectionName(
           cellData?.section_name,
           editorOptions.availableSectionNames,

@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  include Enableable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
 
   validates :password, presence: true, on: :create

@@ -14,7 +14,7 @@ class PagesController < ApplicationController
   def load_page
     return if params[:id].present? && params[:id] =~ /^favicon.*$/
 
-    @page = Page.by_page_name(params[:id]).first
+    @page = Page.enabled.by_page_name(params[:id]).first
 
     if @page.present?
       set_title("#{@site_information.site_name} - #{@page.title}")
@@ -27,7 +27,7 @@ class PagesController < ApplicationController
       renderable_contents = []
 
       @contents.each do |section|
-        renderable_contents << section.renderable_section
+        renderable_contents << section.renderable_section(public_view: true)
       end
 
       @contents = renderable_contents
@@ -43,11 +43,12 @@ class PagesController < ApplicationController
 
   def build_contents
     contents = []
-    sections = Section.by_content_type(@page.section)
+    sections = Section.enabled.by_content_type(@page.section)
 
     set_focused_section(sections)
 
     sections.each do |section|
+      next if section.cells.any? && !section.cells.enabled.exists?
       subsection = process_section(section)
       contents << section
       contents << subsection if subsection.present? && !section.cells.present?
@@ -96,7 +97,7 @@ class PagesController < ApplicationController
   end
 
   def handle_image_group(group_name, formatting)
-    image_files = ImageFile.by_image_group(group_name)
+    image_files = ImageFile.enabled.by_image_group(group_name)
 
     if image_files.present?
       formatting = add_images_to_formatting(formatting, image_files)
@@ -112,7 +113,7 @@ class PagesController < ApplicationController
   end
 
   def handle_single_image_file(section, file_name)
-    image_file   = ImageFile.find_by(name: file_name)
+    image_file   = ImageFile.enabled.find_by(name: file_name)
     results      = get_image_url(image_file)
     section.link = results
 
@@ -120,12 +121,13 @@ class PagesController < ApplicationController
   end
 
   def handle_image_section(section, file_name, formatting)
-    image_file = ImageFile.find_by(name: file_name)
+    image_file = ImageFile.enabled.find_by(name: file_name)
+    return [nil, "", nil, formatting] unless image_file
     image_url  = get_image_url(image_file)
 
     if image_url.present?
       section.link = image_url
-      caption      = image_file.caption.to_s
+      caption      = image_file&.caption.to_s
 
       # Check if caption contains only <p> tags or no HTML
       if caption.match?(/\A(\s*<p>.*?<\/p>\s*)*\z/i)
@@ -157,7 +159,7 @@ class PagesController < ApplicationController
   end
 
   def handle_image_array(image_list, formatting)
-    images = image_list.split(",").map { |image_name| ImageFile.find_by_name(image_name) }
+    images = image_list.split(",").map { |image_name| ImageFile.enabled.find_by_name(image_name) }.compact
     [ nil, add_images_to_formatting(formatting, images) ]
   end
 
@@ -170,12 +172,12 @@ class PagesController < ApplicationController
   end
 
   def replace_video_image_tag(content, file_name)
-    image_file = ImageFile.find_by(name: file_name)
+    image_file = ImageFile.enabled.find_by(name: file_name)
     image_url  = get_image_url(image_file)
 
     if image_url.present?
-      label = image_file.caption
-      label = image_file.name unless label.present?
+      label = image_file&.caption
+      label = image_file&.name unless label.present?
 
       video_tag = view_context.link_to(label,
                                        '#',

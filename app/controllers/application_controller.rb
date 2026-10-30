@@ -49,10 +49,10 @@ class ApplicationController < ActionController::Base
   private
 
   def setup_site
-    @site_information = SiteSetup.find_by(default_setup: true)
+    @site_information = SiteSetup.enabled.find_by(default_setup: true)
 
     unless @site_information.present?
-      @site_information = SiteSetup.first
+      @site_information = SiteSetup.enabled.first
 
       unless @site_information.present?
         @site_information = SiteSetup.new(configuration_name:    'default',
@@ -122,7 +122,7 @@ class ApplicationController < ActionController::Base
   def setup_main_menu_items
     return @main_menu_items if @main_menu_items.present? && !@signed_in
 
-    main_menu_items ||= MenuItem.where(menu_type: "Main", parent_id: nil)
+    main_menu_items ||= MenuItem.publicly_enabled.where(menu_type: "Main", parent_id: nil)
                                 .order(:menu_order)
                                 .includes(:sub_items)
                                 .references(:sub_items)
@@ -171,7 +171,7 @@ class ApplicationController < ActionController::Base
   def setup_footer_items
     return @footer_items if @footer_items.present? && !@signed_in
 
-    footer_items ||= FooterItem.where(parent_id: nil)
+    footer_items ||= FooterItem.publicly_enabled.where(parent_id: nil)
                                .order(:footer_order)
                                .includes(:sub_items)
                                .references(:sub_items)

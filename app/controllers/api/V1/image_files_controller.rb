@@ -10,7 +10,7 @@ module Api
       before_action :set_image, only: %i[ update destroy ]
 
       def index
-        @q          = ImageFile.ransack(params[:q]) # Initialize Ransack search object
+        @q          = (params[:public_view] == "true" ? ImageFile.enabled : ImageFile.all).ransack(params[:q]) # Initialize Ransack search object
         image_files = @q.result(distinct: true).order(:slide_order) # Add ordering by caption
 
         @pagy, @image_files = pagy(image_files, limit: params[:limit] || 100)
@@ -28,6 +28,7 @@ module Api
           image_file = ImageFile.find(params[:id])
         end
 
+        image_file = nil if params[:public_view] == "true" && image_file&.enabled == false
         render json: image_file
       end
 
@@ -109,7 +110,7 @@ module Api
       end
 
       def image_params
-        params.require(:image_file).permit(:name, :caption, :description, :mime_type, :image) # Change image_file -> image
+        params.require(:image_file).permit(:enabled, :name, :caption, :description, :mime_type, :image) # Change image_file -> image
       end
     end
   end

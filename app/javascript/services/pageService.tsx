@@ -31,6 +31,7 @@ export function getPages(query: string | null, limit: number, setError: SetError
 
 export function newPage(params: Partial<Page> = {}): Page {
   return {
+    enabled:     params.enabled ?? true,
     name:        params.name,
     section:     params.section,
     title:       params.title,

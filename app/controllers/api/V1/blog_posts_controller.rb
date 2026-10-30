@@ -12,6 +12,7 @@ module Api
                      else
                        BlogPost.publicly_visible
                      end
+        blog_posts = blog_posts.enabled unless params[:admin_view] == "true" && @application_user&.admin?
         blog_posts = blog_posts.where(blog_type: params[:blog_type]) if params[:blog_type].present?
 
         # Apply Ransack search on the filtered results
@@ -28,7 +29,7 @@ module Api
         if params[:include_comments]
           render json: {
             meta: pagy_metadata(@pagy),
-            blog_posts: @blog_posts.as_json(include: :post_comments)
+            blog_posts: @blog_posts.map { |post| post.as_json.merge("post_comments" => post.post_comments.enabled.as_json) }
           }
         else
           render json: {
@@ -42,7 +43,7 @@ module Api
         return unless @blog.present?
 
         if params[:include_comments]
-          render json: @blog.as_json(include: :post_comments)
+          render json: @blog.as_json.merge("post_comments" => @blog.post_comments.enabled.as_json)
         else
           render json: @blog
         end
@@ -93,6 +94,7 @@ module Api
 
         begin
           posts = action_name == "show" && !signed_in? ? BlogPost.publicly_visible : BlogPost.all
+          posts = posts.enabled if action_name == "show"
           @blog = posts.find(params[:id])
         rescue ActiveRecord::RecordNotFound
           render json: { error: "Blog post: #{params[:id]} not found" }, status: :not_found
@@ -100,7 +102,7 @@ module Api
       end
 
       def blog_params
-        params.require(:blog_post).permit(:visibility, :blog_type, :title, :author, :posted, :content)
+        params.require(:blog_post).permit(:enabled, :visibility, :blog_type, :title, :author, :posted, :content)
       end
     end
   end

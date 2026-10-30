@@ -157,7 +157,7 @@ class Admin::CellsController < Admin::AbstractAdminController
   end
 
   def get_params
-    attributes = params.require(:cell).permit(
+    attributes = params.require(:cell).permit(:enabled,
       :section_id, :section_name, :cell_name, :cell_type, :cell_order,
       :content, :image, :link, :width, :checksum,
       formatting: {},

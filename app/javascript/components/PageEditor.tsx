@@ -1,3 +1,4 @@
+import EnabledSwitch from "./EnabledSwitch";
 // app/javascript/components/PageEditor.tsx
 
 import ErrorBoundary from "./ErrorBoundary";
@@ -256,6 +257,7 @@ const PageEditor: React.FC<PageEditorProps> = ({
             <div className="error-box">{error}</div>
           </div>
         )}
+        <EnabledSwitch enabled={pageData?.enabled} onChange={enabled => setPageData(previous => previous ? { ...previous, enabled } : previous)} />
         {renderTitle(pageData.title, setValue)}
         {renderPageName(pageData.name, setValue)}
         <div className="row mb-2">

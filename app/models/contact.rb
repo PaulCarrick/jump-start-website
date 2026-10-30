@@ -1,5 +1,6 @@
 # /app/models/contacts.rb
 class Contact < ActiveRecord::Base
+  include Enableable
   validates :name, :message, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validate :unique_combination

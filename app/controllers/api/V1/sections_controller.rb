@@ -100,7 +100,7 @@ module Api
 
         section[:cells_attributes] = section.delete(:cells) if section[:cells].present?
 
-        section.permit(
+        section.permit(:enabled,
           :content_type,
           :section_name,
           :section_group,
@@ -114,7 +114,7 @@ module Api
           image_attributes: {},
           text_attributes:  {},
           formatting:       {},
-          cells_attributes: [
+          cells_attributes: [ :enabled,
                               :id,
                               :section_name,
                               :cell_name,

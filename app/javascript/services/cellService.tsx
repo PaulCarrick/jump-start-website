@@ -85,6 +85,7 @@ export function getCells(
 
 export function newCell(params: Partial<Cell> = {}): Cell {
   return {
+    enabled: params.enabled ?? true,
     id: -1,
     cell_name: params.cell_name || "new-cell",
     section_name: params.section_name || "section-name",

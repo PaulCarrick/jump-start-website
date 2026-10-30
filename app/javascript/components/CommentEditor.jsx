@@ -1,3 +1,4 @@
+import EnabledSwitch from "./EnabledSwitch";
 // /app/javascript/components/CommentEditor.jsx
 // noinspection JSUnusedLocalSymbols
 
@@ -22,6 +23,8 @@ const CommentEditor = ({
   const [content, setContent] = useState(comment?.content || ''); // Use existing content if editing
   const [posted, setPosted] = useState(comment?.posted || new Date().toISOString()); // Set posted if editing, otherwise use now
 
+  const [enabled, setEnabled] = useState(comment?.enabled !== false);
+
   const handleSubmit = () => {
     const getCsrfToken = () => {
       return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
@@ -40,7 +43,7 @@ const CommentEditor = ({
         'X-CSRF-Token': getCsrfToken(), // Include the CSRF token here
       },
       body: JSON.stringify({
-        post_comment: { blog_post_id: blogPostId, title, author, content, posted }, // Include all fields
+        post_comment: { enabled, blog_post_id: blogPostId, title, author, content, posted }, // Include all fields
       }),
     })
       .then((response) => {
@@ -76,6 +79,7 @@ const CommentEditor = ({
         className="form-control mb-2"
         readOnly
       />
+      <EnabledSwitch enabled={enabled} onChange={setEnabled} />
       <ReactQuill value={content} onChange={setContent} />
       <div className="mt-3">
         <button onClick={handleSubmit} className="btn btn-primary me-2">

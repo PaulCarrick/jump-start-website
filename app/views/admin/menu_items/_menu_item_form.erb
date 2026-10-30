@@ -5,6 +5,7 @@
               method: controller.get_item.persisted? ? :patch : :post,
               local:  true,
               html: { onsubmit: 'return validate(this)' }) do |form| %>
+  <%= render "shared/enabled_switch", form: form %>
   <%= hidden_field_tag :return_url, admin_return_url %>
 
   <h1>

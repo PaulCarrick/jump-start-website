@@ -65,7 +65,7 @@ class ContactsController < ApplicationController
   end
 
   def show
-    @contact = Contact.find(params[:id])
+    @contact = Contact.enabled.find(params[:id])
     @results = @contact.submit_information
   end
 

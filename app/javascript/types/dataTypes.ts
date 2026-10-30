@@ -34,6 +34,7 @@ export type CellFormatting = {
 }
 
 export type Cell = {
+  enabled?: boolean;
   cell_name: string;
   index?: number | null;
   id?: number | null;
@@ -50,6 +51,7 @@ export type Cell = {
 };
 
 export type Section = {
+  enabled?: boolean;
   index?: number | null;
   id?: number | null;
   section_name: string;
@@ -68,6 +70,7 @@ export type Section = {
 };
 
 export type Page = {
+  enabled?: boolean;
   id?: number | null;
   name?: string | null;
   section?: string | null;
@@ -79,6 +82,7 @@ export type Page = {
 };
 
 export type ImageFile = {
+  enabled?: boolean;
   index?: number | null;
   id?: number | null;
   name: string;
@@ -91,6 +95,7 @@ export type ImageFile = {
 }
 
 export type MenuItem = {
+  enabled?: boolean;
   id?: number | null;
   label?: string | null;
   menu_type?: string | null;
@@ -105,6 +110,7 @@ export type MenuItem = {
 }
 
 export type FooterItem = {
+  enabled?: boolean;
   id?: number | null;
   label?: string | null;
   icon?: string | null;

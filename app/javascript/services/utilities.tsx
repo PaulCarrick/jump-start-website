@@ -9,6 +9,9 @@ export function sendRequest(url: string, setError: SetErrorCallback | null = nul
   const csrfToken  = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content");
   const request    = new XMLHttpRequest();
 
+  if (method === "GET" && !window.location.pathname.startsWith("/admin/")) {
+    url += `${url.includes("?") ? "&" : "?"}public_view=true`;
+  }
   request.open(method, url, false);
   request.setRequestHeader("Content-Type", "application/json");
 

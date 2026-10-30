@@ -206,7 +206,7 @@ class Admin::SectionsController < Admin::AbstractAdminController
   end
 
   def get_params
-    params.require(:section).permit(
+    params.require(:section).permit(:enabled,
       :page_id,
       :content_type,
       :section_name,

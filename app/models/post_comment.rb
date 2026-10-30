@@ -1,4 +1,5 @@
 class PostComment < ApplicationRecord
+  include Enableable
   after_find :verify_checksum, unless: -> { Thread.current[:skip_checksum_verification] }
 
   include Checksum

@@ -82,7 +82,7 @@ module Api
       private
 
       def get_params
-        params.require(:footer_item).permit(
+        params.require(:footer_item).permit(:enabled,
           :id,
           :label,
           :icon,

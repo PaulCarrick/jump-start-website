@@ -85,7 +85,7 @@ module Api
       private
 
       def get_params
-        params.require(:cell).permit(
+        params.require(:cell).permit(:enabled,
           :cell_name,
           :section_name,
           :type,

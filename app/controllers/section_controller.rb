@@ -2,7 +2,7 @@ class SectionController < ApplicationController
   include HtmlSanitizer
 
   def index
-    @q = Section.ransack(params[:q])
+    @q = Section.enabled.joins(:page).where(pages: { enabled: true }).ransack(params[:q])
     @pagy, @results = pagy(@q.result(distinct: true), limit: 3)
     @sections = []
     previous_order = nil
@@ -10,7 +10,7 @@ class SectionController < ApplicationController
     index = 0
 
     @results.each do |section|
-      page = Page.by_section(section.content_type)
+      page = Page.enabled.by_section(section.content_type)
 
       next unless page.present?
 

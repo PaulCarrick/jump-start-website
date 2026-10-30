@@ -4,6 +4,7 @@
               url:    controller.get_item.persisted? ? admin_site_setup_path(controller.get_item) : admin_site_setups_path,
               method: controller.get_item.persisted? ? :patch : :post,
               local:  true) do |form| %>
+  <%= render "shared/enabled_switch", form: form %>
   <%= hidden_field_tag :return_url, admin_return_url %>
 
   <h1>

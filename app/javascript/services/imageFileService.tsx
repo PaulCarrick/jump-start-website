@@ -24,6 +24,7 @@ export function getImageFiles(query: string | null, limit: number, setError: Set
 
 export function newImageFile(params: Partial<ImageFile> = {}): ImageFile {
   return {
+    enabled: params.enabled ?? true,
     name:        params.name || "new-imageFile",
     caption:     params.caption || null,
     description: params.description || null,

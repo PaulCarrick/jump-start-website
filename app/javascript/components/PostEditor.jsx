@@ -1,3 +1,4 @@
+import EnabledSwitch from "./EnabledSwitch";
 // /app/javascript/components/PostEditor.jsx
 // noinspection JSUnusedLocalSymbols
 
@@ -21,6 +22,8 @@ const PostEditor = ({
   const [ posted, setPosted ] = useState(post?.posted || new Date().toISOString());
   const [ visibility, setVisibility ] = useState(post?.visibility || 'public');
 
+  const [enabled, setEnabled] = useState(post?.enabled !== false);
+
   const handleSubmit = () => {
     const getCsrfToken = () => {
       return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
@@ -40,6 +43,7 @@ const PostEditor = ({
       },
       body: JSON.stringify({
                              blog_post: {
+                               enabled,
                                title,
                                author,
                                blog_type,
@@ -67,6 +71,7 @@ const PostEditor = ({
     return (
     <div>
       <h1>{post ? 'Edit Post' : 'Create a New Post'}</h1>
+      <EnabledSwitch enabled={enabled} onChange={setEnabled} />
       <input
         type="text"
         placeholder="Title"

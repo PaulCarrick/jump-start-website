@@ -1,3 +1,4 @@
+import EnabledSwitch from "./EnabledSwitch";
 // app/javascript/components/SectionEditor.tsx
 
 import RenderSection from "./RenderSection";
@@ -195,6 +196,7 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
   if (!hasCells(sectionData)) {
     return (
       <div>
+        <EnabledSwitch enabled={sectionData?.enabled} onChange={enabled => setSectionData(previous => previous ? { ...previous, enabled } : previous)} />
         <GenerateCells
           sectionName={sectionData?.section_name}
           options={options}
@@ -235,7 +237,8 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               <div className="error-box">{error}</div>
             </div>
           )}
-          {renderSectionName(
+          <EnabledSwitch enabled={sectionData?.enabled} onChange={enabled => setSectionData(previous => previous ? { ...previous, enabled } : previous)} />
+        {renderSectionName(
             sectionData?.section_name,
             options.availableSectionNames,
             setValue,

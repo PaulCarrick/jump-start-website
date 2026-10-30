@@ -3,7 +3,7 @@
   column_count = 0
 
   @footer_items.each do |footer_item|
-    next unless footer_item.sub_items.any?
+    next unless footer_item.sub_items.publicly_enabled.any?
     column_count += 1
   end
 
@@ -21,9 +21,9 @@
           <% next if footer_item.access == 'admin' && !controller.current_user_is_admin? %>
           <div class="<%= div_class %>">
             <h2 class="footer-bg footer-text fw-bold h5 text-uppercase <%= div_class %>"><%= footer_item.label %></h2>
-            <% if footer_item.sub_items.any? %>
+            <% if footer_item.sub_items.publicly_enabled.any? %>
               <ul class="footer-bg list-unstyled">
-                <% footer_item.sub_items.each do |sub_item| %>
+                <% footer_item.sub_items.publicly_enabled.each do |sub_item| %>
                   <li>
                     <% next if sub_item.access == 'admin' && !controller.current_user_is_admin? %>
 

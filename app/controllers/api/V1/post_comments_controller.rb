@@ -6,7 +6,7 @@ module Api
       before_action :set_post_comment, only: %i[show update destroy]
 
       def index
-        @pagy, @post_comments = pagy(PostComment.all, items: params[:items] || 10)
+        @pagy, @post_comments = pagy(PostComment.enabled, items: params[:items] || 10)
 
         render json: {
           meta: pagy_metadata(@pagy),
@@ -67,14 +67,14 @@ module Api
         return unless params[:id].present?
 
         begin
-          @post_comment = PostComment.find(params[:id])
+          @post_comment = (action_name == "show" ? PostComment.enabled : PostComment.all).find(params[:id])
         rescue ActiveRecord::RecordNotFound
           render json: { error: "Post comment: #{params[:id]} not found" }, status: :not_found
         end
       end
 
       def post_comment_params
-        params.require(:post_comment).permit(:blog_post_id, :title, :author, :posted, :content)
+        params.require(:post_comment).permit(:enabled, :blog_post_id, :title, :author, :posted, :content)
       end
     end
   end

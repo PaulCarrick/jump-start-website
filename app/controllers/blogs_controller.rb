@@ -5,14 +5,14 @@ class BlogsController < ApplicationController
 
   def index
     @blog_type = params[:blog_type].presence || "Personal"
-    @contents = BlogPost.publicly_visible.where(blog_type: @blog_type).map do |blog|
+    @contents = BlogPost.enabled.publicly_visible.where(blog_type: @blog_type).map do |blog|
       sanitize_html(blog.content)
     end
   end
 
   def show
     @blog_type = params[:blog_type].presence || "Personal"
-    visible_posts = signed_in? ? BlogPost.all : BlogPost.publicly_visible
+    visible_posts = signed_in? ? BlogPost.enabled : BlogPost.enabled.publicly_visible
 
     if params[:id] == "latest"
       @blog = visible_posts.where(blog_type: @blog_type).order(posted: :desc).first

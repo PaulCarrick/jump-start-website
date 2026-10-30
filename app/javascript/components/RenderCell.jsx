@@ -32,6 +32,7 @@ const RenderCell = ({
 }) => {
   if (cell === null) return null; // We can't render what we don't have
 
+  if (cell.enabled === false && !window.location.pathname.startsWith("/admin/")) return null;
   const cellData = dupObject(cell);
   const processedCell = processCell(cellData);
 

@@ -3,6 +3,7 @@
               url:    @user.persisted? ? admin_user_path(@user) : admin_users_path,
               method: @user.persisted? ? :patch : :post,
               local:  true) do |form| %>
+  <%= render "shared/enabled_switch", form: form %>
   <%= hidden_field_tag :return_url, admin_return_url %>
   <h1>
     <% if @user.persisted? %>

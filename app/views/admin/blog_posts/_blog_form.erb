@@ -6,6 +6,7 @@
               local:  true,
               html:   { onsubmit: 'return validate(this)' }) do |form|
 %>
+  <%= render "shared/enabled_switch", form: form %>
   <%= hidden_field_tag :return_url, admin_return_url %>
   <%= form.hidden_field :content, id: "blog_post_content", name: "blog_post[content]" %>
   <%= form.hidden_field :posted, value: controller.get_item&.posted.present? ? controller.get_item.posted : DateTime.now %>
