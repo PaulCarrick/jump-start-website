@@ -60,7 +60,10 @@ module PublishingRequests
     end
     PublishingContext.live = true
     # Resolve authentication from the live user before entering the workspace.
-    user = current_user if respond_to?(:current_user)
+    # Devise must verify CSRF before Warden authenticates posted credentials.
+    # Eager current_user here can authenticate and reset the token before that
+    # verification, causing every browser login to fail with a 422 response.
+    user = current_user if respond_to?(:current_user) && !devise_controller?
     if controller_path.start_with?('api/') && %w[create update destroy].include?(action_name) && !%w[blog_posts post_comments].include?(controller_name) && !user&.admin?
       render json: { errors: [ 'Administrator access is required to change content.' ] }, status: :forbidden
       return
