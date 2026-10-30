@@ -5,6 +5,11 @@
               method: controller.get_item.persisted? ? :patch : :post,
               local:  true,
               html: { onsubmit: 'return validate(this)' }) do |form| %>
+  <% read_only = form.object.admin_navigation_read_only? %>
+  <% if read_only %>
+    <p class="text-muted">Items linking to /admin are read-only.</p>
+  <% end %>
+  <fieldset <%= 'disabled' if read_only %>>
   <%= render "shared/enabled_switch", form: form %>
   <%= hidden_field_tag :return_url, admin_return_url %>
 
@@ -91,8 +96,9 @@
   <div class="pb-3">
     * - Required Fields
   </div>
+  </fieldset>
   <div class="mb-3">
-    <%= form.submit "Save Menu Item", class: "btn btn-primary me-3", disabled: !@application_user.admin?  %>
+    <%= form.submit "Save Menu Item", class: "btn #{read_only ? 'btn-secondary admin-navigation-readonly' : 'btn-primary'} me-3", disabled: read_only || !@application_user.admin?  %>
     <%= link_to("Cancel", admin_return_url, class: "btn btn-secondary", target: "_self") %>
   </div>
 <% end %>

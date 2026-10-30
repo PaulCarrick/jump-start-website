@@ -4,6 +4,7 @@
 class MenuItem < ApplicationRecord
   include Enableable
   include BitemporalRecord
+  include AdminNavigationProtection
   has_many :sub_items, class_name: "MenuItem", foreign_key: "parent_id", primary_key: :id, inverse_of: :parent
   belongs_to :parent, class_name: "MenuItem", optional: true, primary_key: :id, foreign_key: :parent_id, inverse_of: :sub_items
   belongs_to :page, class_name: "Page", optional: true, primary_key: :id, foreign_key: :page_id, inverse_of: :menu_item

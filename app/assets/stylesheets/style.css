@@ -397,3 +397,11 @@ body .admin-main .admin-column-heading {
   background-color: #eceef1;
   border-color: #eceef1;
 }
+
+/* Protected admin navigation uses a neutral disabled Save button. */
+body .btn.admin-navigation-readonly:disabled {
+  color: #6c757d;
+  background-color: #e2e3e5;
+  border-color: #d3d6d8;
+  opacity: 1;
+}
