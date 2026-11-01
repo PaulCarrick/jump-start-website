@@ -187,15 +187,16 @@ const PostList = ({
                 {post.author === user.name && (
                   <>
                     <button
+                      type="button"
                       onClick={() => openPostEditor(post)}
-                      className="btn-link me-2"
+                      className="btn btn-primary me-2"
                     >
                       Edit
                     </button>
                     <button
+                      type="button"
                       onClick={() => handlePostDelete(post.id)}
-                      className="btn-link me-2"
-                      style={{ color: 'red' }}
+                      className="btn btn-danger me-2"
                     >
                       Delete
                     </button>
@@ -230,17 +231,18 @@ const PostList = ({
                         <div className="col-3 text-end">
                           {user.logged_in && comment.author === user.name && (
                             <button
+                              type="button"
                               onClick={() => openCommentEditor(post, comment)}
-                              className="btn-link me-2"
+                              className="btn btn-primary me-2"
                             >
                               Edit
                             </button>
                           )}
                           {comment.author === user.name && (
                             <button
+                              type="button"
                               onClick={() => handleCommentDelete(comment.id)}
-                              className="btn-link me-2"
-                              style={{ color: 'red' }}
+                              className="btn btn-danger me-2"
                             >
                               Delete
                             </button>
