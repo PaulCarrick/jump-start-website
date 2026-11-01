@@ -69,6 +69,7 @@ Rails.application.routes.draw do
     resources :footer_items, except: [ :destroy ]
     delete "/footer_items/:id", to: "footer_items#destroy", as: "delete_footer_item"
     get "/footer_items/:id/delete", to: "footer_items#destroy", as: "destroy_footer_item"
+    post '/publishing/database_sync/:id', to: 'publishing#retry_databases', as: :retry_database_sync
     resources :site_setups, except: [ :destroy ]
     delete "/site_setups/:id", to: "site_setups#destroy", as: "delete_site_setup"
     get "/site_setups/:id/delete", to: "site_setups#destroy", as: "destroy_site_setup"

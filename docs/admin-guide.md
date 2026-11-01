@@ -209,7 +209,7 @@ New users need a password and confirmation. When editing an existing user, leave
 
 ## Site setups
 
-Site setups contain the website's configuration. The required **Database** field stores a database name and defaults to `paul-carrick`. It is informational at this stage; changing it does not switch the application's database connection.
+Site setups contain the website's configuration. The required **Database** field stores a database name and defaults to `paul-carrick`. Deploying a new non-default setup provisions that database and its initial accounts; saving a draft does not. Deploying any Site Setup change synchronizes the setup catalog to all managed databases. See [Site databases](site-databases.md) for USER_PASSWORD, permissions, and recovery steps. Requests select a site by its Site URL hostname and longest matching path prefix. The default setup keeps the original application database connection.
 
 The form groups information such as:
 

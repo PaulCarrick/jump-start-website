@@ -1,3 +1,4 @@
+import { sitePathname } from "../sitePath";
 // /app/javascripts/components/RenderCell.jsx
 // noinspection RegExpRedundantEscape
 
@@ -32,7 +33,7 @@ const RenderCell = ({
 }) => {
   if (cell === null) return null; // We can't render what we don't have
 
-  if (cell.enabled === false && !window.location.pathname.startsWith("/admin/")) return null;
+  if (cell.enabled === false && !sitePathname().startsWith("/admin/")) return null;
   const cellData = dupObject(cell);
   const processedCell = processCell(cellData);
 
@@ -125,7 +126,7 @@ function renderCell(
                   href={(() => {
                     const url = new URL(urls.edit.url, window.location.origin);
                     const caller = new URL(window.location.href);
-                    if (caller.pathname.startsWith("/admin/pages/")) {
+                    if (sitePathname().startsWith("/admin/pages/")) {
                       caller.searchParams.set("section_name", cell.section_name);
                       const parentReturn = document.querySelector('input[name="return_url"]')?.value;
                       if (parentReturn) caller.searchParams.set("return_url", parentReturn);

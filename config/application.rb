@@ -24,6 +24,9 @@ Bundler.require(*Rails.groups)
 module RailsWebsite
   class Application < Rails::Application
     config.active_record.schema_format = :sql
+    # A managed database contains its own ownership marker. Never overwrite the
+    # repository's canonical SQL schema with a tenant schema during bulk upgrades.
+    config.active_record.dump_schema_after_migration = false if ENV['SITE_DATABASE_MIGRATION'] == 'true'
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
 

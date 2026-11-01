@@ -47,6 +47,7 @@ RSpec.describe "Admin Site Setups", type: :system do
         fill_in "site_setup[configuration_name]", with: "alternate"
         fill_in "site_setup[owner_name]", with: "Test User"
         fill_in "site_setup[site_name]", with: "Test"
+        fill_in "site_setup[database]", with: "new-site-database"
         fill_in "site_setup[site_domain]", with: "example.com"
         fill_in "site_setup[site_host]", with: "example.com"
         fill_in "site_setup[site_url]", with: "https://example.com"
@@ -73,8 +74,9 @@ RSpec.describe "Admin Site Setups", type: :system do
       end
 
       it "updates the site setup successfully" do
-        fill_in "site_setup[owner_name]", with: "Example User"
         fill_in "site_setup[site_name]", with: "Example"
+        find_field("site_setup[site_name]").send_keys(:tab)
+        fill_in "site_setup[owner_name]", with: "Example User"
 
         click_button "Save Site Setup"
 

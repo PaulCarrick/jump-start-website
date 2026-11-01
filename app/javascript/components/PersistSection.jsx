@@ -2,6 +2,7 @@
 
 import React from "react";
 import axios from "axios";
+import { sitePath } from "../sitePath";
 
 function createSection() {
   const data = {
@@ -11,7 +12,7 @@ function createSection() {
     other_field: "value" // Add other required parameters here
   };
 
-  axios.post("/admin/sections", data, {
+  axios.post(sitePath("/admin/sections"), data, {
     headers: {
       "Content-Type": "application/json", // Ensure JSON content type
       "X-CSRF-Token": document.querySelector('[name="csrf-token"]').content, // Include CSRF token for security

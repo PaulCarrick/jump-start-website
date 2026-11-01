@@ -1,5 +1,5 @@
 # /app/models/contacts.rb
-class Contact < ActiveRecord::Base
+class Contact < ApplicationRecord
   include Enableable
   include BitemporalRecord
   validates :name, :message, presence: true

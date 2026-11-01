@@ -1,3 +1,4 @@
+import { sitePath } from "../sitePath";
 // app/javascript/components/NavMenu.jsx
 
 import React from 'react';
@@ -37,7 +38,7 @@ const NavMenu = ({menuItems = []}) => {
                   <ul className="dropdown-menu" aria-labelledby={`navbarDropdown-${index}`}>
                     {item.sub_items.map((subItem, subIndex) => (
                       <li key={subIndex}>
-                        <a className="dropdown-item" href={subItem.link}>
+                        <a className="dropdown-item" href={sitePath(subItem.link)}>
                           {subItem.label}
                         </a>
                       </li>
@@ -49,7 +50,7 @@ const NavMenu = ({menuItems = []}) => {
                 (item.options === "image-file") ? (
                   <img src={item.icon} alt={item.icon} style={{ paddingTop: '20px' }} />
                 ) : (
-                  <a className="nav-link px-lg-3 py-lg-4 text-uppercase" href={item.link}>
+                  <a className="nav-link px-lg-3 py-lg-4 text-uppercase" href={sitePath(item.link)}>
                     {item.label}
                   </a>
                 )

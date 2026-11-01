@@ -4,14 +4,30 @@ class Admin::PublishingController < ApplicationController
 
   def index
     @pending = Publishing.pending
+    @database_syncs = SiteContext.catalog? ? SiteDatabaseSyncRequest.where.not(status: 'completed').order(:id) : []
     @deployments = Deployment.order(created_at: :desc).limit(30)
   end
 
   def deploy
     deployment = Publishing.deploy!(actor: current_user, summary: params[:summary].to_s.truncate(1000))
-    redirect_to admin_publishing_path, notice: "Changes deployed successfully (deployment #{deployment.id}).", status: :see_other
+    sync = SiteDatabaseSyncRequest.find_by(deployment_id: deployment.id) if SiteContext.catalog?
+    if sync && sync.status != 'completed'
+      redirect_to admin_publishing_path, alert: "Content deployed (deployment #{deployment.id}), but site database synchronization is pending. Review the status below and retry.", status: :see_other
+    else
+      redirect_to admin_publishing_path, notice: "Changes deployed successfully (deployment #{deployment.id}).", status: :see_other
+    end
   rescue Publishing::Conflict, ActiveRecord::ActiveRecordError => e
     redirect_to admin_publishing_path, alert: publishing_error_message(e, prefix: 'Nothing was deployed'), status: :see_other
+  end
+
+  def retry_databases
+    return head :forbidden if SiteContext.tenant?
+    request = SiteDatabaseSyncRequest.find(params[:id])
+    if request.run!
+      redirect_to admin_publishing_path, notice: 'Site databases synchronized successfully.', status: :see_other
+    else
+      redirect_to admin_publishing_path, alert: 'Site database synchronization is still pending. See its status below.', status: :see_other
+    end
   end
 
   def discard
@@ -20,7 +36,7 @@ class Admin::PublishingController < ApplicationController
   end
 
   def restore
-    model = BitemporalRecord::MODELS.find { |name| name == params[:model] }&.constantize
+    model = Publishing.models.find { |model| model.name == params[:model] }
     raise ActiveRecord::RecordNotFound unless model
     Publishing.restore!(model: model, id: Integer(params[:record_id]), version: Integer(params[:version]), recorded_at: params[:recorded_at].presence && Time.iso8601(params[:recorded_at]))
     redirect_to admin_publishing_path, notice: 'Historical version restored as a draft. Deploy it after review.', status: :see_other
@@ -29,7 +45,7 @@ class Admin::PublishingController < ApplicationController
   end
 
   def history
-    model = BitemporalRecord::MODELS.find { |name| name == params[:model] }&.constantize
+    model = Publishing.models.find { |model| model.name == params[:model] }
     raise ActiveRecord::RecordNotFound unless model
     @model = model
     @record_id = Integer(params[:record_id])

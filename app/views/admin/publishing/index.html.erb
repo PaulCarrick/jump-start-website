@@ -40,6 +40,15 @@
     <% end %>
     <%= button_to 'Discard All Drafts', admin_discard_publishing_path, method: :post, class: 'btn btn-danger mt-3', form: { data: { turbo_confirm: 'Discard all pending changes? Live content will stay unchanged.' } } %>
   <% end %>
+  <% if @database_syncs.any? %>
+    <h2 class="mt-4">Site database synchronization</h2>
+    <% @database_syncs.each do |sync| %>
+      <div class="alert alert-warning">
+        <p>Deployment #<%= sync.deployment_id %> — <%= sync.status.humanize %>. <%= sync.error_message %></p>
+        <%= button_to 'Retry Database Sync', admin_retry_database_sync_path(sync), method: :post, class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+  <% end %>
   <h2 class="mt-4">Recent deployments</h2>
   <% @deployments.each do |deployment| %>
     <p><strong>#<%= deployment.id %></strong> — <%= deployment.effective_at %> — <%= deployment.summary %></p>

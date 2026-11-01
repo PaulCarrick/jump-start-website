@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="site-mount" content="<%= request.script_name %>" data-turbo-track="reload">
   <%= csrf_meta_tags %>
   <% if controller.controller_path.start_with?("admin/") && @application_user&.admin? %>
     <meta name="admin-image-create" content="true">

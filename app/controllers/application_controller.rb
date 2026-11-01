@@ -50,7 +50,8 @@ class ApplicationController < ActionController::Base
   private
 
   def setup_site
-    @site_information = SiteSetup.enabled.find_by(default_setup: true)
+    @site_information = SiteContext.setup_id ? SiteSetup.enabled.find_by(id: SiteContext.setup_id) : nil
+    @site_information ||= SiteSetup.enabled.find_by(default_setup: true)
 
     unless @site_information.present?
       @site_information = SiteSetup.enabled.first
@@ -167,6 +168,7 @@ class ApplicationController < ActionController::Base
                                 .includes(:sub_items)
                                 .references(:sub_items)
                                 .order("menu_items.menu_order", "sub_items_menu_items.menu_order")
+    @admin_menu_items = @admin_menu_items.where.not("menu_items.link LIKE '/admin/site_setups%'") if SiteContext.tenant?
   end
 
   def setup_footer_items

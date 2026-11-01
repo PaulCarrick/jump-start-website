@@ -2,7 +2,8 @@ class Publishing
   class Conflict < StandardError; end
 
   def self.models
-    BitemporalRecord::MODELS.map(&:constantize)
+    names = SiteContext.tenant? ? BitemporalRecord::MODELS - ['SiteSetup'] : BitemporalRecord::MODELS
+    names.map(&:constantize)
   end
 
   def self.pending
@@ -11,12 +12,22 @@ class Publishing
 
   def self.deploy!(actor:, summary:)
     raise SecurityError, 'Administrator access is required' unless actor&.admin?
-    ApplicationRecord.transaction do
+    deployment = ApplicationRecord.transaction do
       # Serialize deployment and discard, and lock the actual draft rows. The
       # model callbacks also lock identity anchors when creating a draft.
       ApplicationRecord.connection.execute('SELECT pg_advisory_xact_lock(87342, 1)')
       drafts = models.flat_map { |model| model.pending_versions.order(:id).lock.to_a }
       raise Conflict, 'There are no pending changes.' if drafts.empty?
+      site_setup_changes = drafts.any? { |draft| draft.is_a?(SiteSetup) }
+      if site_setup_changes
+        begin
+          provisioner = SiteDatabaseProvisioner.new
+          provisioner.preflight!
+          provisioner.enroll!
+        rescue SiteDatabaseProvisioner::Error => error
+          raise Conflict, error.message
+        end
+      end
       now = Time.current
       deployment = Deployment.create!(actor_id: actor.id, effective_at: now, summary: summary)
       old_context = PublishingContext.deploying
@@ -57,11 +68,19 @@ class Publishing
           end
         end
       end
+      SiteDatabaseSyncRequest.create!(deployment_id: deployment.id) if site_setup_changes
       deployment
     ensure
       PublishingContext.deploying = old_context
       PublishingContext.live = old_live unless old_live.nil?
     end
+    # PostgreSQL database creation is outside the content transaction. Persist the
+    # synchronization request first so failures/crashes are explicitly retryable.
+    if SiteContext.catalog?
+      SiteDatabaseSyncRequest.find_by(deployment_id: deployment.id)&.run!
+      SiteRoutes.clear!
+    end
+    deployment
   end
 
   SENSITIVE = %w[encrypted_password password reset_password_token reset_password_sent_at remember_created_at smtp_password captcha_secret_key].freeze
@@ -71,11 +90,12 @@ class Publishing
   end
 
   def self.restore!(model:, id:, version:, recorded_at: nil)
+    previous = PublishingContext.editing
+    raise ActiveRecord::RecordNotFound unless models.include?(model)
     versions = model.history.where(id: id, version: version)
     versions = versions.where('system_period @> ?::timestamptz', recorded_at) if recorded_at
     historical = versions.order(system_period: :desc).first!
     record = model.pending_versions.find_by(id: id) || model.live_versions.find_by(id: id) || raise(ActiveRecord::RecordNotFound)
-    previous = PublishingContext.editing
     PublishingContext.editing = true
     record.assign_attributes(review_attributes(historical))
     record.temporal_deleted = false

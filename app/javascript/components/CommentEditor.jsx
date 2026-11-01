@@ -1,3 +1,4 @@
+import { siteFetch, sitePath } from "../sitePath";
 import EnabledSwitch from "./EnabledSwitch";
 // /app/javascript/components/CommentEditor.jsx
 // noinspection JSUnusedLocalSymbols
@@ -36,7 +37,7 @@ const CommentEditor = ({
 
     const method = comment ? 'PUT' : 'POST'; // Use PUT for updates, POST for new
 
-    fetch(url, {
+    siteFetch(url, {
       method,
       headers: {
         'Content-Type': 'application/json',
@@ -53,7 +54,7 @@ const CommentEditor = ({
           if (closeEditor) closeEditor();
 
           // Redirect to the parent blogs post or refresh comments
-          window.location.href = `/blog`;
+          window.location.href = sitePath(`/blog`);
         } else {
           console.error('Failed to save comment');
         }

@@ -1,3 +1,5 @@
+import { siteHtml } from "../sitePath";
+import { siteFetch, sitePath } from "../sitePath";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'; // Assuming you're using React Router for navigation
 
@@ -9,7 +11,7 @@ const PostDetail = () => {
 
   useEffect(() => {
     // Fetch the post by ID from the Rails API
-    fetch(`/api/posts/${id}`)
+    siteFetch(`/api/posts/${id}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Failed to fetch the post');
@@ -41,7 +43,7 @@ const PostDetail = () => {
   return (
     <div>
       <h1>{post.title}</h1>
-      <div dangerouslySetInnerHTML={{ __html: post.content }} />
+      <div dangerouslySetInnerHTML={{ __html: siteHtml(post.content) }} />
     </div>
   );
 };

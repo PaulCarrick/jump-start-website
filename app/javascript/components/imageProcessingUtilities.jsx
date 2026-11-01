@@ -1,3 +1,4 @@
+import { sitePath } from "../sitePath";
 // /app/javascript/components/image{processingUtilities.jsx
 
 import {isPresent} from "./utilities";
@@ -114,7 +115,7 @@ export function getImageFiles(query) {
   try {
     const xhr = new XMLHttpRequest();
 
-    xhr.open("GET", `/api/v1/image_files?${query}`, false);
+    xhr.open("GET", sitePath(`/api/v1/image_files?${query}`), false);
     xhr.send();
 
     if (xhr.status === 200)

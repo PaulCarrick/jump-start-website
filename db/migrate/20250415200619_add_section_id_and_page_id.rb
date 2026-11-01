@@ -66,6 +66,12 @@ class AddSectionIdAndPageId < ActiveRecord::Migration[8.0]
 
     Section.find_each do |section|
       page = Page.find_by(section: section.content_type)
+      unless page
+        # Legacy sites sometimes used "home" for sections and "Home" for pages.
+        # Only infer a case-insensitive relationship when it is unambiguous.
+        matches = Page.where('LOWER(section) = LOWER(?)', section.content_type).limit(2).to_a
+        page = matches.first if matches.one?
+      end
 
       if page.present?
         section.update_columns(page_id: page.id)

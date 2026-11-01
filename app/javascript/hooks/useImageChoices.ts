@@ -1,3 +1,4 @@
+import { siteFetch, sitePath } from "../sitePath";
 import { useCallback, useEffect, useState } from "react";
 
 type Choices = { images: string[]; videos: string[]; groups: string[] };
@@ -18,7 +19,7 @@ export function useImageChoices() {
   }, []);
   const reload = useCallback(async () => {
     try {
-      const response = await fetch("/admin/image_files?image_picker_choices=true", { headers: { Accept: "application/json" } });
+      const response = await siteFetch("/admin/image_files?image_picker_choices=true", { headers: { Accept: "application/json" } });
       if (!response.ok) throw new Error("Image choices could not be refreshed. Please try again.");
       const catalog: Choices = await response.json();
       cached = { location: window.location.href, choices: catalog };

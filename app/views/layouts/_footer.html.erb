@@ -28,7 +28,7 @@
                     <% next if sub_item.access == 'admin' && !controller.current_user_is_admin? %>
 
                     <% if sub_item.options == "image-file" %>
-                      <a href="<%= sub_item[:link] %>" target="_self">
+                      <a href="<%= site_local_path(sub_item[:link]) %>" target="_self">
                         <%= image_tag sub_item.icon,
                                       alt:   sub_item.label,
                                       class: "footer-bg footer-text nav-link px-lg-3 py-lg-4 text-uppercase"
@@ -36,7 +36,7 @@
                       </a>
                     <% else %>
                       <%= link_to sub_item[:label],
-                                  sub_item[:link],
+                                  site_local_path(sub_item[:link]),
                                   class:  "footer-bg footer-text text-decoration-none",
                                   target: "_self"
                       %>
@@ -46,7 +46,7 @@
               </ul>
             <% else %>
               <% if footer_item.options == "image-file" %>
-                <a href="<%= footer_item[:link] %>" target="_self">
+                <a href="<%= site_local_path(footer_item[:link]) %>" target="_self">
                   <%= image_tag footer_item.icon,
                                 alt:   footer_item.label,
                                 class: "footer-bg footer-text nav-link px-lg-3 py-lg-4 text-uppercase"
@@ -54,7 +54,7 @@
                 </a>
               <% else %>
                 <%= link_to footer_item[:label],
-                            footer_item[:link],
+                            site_local_path(footer_item[:link]),
                             class:  "footer-bg footer-text text-decoration-none",
                             target: "_self"
                 %>

@@ -1,3 +1,4 @@
+import { sitePath } from "../sitePath";
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -36,7 +37,7 @@ export default function NewImageButton({ onReturn }: { onReturn: () => void }) {
           <button type="button" className="btn btn-secondary" onClick={close}>Cancel</button>
         </div>
         <iframe ref={frame} title="New Image form"
-                src="/admin/image_files/new?return_url=%2Fadmin%2Fimage_files%3Fimage_picker_complete%3Dtrue"
+                src={sitePath(`/admin/image_files/new?return_url=${encodeURIComponent(sitePath("/admin/image_files?image_picker_complete=true"))}`)}
                 style={{ width: "100%", height: "75vh", border: 0 }} />
       </dialog>, document.body)}
   </>;

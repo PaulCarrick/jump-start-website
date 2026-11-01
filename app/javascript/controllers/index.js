@@ -9,3 +9,6 @@ application.register("menu-controller", MenuController)
 
 import NavigationController from "./navigation_controller"
 application.register("navigation", NavigationController)
+
+import SiteSetupController from "./site_setup_controller"
+application.register("site-setup", SiteSetupController)

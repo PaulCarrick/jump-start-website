@@ -1,3 +1,4 @@
+import { siteFetch, sitePath } from "../sitePath";
 import EnabledSwitch from "./EnabledSwitch";
 // /app/javascript/components/PostEditor.jsx
 // noinspection JSUnusedLocalSymbols
@@ -35,7 +36,7 @@ const PostEditor = ({
 
     const method = post ? 'PUT' : 'POST'; // Use PUT for updates, POST for new
 
-    fetch(url, {
+    siteFetch(url, {
       method: method,
       headers: {
         'Content-Type': 'application/json',
@@ -60,7 +61,7 @@ const PostEditor = ({
           console.log('Post saved successfully!');
           // noinspection JSValidateTypes
             closeEditor(); // Close the editor on success
-          window.location.href = '/blogs'; // Redirect to the blogs page
+          window.location.href = sitePath('/blogs'); // Redirect to the blogs page
         }
         else {
           console.error('Failed to save post');

@@ -5,7 +5,7 @@ async function fetchGroups() {
   const groupSelectContainer = document.getElementById("group-select-container");
 
   try {
-    const response = await fetch("/api/v1/image_files/groups");
+    const response = await fetch((document.querySelector('meta[name="site-mount"]')?.content || '') + "/api/v1/image_files/groups");
 
     if (!response.ok) {
       throw new Error("Failed to fetch groups");

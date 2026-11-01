@@ -9,7 +9,12 @@ name = "jump_start_temporal_rehearsal_#{Process.pid}_#{Time.now.to_i}_test"
 raise 'Unsafe rehearsal database name' unless name.match?(/\Ajump_start_temporal_rehearsal_\d+_\d+_test\z/)
 ActiveRecord::Base.connection.execute("CREATE DATABASE #{ActiveRecord::Base.connection.quote_column_name(name)}")
 begin
-  ActiveRecord::Base.establish_connection(original_config.merge(database: name))
+  rehearsal_config = original_config.merge(database: name)
+  ActiveRecord::Base.establish_connection(rehearsal_config)
+  ApplicationRecord.connects_to shards: { default: { writing: rehearsal_config } }
+  BitemporalRecord::MODELS.each do |model|
+    raise "Unsafe rehearsal connection for #{model}" unless model.constantize.connection_db_config.database == name
+  end
   ActiveRecord::Migration.verbose = false
   load Rails.root.join('spec/fixtures/pre_temporal_schema.rb')
   BitemporalRecord::MODELS.each { |model| model.constantize.reset_column_information; model.constantize.query_constraints :id }
@@ -52,6 +57,12 @@ begin
       raise "Database field was not backfilled in #{table}"
     end
   end
+  %w[site_setups site_setups_history].each do |table|
+    connection.select_all("SELECT site_url, routing_host, routing_path FROM #{connection.quote_table_name(table)}").each do |row|
+      expected = SiteUrl.parts(row['site_url'])
+      raise "URL routing backfill mismatch in #{table}" unless [row['routing_host'], row['routing_path']] == expected
+    end
+  end
   # Also rehearse repair of databases that ran the initial release, whose
   # baselines used an unbounded range instead of an explicit infinity timestamp.
   before.each_key do |table|
@@ -75,5 +86,6 @@ begin
 ensure
   ActiveRecord::Base.connection_pool.disconnect!
   ActiveRecord::Base.establish_connection(original_config)
+  ApplicationRecord.connects_to shards: { default: { writing: original_config } }
   ActiveRecord::Base.connection.execute("DROP DATABASE #{ActiveRecord::Base.connection.quote_column_name(name)} WITH (FORCE)")
 end

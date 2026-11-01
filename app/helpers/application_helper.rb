@@ -1,4 +1,11 @@
 module ApplicationHelper
+  def site_local_path(value)
+    return value unless value.is_a?(String) && value.start_with?('/') && !value.start_with?('//')
+    mount = request.script_name.to_s
+    return value if mount.empty? || value == mount || value.start_with?("#{mount}/") || value.match?(%r{\A/(assets|images|packs)/})
+    mount + value
+  end
+
   def sortable_column(display_name, column, model_path_name, custom_class: "btn btn-secondary")
     # Determine the current sort direction for the column
     current_direction = (params[:sort] == column && params[:direction] == "asc") ? "desc" : "asc"

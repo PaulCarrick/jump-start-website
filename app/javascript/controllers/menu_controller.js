@@ -1,3 +1,4 @@
+import { siteFetch, sitePath } from "../sitePath";
 import { Controller } from "@hotwired/stimulus";
 import React from "react";
 import { createRoot } from "react-dom/client";
@@ -13,7 +14,7 @@ export default class extends Controller {
     const root = createRoot(rootElement);
 
     try {
-      const response = await fetch(this.apiEndpointValue);
+      const response = await siteFetch(this.apiEndpointValue);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

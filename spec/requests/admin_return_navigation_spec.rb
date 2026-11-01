@@ -48,7 +48,11 @@ RSpec.describe "Admin return navigation", type: :request do
           attrs[name] = "new-#{attrs[name]}"
         end
         attrs['section'] = "new-#{attrs['section']}" if resource == :pages
-        attrs['default_setup'] = false if resource == :site_setups
+        if resource == :site_setups
+          attrs['default_setup'] = false
+          attrs['database'] = 'new-site-database'
+          attrs['site_url'] = "#{attrs['site_url']}/new-site"
+        end
         if resource == :users
           attrs['password'] = attrs['password_confirmation'] = 'Valid-password-123!'
         elsif resource == :image_files

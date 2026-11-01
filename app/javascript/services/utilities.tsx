@@ -1,3 +1,4 @@
+import { sitePath, sitePathname } from "../sitePath";
 // /app/javascript/services/cellService.jsx
 
 // Utility functions
@@ -9,10 +10,10 @@ export function sendRequest(url: string, setError: SetErrorCallback | null = nul
   const csrfToken  = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content");
   const request    = new XMLHttpRequest();
 
-  if (method === "GET" && !window.location.pathname.startsWith("/admin/")) {
+  if (method === "GET" && !sitePathname().startsWith("/admin/")) {
     url += `${url.includes("?") ? "&" : "?"}public_view=true${new URLSearchParams(window.location.search).get("preview") === "draft" ? "&preview=draft" : ""}`;
   }
-  request.open(method, url, false);
+  request.open(method, sitePath(url), false);
   request.setRequestHeader("Content-Type", "application/json");
 
   if (csrfToken)
@@ -56,7 +57,7 @@ export function getAdminPaths(model: string, id: string | number) {
   ;
   const request = new XMLHttpRequest();
 
-  request.open("GET", url, false);
+  request.open("GET", sitePath(url), false);
   request.send(null);
 
   if (request.status === 200)

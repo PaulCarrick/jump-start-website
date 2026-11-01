@@ -1,6 +1,10 @@
 # /app/controllers/admin/menu_items
 
 class Admin::SiteSetupsController < Admin::AbstractAdminController
+  before_action do
+    head :forbidden if SiteContext.tenant?
+  end
+
   def initialize
     super
 
@@ -9,6 +13,16 @@ class Admin::SiteSetupsController < Admin::AbstractAdminController
     @has_query      = false
     @has_sort       = true
     @model_class    = SiteSetup
+  end
+
+  def new
+    template = SiteSetup.live_versions.where(default_setup: true, temporal_deleted: false).first
+    attributes = template ? template.attributes.except(*BitemporalRecord::META) : {}
+    # A distinct, unsaved setup inherits configuration, never identity/history or
+    # the default flag. No record is created until the user explicitly saves.
+    set_item(true, attributes.merge('default_setup' => false))
+  rescue StandardError => error
+    handle_error(:index, error)
   end
 
   COLOR_ARRAY = [

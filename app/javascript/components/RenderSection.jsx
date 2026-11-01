@@ -1,3 +1,4 @@
+import { sitePathname } from "../sitePath";
 // /app/javascripts/components/RenderContent.jsx
 // noinspection RegExpRedundantEscape
 
@@ -35,7 +36,7 @@ const RenderSection = ({
   if (section === null) return null; // We can't render what we don't have
 
   const sectionData = dupObject(section);
-  if (!window.location.pathname.startsWith("/admin/")) {
+  if (!sitePathname().startsWith("/admin/")) {
     if (sectionData.enabled === false) return null;
     if (sectionData.cells) sectionData.cells = sectionData.cells.filter(cell => cell.enabled !== false);
   }

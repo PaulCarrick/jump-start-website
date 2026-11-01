@@ -1,3 +1,4 @@
+import { siteHtml } from "../sitePath";
 // /app/javascript/components/ContentBlock.jsx
 
 // Render a content block
@@ -14,7 +15,7 @@ const ContentBlock = ({
                       }) => {
   return (
       <>
-        <div className="ql-editor rich-text-content" dangerouslySetInnerHTML={{ __html: content }}/>
+        <div className="ql-editor rich-text-content" dangerouslySetInnerHTML={{ __html: siteHtml(content) }}/>
         {options.expanding_rows &&
          <button id={toggleId} className={toggleClass}>Show More</button>}
         {options.expanding_cells &&

@@ -1,3 +1,5 @@
+import { siteHtml } from "../sitePath";
+import { siteFetch, sitePath } from "../sitePath";
 // /app/javascript/components/PostList.jsx
 // noinspection JSUnresolvedVariable
 
@@ -39,7 +41,7 @@ const PostList = ({
       .join('&');
     const url = `/api/v1/blog_posts?include_comments=true&blog_type=${blog_type}&visibility=${user.logged_in ? "Private" : "Public"}&page=${page}&limit=3${queryParams ? `&${queryParams}` : ''}`;
 
-    fetch(`${url}${url.includes("?") ? "&" : "?"}public_view=true${new URLSearchParams(window.location.search).get("preview") === "draft" ? "&preview=draft" : ""}`)
+    siteFetch(`${url}${url.includes("?") ? "&" : "?"}public_view=true${new URLSearchParams(window.location.search).get("preview") === "draft" ? "&preview=draft" : ""}`)
       .then((response) => {
         const totalPages = parseInt(response.headers.get('total-Pages'), 10) || 1;
         const currentPage = parseInt(response.headers.get('current-page'), 10) || 1;
@@ -106,7 +108,7 @@ const PostList = ({
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-    fetch(`/api/v1/blog_posts/${postId}`, {
+    siteFetch(`/api/v1/blog_posts/${postId}`, {
       method: 'DELETE',
       headers: {
         'X-CSRF-Token': csrfToken,
@@ -132,7 +134,7 @@ const PostList = ({
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-    fetch(`/api/v1/post_comments/${commentId}`, {
+    siteFetch(`/api/v1/post_comments/${commentId}`, {
       method: 'DELETE',
       headers: {
         'X-CSRF-Token': csrfToken,
@@ -206,7 +208,7 @@ const PostList = ({
             </div>
             <div className="row ps-5 pt-3">
               <div className="col-lg-12">
-                <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+                <div dangerouslySetInnerHTML={{ __html: siteHtml(post.content) }}></div>
               </div>
             </div>
             {post.post_comments && post.post_comments.length > 0 && (
@@ -251,7 +253,7 @@ const PostList = ({
                       </div>
                       <div className="row ps-3 pt-2">
                         <div className="col-lg-12">
-                          <div dangerouslySetInnerHTML={{ __html: comment.content }}></div>
+                          <div dangerouslySetInnerHTML={{ __html: siteHtml(comment.content) }}></div>
                         </div>
                       </div>
                     </div>

@@ -1,3 +1,4 @@
+import { siteHtml } from "../sitePath";
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { captionText } from './captionText.js';
@@ -83,7 +84,7 @@ const SlideShow = ({ images = [], slideType = "Topic", options = {} }) => {
 
         {description && (
           <div className="text-start">
-            <div className="ql-editor rich-text-content" dangerouslySetInnerHTML={{ __html: description }} />
+            <div className="ql-editor rich-text-content" dangerouslySetInnerHTML={{ __html: siteHtml(description) }} />
           </div>
         )}
       </div>

@@ -1,3 +1,5 @@
+import { sitePath } from "../sitePath";
+import { siteHtml } from "../sitePath";
 import { captionText } from './captionText.js';
 // /app/javascript/components/RenderSingleImage.jsx
 
@@ -44,7 +46,7 @@ function renderImage(image, options) {
 }
 
 function addLink(content, link) {
-  return <a href={link}>{content}</a>;
+  return <a href={sitePath(link)}>{content}</a>;
 }
 
 function addDescription(content, description, options) {
@@ -72,7 +74,7 @@ function addDescription(content, description, options) {
 function renderDescription(description, expandable, toggleId, toggleClass) {
   return (
       <>
-        <div className="ql-editor rich-text-content" dangerouslySetInnerHTML={{ __html: description }}/>
+        <div className="ql-editor rich-text-content" dangerouslySetInnerHTML={{ __html: siteHtml(description) }}/>
         {expandable && (
             <div>
               <button id={toggleId} className={toggleClass}>

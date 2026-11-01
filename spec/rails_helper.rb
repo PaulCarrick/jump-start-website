@@ -87,8 +87,8 @@ RSpec.configure do |config|
 
   # Assertions outside requests inspect the privileged working set. Each request
   # establishes its own live/admin scope, and production defaults to live reads.
-  config.before(:each) { PublishingContext.live = false }
-  config.after(:each) { PublishingContext.reset }
+  config.before(:each) { PublishingContext.live = false; SiteRoutes.clear! }
+  config.after(:each) { PublishingContext.reset; SiteContext.reset; SiteRoutes.clear!; SiteConnections.clear! }
 
   config.order = :defined
 

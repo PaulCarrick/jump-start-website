@@ -56,7 +56,7 @@ class ImageFile < ApplicationRecord
   end
 
   def image_url
-    rails_blob_path(image.respond_to?(:blob) ? image.blob : image, only_path: true) if image.attached?
+    rails_blob_path(image.respond_to?(:blob) ? image.blob : image, only_path: true, script_name: SiteContext.mount_path.to_s) if image.attached?
   end
 
   def as_json(options = {})

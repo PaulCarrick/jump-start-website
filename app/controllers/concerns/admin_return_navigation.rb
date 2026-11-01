@@ -23,9 +23,12 @@ module AdminReturnNavigation
     else
       return if uri.scheme || !value.start_with?("/") || value.start_with?("//")
     end
-    return unless uri.path == "/admin" || uri.path.start_with?("/admin/")
+    mount = request.script_name.to_s
+    return unless mount.empty? || uri.path == mount || uri.path.start_with?("#{mount}/")
+    local_path = mount.empty? ? uri.path : uri.path.delete_prefix(mount)
+    return unless local_path == "/admin" || local_path.start_with?("/admin/")
 
-    route = Rails.application.routes.recognize_path(uri.path, method: :get)
+    route = Rails.application.routes.recognize_path(local_path, method: :get)
     return unless route[:controller].start_with?("admin/") && %w[index show edit new].include?(route[:action])
 
     return if Rack::Utils.parse_nested_query(uri.query.to_s)["method"].present?

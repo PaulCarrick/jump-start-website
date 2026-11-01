@@ -11,6 +11,11 @@ class User < ApplicationRecord
     new_record? || password.present?
   end
 
+  def self.rememberable_options
+    options = super
+    SiteContext.tenant? ? options.merge(key: "remember_user_#{SiteContext.key}_token") : options
+  end
+
   def regular?
     !access.present? || (access === 'regular')
   end
