@@ -2,6 +2,11 @@
 <%= render layout: "layouts/admin_page" do %>
   <% if controller.get_item&.present? %>
     <div class="row mb-3">
+      <div class="col-3">Database</div>
+      <div class="col-9"><%= controller.get_item.database %></div>
+    </div>
+
+    <div class="row mb-3">
       <div class="col-3">
         Configuration Name
       </div>

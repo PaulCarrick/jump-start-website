@@ -209,7 +209,9 @@ New users need a password and confirmation. When editing an existing user, leave
 
 ## Site setups
 
-Site setups contain the website's configuration. The form groups information such as:
+Site setups contain the website's configuration. The required **Database** field stores a database name and defaults to `paul-carrick`. It is informational at this stage; changing it does not switch the application's database connection.
+
+The form groups information such as:
 
 - Configuration name and default-setup selection.
 - Owner, site name, domain, host, URL, and guest-user information.

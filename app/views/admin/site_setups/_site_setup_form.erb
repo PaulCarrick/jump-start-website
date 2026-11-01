@@ -40,6 +40,13 @@
   </div>
 
   <div class="mb-3">
+    <%= form.label :database, "Database*", class: "form-label" %>
+    <%= form.text_field :database, class: "form-control", required: true,
+                        aria: { describedby: "siteSetupDatabaseHelp" } %>
+    <div id="siteSetupDatabaseHelp" class="form-text">Stored for this site setup. Database selection is not active yet.</div>
+  </div>
+
+  <div class="mb-3">
     <%= form.label :site_name, "Site Name*", class: "form-label" %>
     <%= form.text_field :site_name,
                         class:       "form-control",

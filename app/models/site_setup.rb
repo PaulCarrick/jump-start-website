@@ -6,6 +6,9 @@ class SiteSetup < ActiveRecord::Base
   validates :contact_email_from, format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }, allow_blank: true
   validates :contact_email_to, format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }, allow_blank: true
 
+  # Allow the pre-migration schema to boot for migration/rehearsal only.
+  validates :database, presence: true, if: -> { has_attribute?(:database) }
+
   validate :only_one_default_allowed
 
   private

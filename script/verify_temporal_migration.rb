@@ -47,6 +47,11 @@ begin
     history_count = connection.select_value("SELECT count(*) FROM #{connection.quote_table_name("#{table}_history")}")
     raise "History baseline missing in #{table}" unless history_count == rows.size
   end
+  %w[site_setups site_setups_history].each do |table|
+    unless connection.select_value("SELECT count(*) FROM #{connection.quote_table_name(table)} WHERE \"database\" IS DISTINCT FROM 'paul-carrick'") == 0
+      raise "Database field was not backfilled in #{table}"
+    end
+  end
   # Also rehearse repair of databases that ran the initial release, whose
   # baselines used an unbounded range instead of an explicit infinity timestamp.
   before.each_key do |table|
@@ -61,6 +66,10 @@ begin
     connection.execute("UPDATE #{connection.quote_table_name(table)} SET enabled = NOT enabled")
     count = connection.select_value("SELECT count(*) FROM #{connection.quote_table_name("#{table}_history")}")
     raise "Initial history period did not close in #{table}" unless count == before[table].size * 2
+  end
+  connection.execute("UPDATE site_setups SET \"database\" = 'rehearsal-site'")
+  unless connection.select_value("SELECT count(*) FROM site_setups_history WHERE \"database\" = 'rehearsal-site'") == before['site_setups'].size
+    raise 'Site setup database changes are not captured by native history'
   end
   puts "PASS: populated migration preserves all existing values, IDs, timestamps and row counts across eleven models; native history baselines created and first post-migration writes verified."
 ensure
