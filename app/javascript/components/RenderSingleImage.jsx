@@ -77,7 +77,7 @@ function renderDescription(description, expandable, toggleId, toggleClass) {
         <div className="ql-editor rich-text-content" dangerouslySetInnerHTML={{ __html: siteHtml(description) }}/>
         {expandable && (
             <div>
-              <button id={toggleId} className={toggleClass}>
+              <button id={toggleId} className={`btn ${toggleClass || ""}`}>
                 Show More
               </button>
             </div>

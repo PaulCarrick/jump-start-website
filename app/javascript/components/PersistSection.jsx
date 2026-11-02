@@ -28,6 +28,6 @@ function createSection() {
 
 export default function App() {
   return (
-      <button onClick={createSection}>Create Section</button>
+      <button className="btn btn-primary" onClick={createSection}>Create Section</button>
   );
 }

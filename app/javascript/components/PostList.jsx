@@ -181,7 +181,7 @@ const PostList = ({
                 {user.logged_in && (
                   <button
                     onClick={() => openCommentEditor(post)}
-                    className="btn-link me-2"
+                    className="btn btn-link me-2"
                   >
                     Comment
                   </button>
@@ -278,7 +278,7 @@ const PostList = ({
               <div className="mb-3 d-flex justify-content-end align-items-center">
                 <button
                   onClick={() => changePage(currentPage - 1)}
-                  className="btn-link me-2"
+                  className="btn btn-link me-2"
                   disabled={currentPage === 1}
                 >
                   Previous
@@ -288,7 +288,7 @@ const PostList = ({
                 </span>
                 <button
                   onClick={() => changePage(currentPage + 1)}
-                  className="btn-link me-2"
+                  className="btn btn-link me-2"
                   disabled={currentPage >= meta.totalPages}
                 >
                   Next

@@ -1,4 +1,5 @@
 :root {
+    --action-button-height: 44px;
     --header-bg: #0d6efd; /* Default header color */
     --header-text-color: #f8f9fa; /* Default header color */
     --footer-bg: #0d6efd; /* Default footer color */
@@ -278,7 +279,22 @@ div.reset-styles {
 /* Shared pastel buttons, including small buttons and form submit controls. */
 body .btn {
   --bs-btn-font-size: 14pt;
+  --bs-btn-line-height: 1.25;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--action-button-height);
+  min-height: var(--action-button-height);
   font-size: 14pt;
+  line-height: 1.25;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+body .navbar-toggler {
+  box-sizing: border-box;
+  height: var(--action-button-height);
+  min-height: var(--action-button-height);
 }
 body .btn-primary {
   --bs-btn-color: #273f64;
