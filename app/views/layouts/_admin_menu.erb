@@ -17,20 +17,20 @@
                               data: { bs_toggle: "dropdown" },
                               aria: { expanded: "false" },
                               target: "_self" do %>
-                    <%= menu_item.label %>
+                    <%= navigation_label(menu_item) %>
                   <% end %>
                   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown-#{index}">
                     <% menu_item.sub_items.each do |sub_item| %>
                       <li>
                         <% link, method = sub_item[:link]&.split("|") %>
                         <% if method %>
-                          <%= link_to sub_item[:label],
+                          <%= link_to navigation_label(sub_item),
                                       site_local_path(link),
                                       method: method.to_sym,
                                       class: "dropdown-item",
                                       target: "_self"  %>
                         <% else %>
-                          <%= link_to sub_item[:label],
+                          <%= link_to navigation_label(sub_item),
                                       site_local_path(sub_item[:link]),
                                       class: "dropdown-item",
                                       target: "_self"  %>
@@ -44,20 +44,20 @@
                 <% if menu_item.options == "image-file" %>
                   <a href="<%= site_local_path(menu_item[:link]) %>" target="_self">
                     <%= image_tag menu_item.icon,
-                                  alt: menu_item.label,
+                                  alt: navigation_label(menu_item),
                                   class: "nav-link px-lg-3 py-2 text-uppercase"
                     %>
                   </a>
                 <% else %>
                   <% link, method = menu_item[:link]&.split("|") %>
                   <% if method %>
-                    <%= link_to menu_item[:label],
+                    <%= link_to navigation_label(menu_item),
                                 site_local_path(link),
                                 method: method.to_sym,
                                 class: "nav-link px-lg-3 py-2 text-uppercase",
                                 target: "_self"  %>
                   <% else %>
-                    <%= link_to menu_item[:label],
+                    <%= link_to navigation_label(menu_item),
                                 site_local_path(menu_item[:link]),
                                 class: "nav-link px-lg-3 py-2 text-uppercase",
                                 target: "_self"  %>

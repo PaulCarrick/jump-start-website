@@ -29,3 +29,15 @@
 
 en:
   hello: "Hello world"
+  activerecord:
+    models:
+      cell:
+        one: Column
+        other: Columns
+    attributes:
+      cell:
+        cell_name: Column name
+        cell_order: Column order
+        cell_type: Column type
+      section:
+        cells: Columns

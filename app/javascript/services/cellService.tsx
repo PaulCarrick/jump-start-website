@@ -113,7 +113,7 @@ export function updateCell(
   setError: SetErrorCallback | null = null,
 ): Cell | null {
   if (!cell.id || cell.id < 0) {
-    console.error("Error: Cell ID is required for updating.");
+    console.error("Error: Column ID is required for updating.");
     return null;
   }
 
@@ -380,9 +380,9 @@ export function generateCells(
 
     case "three-column":
       cells = [
-        textCell(sectionName, "Text for First Cell.", 1, "33%"),
-        textCell(sectionName, "Text for Second Cell.", 2, "33%"),
-        textCell(sectionName, "Text for Third Cell.", 3, "34%"),
+        textCell(sectionName, "Text for First Column.", 1, "33%"),
+        textCell(sectionName, "Text for Second Column.", 2, "33%"),
+        textCell(sectionName, "Text for Third Column.", 3, "34%"),
       ];
 
       results.push(...cells);
@@ -390,10 +390,10 @@ export function generateCells(
 
     case "four-column":
       cells = [
-        textCell(sectionName, "Text for First Cell.", 1, "25%"),
-        textCell(sectionName, "Text for Second Cell.", 2, "25%"),
-        textCell(sectionName, "Text for Third Cell.", 3, "25%"),
-        textCell(sectionName, "Text for Fourth Cell.", 4, "25%"),
+        textCell(sectionName, "Text for First Column.", 1, "25%"),
+        textCell(sectionName, "Text for Second Column.", 2, "25%"),
+        textCell(sectionName, "Text for Third Column.", 3, "25%"),
+        textCell(sectionName, "Text for Fourth Column.", 4, "25%"),
       ];
 
       results.push(...cells);
@@ -401,11 +401,11 @@ export function generateCells(
 
     case "five-column":
       cells = [
-        textCell(sectionName, "Text for First Cell.", 1, "20%"),
-        textCell(sectionName, "Text for Second Cell.", 2, "20%"),
-        textCell(sectionName, "Text for Third Cell.", 3, "20%"),
-        textCell(sectionName, "Text for Fourth Cell.", 4, "20%"),
-        textCell(sectionName, "Text for Fifth Cell.", 5, "20%"),
+        textCell(sectionName, "Text for First Column.", 1, "20%"),
+        textCell(sectionName, "Text for Second Column.", 2, "20%"),
+        textCell(sectionName, "Text for Third Column.", 3, "20%"),
+        textCell(sectionName, "Text for Fourth Column.", 4, "20%"),
+        textCell(sectionName, "Text for Fifth Column.", 5, "20%"),
       ];
 
       results.push(...cells);

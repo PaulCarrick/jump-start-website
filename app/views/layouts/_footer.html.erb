@@ -20,7 +20,7 @@
         <% @footer_items.each do |footer_item| %>
           <% next if footer_item.access == 'admin' && !controller.current_user_is_admin? %>
           <div class="<%= div_class %>">
-            <h2 class="footer-bg footer-text fw-bold h5 text-uppercase <%= div_class %>"><%= footer_item.label %></h2>
+            <h2 class="footer-bg footer-text fw-bold h5 text-uppercase <%= div_class %>"><%= navigation_label(footer_item) %></h2>
             <% if footer_item.sub_items.publicly_enabled.any? %>
               <ul class="footer-bg list-unstyled">
                 <% footer_item.sub_items.publicly_enabled.each do |sub_item| %>
@@ -30,12 +30,12 @@
                     <% if sub_item.options == "image-file" %>
                       <a href="<%= site_local_path(sub_item[:link]) %>" target="_self">
                         <%= image_tag sub_item.icon,
-                                      alt:   sub_item.label,
+                                      alt:   navigation_label(sub_item),
                                       class: "footer-bg footer-text nav-link px-lg-3 py-lg-4 text-uppercase"
                         %>
                       </a>
                     <% else %>
-                      <%= link_to sub_item[:label],
+                      <%= link_to navigation_label(sub_item),
                                   site_local_path(sub_item[:link]),
                                   class:  "footer-bg footer-text text-decoration-none",
                                   target: "_self"
@@ -48,12 +48,12 @@
               <% if footer_item.options == "image-file" %>
                 <a href="<%= site_local_path(footer_item[:link]) %>" target="_self">
                   <%= image_tag footer_item.icon,
-                                alt:   footer_item.label,
+                                alt:   navigation_label(footer_item),
                                 class: "footer-bg footer-text nav-link px-lg-3 py-lg-4 text-uppercase"
                   %>
                 </a>
               <% else %>
-                <%= link_to footer_item[:label],
+                <%= link_to navigation_label(footer_item),
                             site_local_path(footer_item[:link]),
                             class:  "footer-bg footer-text text-decoration-none",
                             target: "_self"

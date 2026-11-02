@@ -1,6 +1,9 @@
 <!-- app/views/admin/cells/index.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
-  <h1 class="mb-3">Manage Cells</h1>
+  <h1 class="mb-3">Manage Columns</h1>
+  <div class="mb-3">
+    <%= link_to "New Column", new_admin_cell_path, class: "btn btn-primary", target: "_self" %>
+  </div>
   <div class="table-responsive">
     <table class="table admin-cells-table">
       <colgroup>
@@ -21,7 +24,7 @@
           <th scope="col"><%= sortable_column('Type', 'cell_type', "cells") %></th>
           <th scope="col" colspan="2">
             <div class="d-flex align-items-start justify-content-between flex-wrap gap-2">
-              <%= column_heading("Cell") %>
+              <%= column_heading("Column") %>
               <div class="d-flex align-items-start justify-content-end flex-wrap gap-2 ms-auto">
                 <%= link_to 'Clear Sort', admin_cells_path(clear_sort: true), class: "btn btn-secondary", target: "_self" %>
                 <%= render 'shared/top_page_navigation' %>
@@ -70,7 +73,7 @@
         <%= form.search_field :section_name_cont %>
       </div>
       <div class="col-2">
-        <%= form.label :cell_name_cont, "Cell Name", class: "form-label" %>
+        <%= form.label :cell_name_cont, "Column Name", class: "form-label" %>
       </div>
       <div class="col-4">
         <%= form.search_field :cell_name_cont, style: "min-width: 100%;" %>
@@ -99,7 +102,7 @@
       </div>
     </div>
     <div>
-      <%= form.submit "Search Cells", class: "btn btn-primary" %>
+      <%= form.submit "Search Columns", class: "btn btn-primary" %>
       <%= link_to 'Clear Search', admin_cells_path(clear_search: true), class: "btn btn-secondary", target: "_self" %>
     </div>
   <% end %>

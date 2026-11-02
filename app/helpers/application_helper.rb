@@ -1,4 +1,14 @@
 module ApplicationHelper
+  def navigation_label(item)
+    label = item.label.to_s
+    return label unless item.link.to_s.match?(%r{\A/(?:admin/)?cells(?:[/?#|]|\z)})
+
+    label.gsub(/\bcells?\b/i) do |word|
+      replacement = word.downcase == 'cells' ? 'columns' : 'column'
+      word == word.upcase ? replacement.upcase : word[0] == word[0].upcase ? replacement.capitalize : replacement
+    end
+  end
+
   def site_local_path(value)
     return value unless value.is_a?(String) && value.start_with?('/') && !value.start_with?('//')
     mount = request.script_name.to_s

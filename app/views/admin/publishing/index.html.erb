@@ -13,7 +13,7 @@
             <td><%= record.class.model_name.human %>
               <details><summary>Review draft values</summary>
                 <% Publishing.review_attributes(record).each do |field, value| %>
-                  <p><strong><%= field.humanize %>:</strong> <%= value.to_s.truncate(3000) %></p>
+                  <p><strong><%= record.class.human_attribute_name(field) %>:</strong> <%= value.to_s.truncate(3000) %></p>
                 <% end %>
               </details>
             </td>

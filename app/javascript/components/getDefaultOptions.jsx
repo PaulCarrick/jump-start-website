@@ -344,7 +344,7 @@ export function formattingOptions(styleData) {
     fields.push({ label: "Expanding Rows", value: "expanding_rows" });
 
   if (!isPresent(styleData?.expanding_cells))
-    fields.push({ label: "Expanding Cells", value: "expanding_cells" });
+    fields.push({ label: "Expanding Columns", value: "expanding_cells" });
 
   if (!isPresent(styleData?.slide_show_images))
     fields.push({ label: "Slide Show Images", value: "slide_show_images" });

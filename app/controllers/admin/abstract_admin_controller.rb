@@ -28,7 +28,7 @@ class Admin::AbstractAdminController < ApplicationController
     @fields            = @model_class.column_names
                                      .map(&:to_sym)
                                      .reject { |column| (BitemporalRecord::META + %w[attachment_blob_id]).include?(column.to_s) }
-    @title             = "#{get_site_information.site_name} - Admin Dashboard: #{controller_name.titleize}"
+    @title             = "#{get_site_information.site_name} - Admin Dashboard: #{class_title}"
 
     set_title(@title)
   end
@@ -51,10 +51,10 @@ class Admin::AbstractAdminController < ApplicationController
     result = @model_class.create!(get_params)
 
     if result.persisted?
-      flash[:notice] = "#{controller_name.singularize.titleize} created successfully."
+      flash[:notice] = "#{model_title} created successfully."
       redirect_to admin_return_url, status: :see_other
     else
-      raise("Could not create #{controller_name.singularize.titleize}.")
+      raise("Could not create #{model_title}.")
     end
   rescue StandardError => e
     handle_error(:new, e)
@@ -66,11 +66,11 @@ class Admin::AbstractAdminController < ApplicationController
     set_item
 
     if get_record&.update(get_params)
-      flash[:notice] = "#{controller_name.singularize.titleize} updated successfully."
+      flash[:notice] = "#{model_title} updated successfully."
       # Fetch preserves PATCH across 302; 303 follows the list redirect with GET.
       redirect_to admin_return_url, status: :see_other
     else
-      raise("Could not update #{controller_name.singularize.titleize}, ID: #{params[:id]}.")
+      raise("Could not update #{model_title}, ID: #{params[:id]}.")
     end
   rescue StandardError => e
     handle_error(:edit, e)
@@ -96,10 +96,10 @@ class Admin::AbstractAdminController < ApplicationController
     result = get_record&.destroy
 
     if result&.destroyed?
-      flash[:notice] = "#{controller_name.singularize.titleize} deleted successfully."
+      flash[:notice] = "#{model_title} deleted successfully."
       redirect_to admin_return_url, status: :see_other
     else
-      raise("Could not delete #{controller_name.singularize.titleize}, ID: #{params[:id]}.")
+      raise("Could not delete #{model_title}, ID: #{params[:id]}.")
     end
   rescue StandardError => e
     handle_error(:index, e)
@@ -149,7 +149,7 @@ class Admin::AbstractAdminController < ApplicationController
     @error_message = get_record&.errors&.full_messages&.join(", ")
     @error_message = e&.message unless @error_message.present?
     @error_message = "An error occurred." unless @error_message.present?
-    @error_message = "There was an error with the #{@model_class}: #{@error_message}"
+    @error_message = "There was an error with the #{model_title}: #{@error_message}"
     flash[:error]  = @error_message
 
     redirect_to url_for(action: action, id: params[:id], return_url: @admin_return_url, only_path: true), status: :see_other

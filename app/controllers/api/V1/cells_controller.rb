@@ -27,7 +27,7 @@ module Api
         if results.present?
           render json: results
         else
-          render json: { error: "Cell not found" }, status: :not_found
+          render json: { error: "Column not found" }, status: :not_found
         end
       end
 
@@ -47,7 +47,7 @@ module Api
         if cell && cell.update(get_params)
           render json: cell
         else
-          render json: { errors: cell&.errors&.full_messages || [ "Cell not found" ] }, status: :unprocessable_entity
+          render json: { errors: cell&.errors&.full_messages || [ "Column not found" ] }, status: :unprocessable_entity
         end
       end
 
@@ -56,9 +56,9 @@ module Api
 
         if cell
           cell.destroy
-          render json: { message: "Cell deleted successfully" }
+          render json: { message: "Column deleted successfully" }
         else
-          render json: { error: "Cell not found" }, status: :not_found
+          render json: { error: "Column not found" }, status: :not_found
         end
       end
 
@@ -85,7 +85,8 @@ module Api
       private
 
       def get_params
-        params.require(:cell).permit(:enabled,
+        attributes = params.require(:cell).permit(:enabled,
+          :section_id,
           :cell_name,
           :section_name,
           :type,
@@ -98,6 +99,10 @@ module Api
           options:    {},
           formatting: {}
         )
+        if attributes.key?(:section_name)
+          attributes[:section_id] = Section.find_by(section_name: attributes[:section_name])&.id
+        end
+        attributes
       end
     end
   end

@@ -82,7 +82,7 @@ RSpec.describe "Cell administration", type: :request do
   it "rejects creation without a name" do
     expect { post admin_cells_path, params: { cell: attributes.merge(cell_name: nil) } }.not_to change(Cell, :count)
     expect(response).to redirect_to(new_admin_cell_path)
-    expect(flash[:error]).to include("Cell name")
+    expect(flash[:error]).to include("Column name")
   end
 
   it "returns the created column ID for JSON clients" do
@@ -96,7 +96,7 @@ RSpec.describe "Cell administration", type: :request do
       post admin_cells_path, params: { cell: attributes.merge(cell_name: nil) }, as: :json
     }.not_to change(Cell, :count)
     expect(response).to have_http_status(:unprocessable_content)
-    expect(response.parsed_body.fetch("error")).to include("Cell name")
+    expect(response.parsed_body.fetch("error")).to include("Column name")
   end
 
   it "deletes a cell" do

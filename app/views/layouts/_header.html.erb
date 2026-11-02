@@ -33,7 +33,7 @@
                                 role:  "button",
                                 data:  { bs_toggle: "dropdown" },
                                 aria:  { expanded: "false" } do %>
-                      <%= menu_item.label %>
+                      <%= navigation_label(menu_item) %>
                     <% end %>
                     <ul class="header-bg dropdown-menu" aria-labelledby="navbarDropdown-#{index}">
                       <% menu_item.sub_items.publicly_enabled.each do |sub_item| %>
@@ -42,9 +42,9 @@
                           <% link, method = sub_item[:link]&.split("|") %>
 
                           <% if method %>
-                            <%= link_to sub_item[:label], site_local_path(link), method: method.to_sym, class: "header-bg header-text dropdown-item", target: "_self" %>
+                            <%= link_to navigation_label(sub_item), site_local_path(link), method: method.to_sym, class: "header-bg header-text dropdown-item", target: "_self" %>
                           <% else %>
-                            <%= link_to sub_item[:label], site_local_path(sub_item[:link]), class: "header-bg header-text dropdown-item", target: "_self" %>
+                            <%= link_to navigation_label(sub_item), site_local_path(sub_item[:link]), class: "header-bg header-text dropdown-item", target: "_self" %>
                           <% end %>
                         </li>
                       <% end %>
@@ -55,16 +55,16 @@
                   <% if menu_item.options == "image-file" %>
                     <a href="<%= site_local_path(menu_item[:link]) %>" target="_self">
                       <%= image_tag menu_item.icon,
-                                    alt:   menu_item.label,
+                                    alt:   navigation_label(menu_item),
                                     class: "header-bg header-text nav-link px-lg-3 py-lg-4 text-uppercase"
                       %>
                     </a>
                   <% else %>
                     <% link, method = menu_item[:link]&.split("|") %>
                     <% if method %>
-                      <%= link_to menu_item[:label], site_local_path(link), method: method.to_sym, class: "header-text nav-link px-lg-3 py-lg-4 text-uppercase", target: "_self" %>
+                      <%= link_to navigation_label(menu_item), site_local_path(link), method: method.to_sym, class: "header-text nav-link px-lg-3 py-lg-4 text-uppercase", target: "_self" %>
                     <% else %>
-                      <%= link_to menu_item[:label], site_local_path(menu_item[:link]), class: "header-text nav-link px-lg-3 py-lg-4 text-uppercase", target: "_self" %>
+                      <%= link_to navigation_label(menu_item), site_local_path(menu_item[:link]), class: "header-text nav-link px-lg-3 py-lg-4 text-uppercase", target: "_self" %>
                     <% end %>
                   <% end %>
                 <% end %>

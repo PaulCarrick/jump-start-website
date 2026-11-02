@@ -39,9 +39,9 @@ class Admin::CellsController < Admin::AbstractAdminController
       get_item&.save!
 
       if request.headers['Content-Type'] === "application/json"
-        render json: { message: 'Cell created successfully', id: get_item.id }, status: :ok
+        render json: { message: 'Column created successfully', id: get_item.id }, status: :ok
       else
-        redirect_to admin_return_url, status: :see_other, notice: "Cell created successfully."
+        redirect_to admin_return_url, status: :see_other, notice: "Column created successfully."
       end
     rescue => e
       if request.headers['Content-Type'] === "application/json"
@@ -93,9 +93,9 @@ class Admin::CellsController < Admin::AbstractAdminController
       get_record&.update!(data)
 
       if request.headers['Content-Type'] === "application/json"
-        render json: { message: 'Cell updated successfully' }, status: :ok
+        render json: { message: 'Column updated successfully' }, status: :ok
       else
-        redirect_to admin_return_url, status: :see_other, notice: "Cell updated successfully."
+        redirect_to admin_return_url, status: :see_other, notice: "Column updated successfully."
       end
     rescue => e
       if request.headers['Content-Type'] === "application/json"
@@ -125,7 +125,7 @@ class Admin::CellsController < Admin::AbstractAdminController
       result = get_record&.destroy
 
       if result&.destroyed?
-        flash[:notice] = "#{controller_name.singularize.titleize} deleted successfully."
+        flash[:notice] = "#{model_title} deleted successfully."
 
         if params[:return_url].present?
           redirect_to admin_return_url, status: :see_other
@@ -133,7 +133,7 @@ class Admin::CellsController < Admin::AbstractAdminController
           redirect_to action: :index, turbo: false
         end
       else
-        raise("Could not delete #{controller_name.singularize.titleize}, ID: #{params[:id]}.")
+        raise("Could not delete #{model_title}, ID: #{params[:id]}.")
       end
     rescue => e
       handle_error(:index, e)
@@ -145,6 +145,14 @@ class Admin::CellsController < Admin::AbstractAdminController
     record.formatting = {} if record.present? && !record.formatting.present? # Ensure formatting is present
 
     record
+  end
+
+  def model_title
+    Cell.model_name.human
+  end
+
+  def class_title
+    Cell.model_name.human(count: 2)
   end
 
   private

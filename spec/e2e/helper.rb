@@ -17,7 +17,7 @@ module AdminE2E
   EMAIL = 'admin@e2e.example'
   AREAS = { 'Site Setups'=>'site_setups', 'Users'=>'users', 'Menu Items'=>'menu_items',
     'Footer Items'=>'footer_items', 'Pages'=>'pages', 'Sections'=>'sections',
-    'Cells'=>'cells', 'Image Files'=>'image_files', 'Blogs'=>'blog_posts' }.freeze
+    'Columns'=>'cells', 'Image Files'=>'image_files', 'Blogs'=>'blog_posts' }.freeze
 
   def reset_empty_database!
     expected = "#{ENV.fetch('DB_DATABASE')}_test"

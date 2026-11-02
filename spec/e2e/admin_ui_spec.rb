@@ -338,7 +338,7 @@ RSpec.describe 'Admin Selenium UI', admin_e2e: true do
       click_link 'Edit', exact: true
       expect(page).to have_button('Save Section'); cancel
       area('cells'); click_link 'View', exact: true
-      expect(page).to have_content('Content e2e-page'); click_link 'Back to Cells'
+      expect(page).to have_content('Content e2e-page'); click_link 'Back to Columns'
       click_link 'Edit', exact: true
       expect(page).to have_button('Save Column')
       replace_input('#cell_name', 'renamed-cell'); quill('Updated cell content')
@@ -370,7 +370,7 @@ RSpec.describe 'Admin Selenium UI', admin_e2e: true do
       fields.each do |field|
         it "searches #{resource} with #{field} and clears empty results" do
           create_page; area(resource)
-          fill_field field, with: 'unmatched-e2e-token'; click_button(resource == 'sections' ? 'Search Sections' : 'Search Cells')
+          fill_field field, with: 'unmatched-e2e-token'; click_button(resource == 'sections' ? 'Search Sections' : 'Search Columns')
           expect(page).to have_no_link('View', exact: true)
           clear_search; expect(page).to have_link('View', exact: true)
         end

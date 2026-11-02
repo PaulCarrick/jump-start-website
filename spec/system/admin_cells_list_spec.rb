@@ -32,4 +32,24 @@ RSpec.describe 'Admin Cells list', type: :system do
     first('a', text: 'Next', exact_text: true).click
     expect(page).to have_css('.admin-cell-record', count: 1)
   end
+  it 'creates a draft column from the New Column button using its selected section' do
+    section = create(:section, section_name: 'new-column-parent')
+    visit admin_cells_path
+    expect(page).to have_css('h1', text: 'Manage Columns')
+    expect(page).to have_link('Columns', href: admin_cells_path)
+    expect(page).to have_button('Search Columns')
+    expect(page).to have_title(/Admin Dashboard: Columns/)
+    click_link 'New Column'
+    expect(page).to have_css('h1', text: 'New Column')
+    find('#sectionNameDiv input[role="combobox"]').set(section.section_name)
+    find('[role="option"]', text: section.section_name, exact_text: true).click
+    replace_react('#cell_name', 'Created from Manage Columns')
+    enter_column_text 'New column content'
+    click_button 'Save Column'
+    expect(page).to have_current_path(admin_cells_path, ignore_query: true)
+    saved = Cell.pending_versions.find_by!(cell_name: 'Created from Manage Columns')
+    expect(saved.section_id).to eq(section.id)
+    expect(saved.content).to include('New column content')
+    expect(Cell.live_versions.where(id: saved.id)).not_to exist
+  end
 end

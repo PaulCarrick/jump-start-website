@@ -6,10 +6,10 @@ Use this guide to maintain the website through the admin sidebar. It covers crea
 
 - [Getting started](#getting-started)
 - [Using list pages](#using-list-pages)
-- [Pages, sections, and cells](#pages-sections-and-cells)
+- [Pages, sections, and columns](#pages-sections-and-columns)
 - [Pages](#pages)
 - [Sections](#sections)
-- [Cells](#cells)
+- [Columns](#columns)
 - [Writing and formatting content](#writing-and-formatting-content)
 - [Image files and groups](#image-files-and-groups)
 - [Blogs](#blogs)
@@ -46,7 +46,7 @@ A typical content change is:
 4. Change the content and save it.
 5. Review the page on the website.
 
-The **Enabled** switch controls whether a record appears on the public website. New and existing records start enabled. Switch it off and save to hide content without deleting it; it remains visible and editable in admin. Disabling a page hides its sections and cells from that page. Disabled sections hide their cells, and disabled images are excluded from public image lookups and groups. Public navigation and blogs also honor Enabled. The user switch controls the record's enabled status; it does not change the account's access level or password.
+The **Enabled** switch controls whether a record appears on the public website. New and existing records start enabled. Switch it off and save to hide content without deleting it; it remains visible and editable in admin. Disabling a page hides its sections and columns from that page. Disabled sections hide their columns, and disabled images are excluded from public image lookups and groups. Public navigation and blogs also honor Enabled. The user switch controls the record's enabled status; it does not change the account's access level or password.
 
 Fields marked with an asterisk are required. Some editors keep Save disabled until the necessary data is available. A disabled Save button cannot be activated with its keyboard shortcut.
 
@@ -60,7 +60,7 @@ List pages show records with **View**, **Edit**, and, where permitted, **Delete*
 
 Grey headings with arrows are sortable. Select a heading to sort by that column; select it again to reverse the direction. **Clear Sort** returns to the list's default ordering.
 
-Lighter grey headings without arrows are labels, not sorting controls. For example, the Cell preview column is not sortable.
+Lighter grey headings without arrows are labels, not sorting controls. For example, the Column preview column is not sortable.
 
 ### Searching
 
@@ -68,19 +68,19 @@ Lists that support searching have a search form below the records. Fill in one o
 
 ### Pagination
 
-**First**, **Previous**, **Next**, and **Last** move between result pages. The page indicator shows your current position. Unavailable directions appear disabled. The Cells list displays five records per page, with each preview in its own column.
+**First**, **Previous**, **Next**, and **Last** move between result pages. The page indicator shows your current position. Unavailable directions appear disabled. The Columns list displays five records per page, with each preview in its own column.
 
 ### Deleting
 
-Check the record carefully before confirming **Delete**. A confirmation asks whether to proceed. Cancel the confirmation if you selected the wrong record. The exact effect on related records depends on the record type; deleting a section also removes its cells.
+Check the record carefully before confirming **Delete**. A confirmation asks whether to proceed. Cancel the confirmation if you selected the wrong record. The exact effect on related records depends on the record type; deleting a section also removes its columns.
 
-## Pages, sections, and cells
+## Pages, sections, and columns
 
 The content structure has three levels:
 
 - A **page** is a website destination with a title, name, access setting, and content.
-- A **section** is an ordered block within a page. A section can contain one or more cells, arranged as columns.
-- A **cell**, also called a **column** in editing controls, contains text, an image, video, or a combination of content and formatting.
+- A **section** is an ordered block within a page. A section contains one or more columns.
+- A **column** contains text, an image, video, or a combination of content and formatting.
 
 A page's **Section Group** field and a section's **Section group** field serve different purposes. The page field identifies its section/content category. The section field groups neighboring sections so they can be kept together and duplicated as a unit.
 
@@ -98,7 +98,7 @@ A page's **Section Group** field and a section's **Section group** field serve d
 
 ### Editing a page
 
-The saved-page editor shows page fields and a preview of its sections. Section actions include **Edit Section**, **Duplicate Section** or **Duplicate Group**, and **Delete Section**. Each cell has its own **Edit Column** and **Delete Column** buttons.
+The saved-page editor shows page fields and a preview of its sections. Section actions include **Edit Section**, **Duplicate Section** or **Duplicate Group**, and **Delete Section**. Each column has its own **Edit Column** and **Delete Column** buttons.
 
 **Add Section** opens the section editor for that page. Save changes in the editor you opened; after returning, review the page and save any remaining page-field changes.
 
@@ -114,30 +114,30 @@ Sections have numeric order values. Use the page's renumbering control to normal
 2. Choose a template. Available column templates include Text Only, Image Only, dual-column text/image arrangements, and layouts with several columns.
 3. Enter the text and select the image or media requested by the template.
 4. Choose **Generate Columns**.
-5. Review the generated cells. Set the section name, order, and optional group.
+5. Review the generated columns. Set the section name, order, and optional group.
 6. Choose **Save Section**.
 
 Save Section is visible but disabled before columns are generated. Generating columns prepares an editable draft; it does not by itself save the section.
 
-### Editing cells inside a section
+### Editing columns inside a section
 
-Choose **Edit Column** for the desired cell. Save Column returns the edited cell to the section draft. Choose **Save Section** to persist the section changes. Cancel in a nested editor returns to the parent draft.
+Choose **Edit Column** for the desired column. Save Column returns the edited column to the section draft. Choose **Save Section** to persist the section changes. Cancel in a nested editor returns to the parent draft.
 
 ### Section groups and duplication
 
 Give related sections the same **Section group** name to group them. Leave the field blank for an independent section.
 
-From the page editor, **Duplicate Section** asks for a new section name and copies that section and its cells. **Duplicate Group** asks for a new group name and copies all sections in the group, including their cells. The copied group is placed after existing sections. Names must be valid and must not conflict with existing names.
+From the page editor, **Duplicate Section** asks for a new section name and copies that section and its columns. **Duplicate Group** asks for a new group name and copies all sections in the group, including their columns. The copied group is placed after existing sections. Names must be valid and must not conflict with existing names.
 
-The page preview uses stronger horizontal rules between groups and lighter rules within a group. Vertical rules separate adjacent cells.
+The page preview uses stronger horizontal rules between groups and lighter rules within a group. Vertical rules separate adjacent columns.
 
-## Cells
+## Columns
 
-The Cells list shows Section, Name, Order, Image, Type, a rendered Cell preview, and action buttons. Images scale to fit the preview column and text wraps. Five cells appear per page.
+The Columns list shows Section, Name, Order, Image, Type, a rendered Column preview, and action buttons. Images scale to fit the preview column and text wraps. Five columns appear per page.
 
-Choose **Edit** to open a cell directly. You can also use **Edit Column** from a page or section. Depending on the editor and content type, controls include content, image/media selection, link, ordering, width, and formatting.
+Choose **New Column** at the top of Manage Columns to add a column to an existing section. Choose **Edit** to open a column directly. You can also use **Edit Column** from a page or section. Depending on the editor and content type, controls include content, image/media selection, link, ordering, width, and formatting.
 
-Use **Save Column** to finish. In a standalone cell editor, this saves the cell. Inside a section editor, it updates the section draft; save the section afterward.
+Use **Save Column** to finish. In a standalone column editor, this saves the column. Inside a section editor, it updates the section draft; save the section afterward.
 
 ## Writing and formatting content
 

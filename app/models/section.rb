@@ -147,7 +147,7 @@ class Section < ApplicationRecord
         end
       end
     rescue => e
-      errors.add(:base, "Cannot generate cells from: #{section_name}..Error: #{e.message}")
+      errors.add(:base, "Cannot generate columns from: #{section_name}..Error: #{e.message}")
 
       raise ActiveRecord::Rollback
     end

@@ -36,7 +36,7 @@ module Api
         section = Section.new(section_params)
 
         unless section.cells.present?
-          render json: "A section must have cells to be saved.", status: :unprocessable_entity
+          render json: "A section must have columns to be saved.", status: :unprocessable_entity
 
           return
         end

@@ -83,7 +83,7 @@ RSpec.describe Admin::CellsController, type: :controller do
         }.to change(Cell, :count).by(1)
 
         expect(response).to redirect_to(admin_cells_path)
-        expect(flash[:notice]).to eq("Cell created successfully.")
+        expect(flash[:notice]).to eq("Column created successfully.")
       end
     end
 
@@ -114,7 +114,7 @@ RSpec.describe Admin::CellsController, type: :controller do
 
         expect(cell.class.find(cell.id).cell_name).to eq("Updated Cell")
         expect(response).to redirect_to(admin_cells_path)
-        expect(flash[:notice]).to eq("Cell updated successfully.")
+        expect(flash[:notice]).to eq("Column updated successfully.")
       end
 
       it "prettifies the content before saving" do
