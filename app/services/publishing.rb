@@ -2,7 +2,7 @@ class Publishing
   class Conflict < StandardError; end
 
   def self.models
-    names = SiteContext.tenant? ? BitemporalRecord::MODELS - ['SiteSetup'] : BitemporalRecord::MODELS
+    names = SiteContext.tenant? ? BitemporalRecord::MODELS - [ 'SiteSetup' ] : BitemporalRecord::MODELS
     names.map(&:constantize)
   end
 

@@ -13,7 +13,7 @@ class ReleaseDeletedTemporalNames < ActiveRecord::Migration[8.1]
     CONSTRAINTS.each do |table, constraints|
       constraints.each do |name, columns|
         remove_exclusion_constraint table, name: name.to_s
-        expression = (columns.map { |column| "#{quote_column_name(column)} WITH =" } + ['validity WITH &&']).join(', ')
+        expression = (columns.map { |column| "#{quote_column_name(column)} WITH =" } + [ 'validity WITH &&' ]).join(', ')
         add_exclusion_constraint table, expression, using: :gist, where: 'NOT temporal_deleted', name: name.to_s
       end
     end

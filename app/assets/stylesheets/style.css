@@ -418,3 +418,42 @@ body .btn.admin-navigation-readonly:disabled {
   line-height: inherit;
   text-align: inherit;
 }
+
+/* Keep published Quill sizes readable on phones without changing saved content
+   or the editable Quill surface. Desktop sizing and Div Ratio stay intact. */
+@media (max-width: 575.98px) {
+  .row > .content-section-cell {
+    /* Saved percentages/auto flex otherwise override Bootstrap's mobile layout. */
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    min-width: 0;
+  }
+
+  .ql-editor.rich-text-content {
+    font-size: 1rem;
+  }
+
+  .ql-editor.rich-text-content .ql-size-small {
+    font-size: 0.875em;
+  }
+
+  .ql-editor.rich-text-content .ql-size-large {
+    font-size: 1.25em;
+  }
+
+  .ql-editor.rich-text-content .ql-size-huge {
+    font-size: 1.75em;
+  }
+
+  .ql-editor.rich-text-content h1 {
+    font-size: 1.75rem;
+  }
+
+  .ql-editor.rich-text-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .ql-editor.rich-text-content h3 {
+    font-size: 1.25rem;
+  }
+}

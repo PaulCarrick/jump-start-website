@@ -3,7 +3,7 @@ require 'rails_helper'
 class RoutingProbeJob < ApplicationJob
   class_attribute :results, default: []
   def perform(user, fail_after_read: false)
-    self.class.results += [[user.email, Page.first&.title, ApplicationRecord.connection_db_config.database]]
+    self.class.results += [ [ user.email, Page.first&.title, ApplicationRecord.connection_db_config.database ] ]
     raise 'simulated job error' if fail_after_read
   end
 end
@@ -20,7 +20,7 @@ RSpec.describe 'URL-selected site databases', type: :request do
     create(:page, name: 'home', title: 'Catalog Home', section: 'catalog-home')
     @a = provision_site('tenant-a')
     @b = provision_site('tenant-b')
-    [@a, @b].each do |site|
+    [ @a, @b ].each do |site|
       within_site(site) do
         page = create(:page, name: 'home', title: "#{site.site_name} Home", section: site.site_name)
         section = create(:section, page: page, content_type: page.section)
@@ -151,7 +151,7 @@ RSpec.describe 'URL-selected site databases', type: :request do
 
   it 'does not allow signed blob or disk URLs to cross sites with overlapping IDs' do
     urls = {}
-    [@a, @b].each do |site|
+    [ @a, @b ].each do |site|
       within_site(site) do
         image = create(:image_file)
         urls[site.site_name] = image.image_url
@@ -175,9 +175,9 @@ RSpec.describe 'URL-selected site databases', type: :request do
     within_site(@a) { payload = RoutingProbeJob.new(User.find_by!(email: 'tenant-a@example.com')).serialize }
     RoutingProbeJob.results = []
     RoutingProbeJob.deserialize(payload).perform_now
-    expect(RoutingProbeJob.results.last).to eq(['tenant-a@example.com', 'tenant-a Home', @a.database])
+    expect(RoutingProbeJob.results.last).to eq([ 'tenant-a@example.com', 'tenant-a Home', @a.database ])
     expect(SiteContext.database).to be_nil
-    routes = [@a, @b].map { |site| SiteRoutes.resolve('www.example.com', "/#{site.site_name}") }
+    routes = [ @a, @b ].map { |site| SiteRoutes.resolve('www.example.com', "/#{site.site_name}") }
     barrier = Queue.new
     release = Queue.new
     threads = routes.map do |route|
@@ -185,7 +185,7 @@ RSpec.describe 'URL-selected site databases', type: :request do
         SiteConnections.with(route) do
           barrier << true
           release.pop
-          [Page.find_by!(name: 'home').title, ApplicationRecord.connection_db_config.database]
+          [ Page.find_by!(name: 'home').title, ApplicationRecord.connection_db_config.database ]
         end
       ensure
         ApplicationRecord.connection_handler.clear_active_connections!
@@ -193,7 +193,7 @@ RSpec.describe 'URL-selected site databases', type: :request do
     end
     2.times { barrier.pop }
     2.times { release << true }
-    expect(threads.map(&:value)).to contain_exactly(['tenant-a Home', @a.database], ['tenant-b Home', @b.database])
+    expect(threads.map(&:value)).to contain_exactly([ 'tenant-a Home', @a.database ], [ 'tenant-b Home', @b.database ])
     expect(Page.find_by!(name: 'home').title).to eq('Catalog Home')
   end
   it 'invalidates changed routes after deployment and reserves disabled mounts' do
@@ -252,5 +252,4 @@ RSpec.describe 'URL-selected site databases', type: :request do
     get '/tenant-a/home'
     expect(response).to have_http_status(:ok)
   end
-
 end

@@ -13,7 +13,7 @@ class SiteUrl
     unless path.match?(%r{\A(?:/[A-Za-z0-9._~-]+)*\z}) && path.split('/').none? { |part| %w[. ..].include?(part) }
       raise Invalid, 'must use a simple path without encoded separators or dot segments'
     end
-    [host, path]
+    [ host, path ]
   rescue URI::InvalidURIError
     raise Invalid, 'must be a valid absolute http(s) URL'
   end

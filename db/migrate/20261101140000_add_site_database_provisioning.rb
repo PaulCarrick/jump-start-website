@@ -19,5 +19,4 @@ class AddSiteDatabaseProvisioning < ActiveRecord::Migration[8.1]
   def down
     raise ActiveRecord::IrreversibleMigration, 'Provisioning records contain ownership tokens and retry state. Preserve them and use a reviewed forward migration.'
   end
-
 end

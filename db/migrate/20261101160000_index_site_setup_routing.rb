@@ -3,7 +3,7 @@ require 'uri'
 class IndexSiteSetupRouting < ActiveRecord::Migration[8.1]
   def up
     execute "SET LOCAL lock_timeout = '10s'"
-    drop_versioning_hook :site_setups, :site_setups_history, primary_key: [:id, :version]
+    drop_versioning_hook :site_setups, :site_setups_history, primary_key: [ :id, :version ]
     %i[site_setups site_setups_history].each do |table|
       add_column table, :routing_host, :string
       add_column table, :routing_path, :string
@@ -30,10 +30,10 @@ class IndexSiteSetupRouting < ActiveRecord::Migration[8.1]
       change_column_null table, :routing_path, false
     end
     add_index :site_setups, :site_url
-    add_index :site_setups, [:routing_host, :routing_path], name: 'index_site_setups_routing_lookup'
+    add_index :site_setups, [ :routing_host, :routing_path ], name: 'index_site_setups_routing_lookup'
     add_exclusion_constraint :site_setups, 'routing_host WITH =, routing_path WITH =, validity WITH &&', using: :gist,
       where: 'enabled AND NOT temporal_deleted', name: 'site_setups_unique_live_route'
-    create_versioning_hook :site_setups, :site_setups_history, primary_key: [:id, :version]
+    create_versioning_hook :site_setups, :site_setups_history, primary_key: [ :id, :version ]
   end
 
   def down

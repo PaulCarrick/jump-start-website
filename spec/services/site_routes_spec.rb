@@ -8,7 +8,7 @@ RSpec.describe SiteRoutes do
     %w[localhost 127.0.0.1 ::1].each do |host|
       expect(described_class.resolve(host, '/').setup_id).to eq(default.id)
       route = described_class.resolve(host, '/jumpstart-server/admin/pages')
-      expect([route.setup_id, route.database, route.path]).to eq([tenant.id, 'jump-start', '/jumpstart-server'])
+      expect([ route.setup_id, route.database, route.path ]).to eq([ tenant.id, 'jump-start', '/jumpstart-server' ])
       expect(described_class.resolve(host, '/jumpstart-server-other').setup_id).to eq(default.id)
     end
     expect(tenant.reload.site_url).to eq('https://paul-carrick.com/jumpstart-server')

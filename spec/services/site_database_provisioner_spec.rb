@@ -47,8 +47,8 @@ RSpec.describe SiteDatabaseProvisioner do
     expect(SiteDatabaseSyncRequest.find_by!(deployment_id: deployment.id).status).to eq('completed')
     expect(SiteSetup.connection_db_config.database).not_to eq(site.database)
     target(site.database) do |connection|
-      expect(connection.exec('SELECT label FROM menu_items ORDER BY id').map { |row| row['label'] }).to eq(['Admin Root', 'Manage Pages'])
-      expect(connection.exec_params('SELECT parent_id FROM menu_items WHERE id = $1', [child.id]).first['parent_id'].to_i).to eq(root.id)
+      expect(connection.exec('SELECT label FROM menu_items ORDER BY id').map { |row| row['label'] }).to eq([ 'Admin Root', 'Manage Pages' ])
+      expect(connection.exec_params('SELECT parent_id FROM menu_items WHERE id = $1', [ child.id ]).first['parent_id'].to_i).to eq(root.id)
       expect(connection.exec('SELECT label FROM footer_items').first['label']).to eq('Manage Users')
       users = connection.exec('SELECT email, name, access, encrypted_password FROM users').to_a
       guest = users.find { |row| row['email'] == 'guest@new-site.example' }
@@ -80,9 +80,9 @@ RSpec.describe SiteDatabaseProvisioner do
     SiteSetup.find(default.id).update!(site_name: 'Changed catalog')
     PublishingContext.editing = false
     Publishing.deploy!(actor: admin, summary: 'Change default')
-    [first, second].each do |site|
+    [ first, second ].each do |site|
       target(site.database) do |connection|
-        expect(connection.exec_params('SELECT site_name FROM site_setups WHERE id = $1 AND validity @> NOW()', [default.id]).first['site_name']).to eq('Changed catalog')
+        expect(connection.exec_params('SELECT site_name FROM site_setups WHERE id = $1 AND validity @> NOW()', [ default.id ]).first['site_name']).to eq('Changed catalog')
         expect(connection.exec('SELECT count(*) FROM site_setups_history').first['count'].to_i).to be >= 3
       end
     end
@@ -123,5 +123,4 @@ RSpec.describe SiteDatabaseProvisioner do
     expect(SiteDatabase.count).to eq(0)
     expect(SiteDatabaseSyncRequest.count).to eq(0)
   end
-
 end

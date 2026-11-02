@@ -32,7 +32,7 @@ namespace :site_databases do
         environment['DATABASE_URL'] = URI::Generic.build(
           scheme: 'postgresql', host: host.start_with?('/') ? 'localhost' : host,
           port: source.fetch(:port, 5432).to_i,
-          userinfo: [source[:username], source[:password]].map { |part| URI.encode_www_form_component(part.to_s) }.join(':'),
+          userinfo: [ source[:username], source[:password] ].map { |part| URI.encode_www_form_component(part.to_s) }.join(':'),
           path: "/#{site.name}", query: query.empty? ? nil : URI.encode_www_form(query)
         ).to_s
         %w[sslmode sslcert sslkey sslrootcert].each do |option|
@@ -43,7 +43,7 @@ namespace :site_databases do
         FileUtils.mkdir_p(Rails.root.join('log'))
         path = Rails.root.join('log', "site-database-migration-#{site.id}.log")
         success = File.open(path, File::WRONLY | File::CREAT | File::TRUNC, 0o600) do |log|
-          system(environment, RbConfig.ruby, Rails.root.join('bin/rails').to_s, task, out: log, err: [:child, :out])
+          system(environment, RbConfig.ruby, Rails.root.join('bin/rails').to_s, task, out: log, err: [ :child, :out ])
         end
         raise 'Migration command failed' unless success
         puts "#{site.name}: migrated."

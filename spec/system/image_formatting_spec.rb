@@ -32,5 +32,4 @@ RSpec.describe 'Image formatting in columns', type: :system do
     expect(page).to have_field('Image Classes:', with: 'rounded shadow')
     expect(page).to have_field('Image Styles:', with: 'border-radius: 12px;')
   end
-
 end

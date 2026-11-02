@@ -10,17 +10,17 @@ class AddDatabaseToSiteSetups < ActiveRecord::Migration[8.1]
 
   def down
     execute "SET LOCAL lock_timeout = '10s'"
-    drop_versioning_hook :site_setups, :site_setups_history, primary_key: [:id, :version]
+    drop_versioning_hook :site_setups, :site_setups_history, primary_key: [ :id, :version ]
     remove_column :site_setups, :database
     remove_column :site_setups_history, :database
-    create_versioning_hook :site_setups, :site_setups_history, primary_key: [:id, :version]
+    create_versioning_hook :site_setups, :site_setups_history, primary_key: [ :id, :version ]
   end
 
   private
 
   def rebuild_history_hook
     # Hooks enumerate columns, so regenerate them to record future changes.
-    drop_versioning_hook :site_setups, :site_setups_history, primary_key: [:id, :version]
-    create_versioning_hook :site_setups, :site_setups_history, primary_key: [:id, :version]
+    drop_versioning_hook :site_setups, :site_setups_history, primary_key: [ :id, :version ]
+    create_versioning_hook :site_setups, :site_setups_history, primary_key: [ :id, :version ]
   end
 end

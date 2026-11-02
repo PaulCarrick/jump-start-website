@@ -15,7 +15,7 @@ class SiteRoutes
     return Route.new(nil, nil, '', nil, true) unless SiteSetup.columns_hash.key?('routing_host')
     host = host.to_s.downcase.delete_suffix('.')
     return nil if host.blank? || host.bytesize > 253
-    routes = CACHE.fetch([CatalogRecord.connection_db_config.database, host], expires_in: TTL) { load_host(host) }
+    routes = CACHE.fetch([ CatalogRecord.connection_db_config.database, host ], expires_in: TTL) { load_host(host) }
     routes.find { |route| route.path.empty? || path == route.path || path.start_with?("#{route.path}/") }
   end
 
@@ -54,6 +54,6 @@ class SiteRoutes
                 catalog || row['bootstrapped'] == true
               end
       Route.new(row['id'], catalog ? nil : row['database'], row['routing_path'], key, ready)
-    end.sort_by { |route| [-route.path.length, route.ready == :disabled ? 1 : 0] }.freeze
+    end.sort_by { |route| [ -route.path.length, route.ready == :disabled ? 1 : 0 ] }.freeze
   end
 end

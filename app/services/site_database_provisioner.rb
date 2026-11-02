@@ -54,7 +54,7 @@ class SiteDatabaseProvisioner
         unless catalog.exec("SELECT rolcreatedb OR rolsuper AS allowed FROM pg_roles WHERE rolname = current_user").first['allowed'] == 't'
           raise Error, 'The database role needs CREATEDB permission before a new site can be deployed.'
         end
-        if catalog.exec_params('SELECT 1 FROM pg_database WHERE datname = $1', [setup.database]).ntuples.positive?
+        if catalog.exec_params('SELECT 1 FROM pg_database WHERE datname = $1', [ setup.database ]).ntuples.positive?
           raise Error, "Database #{setup.database} already exists and is not managed by this application. It will not be overwritten."
         end
       end
@@ -127,7 +127,7 @@ class SiteDatabaseProvisioner
     # A database comment records ownership before schema loading, so interrupted
     # initialization is retryable without adopting unrelated databases.
     with_database(source_database) do |catalog|
-      row = catalog.exec_params("SELECT shobj_description(oid, 'pg_database') AS marker FROM pg_database WHERE datname = $1", [registration.name]).first
+      row = catalog.exec_params("SELECT shobj_description(oid, 'pg_database') AS marker FROM pg_database WHERE datname = $1", [ registration.name ]).first
       marker = "jump-start:#{registration.ownership_token}"
       if row
         raise Error, "Database #{registration.name} is not owned by this provisioning request." unless row['marker'] == marker
@@ -148,9 +148,9 @@ class SiteDatabaseProvisioner
         target.transaction do
           target.exec(sql)
           target.exec('SET search_path TO public')
-          target.exec_params("INSERT INTO ar_internal_metadata (key, value, created_at, updated_at) VALUES ('environment', $1, NOW(), NOW()) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()", [Rails.env])
+          target.exec_params("INSERT INTO ar_internal_metadata (key, value, created_at, updated_at) VALUES ('environment', $1, NOW(), NOW()) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()", [ Rails.env ])
           target.exec("CREATE TABLE #{MARKER} (token text NOT NULL)")
-          target.exec_params("INSERT INTO #{MARKER} (token) VALUES ($1)", [registration.ownership_token])
+          target.exec_params("INSERT INTO #{MARKER} (token) VALUES ($1)", [ registration.ownership_token ])
         end
       end
       target.exec('SET search_path TO public')
@@ -180,7 +180,7 @@ class SiteDatabaseProvisioner
   end
 
   def bootstrap_admin_links!(target)
-    [MenuItem, FooterItem].each do |model|
+    [ MenuItem, FooterItem ].each do |model|
       rows = model.live_versions.where(temporal_deleted: false).where("link LIKE '/admin%'").map { |item| item.attributes }
       ids = rows.map { |row| row['id'] }
       rows.each do |row|
@@ -217,7 +217,7 @@ class SiteDatabaseProvisioner
   end
 
   def source_snapshot
-    %w[site_setups site_setups_history].to_h { |table| [table, source.select_all("SELECT * FROM #{source.quote_table_name(table)}").to_a] }
+    %w[site_setups site_setups_history].to_h { |table| [ table, source.select_all("SELECT * FROM #{source.quote_table_name(table)}").to_a ] }
   end
 
   def copy_catalog!(target, snapshot)
@@ -233,7 +233,7 @@ class SiteDatabaseProvisioner
   end
 
   def insert_identity!(target, table, id)
-    target.exec_params("INSERT INTO #{target.quote_ident("#{table}_identities")} (id) VALUES ($1) ON CONFLICT DO NOTHING", [id])
+    target.exec_params("INSERT INTO #{target.quote_ident("#{table}_identities")} (id) VALUES ($1) ON CONFLICT DO NOTHING", [ id ])
   end
 
   def insert!(target, table, attributes)
@@ -250,6 +250,6 @@ class SiteDatabaseProvisioner
   end
 
   def reset_sequence!(target, table)
-    target.exec_params("SELECT setval(pg_get_serial_sequence($1, 'id'), GREATEST(COALESCE((SELECT max(id) FROM #{target.quote_ident(table)}), 0), 1), EXISTS(SELECT 1 FROM #{target.quote_ident(table)}))", [table])
+    target.exec_params("SELECT setval(pg_get_serial_sequence($1, 'id'), GREATEST(COALESCE((SELECT max(id) FROM #{target.quote_ident(table)}), 0), 1), EXISTS(SELECT 1 FROM #{target.quote_ident(table)}))", [ table ])
   end
 end

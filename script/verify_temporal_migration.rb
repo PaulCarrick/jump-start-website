@@ -60,7 +60,7 @@ begin
   %w[site_setups site_setups_history].each do |table|
     connection.select_all("SELECT site_url, routing_host, routing_path FROM #{connection.quote_table_name(table)}").each do |row|
       expected = SiteUrl.parts(row['site_url'])
-      raise "URL routing backfill mismatch in #{table}" unless [row['routing_host'], row['routing_path']] == expected
+      raise "URL routing backfill mismatch in #{table}" unless [ row['routing_host'], row['routing_path'] ] == expected
     end
   end
   # Also rehearse repair of databases that ran the initial release, whose

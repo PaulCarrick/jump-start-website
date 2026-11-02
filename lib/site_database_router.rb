@@ -38,6 +38,6 @@ class SiteDatabaseRouter
   private
 
   def response(status, message)
-    [status, { 'content-type' => 'text/plain; charset=utf-8', 'cache-control' => 'no-store' }, [message]]
+    [ status, { 'content-type' => 'text/plain; charset=utf-8', 'cache-control' => 'no-store' }, [ message ] ]
   end
 end

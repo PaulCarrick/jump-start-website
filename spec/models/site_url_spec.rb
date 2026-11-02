@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe SiteUrl do
   it 'normalizes host case, trailing dots, and a trailing path slash' do
-    expect(described_class.parts('https://EXAMPLE.com./jumpstart-server/')).to eq(['example.com', '/jumpstart-server'])
+    expect(described_class.parts('https://EXAMPLE.com./jumpstart-server/')).to eq([ 'example.com', '/jumpstart-server' ])
   end
 
   it 'rejects unsafe or ambiguous URL forms' do
-    ['//example.com/a', 'https://user:password@example.com/a', 'https://example.com/a?db=other', 'https://example.com/a#fragment', 'https://example.com/a/../b', 'https://example.com/a%2fb'].each do |url|
+    [ '//example.com/a', 'https://user:password@example.com/a', 'https://example.com/a?db=other', 'https://example.com/a#fragment', 'https://example.com/a/../b', 'https://example.com/a%2fb' ].each do |url|
       expect { described_class.parts(url) }.to raise_error(SiteUrl::Invalid)
     end
   end
@@ -22,6 +22,6 @@ RSpec.describe SiteUrl do
 
   it 'has URL and normalized lookup indexes' do
     indexes = CatalogRecord.connection.indexes(:site_setups)
-    expect(indexes.map(&:columns)).to include(['site_url'], ['routing_host', 'routing_path'])
+    expect(indexes.map(&:columns)).to include([ 'site_url' ], [ 'routing_host', 'routing_path' ])
   end
 end
