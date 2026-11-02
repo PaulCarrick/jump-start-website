@@ -137,7 +137,8 @@ const processCells = (
 ) => {
   if (!cells || cells.length === 0) return null;
 
-  let containerClasses = "row";
+  const rowClasses = new Set(["row"]);
+  const alignments = new Set();
   let containerId = "";
 
   cells.forEach((cell) => {
@@ -146,16 +147,24 @@ const processCells = (
     if (cell.formatting) {
       const cellContainerClasses = cell.formatting["container_classes"];
 
-      if (
-        cellContainerClasses &&
-        !containerClasses.includes(cellContainerClasses)
-      )
-        containerClasses = containerClasses + " " + cellContainerClasses;
+      // A shared row has one alignment per breakpoint. Use the first column's
+      // setting consistently in public rendering and the admin preview instead
+      // of letting Bootstrap's stylesheet order choose a conflicting value.
+      for (const token of (cellContainerClasses || "").split(/\s+/).filter(Boolean)) {
+        const alignment = token.match(/^align-items-(?:(sm|md|lg|xl|xxl)-)?(start|center|end|baseline|stretch)$/);
+        if (alignment) {
+          const breakpoint = alignment[1] || "base";
+          if (alignments.has(breakpoint)) continue;
+          alignments.add(breakpoint);
+        }
+        rowClasses.add(token);
+      }
     }
 
     processCell(cell);
   });
 
+  const containerClasses = [...rowClasses].join(" ");
   const alignment = containerClasses.match(
     /(?:^|\s)align-items-(start|center|end|baseline|stretch)(?:\s|$)/,
   )?.[1];
