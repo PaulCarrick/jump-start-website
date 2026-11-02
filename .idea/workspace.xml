@@ -8,52 +8,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/assets/javascripts/views/admin/image_files/edit.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/assets/javascripts/views/admin/image_files/edit.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/admin/publishing_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/admin/publishing_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/admin/site_setups_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/admin/site_setups_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/application_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/application_controller.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/controllers/concerns/admin_return_navigation.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/concerns/admin_return_navigation.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/helpers/application_helper.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/helpers/application_helper.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/CommentEditor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/CommentEditor.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/ContentBlock.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/ContentBlock.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/NavMenu.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/NavMenu.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/NewImageButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/NewImageButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/PersistSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/PersistSection.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/PostDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/PostDetail.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/PostEditor.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/PostEditor.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/PostList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/PostList.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderCell.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderCell.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderSection.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderSection.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/RenderSingleImage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/RenderSingleImage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/SlideShow.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/SlideShow.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/components/imageProcessingUtilities.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/components/imageProcessingUtilities.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/controllers/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/controllers/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/controllers/menu_controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/controllers/menu_controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/hooks/useImageChoices.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/hooks/useImageChoices.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/javascript/services/utilities.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/javascript/services/utilities.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/application_record.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/application_record.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/contact.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/contact.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/image_file.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/image_file.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/site_setup.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/site_setup.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models/user.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/models/user.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/publishing.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/publishing.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/publishing/index.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/publishing/index.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/admin/site_setups/_site_setup_form.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/admin/site_setups/_site_setup_form.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/layouts/_admin_menu.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/layouts/_admin_menu.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/layouts/_footer.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/layouts/_footer.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/layouts/_header.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/layouts/_header.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views/layouts/application.html.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/layouts/application.html.erb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/application.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/application.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/structure.sql" beforeDir="false" afterPath="$PROJECT_DIR$/db/structure.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/admin-guide.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/admin-guide.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/script/verify_temporal_migration.rb" beforeDir="false" afterPath="$PROJECT_DIR$/script/verify_temporal_migration.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/rails_helper.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/rails_helper.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/requests/admin_return_navigation_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/requests/admin_return_navigation_spec.rb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spec/system/admin_site_setups_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/system/admin_site_setups_spec.rb" afterDir="false" />
-    </list>
+    <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -594,7 +549,7 @@
       <workItem from="1793283810344" duration="2376000" />
       <workItem from="1793367917479" duration="1167000" />
       <workItem from="1793557166513" duration="17000" />
-      <workItem from="1793557195074" duration="1169000" />
+      <workItem from="1793557195074" duration="1833000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />
