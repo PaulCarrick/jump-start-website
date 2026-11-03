@@ -17,7 +17,8 @@ RSpec.describe AdminDefaultsSeed do
     described_class.load!
     expect(SiteSetup.find_by(default_setup: true)).to have_attributes(
       configuration_name: 'default', site_name: 'Jump Start Website',
-      site_url: 'https://jumpstartserver.com', database: 'paul-carrick'
+      site_url: 'http://localhost:3000', database: 'jump-start',
+      routing_host: 'localhost', routing_path: ''
     )
     expect(MenuItem.count).to eq(13)
     expect(FooterItem.count).to eq(5)
@@ -81,8 +82,8 @@ RSpec.describe AdminDefaultsSeed do
   it 'seeds the two users with source profiles and an environment-provided password' do
     described_class.load!
     expect(User.count).to eq(2)
-    guest = User.find_by!(email: 'guest@jumpstartserver.com')
-    admin = User.find_by!(email: 'jump_start@jumpstartserver.com')
+    guest = User.find_by!(email: 'guest@example.com')
+    admin = User.find_by!(email: 'jump_start@example.com')
     expect(guest).to have_attributes(name: 'Guest User', access: 'regular', enabled: true)
     expect(admin).to have_attributes(name: 'jump_start', access: 'admin', enabled: true)
     expect(admin.valid_password?(ENV.fetch('USER_PASSWORD'))).to be(true)
@@ -117,7 +118,7 @@ RSpec.describe 'Seeded basic website', type: :request do
     original_password = ENV['USER_PASSWORD']
     ENV['USER_PASSWORD'] = 'seed-password-12345'
     AdminDefaultsSeed.load!
-    host! 'jumpstartserver.com'
+    host! 'localhost'
     get '/home'
     expect(response).to have_http_status(:ok)
     document = Nokogiri::HTML(response.body)
