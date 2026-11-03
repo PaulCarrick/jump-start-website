@@ -50,6 +50,8 @@
 /bin/clearerror_images*
 /bin/display*
 /bin/run*
+!/bin/docker-entrypoint
+!/bin/docker-bootstrap.rb
 /bin/rubocop
 
 # Ignore Kamal
@@ -80,3 +82,12 @@ yarn.lock
 /.dockerignore
 *Dockerfile*
 *docker-compose*
+
+**/.env
+**/.env.*
+/startup
+/.idea
+/.agents
+/.codex
+/.aws
+/vendor/bundle

@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+cd /rails
+if [ "${1:-}" = bundle ] && [ "${3:-}" = puma ]; then
+  : "${DB_PASSWORD:?DB_PASSWORD is required}"
+  : "${SECRET_KEY_BASE:?SECRET_KEY_BASE is required}"
+  mkdir -p tmp/pids
+  rm -f tmp/pids/server.pid
+  # Model loading during preparation must also work before tables exist.
+  JUMPSTART_BOOTSTRAP=1 ASSETS_PRECOMPILE=1 bundle exec rails db:prepare
+  bundle exec rails runner /rails/bin/docker-bootstrap.rb
+fi
+exec "$@"

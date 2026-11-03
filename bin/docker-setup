@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+"""Generate private runtime configuration without overwriting existing settings."""
+import os
+from pathlib import Path
+import secrets
+
+path = Path('.env')
+content = ('DB_PASSWORD=' + secrets.token_hex(32) + '\n'
+           'SECRET_KEY_BASE=' + secrets.token_hex(64) + '\n'
+           'ADMIN_EMAIL=admin@example.com\n'
+           'ADMIN_PASSWORD=' + secrets.token_urlsafe(24) + '\n'
+           'SITE_URL=http://localhost:3000\n')
+try:
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+except FileExistsError:
+    raise SystemExit('.env already exists; keeping your configuration.')
+with os.fdopen(descriptor, 'w') as output:
+    output.write(content)
+print('Created private .env. Your administrator login is stored there.\nStart with: docker compose up -d --build')

@@ -1,0 +1,55 @@
+services:
+  db:
+    image: ${JUMPSTART_DATABASE_IMAGE:-jumpstart-database:local}
+    build:
+      context: .
+      dockerfile: Dockerfile-database
+    environment:
+      POSTGRES_USER: jump_start
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Run bin/docker-setup first}
+      POSTGRES_DB: jump_start
+    volumes:
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U jump_start -d jump_start']
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+  rails:
+    image: ${JUMPSTART_RAILS_IMAGE:-jumpstart-rails:local}
+    build:
+      context: .
+      dockerfile: Dockerfile-rails
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_DATABASE: jump_start
+      DB_QUEUE_DATABASE: jump_start_queue
+      DB_USERNAME: jump_start
+      DB_PASSWORD: ${DB_PASSWORD:?Run bin/docker-setup first}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:?Run bin/docker-setup first}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Run bin/docker-setup first}
+      SITE_URL: ${SITE_URL:-http://localhost:3000}
+      DOCKERIZED: 'true'
+      SERVER_MODE: http
+      SERVER_PORT: '3000'
+      SSL_MODE: 'false'
+      SOLID_QUEUE_IN_PUMA: 'true'
+    ports:
+      - '${BIND_ADDRESS:-127.0.0.1}:${HTTP_PORT:-3000}:3000'
+    volumes:
+      - uploads:/rails/storage
+    healthcheck:
+      test: [CMD-SHELL, 'curl -fsS -H "Host: $$(ruby -ruri -e ''print URI(ENV.fetch("SITE_URL")).host'')" http://127.0.0.1:3000/users/sign_in || exit 1']
+      interval: 15s
+      timeout: 5s
+      start_period: 180s
+      retries: 10
+    restart: unless-stopped
+volumes:
+  database:
+  uploads:
