@@ -12,7 +12,7 @@ module BitemporalRecord
     system_versioning
     system_versioned
     self.primary_key = :id
-    if table_exists? && columns_hash.key?('version')
+    if ENV['ASSETS_PRECOMPILE'] != '1' && table_exists? && columns_hash.key?('version')
       query_constraints :id, :version
     else
       query_constraints :id

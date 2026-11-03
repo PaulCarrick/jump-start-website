@@ -5,7 +5,6 @@ FROM postgres:15 AS build
 
 WORKDIR /database
 
-RUN env
 
 ARG EXTERNAL_PORT=5433
 ARG SSH_PORT="2222"
@@ -63,7 +62,7 @@ RUN echo "*** Installing Base Packages..." && \
     echo "*** Base Packages Installed."
 
 # Setup environmental variabl;es for all users
-COPY ./startup/rails/.env /etc/environment
+COPY ./startup/database/.env /etc/environment
 RUN chmod 644 /etc/environment
 RUN echo "set -o allexport && source /etc/environment && set +o allexport" >> /etc/profile
 
