@@ -3,7 +3,7 @@ services:
     image: ${JUMPSTART_DATABASE_IMAGE:-jumpstart-database:local}
     build:
       context: .
-      dockerfile: Dockerfile-database
+      dockerfile: Dockerfile-database.quickstart
     environment:
       POSTGRES_USER: jump_start
       POSTGRES_PASSWORD: ${DB_PASSWORD:?Run bin/docker-setup first}
@@ -20,7 +20,7 @@ services:
     image: ${JUMPSTART_RAILS_IMAGE:-jumpstart-rails:local}
     build:
       context: .
-      dockerfile: Dockerfile-rails
+      dockerfile: Dockerfile-rails.quickstart
     depends_on:
       db:
         condition: service_healthy

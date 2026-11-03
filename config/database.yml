@@ -92,7 +92,7 @@ production:
   queue:
     <<: *primary_production
     schema_format: ruby
-    database: <%= ENV.fetch("DB_QUEUE_DATABASE") { "#{ENV.fetch("DB_DATABASE", "jump_start")}_cache" } %>
+    database: <%= ENV.fetch("DB_DATABASE", "jump_start") %>_cache
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production

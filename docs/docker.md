@@ -40,3 +40,9 @@ The default binds only to localhost and serves HTTP on port 3000. For public hos
 Run `python3 -m unittest discover -s spec/python -p test_docker_builds.py`. A full integration check uses a separate Compose project with fresh volumes: build, wait for healthy services, sign in, create content/upload a file, restart and confirm persistence, then upgrade against a backup copy of the volumes.
 
 `bin/test-containers` automates the fresh-volume installation, login-page request, administrator checks, and restart persistence in an isolated temporary project. It deletes only its own test volumes when finished. Requires Compose 2.24.4 or newer for the test's port override.
+
+## Existing production deployments
+
+The downloadable images use `Dockerfile-rails.quickstart` and `Dockerfile-database.quickstart`, each with its own build exclusions. Their database, Puma, and seed configuration lives in `docker/quickstart` and is copied only into those images.
+
+The existing `Dockerfile-rails`, `Dockerfile-database`, `bin/build`, `bin/compose`, and `docker-compose-*.yml` continue to use the production build path. Do not replace an existing production deployment with `compose.yml`: it is a separate fresh-install setup, with different volumes and startup behavior.

@@ -1,0 +1,2 @@
+# Keep the upstream initialization, signal handling, and persistent data layout.
+FROM postgres:15

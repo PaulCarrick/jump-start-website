@@ -21,6 +21,20 @@ class DockerSetupTests(unittest.TestCase):
             self.assertNotEqual(subprocess.run(command, cwd=directory, capture_output=True).returncode, 0)
             self.assertEqual(path.read_bytes(), original)
 
+    def test_quickstart_configuration_is_separate_from_production(self):
+        compose = (ROOT / 'compose.yml').read_text()
+        release = (ROOT / '.github/workflows/containers.yml').read_text()
+        for component in ('rails', 'database'):
+            self.assertIn('dockerfile: Dockerfile-' + component + '.quickstart', compose)
+            self.assertTrue((ROOT / ('Dockerfile-' + component + '.quickstart.dockerignore')).is_file())
+        self.assertIn('file: Dockerfile-${{ matrix.component }}.quickstart', release)
+        production = (ROOT / 'Dockerfile-rails').read_text()
+        self.assertIn('/rails/scripts/rails-entrypoint.sh', production)
+        self.assertNotIn('docker/quickstart/', production)
+        quickstart = (ROOT / 'Dockerfile-rails.quickstart').read_text()
+        for configuration in ('database.yml', 'puma.rb', 'seeds.rb'):
+            self.assertIn('COPY docker/quickstart/' + configuration, quickstart)
+
     def test_entrypoint_preserves_command_arguments(self):
         # The image uses /rails as its working directory; emulate it by replacing only cd.
         script = (ROOT / 'bin/docker-entrypoint').read_text().replace('cd /rails', 'cd "' + str(ROOT) + '"')

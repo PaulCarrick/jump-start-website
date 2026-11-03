@@ -1,0 +1,30 @@
+# syntax=docker/dockerfile:1
+ARG RUBY_VERSION=4.0.7
+FROM ruby:${RUBY_VERSION}-slim AS base
+WORKDIR /rails
+ENV RAILS_ENV=production BUNDLE_PATH=/usr/local/bundle RAILS_LOG_TO_STDOUT=1
+RUN apt-get update -qq && apt-get install --no-install-recommends -y curl libjemalloc2 libvips postgresql-client libpq5 && rm -rf /var/lib/apt/lists/*
+
+FROM base AS build
+RUN apt-get update -qq && apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && apt-get install --no-install-recommends -y nodejs && rm -rf /var/lib/apt/lists/*
+COPY Gemfile Gemfile.lock ./
+RUN gem install bundler -v 4.0.20 && bundle config set without 'development test' && bundle install && bundle exec bootsnap precompile --gemfile
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY . .
+# Configuration overrides belong only to the downloadable image.
+COPY docker/quickstart/database.yml config/database.yml
+COPY docker/quickstart/puma.rb config/puma.rb
+COPY docker/quickstart/seeds.rb db/seeds.rb
+RUN bundle exec bootsnap precompile app/ lib/
+RUN ASSETS_PRECOMPILE=1 SECRET_KEY_BASE_DUMMY=1 DB_PASSWORD=build-only bundle exec rails assets:precompile
+
+FROM base
+RUN groupadd --gid 1000 rails && useradd --uid 1000 --gid rails --create-home rails
+COPY --from=build /usr/local/bundle /usr/local/bundle
+COPY --from=build --chown=rails:rails /rails /rails
+RUN mkdir -p storage tmp/pids log && chown -R rails:rails storage tmp log
+USER rails
+EXPOSE 3000
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
