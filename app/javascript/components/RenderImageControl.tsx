@@ -55,7 +55,7 @@ const RenderImageControl: React.FC<RenderImageControlProps> = ({
 
   return (
       <div className="row mb-2">
-        <div className="col-2 d-flex align-items-center">Image:</div>
+        <div className="col-2 pt-2">Image:</div>
         <div className="col-5">
           <select
               className="form-select"
@@ -67,7 +67,7 @@ const RenderImageControl: React.FC<RenderImageControlProps> = ({
                 <option key={value} value={value}>{label}</option>
             ))}
           </select>
-          <NewImageButton onReturn={reload} />
+          <div className="mt-2"><NewImageButton onReturn={reload} /></div>
           {error && <div role="alert">{error} <button type="button" className="btn btn-link" onClick={reload}>Retry</button></div>}
         </div>
       </div>

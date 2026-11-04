@@ -108,9 +108,9 @@ export default function ImagePicker({
   if (!image && imageType === "Upload") {
     return (
       <div className="row mb-2">
-        <div className="col-2 d-flex align-items-center">Upload Image:</div>
+        <div className="col-2 pt-2">Upload Image:</div>
         <div className="col-7">
-          <NewImageButton onReturn={reload} />
+          <div className="mb-2"><NewImageButton onReturn={reload} /></div>
           {error && <div role="alert">{error}</div>}
           <input
             type="file"
@@ -157,13 +157,13 @@ export default function ImagePicker({
   } else {
     return (
       <div className="row mb-2">
-        <div className="col-2 d-flex align-items-center">Image:</div>
+        <div className="col-2 pt-2">Image:</div>
         <div className="col-7">
           <div id="imageDiv">
             {renderComboBox("image", imageChoice(image), optionsHash, chooseImage)}
           </div>
           {image && <div className="form-text mb-1">Current image: {imageChoice(image)}</div>}
-          <div className="d-flex gap-2 mt-1">
+          <div className="d-flex flex-wrap align-items-center gap-2 mt-1">
             <NewImageButton onReturn={reload} />
             {image && <button type="button" className="btn btn-secondary" onClick={() => setValue('', 'image')}>Remove Image</button>}
           </div>

@@ -28,7 +28,7 @@ export default function NewImageButton({ onReturn }: { onReturn: () => void }) {
   if (!document.querySelector('meta[name="admin-image-create"][content="true"]')) return null;
 
   return <>
-    <button ref={trigger} type="button" className="btn btn-secondary mt-2" onClick={() => setOpen(true)}>New Image</button>
+    <button ref={trigger} type="button" className="btn btn-secondary" onClick={() => setOpen(true)}>New Image</button>
     {open && createPortal(
       <dialog ref={dialog} aria-label="New Image" onCancel={(event) => { event.preventDefault(); close(); }}
               style={{ width: "95vw", maxWidth: "1200px", padding: "1rem", border: "1px solid #dee2e6", borderRadius: "0.5rem" }}>
