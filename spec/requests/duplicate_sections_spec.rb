@@ -20,8 +20,7 @@ RSpec.describe "Duplicate a page section", type: :request do
   it "rejects non-admin users without creating records" do
     sign_in create(:user, access: "read_only")
     expect { post path, params: { section_name: "New details" } }.not_to change { [ Section.count, Cell.count ] }
-    expect(response).to redirect_to(edit_admin_page_path(section.page))
-    expect(flash[:alert]).to include("not permitted")
+    expect(response).to have_http_status(:forbidden)
   end
 
   it "does not duplicate a section through another page's URL" do

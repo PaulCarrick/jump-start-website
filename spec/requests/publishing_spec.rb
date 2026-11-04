@@ -6,9 +6,9 @@ RSpec.describe 'Publishing UI and authorization', type: :request do
   it 'requires administrator access to deploy or discard' do
     sign_in create(:user, access: 'read_only')
     post admin_deploy_publishing_path
-    expect(response).to redirect_to(root_path)
+    expect(response).to have_http_status(:forbidden)
     post admin_discard_publishing_path
-    expect(response).to redirect_to(root_path)
+    expect(response).to have_http_status(:forbidden)
   end
 
   it 'saves drafts through existing editors and deploys them from the shared review page' do

@@ -23,7 +23,7 @@ RSpec.describe 'Site database sync status', type: :request do
     sign_in create(:user, access: 'read_only')
     request = SiteDatabaseSyncRequest.create!(deployment_id: 1, status: 'failed')
     post admin_retry_database_sync_path(request)
-    expect(response).to redirect_to(root_path)
+    expect(response).to have_http_status(:forbidden)
     expect(request.reload.status).to eq('failed')
   end
 end

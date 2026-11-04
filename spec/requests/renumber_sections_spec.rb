@@ -24,8 +24,7 @@ RSpec.describe "Renumber page sections", type: :request do
     get edit_admin_page_path(section.page)
     expect(response.body).not_to include("Renumber Sections")
     post path
-    expect(response).to redirect_to(edit_admin_page_path(section.page))
-    expect(flash[:alert]).to include("not permitted")
+    expect(response).to have_http_status(:forbidden)
     expect([ section.class.find(section.id).section_order, second.class.find(second.id).section_order ]).to eq([ -10, 75 ])
   end
 

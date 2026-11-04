@@ -64,8 +64,24 @@ module PublishingRequests
     # Eager current_user here can authenticate and reset the token before that
     # verification, causing every browser login to fail with a 422 response.
     user = current_user if respond_to?(:current_user) && !devise_controller?
-    if controller_path.start_with?('api/') && %w[create update destroy].include?(action_name) && !%w[blog_posts post_comments].include?(controller_name) && !user&.admin?
-      render json: { errors: [ 'Administrator access is required to change content.' ] }, status: :forbidden
+    if controller_path.start_with?('api/') && %w[create update destroy].include?(action_name)
+      permitted = case controller_name
+                  when 'blog_posts' then user&.blogs?
+                  when 'post_comments' then user.present? && !user.read_only?
+                  else user&.admin?
+                  end
+      unless permitted
+        render json: { errors: [ 'You are not permitted to change this content.' ] }, status: :forbidden
+        return
+      end
+    end
+    # Some legacy editor links mutate data through GET requests, including
+    # cancellation cleanup. Protect those as well as normal form submissions.
+    admin_write = !request.get? && !request.head?
+    admin_write ||= %w[create update destroy duplicate renumber_sections add_section_to_page add_cell_to_section].include?(action_name)
+    admin_write ||= action_name == 'edit' && params[:canceled] == 'true'
+    if controller_path.start_with?('admin/') && admin_write && !user&.admin?
+      user ? head(:forbidden) : authenticate_user!
       return
     end
     admin_request = (controller_path.start_with?('admin/') || (controller_path.start_with?('api/') && (%w[create update destroy].include?(action_name) || params[:public_view] != 'true'))) && user&.admin?
