@@ -39,7 +39,7 @@ The default binds only to localhost and serves HTTP on port 3000. For public hos
 
 Run `python3 -m unittest discover -s spec/python -p test_docker_builds.py`. A full integration check uses a separate Compose project with fresh volumes: build, wait for healthy services, sign in, create content/upload a file, restart and confirm persistence, then upgrade against a backup copy of the volumes.
 
-`bin/test-containers` automates the fresh-volume installation, login-page request, administrator checks, and restart persistence in an isolated temporary project. It deletes only its own test volumes when finished. Requires Compose 2.24.4 or newer for the test's port override.
+`bin/test-containers` automates the fresh-volume installation, login-page request, generated administrator password check, and persistence of the account and an Active Storage upload after restart and container replacement without rebuilding, in an isolated temporary project. It deletes only its own test volumes when finished. Requires Compose 2.24.4 or newer for the test's port override.
 
 ## Existing production deployments
 

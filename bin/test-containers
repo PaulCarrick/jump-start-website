@@ -20,13 +20,13 @@ with tempfile.TemporaryDirectory() as directory:
         command += ['-f', str(root / 'compose.yml'), '-f', str(override)]
         run('up', '-d', '--build', '--wait', '--wait-timeout', '300')
         run('exec', '-T', 'rails', 'bundle', 'exec', 'rails', 'runner',
-            "raise 'admin missing' unless User.unscoped.where(email: ENV.fetch('ADMIN_EMAIL'), access: 'super').exists?; File.write(Rails.root.join('storage/container-test'), 'persistent')")
+            "admin = User.find_by!(email: ENV.fetch('ADMIN_EMAIL'), access: 'super'); raise 'password invalid' unless admin.valid_password?(ENV.fetch('ADMIN_PASSWORD')); ActiveStorage::Blob.create_and_upload!(io: StringIO.new('persistent upload'), filename: 'container-test.txt', content_type: 'text/plain')")
         run('exec', '-T', 'rails', 'curl', '-fsS', '-H', 'Host: localhost', 'http://127.0.0.1:3000/users/sign_in', stdout=subprocess.DEVNULL)
         run('restart')
-        run('up', '-d', '--wait', '--wait-timeout', '300')
+        run('up', '-d', '--no-build', '--force-recreate', '--wait', '--wait-timeout', '300')
         run('exec', '-T', 'rails', 'bundle', 'exec', 'rails', 'runner',
-            "raise 'upload lost' unless File.read(Rails.root.join('storage/container-test')) == 'persistent'; raise 'account lost' unless User.unscoped.where(email: ENV.fetch('ADMIN_EMAIL')).count == 1")
-        print('Fresh install, login page, accounts, and restart persistence passed.')
+            "raise 'upload lost' unless ActiveStorage::Blob.find_by!(filename: 'container-test.txt').download == 'persistent upload'; raise 'account lost' unless User.unscoped.where(email: ENV.fetch('ADMIN_EMAIL')).count == 1")
+        print('Fresh install, login page, password, uploaded file, restart, and container replacement persistence passed.')
     except Exception:
         run('logs', '--no-color')
         raise
