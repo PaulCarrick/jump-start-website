@@ -8,7 +8,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things." />
+    <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
+      <change beforePath="$PROJECT_DIR$/app/controllers/admin/help_controller.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/controllers/admin/help_controller.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/helpers/admin_help_helper.rb" beforeDir="false" afterPath="$PROJECT_DIR$/app/helpers/admin_help_helper.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/views/layouts/_admin_menu.erb" beforeDir="false" afterPath="$PROJECT_DIR$/app/views/layouts/_admin_menu.erb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/routes.rb" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.rb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spec/system/admin_help_spec.rb" beforeDir="false" afterPath="$PROJECT_DIR$/spec/system/admin_help_spec.rb" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -554,7 +560,7 @@
       <workItem from="1793637254053" duration="7365000" />
       <workItem from="1793717326880" duration="8079000" />
       <workItem from="1793730426168" duration="2457000" />
-      <workItem from="1793733072478" duration="809000" />
+      <workItem from="1793733072478" duration="1391000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />

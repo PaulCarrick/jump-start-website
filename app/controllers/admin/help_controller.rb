@@ -6,6 +6,10 @@ class Admin::HelpController < ApplicationController
     @title = "Admin Help"
   end
 
+  def tutorial
+    @title = "New Site Tutorial"
+  end
+
   private
 
   def require_help_access

@@ -3,8 +3,8 @@ require "rdoc/markdown"
 require "rdoc/markup/to_html"
 
 module AdminHelpHelper
-  def admin_help_document
-    source = Rails.root.join("docs/admin-guide.md").read
+  def admin_help_document(tutorial: false)
+    source = Rails.root.join(tutorial ? "docs/new-site-tutorial.md" : "docs/admin-guide.md").read
     html = RDoc::Markdown.parse(source).accept(RDoc::Markup::ToHtml.new(RDoc::Options.new))
     document = Nokogiri::HTML::DocumentFragment.parse(html)
     document.css("h1, h2, h3").each do |heading|

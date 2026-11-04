@@ -7,7 +7,7 @@ RSpec.describe 'Admin Help', type: :system do
     login_as(create(:user, access: 'super'))
     visit admin_pages_path
     within('.admin-sidebar') do
-      expect(page).to have_css('ul.navbar-nav > li:last-child a', text: /help/i)
+      expect(page).to have_css('ul.navbar-nav > li:last-child a', text: /new site tutorial/i)
       find("a[href='/admin/help']").click
     end
     expect(page).to have_current_path(admin_help_path)
@@ -21,6 +21,21 @@ RSpec.describe 'Admin Help', type: :system do
     expect(page).to have_current_path(%r{/admin/help\#pages\z}, url: true)
     expect(page).to have_css('#common-questions')
     page.save_screenshot(Rails.root.join('tmp/admin-help.png'))
+  end
+
+  it 'opens the step-by-step tutorial below Help' do
+    login_as(create(:user, access: 'super'))
+    visit admin_help_path
+    within('.admin-sidebar') do
+      expect(page).to have_css('li:has(a[href="/admin/help"]) + li a', text: /new site tutorial/i)
+      click_link 'New Site Tutorial'
+    end
+    expect(page).to have_current_path(admin_tutorial_path)
+    expect(page).to have_css('h1', text: 'Build your first Jumpstart website')
+    expect(page).to have_css('h2', text: 'Path A: native installation from the repository')
+    expect(page).to have_css('h2', text: 'Path B: two-container installation')
+    expect(page).to have_css('h2', text: 'Edit your Site Setup')
+    expect(page).to have_css('h2', text: 'Create an About page with text and images')
   end
 
   it 'allows a read-only user to read the guide' do

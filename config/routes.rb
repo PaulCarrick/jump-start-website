@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     post 'publishing/discard', to: 'publishing#discard', as: :discard_publishing
     get 'publishing/history', to: 'publishing#history', as: :publishing_history
     get "help", to: "help#show", as: :help
+    get "tutorial", to: "help#tutorial", as: :tutorial
     root "dashboard#index" # Admin dashboard
     resources :blog_posts, except: [ :destroy ]
     delete "/blog_posts/:id", to: "blog_posts#destroy", as: "delete_blog_post"
