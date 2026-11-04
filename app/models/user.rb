@@ -3,6 +3,16 @@ class User < ApplicationRecord
   include BitemporalRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
 
+  # Devise's unscoped uniqueness check also sees retired temporal versions.
+  # Replace only that check, retaining its other email/password validations.
+  _validators[:email].select { |validator| validator.is_a?(ActiveRecord::Validations::UniquenessValidator) }.each do |validator|
+    skip_callback(:validate, :before, validator)
+    _validators[:email].delete(validator)
+  end
+  validates_uniqueness_of :email, allow_blank: true, case_sensitive: true,
+                         if: :devise_will_save_change_to_email?,
+                         conditions: -> { working_or_live }
+
   validates :password, presence: true, on: :create
   validates :password, confirmation: true, allow_blank: true
 

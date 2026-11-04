@@ -103,7 +103,7 @@ RUN if [ "${SUDO_AVAILABLE}" = "true" ]; then \
     fi
 
 # Define a volume for persistent data storage
-VOLUME /var/lib/postgresql/data
+VOLUME /var/lib/postgresql/15/main
 
 EXPOSE ${EXTERNAL_PORT}
 ENTRYPOINT ["/database/scripts/database-entrypoint.sh"]

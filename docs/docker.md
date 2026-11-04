@@ -46,3 +46,5 @@ Run `python3 -m unittest discover -s spec/python -p test_docker_builds.py`. A fu
 The downloadable images use `Dockerfile-rails.quickstart` and `Dockerfile-database.quickstart`, each with its own build exclusions. Their database, Puma, and seed configuration lives in `docker/quickstart` and is copied only into those images.
 
 The existing `Dockerfile-rails`, `Dockerfile-database`, `bin/build`, `bin/compose`, and `docker-compose-*.yml` continue to use the production build path. Do not replace an existing production deployment with `compose.yml`: it is a separate fresh-install setup, with different volumes and startup behavior.
+
+The legacy database container runs its PostgreSQL 15 cluster at `/var/lib/postgresql/15/main`; both its image volume declaration and Compose `postgres_data` mount target that directory. Before recreating an older database container that mounted `/var/lib/postgresql/data`, take and verify a logical database backup from the running container. The mount change does not move existing data: restore the backup into the corrected deployment and verify it before removing the old container or volumes.

@@ -26,6 +26,38 @@ RSpec.describe User, type: :model do
   end
 
   describe "validations" do
+    it "rejects an email belonging to another current user" do
+      existing = create(:user)
+      replacement = build(:user, email: existing.email)
+      expect(replacement).not_to be_valid
+      expect(replacement.errors[:email]).to include("has already been taken")
+    end
+
+    it "reuses a draft-deleted user's email and preserves history through deployment" do
+      admin = create(:user, access: 'super')
+      existing = create(:user)
+      PublishingContext.editing = true
+      existing.destroy!
+      replacement = create(:user, email: existing.email)
+      PublishingContext.editing = false
+      Publishing.deploy!(actor: admin, summary: 'Replace deleted user')
+      PublishingContext.live = true
+      expect(User.find_by!(email: existing.email).id).to eq(replacement.id)
+      expect(User.unscoped.where(id: existing.id)).to exist
+      expect(build(:user, email: existing.email)).not_to be_valid
+    end
+
+    it "allows reuse of an email retained only by a previous published version" do
+      admin = create(:user, access: 'super')
+      existing = create(:user)
+      old_email = existing.email
+      PublishingContext.editing = true
+      existing.update!(email: 'changed@example.com')
+      PublishingContext.editing = false
+      Publishing.deploy!(actor: admin, summary: 'Change email')
+      expect(create(:user, email: old_email)).to be_persisted
+    end
+
     it "validates presence of email" do
       user = User.new(password: "password123")
       expect(user.valid?).to be false
