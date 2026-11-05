@@ -1,65 +1,60 @@
-# Jump Start Website
+# Jump Start Server
 
-## What is Jump Start Website?
-**Jump Start Website** is an application that makes it easy to set up a website without any coding. Once installed and running, all setup is done directly on the server itself.
+Jump Start Server is an open source, self-hosted website builder. Create pages, manage navigation, and publish blog posts from a browser without writing code. Search and contact forms are built in, and you choose where to host your site.
 
-## Why Use Jump Start Website?
-Jump Start Website makes it easy to create and manage a website without any coding. With Jump Start Website, you can:
+[See a live example](https://paul-carrick.com) · [Follow the quickstart](docs/new-site-tutorial.md) · [View releases](https://github.com/PaulCarrick/jump-start-website/releases)
 
-✔ **Create, edit, and delete pages** with text and images.  
-✔ **Easily manage navigation menus** in the header and footer.  
-✔ **Use built-in features**, including contact forms, blogs, and search capabilities.  
+## What you can build
 
-## Why Use Jump Start Website Instead of AI-Based Website Builders?
-Many hosting providers now offer AI-based website builders, but **Jump Start Website** has key advantages:
+Use Jump Start Server to create a personal website, portfolio, blog, or small organization site. Once the server is running, you can manage your site from the admin interface.
 
-### 🚀 It's Free & Open-Source
-Jump Start Website is **100% free and open-source**, with no hidden fees.
+- Create and edit pages with text and images.
+- Configure navigation in the header and footer.
+- Write and publish blog posts.
+- Let visitors search your site and contact you through a built-in form.
 
-### 🏗 You Control the Layout
-Unlike AI website builders that force predefined templates, **Jump Start Website** lets you design your website exactly how you want.
+## Why use Jump Start Server?
 
-### 🔓 No Vendor Lock-In
-With **Jump Start Website**, you’re **not tied to a specific hosting provider**.  
+### 🚀 Free and open source
 
-If you ever want to switch providers, just move your server—it’s that simple!
+Use, inspect, and modify the software under the Apache License 2.0. The software is free. Hosting and domain registration costs depend on what you choose.
 
-### 💰 Affordable Hosting Options
-Jump Start Website is designed to run efficiently on **budget-friendly hosting solutions**.
+### 🏗️ Control your site’s layout
 
-For example, the creator of Jump Start Website, **Paul Carrick**, runs his website using:
+Arrange page content and configure your header and footer navigation from the admin interface. You can update the site as your content changes.
 
-✔ **Amazon Lightsail** – $7/month  
-✔ **Let's Encrypt SSL Certificates** – Free  
-✔ **Namecheap domain registration** – $17/year  
+### 🔓 Choose where you host
 
-**Total cost? Just $101 per year!**
+Run Jump Start Server on infrastructure you control. If you switch hosting providers, you can migrate the application, database, and uploaded files to your new host.
 
----
+### 💰 Start with affordable hosting
 
-## Example Website  
-For an example of what Jump Start Website can do, visit:  
-[**Paul Carrick’s website**](https://paul-carrick.com)  
+You can run a personal site on a small cloud server. The live example runs on Amazon Lightsail and uses Let’s Encrypt for HTTPS.
 
-It runs on **Jump Start Website**. There is **no HTML coding, CSS, or JavaScript used**.
+## Get started
 
-## Download & Installation
-Distributions are available via:
+Follow the [new site tutorial](docs/new-site-tutorial.md) to run Jump Start Server with Docker. Once it’s running, open the admin interface, create your first page, and add it to your site navigation.
 
-- **GitHub (source code):** [Jump Start Website Repository](https://github.com/PaulCarrick/jump-start-website)  
-- **DockerHub (containerized version):** [Jump Start Website Docker Image](https://hub.docker.com/repository/docker/paulcarrick/jump-start-website-server/tags/latest/sha256-a847743b1016adf7dd1a3ff369f032fa3a7dac97ef226924e08f5e28e5a2faa4)  
-- **Debian Package** for easy installation  
+See [GitHub Releases](https://github.com/PaulCarrick/jump-start-website/releases) for versioned downloads and release notes. For additional setup options, see the [installation guide](INSTALLATION.md).
 
-## Installation
-[Installation Guide](INSTALLATION.md)
+## Live example
 
-## Documentation & Support
-Documentation is available at [jump-start-website.com](https://jump-start-website.com) to help you install and use **Jump Start Website**.\
-\
-If you get stuck, you can request help throught the contact form:\
-[jump-start-website.com/contact](https://jump-start-website.com/contact)
+[Paul Carrick’s personal website](https://paul-carrick.com) runs on Jump Start Server. Browse it to see how pages, navigation, and blog posts work together on a published site.
 
----
+## For developers
 
-We hope you enjoy it! 🎉
+Jump Start Server uses Ruby on Rails and PostgreSQL, with JavaScript and TypeScript in the frontend. Docker configurations are included for the application and database.
 
+- [`app/`](app/) contains the application code.
+- [`spec/`](spec/) contains the RSpec test suite.
+- [`docs/`](docs/) contains tutorials and project documentation.
+
+## Help and contributions
+
+If you find a bug or have a feature idea, [open a GitHub issue](https://github.com/PaulCarrick/jump-start-website/issues). For a bug report, include the version you’re running, how you installed it, and the steps to reproduce the problem.
+
+Pull requests are welcome. For a larger change, start with an issue so we can discuss the approach.
+
+## License
+
+Jump Start Server is available under the [Apache License 2.0](LICENSE).
