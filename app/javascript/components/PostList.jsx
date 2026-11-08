@@ -126,6 +126,10 @@ const PostList = ({
       .catch((error) => console.error('Error:', error));
   };
 
+  // Matches the server rule: administrators, or the user who wrote the comment.
+  const canChangeComment = (comment) =>
+    Boolean(user?.id) && ((user.access === 'admin') || (user.access === 'super') || (comment.user_id === user.id));
+
   const handleCommentDelete = (commentId) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this comment?");
     if (!confirmDelete) {
@@ -231,7 +235,7 @@ const PostList = ({
                           {DateTimeDisplay({ dateTime: comment.posted })} - {comment.author}
                         </div>
                         <div className="col-3 text-end">
-                          {user.logged_in && comment.author === user.name && (
+                          {canChangeComment(comment) && (
                             <button
                               type="button"
                               onClick={() => openCommentEditor(post, comment)}
@@ -240,7 +244,7 @@ const PostList = ({
                               Edit
                             </button>
                           )}
-                          {comment.author === user.name && (
+                          {canChangeComment(comment) && (
                             <button
                               type="button"
                               onClick={() => handleCommentDelete(comment.id)}

@@ -178,8 +178,8 @@ CREATE FUNCTION public.sys_ver_func_1981a196b1() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
   BEGIN
-    INSERT INTO "post_comments_history" ("id", "blog_post_id", "title", "author", "posted", "content", "created_at", "updated_at", "checksum", "enabled", "version", "validity", "temporal_state", "base_version", "base_updated_at", "deployment_id", "temporal_deleted", system_period)
-    VALUES (NEW."id", NEW."blog_post_id", NEW."title", NEW."author", NEW."posted", NEW."content", NEW."created_at", NEW."updated_at", NEW."checksum", NEW."enabled", NEW."version", NEW."validity", NEW."temporal_state", NEW."base_version", NEW."base_updated_at", NEW."deployment_id", NEW."temporal_deleted", tstzrange(NOW(), 'infinity'));
+    INSERT INTO "post_comments_history" ("id", "blog_post_id", "title", "author", "posted", "content", "created_at", "updated_at", "checksum", "enabled", "version", "validity", "temporal_state", "base_version", "base_updated_at", "deployment_id", "temporal_deleted", "user_id", system_period)
+    VALUES (NEW."id", NEW."blog_post_id", NEW."title", NEW."author", NEW."posted", NEW."content", NEW."created_at", NEW."updated_at", NEW."checksum", NEW."enabled", NEW."version", NEW."validity", NEW."temporal_state", NEW."base_version", NEW."base_updated_at", NEW."deployment_id", NEW."temporal_deleted", NEW."user_id", tstzrange(NOW(), 'infinity'));
 
     RETURN NULL;
   END;
@@ -190,7 +190,7 @@ $$;
 -- Name: FUNCTION sys_ver_func_1981a196b1(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.sys_ver_func_1981a196b1() IS '{"verb":"insert","source_table":"post_comments","history_table":"post_comments_history","columns":["id","blog_post_id","title","author","posted","content","created_at","updated_at","checksum","enabled","version","validity","temporal_state","base_version","base_updated_at","deployment_id","temporal_deleted"],"gem_version":"0.4.0"}';
+COMMENT ON FUNCTION public.sys_ver_func_1981a196b1() IS '{"verb":"insert","source_table":"post_comments","history_table":"post_comments_history","columns":["id","blog_post_id","title","author","posted","content","created_at","updated_at","checksum","enabled","version","validity","temporal_state","base_version","base_updated_at","deployment_id","temporal_deleted","user_id"],"gem_version":"0.4.0"}';
 
 
 --
@@ -820,9 +820,9 @@ CREATE FUNCTION public.sys_ver_func_c2a5a30bd7() RETURNS trigger
     SET system_period = tstzrange(lower(system_period), NOW())
     WHERE "id" = OLD."id" AND "version" = OLD."version" AND upper(system_period) = 'infinity' AND lower(system_period) < NOW();
 
-    INSERT INTO "post_comments_history" ("id", "blog_post_id", "title", "author", "posted", "content", "created_at", "updated_at", "checksum", "enabled", "version", "validity", "temporal_state", "base_version", "base_updated_at", "deployment_id", "temporal_deleted", system_period)
-    VALUES (NEW."id", NEW."blog_post_id", NEW."title", NEW."author", NEW."posted", NEW."content", NEW."created_at", NEW."updated_at", NEW."checksum", NEW."enabled", NEW."version", NEW."validity", NEW."temporal_state", NEW."base_version", NEW."base_updated_at", NEW."deployment_id", NEW."temporal_deleted", tstzrange(NOW(), 'infinity'))
-    ON CONFLICT ("id", "version", system_period) DO UPDATE SET "id" = EXCLUDED."id", "blog_post_id" = EXCLUDED."blog_post_id", "title" = EXCLUDED."title", "author" = EXCLUDED."author", "posted" = EXCLUDED."posted", "content" = EXCLUDED."content", "created_at" = EXCLUDED."created_at", "updated_at" = EXCLUDED."updated_at", "checksum" = EXCLUDED."checksum", "enabled" = EXCLUDED."enabled", "version" = EXCLUDED."version", "validity" = EXCLUDED."validity", "temporal_state" = EXCLUDED."temporal_state", "base_version" = EXCLUDED."base_version", "base_updated_at" = EXCLUDED."base_updated_at", "deployment_id" = EXCLUDED."deployment_id", "temporal_deleted" = EXCLUDED."temporal_deleted";
+    INSERT INTO "post_comments_history" ("id", "blog_post_id", "title", "author", "posted", "content", "created_at", "updated_at", "checksum", "enabled", "version", "validity", "temporal_state", "base_version", "base_updated_at", "deployment_id", "temporal_deleted", "user_id", system_period)
+    VALUES (NEW."id", NEW."blog_post_id", NEW."title", NEW."author", NEW."posted", NEW."content", NEW."created_at", NEW."updated_at", NEW."checksum", NEW."enabled", NEW."version", NEW."validity", NEW."temporal_state", NEW."base_version", NEW."base_updated_at", NEW."deployment_id", NEW."temporal_deleted", NEW."user_id", tstzrange(NOW(), 'infinity'))
+    ON CONFLICT ("id", "version", system_period) DO UPDATE SET "id" = EXCLUDED."id", "blog_post_id" = EXCLUDED."blog_post_id", "title" = EXCLUDED."title", "author" = EXCLUDED."author", "posted" = EXCLUDED."posted", "content" = EXCLUDED."content", "created_at" = EXCLUDED."created_at", "updated_at" = EXCLUDED."updated_at", "checksum" = EXCLUDED."checksum", "enabled" = EXCLUDED."enabled", "version" = EXCLUDED."version", "validity" = EXCLUDED."validity", "temporal_state" = EXCLUDED."temporal_state", "base_version" = EXCLUDED."base_version", "base_updated_at" = EXCLUDED."base_updated_at", "deployment_id" = EXCLUDED."deployment_id", "temporal_deleted" = EXCLUDED."temporal_deleted", "user_id" = EXCLUDED."user_id";
 
     RETURN NULL;
   END;
@@ -833,7 +833,7 @@ $$;
 -- Name: FUNCTION sys_ver_func_c2a5a30bd7(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.sys_ver_func_c2a5a30bd7() IS '{"verb":"update","source_table":"post_comments","history_table":"post_comments_history","columns":["id","blog_post_id","title","author","posted","content","created_at","updated_at","checksum","enabled","version","validity","temporal_state","base_version","base_updated_at","deployment_id","temporal_deleted"],"primary_key":["id","version"],"gem_version":"0.4.0"}';
+COMMENT ON FUNCTION public.sys_ver_func_c2a5a30bd7() IS '{"verb":"update","source_table":"post_comments","history_table":"post_comments_history","columns":["id","blog_post_id","title","author","posted","content","created_at","updated_at","checksum","enabled","version","validity","temporal_state","base_version","base_updated_at","deployment_id","temporal_deleted","user_id"],"primary_key":["id","version"],"gem_version":"0.4.0"}';
 
 
 --
@@ -1862,6 +1862,7 @@ CREATE TABLE public.post_comments (
     base_updated_at timestamp(6) without time zone,
     deployment_id bigint,
     temporal_deleted boolean DEFAULT false NOT NULL,
+    user_id bigint,
     CONSTRAINT post_comments_temporal_state CHECK (((temporal_state)::text = ANY ((ARRAY['live'::character varying, 'draft'::character varying])::text[]))),
     CONSTRAINT post_comments_temporal_validity CHECK (((((temporal_state)::text = 'draft'::text) AND isempty(validity)) OR (((temporal_state)::text = 'live'::text) AND (NOT isempty(validity)))))
 );
@@ -1908,7 +1909,8 @@ CREATE TABLE public.post_comments_history (
     base_updated_at timestamp(6) without time zone,
     deployment_id bigint,
     temporal_deleted boolean DEFAULT false NOT NULL,
-    system_period tstzrange NOT NULL
+    system_period tstzrange NOT NULL,
+    user_id bigint
 );
 
 
@@ -3311,6 +3313,13 @@ CREATE INDEX index_post_comments_on_title ON public.post_comments USING btree (t
 
 
 --
+-- Name: index_post_comments_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_post_comments_on_user_id ON public.post_comments USING btree (user_id);
+
+
+--
 -- Name: index_sections_on_page_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -3761,6 +3770,7 @@ ALTER TABLE ONLY public.cells
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261108120000'),
 ('20261101160000'),
 ('20261101140000'),
 ('20261101120000'),

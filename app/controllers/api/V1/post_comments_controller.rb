@@ -27,6 +27,13 @@ module Api
         begin
           post_comment = PostComment.new(post_comment_params)
 
+          # The writer is always the signed-in user, whatever the request says.
+          post_comment.user_id = current_user.id
+          unless current_user.admin?
+            post_comment.author = current_user.name
+            post_comment.posted = Time.current
+          end
+
           post_comment.save!
 
           render json: post_comment, status: :created
@@ -37,6 +44,7 @@ module Api
 
       def update
         return unless @post_comment.present?
+        return forbid_change unless @post_comment.changeable_by?(current_user)
 
         begin
           @post_comment.update!(post_comment_params)
@@ -49,6 +57,7 @@ module Api
 
       def destroy
         return unless @post_comment.present?
+        return forbid_change unless @post_comment.changeable_by?(current_user)
 
         begin
           @post_comment.destroy!
@@ -73,8 +82,20 @@ module Api
         end
       end
 
+      def forbid_change
+        render json: { errors: [ "You can change or delete only your own comments." ] }, status: :forbidden
+      end
+
+      # Administrators may set every field. Other users may set only the text of
+      # their comment, and the post it belongs to when they first write it.
       def post_comment_params
-        params.require(:post_comment).permit(:enabled, :blog_post_id, :title, :author, :posted, :content)
+        if current_user.admin?
+          params.require(:post_comment).permit(:enabled, :blog_post_id, :title, :author, :posted, :content)
+        elsif action_name == "create"
+          params.require(:post_comment).permit(:blog_post_id, :title, :content)
+        else
+          params.require(:post_comment).permit(:title, :content)
+        end
       end
     end
   end
