@@ -10,6 +10,14 @@ if (!window.contactRecaptchaListenerInstalled) {
     }
     event.preventDefault();
     const button = event.submitter;
+    const message = form.querySelector('[name="contact[message]"]');
+    const holder = document.createElement("div");
+    holder.innerHTML = message ? message.value : "";
+    if (!holder.textContent.trim()) {
+      const area = document.getElementById("error-area");
+      if (area) area.textContent = "Please enter a message.";
+      return;
+    }
     const showError = () => {
       if (button) button.disabled = false;
       const area = document.getElementById("error-area");

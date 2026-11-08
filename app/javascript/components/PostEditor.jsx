@@ -5,8 +5,8 @@ import EnabledSwitch from "./EnabledSwitch";
 
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import { storableHtml } from './quillHtml';
 
 const PostEditor = ({
                         user = {
@@ -50,7 +50,7 @@ const PostEditor = ({
                                title,
                                author,
                                blog_type,
-                               content,
+                               content: storableHtml(content),
                                posted,
                                visibility
                              }, // Include all fields

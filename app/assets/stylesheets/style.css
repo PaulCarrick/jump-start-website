@@ -435,6 +435,22 @@ body .btn.admin-navigation-readonly:disabled {
   text-align: inherit;
 }
 
+/* Saved text is ordinary HTML. Quill 2's stylesheet hides list markers inside
+   .ql-editor (its editor draws its own), so show normal bullets and numbers. */
+.ql-editor.rich-text-content ul,
+.ql-editor.rich-text-content ol {
+  padding-left: 1.5em;
+}
+.ql-editor.rich-text-content li {
+  padding-left: 0;
+}
+.ql-editor.rich-text-content ul > li {
+  list-style-type: disc;
+}
+.ql-editor.rich-text-content ol > li {
+  list-style-type: decimal;
+}
+
 /* Keep published Quill sizes readable on phones without changing saved content
    or the editable Quill surface. Desktop sizing and Div Ratio stay intact. */
 @media (max-width: 575.98px) {

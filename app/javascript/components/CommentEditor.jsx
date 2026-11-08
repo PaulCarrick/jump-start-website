@@ -5,8 +5,8 @@ import EnabledSwitch from "./EnabledSwitch";
 
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import { storableHtml } from './quillHtml';
 
 // Writes a new comment, or edits one when `comment` is given. The server sets
 // the author, the date and who wrote it, so they are only shown here.
@@ -34,7 +34,7 @@ const CommentEditor = ({
     const url = comment
       ? `/api/v1/post_comments/${comment.id}` // Include the ID for updates
       : '/api/v1/post_comments'; // Create new comment
-    const fields = { blog_post_id: blogPostId, title, content };
+    const fields = { blog_post_id: blogPostId, title, content: storableHtml(content) };
 
     if (isAdministrator) fields.enabled = enabled;
 

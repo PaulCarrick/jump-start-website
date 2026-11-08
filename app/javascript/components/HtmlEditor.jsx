@@ -4,9 +4,9 @@
 
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import Quill from "quill";
+// Quill's stylesheet is served from app/assets/stylesheets/quill.snow.css.
+import ReactQuill, { Quill } from "react-quill-new";
+import { storableHtml } from "./quillHtml";
 import { html as beautifyHtml } from "js-beautify";
 
 // Define a custom DivBlot
@@ -120,8 +120,8 @@ const HtmlEditor = ({
     const nextView = !isHtmlView;
     if (nextView) {
       const content =
-        quillRef.current?.getEditor().root.innerHTML ?? editorContent;
-      setEditorContent(prettyPrintHtml(content));
+        quillRef.current?.getEditor().getSemanticHTML() ?? editorContent;
+      setEditorContent(prettyPrintHtml(storableHtml(content)));
     }
     // The string callbacks write HTML to Rails fields, so only React callbacks
     // receive the separate mode-change event.
@@ -163,16 +163,16 @@ const HtmlEditor = ({
 
   const handleChange = (content) => {
     setEditorContent(content); // Keep local state updated
-    sendChange(content, id);
+    sendChange(storableHtml(content), id);
   };
 
   const handleBlur = () => {
     const quill = quillRef.current?.getEditor();
     const content = isHtmlView
       ? editorContent
-      : (quill?.root.innerHTML ?? editorContent);
+      : (quill?.getSemanticHTML() ?? editorContent);
 
-    blurCallback?.(content, id);
+    blurCallback?.(storableHtml(content), id);
   };
 
   return (

@@ -2,7 +2,10 @@
 class Contact < ApplicationRecord
   include Enableable
   include BitemporalRecord
+  before_validation :clean_message
+
   validates :name, :message, presence: true
+  validate :message_has_text
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validate :unique_combination
 
@@ -16,5 +19,19 @@ class Contact < ApplicationRecord
     return unless contacts.exists?
 
     errors.add(:base, "The contact information must be unique. You have already submitted this information. Please at least change the description.")
+  end
+
+  private
+
+  # The message comes from a visitor's rich-text editor.
+  def clean_message
+    self.message = HtmlCleaner.clean(message) if message.present?
+  end
+
+  # An empty editor still sends markup such as "<p><br></p>".
+  def message_has_text
+    return if message.blank?
+
+    errors.add(:message, "can't be blank") if Nokogiri::HTML::DocumentFragment.parse(message).text.strip.empty?
   end
 end

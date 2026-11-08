@@ -4,8 +4,4 @@ import "./controllers"
 import * as bootstrap from "bootstrap"
 import "./components"
 
-import "trix"
-import "@rails/actiontext"
-import "react-quill/dist/quill.snow.css"
-
 import "./adminShortcuts"

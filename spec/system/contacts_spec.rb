@@ -22,7 +22,8 @@ RSpec.describe "Contact Form", type: :system do
       expect(page).to have_field("contact[name]")
       expect(page).to have_field("contact[email]")
       expect(page).to have_field("Phone Number (optional)")
-      expect(page).to have_css("trix-editor#contact_message")
+      expect(page).to have_css(".ql-editor[contenteditable=true]")
+      expect(page).to have_field("contact[message]", type: :hidden)
       expect(page).to have_button("Send Message")
     end
   end
@@ -42,10 +43,21 @@ RSpec.describe "Contact Form", type: :system do
         fill_in "Full Name*", with: "John Doe"
         fill_in "contact[email]", with: "john.doe@example.com"
         fill_in "Phone Number (optional)", with: "+1 (555) 555-5555"
-        fill_in_trix_editor("contact_message", with: "I am interested in your services.")
+        enter_column_text("I am interested in your services.")
         click_button "Send Message"
         expect(page).to have_content("The contact information was successfully sent.")
         expect(page).to have_title("#{site_setup.site_name} - Contact")
+        expect(Contact.last.message).to include("I am interested in your services.")
+      end
+    end
+
+    context "when the message is empty" do
+      it "asks for a message instead of sending" do
+        fill_in "Full Name*", with: "John Doe"
+        fill_in "contact[email]", with: "john.doe@example.com"
+        click_button "Send Message"
+        expect(page).to have_content("Please enter a message.")
+        expect(Contact.count).to eq(0)
       end
     end
   end

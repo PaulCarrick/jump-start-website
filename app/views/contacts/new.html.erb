@@ -35,8 +35,17 @@
       </div>
 
       <div class="mb-3">
-        <%= form.label :message, "Message*", class: "form-label" %>
-        <%= form.rich_text_area :message, class: "form-control", required: true %>
+        <%= form.label :message, "Message*", class: "form-label", for: "contact_message_editor" %>
+        <%# The Quill editor (the same one used across the site) keeps this field up to date. %>
+        <%= form.hidden_field :message %>
+        <%= react_component("HtmlEditor",
+                            {
+                              id:             "contact_message_editor",
+                              value:          @contact.message.to_s,
+                              placeholder:    "Enter your message",
+                              noSwitchButton: true,
+                              onChange:       "document.getElementById('contact_message').value = editorContent"
+                            }) %>
       </div>
 
       <div class="pb-3">

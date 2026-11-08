@@ -13,7 +13,9 @@ RSpec.describe "Public contact form", type: :request do
     get new_contact_path
     expect(response).to have_http_status(:ok)
     expect(response.body).to include("Contact Request Form", "g-recaptcha-response-data[contact]")
-    expect(Nokogiri::HTML(response.body).at_css('form#contact-form trix-editor')).to be_present
+    form = Nokogiri::HTML(response.body).at_css('form#contact-form')
+    expect(form.at_css('[data-react-class="HtmlEditor"]')).to be_present
+    expect(form.at_css('input[type="hidden"][name="contact[message]"]')).to be_present
   end
 
   it "rejects missing tokens without saving a contact or sending mail" do

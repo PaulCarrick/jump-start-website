@@ -2,9 +2,8 @@ import React from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 
-vi.mock('quill', () => ({ default: { import: () => class {}, register: vi.fn() } }));
-vi.mock('react-quill', () => ({ default: React.forwardRef(({ value, onChange, onBlur }, ref) => {
-  React.useImperativeHandle(ref, () => ({ getEditor: () => ({ root: { innerHTML: value },
+vi.mock('react-quill-new', () => ({ Quill: { import: () => class {}, register: vi.fn() }, default: React.forwardRef(({ value, onChange, onBlur }, ref) => {
+  React.useImperativeHandle(ref, () => ({ getEditor: () => ({ root: { innerHTML: value }, getSemanticHTML: () => value,
     getModule: () => ({ addHandler() {} }), clipboard: { dangerouslyPasteHTML() {} } }) }));
   return <textarea aria-label="Rich text" value={value} onChange={e => onChange(e.target.value)} onBlur={onBlur} />;
 }) }));
