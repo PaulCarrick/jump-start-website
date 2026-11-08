@@ -18,14 +18,14 @@
     <div class="footer-bg container pt-4">
       <div class="footer-bg row">
         <% @footer_items.each do |footer_item| %>
-          <% next if footer_item.access == 'admin' && !controller.current_user_is_admin? %>
+          <% next if hidden_navigation_item?(footer_item) %>
           <div class="<%= div_class %>">
             <h2 class="footer-bg footer-text fw-bold h5 text-uppercase <%= div_class %>"><%= navigation_label(footer_item) %></h2>
             <% if footer_item.sub_items.publicly_enabled.any? %>
               <ul class="footer-bg list-unstyled">
-                <% footer_item.sub_items.publicly_enabled.each do |sub_item| %>
+                <% footer_item.sub_items.publicly_enabled.map { |item| with_sign_out_link(item) }.each do |sub_item| %>
+                  <% next if hidden_navigation_item?(sub_item) %>
                   <li>
-                    <% next if sub_item.access == 'admin' && !controller.current_user_is_admin? %>
 
                     <% if sub_item.options == "image-file" %>
                       <a href="<%= site_local_path(sub_item[:link]) %>" target="_self">

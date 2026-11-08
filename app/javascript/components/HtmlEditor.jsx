@@ -57,6 +57,16 @@ const toolbarOptions = [
 
 const quillModules = { toolbar: toolbarOptions };
 
+// For site visitors (the contact form): just the basics.
+const simpleQuillModules = {
+  toolbar: [
+    ["bold", "italic", "underline"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["link"],
+    ["clean"],
+  ],
+};
+
 // Rails forms pass callback bodies; React parents pass functions.
 function compileCallback(callback) {
   return typeof callback === "string"
@@ -72,6 +82,7 @@ const HtmlEditor = ({
   onBlur = null,
   useHtmlView = false,
   noSwitchButton = false,
+  simpleToolbar = false,
 }) => {
   const [isHtmlView, setIsHtmlView] = useState(useHtmlView); // Toggle for raw HTML view
   const [editorContent, setEditorContent] = useState(value || ""); // Store editor content
@@ -92,8 +103,8 @@ const HtmlEditor = ({
         }
       });
 
-      // Add handler for the 'div' button
-      quill.getModule("toolbar").addHandler("div", () => {
+      // Add handler for the 'div' button (not on the simple toolbar)
+      if (!simpleToolbar) quill.getModule("toolbar").addHandler("div", () => {
         const range = quill.getSelection();
         if (range) {
           quill.insertEmbed(range.index, "div", { backgroundColor: "white" });
@@ -195,7 +206,7 @@ const HtmlEditor = ({
           value={editorContent}
           onChange={handleChange}
           onBlur={handleBlur}
-          modules={quillModules}
+          modules={simpleToolbar ? simpleQuillModules : quillModules}
           className="form-control"
           placeholder={placeholder}
         />
@@ -239,6 +250,7 @@ HtmlEditor.propTypes = {
   onBlur: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   useHtmlView: PropTypes.bool,
   noSwitchButton: PropTypes.bool,
+  simpleToolbar: PropTypes.bool,
   theme: PropTypes.string,
 };
 

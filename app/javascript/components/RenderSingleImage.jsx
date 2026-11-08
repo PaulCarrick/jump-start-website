@@ -104,6 +104,7 @@ function renderCaption(caption, options) {
 }
 
 RenderSingleImage.propTypes = {
+  content: PropTypes.string,
   image:   PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   link:    PropTypes.string,
   options: PropTypes.shape({

@@ -129,7 +129,8 @@ SlideShow.propTypes = {
                           PropTypes.object
                         ])
   ).isRequired,
-  slideType: PropTypes.string
+  slideType: PropTypes.string,
+  options: PropTypes.object
 };
 
 export default SlideShow;

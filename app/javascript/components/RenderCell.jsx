@@ -72,6 +72,11 @@ function CellActions({ targetId, children }) {
   return target ? createPortal(controls, target) : controls;
 }
 
+CellActions.propTypes = {
+  targetId: PropTypes.string,
+  children: PropTypes.node,
+};
+
 // Utility Functions
 
 function renderCell(
@@ -306,6 +311,7 @@ RenderCell.propTypes = {
   noBorder: PropTypes.bool,
   noHidden: PropTypes.bool,
   onChange: PropTypes.any,
+  actionsTargetId: PropTypes.string,
   contentAlignment: PropTypes.string,
 };
 

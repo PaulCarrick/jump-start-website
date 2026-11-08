@@ -127,6 +127,14 @@ function CellRow({ editing, className, id, children, actionsTargetId }) {
   return <div ref={row} className={className} id={id}>{children}</div>;
 }
 
+CellRow.propTypes = {
+  editing: PropTypes.bool,
+  className: PropTypes.string,
+  id: PropTypes.string,
+  children: PropTypes.node,
+  actionsTargetId: PropTypes.string,
+};
+
 const processCells = (
   cells,
   editing = false,
@@ -409,6 +417,7 @@ RenderSection.propTypes = {
   noBorder: PropTypes.bool,
   noHidden: PropTypes.bool,
   onChange: PropTypes.any,
+  actionsTargetId: PropTypes.string,
 };
 
 export default RenderSection;

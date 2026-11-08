@@ -157,7 +157,7 @@ class ApplicationController < ActionController::Base
           end
         else
           if main_menu_item.link&.strip == "/users/sign_in"
-            main_menu_item.label = "logout"
+            main_menu_item.label = "Log out"
             main_menu_item.icon  = "/images/no-keys.svg"
             main_menu_item.link  = "/users/sign_out"
             @main_menu_items << main_menu_item
@@ -207,7 +207,7 @@ class ApplicationController < ActionController::Base
           end
         else
           if footer_item.link&.strip == "/users/sign_in"
-            footer_item.label = "logout"
+            footer_item.label = "Log out"
             footer_item.icon  = "/images/no-keys.svg"
             footer_item.link  = "/users/sign_out"
             @footer_items << footer_item
@@ -222,7 +222,7 @@ class ApplicationController < ActionController::Base
       footer_item.sub_items.each do |sub_item|
         next unless sub_item.link&.strip == "/users/sign_in"
 
-        sub_item.label = "logout"
+        sub_item.label = "Log out"
         sub_item.icon  = "/images/no-keys.svg"
         sub_item.link  = "/users/sign_out"
 
@@ -231,7 +231,7 @@ class ApplicationController < ActionController::Base
 
       next unless footer_item.link&.strip == "/users/sign_in"
 
-      footer_item.label = "logout"
+      footer_item.label = "Log out"
       footer_item.icon  = "/images/no-keys.svg"
       footer_item.link  = "/users/sign_out"
 

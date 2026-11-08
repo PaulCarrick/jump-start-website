@@ -123,10 +123,12 @@ RSpec.describe 'Seeded basic website', type: :request do
     expect(response).to have_http_status(:ok)
     document = Nokogiri::HTML(response.body)
     expect(document.at_css('header').text).to include('Home', 'Contact')
-    expect(document.css('header img').map { |image| image['src'] }).to include(
-      '/images/search.svg', '/images/gear.svg', '/images/keys.svg'
-    )
-    expect(document.at_css('footer').text).to include('OTHER', 'Contact', 'Search Website', 'Admin Dashboard', 'Login')
+    # Visitors who are not signed in do not see links into the admin area.
+    header_icons = document.css('header img').map { |image| image['src'] }
+    expect(header_icons).to include('/images/search.svg', '/images/keys.svg')
+    expect(header_icons).not_to include('/images/gear.svg')
+    expect(document.at_css('footer').text).to include('OTHER', 'Contact', 'Search Website', 'Login')
+    expect(document.at_css('footer').text).not_to include('Admin Dashboard')
     expect(response.body).to include('Hello World!', 'Welcome to the Jump Start web Server.')
   ensure
     ENV['USER_PASSWORD'] = original_password

@@ -22,7 +22,7 @@
         <div class="header-bg collapse navbar-collapse" id="navbarNav" data-navigation-target="menu">
           <ul class="header-bg ms-auto navbar-nav">
             <% @main_menu_items.each_with_index do |menu_item, index| %>
-              <% next if menu_item.access == 'admin' && !controller.current_user_is_admin? %>
+              <% next if hidden_navigation_item?(menu_item) %>
               <li class="header-bg nav-item">
                 <% if menu_item.sub_items.publicly_enabled.any? %>
                   <!-- Dropdown Menu -->
@@ -36,8 +36,8 @@
                       <%= navigation_label(menu_item) %>
                     <% end %>
                     <ul class="header-bg dropdown-menu" aria-labelledby="navbarDropdown-#{index}">
-                      <% menu_item.sub_items.publicly_enabled.each do |sub_item| %>
-                        <% next if sub_item.access == 'admin' && !controller.current_user_is_admin? %>
+                      <% menu_item.sub_items.publicly_enabled.map { |item| with_sign_out_link(item) }.each do |sub_item| %>
+                        <% next if hidden_navigation_item?(sub_item) %>
                         <li>
                           <% link, method = sub_item[:link]&.split("|") %>
 

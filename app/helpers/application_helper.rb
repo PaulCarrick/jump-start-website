@@ -1,4 +1,26 @@
 module ApplicationHelper
+  # Users whose access lets them open the admin area (regular users are sent back).
+  ADMIN_AREA_ACCESS = %w[read_only blogs admin super].freeze
+
+  # Header and footer items this visitor should not see: items marked for
+  # administrators, and links into the admin area for anyone who cannot use it.
+  def hidden_navigation_item?(item)
+    return true if item.access == 'admin' && !controller.current_user_is_admin?
+
+    item.link.to_s.strip.start_with?('/admin') && !(user_signed_in? && ADMIN_AREA_ACCESS.include?(current_user.access))
+  end
+
+  # A "Login" item becomes "Log out" for someone who is signed in. The
+  # controller does this for top-level items; sub-items are loaded in the view.
+  def with_sign_out_link(item)
+    if user_signed_in? && item.link.to_s.strip == '/users/sign_in'
+      item.label = 'Log out'
+      item.icon  = '/images/no-keys.svg'
+      item.link  = '/users/sign_out'
+    end
+    item
+  end
+
   def navigation_label(item)
     label = item.label.to_s
     return label unless item.link.to_s.match?(%r{\A/(?:admin/)?cells(?:[/?#|]|\z)})
@@ -69,9 +91,5 @@ module ApplicationHelper
               class:   "btn btn-danger",
               form:    { class: "d-inline", id: form_id, data: { turbo: false } },
               onclick: "return confirm('Are you sure you want to delete this?');")
-  end
-
-  def quil_editor(id, value_name, classes = "", styles = "")
-    render 'shared/quil_editor', locals: { id: id, value_name: value_name, classes: classes, styles: styles }
   end
 end
