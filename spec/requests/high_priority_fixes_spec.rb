@@ -48,6 +48,12 @@ RSpec.describe 'Search, pages API, new sections and deletes', type: :request do
       expect(response).to redirect_to(%r{/admin/page/new_section/#{public_page.id}})
     end
 
+    it 'adds a section without placeholder description text' do
+      get admin_add_section_to_existing_page_path(public_page)
+      new_section = Section.unscoped.where(page_id: public_page.id).where.not(id: section.id).order(:id).last
+      expect(new_section.description).to be_blank
+    end
+
     it 'no longer deletes through a plain link' do
       expect { Rails.application.routes.recognize_path("/admin/sections/#{section.id}/delete", method: :get) }
         .to raise_error(ActionController::RoutingError)
