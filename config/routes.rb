@@ -39,41 +39,32 @@ Rails.application.routes.draw do
     root "dashboard#index" # Admin dashboard
     resources :blog_posts, except: [ :destroy ]
     delete "/blog_posts/:id", to: "blog_posts#destroy", as: "delete_blog_post"
-    get "/blog_posts/:id/delete", to: "blog_posts#destroy", as: "destroy_blog_post"
     resources :cells, except: [ :destroy ]
     delete "/cells/:id", to: "cells#destroy", as: "delete_cell"
-    get "/cells/:id/delete", to: "cells#destroy", as: "destroy_cell"
     get "/cells/:id/admin_urls", to: "/api/v1/cells#get_admin_urls"
     resources :sections, except: [ :destroy ]
     post "/pages/:page_id/sections/:id/duplicate", to: "sections#duplicate", as: "duplicate_page_section"
     delete "/sections/:id", to: "sections#destroy", as: "delete_section"
     get "/sections/:id/admin_urls", to: "/api/v1/sections#get_admin_urls"
-    get "/sections/:id/delete", to: "sections#destroy", as: "destroy_section"
     get "/page/new_cell/:id", to: "sections#add_cell_to_section", as: "add_cell_to_existing_section"
     get "/page/new_cell", to: "sections#add_cell_to_section", as: "add_cell_to_new_section"
     resources :pages, except: [ :destroy ]
     post "/pages/:id/renumber_sections", to: "pages#renumber_sections", as: "renumber_page_sections"
     delete "/pages/:id", to: "pages#destroy", as: "delete_page"
     get "/pages/:id/test", to: "pages#test"
-    get "/pages/:id/delete", to: "pages#destroy", as: "destroy_page"
     get "/page/new_section/:id", to: "pages#add_section_to_page", as: "add_section_to_existing_page"
     get "/page/new_section", to: "pages#add_section_to_page", as: "add_section_to_new_page"
     resources :users, except: [ :destroy ]
     delete "/users/:id", to: "users#destroy", as: "delete_user"
-    get "/users/:id/delete", to: "users#destroy", as: "destroy_user"
     resources :image_files, except: [ :destroy ]
     delete "/image_files/:id", to: "image_files#destroy", as: "delete_image_file"
-    get "/image_files/:id/delete", to: "image_files#destroy", as: "destroy_image_file"
     resources :menu_items, except: [ :destroy ]
     delete "/menu_items/:id", to: "menu_items#destroy", as: "delete_menu_item"
-    get "/menu_items/:id/delete", to: "menu_items#destroy", as: "destroy_menu_item"
     resources :footer_items, except: [ :destroy ]
     delete "/footer_items/:id", to: "footer_items#destroy", as: "delete_footer_item"
-    get "/footer_items/:id/delete", to: "footer_items#destroy", as: "destroy_footer_item"
     post '/publishing/database_sync/:id', to: 'publishing#retry_databases', as: :retry_database_sync
     resources :site_setups, except: [ :destroy ]
     delete "/site_setups/:id", to: "site_setups#destroy", as: "delete_site_setup"
-    get "/site_setups/:id/delete", to: "site_setups#destroy", as: "destroy_site_setup"
   end
 
   resources :blogs

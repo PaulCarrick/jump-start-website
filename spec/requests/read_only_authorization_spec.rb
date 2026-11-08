@@ -16,10 +16,10 @@ RSpec.describe 'Read-only write protection', type: :request do
     expect(Section.unscoped.where(id: section.id)).to exist
   end
 
-  it 'blocks section creation and deletion through legacy GET links' do
+  it 'blocks section creation through the Add Section link and deletion' do
     expect { get "/admin/page/new_section/#{page.id}" }.not_to change(Section.unscoped, :count)
     expect(response).to have_http_status(:forbidden)
-    get "/admin/sections/#{section.id}/delete"
+    delete "/admin/sections/#{section.id}"
     expect(response).to have_http_status(:forbidden)
     expect(Section.unscoped.where(id: section.id)).to exist
   end

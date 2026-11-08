@@ -71,7 +71,7 @@
             </button>
           </div>
           <div class="col-4" style="min-height: 2em;">
-            <% delete_path = admin_image_file_path(image_file).to_s + "/delete" %>
+            <% delete_path = admin_image_file_path(image_file) %>
             <%= action_links(image_file,
                              admin_image_file_path(image_file),
                              edit_admin_image_file_path(image_file),

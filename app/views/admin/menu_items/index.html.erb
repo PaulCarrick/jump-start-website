@@ -43,7 +43,7 @@
           <%= menu_item.link %>
         </div>
         <div class="col-2" style="min-height: 2em;">
-          <% delete_path = admin_menu_item_path(menu_item).to_s + "/delete" %>
+          <% delete_path = admin_menu_item_path(menu_item) %>
           <%= action_links(menu_item,
                            admin_menu_item_path(menu_item),
                            edit_admin_menu_item_path(menu_item),

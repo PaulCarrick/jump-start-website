@@ -88,13 +88,11 @@
                                  id: "duplicate-section-#{section.id}-button",
                                  form: "duplicate-section-#{section.id}",
                                  class: "btn btn-secondary ms-2") %>
-                  <%= link_to "Delete Section",
-                              admin_delete_section_path(section, method: :delete, return_url: @return_path),
-                              method:  :delete,
-                              data:    { confirm: "Are you sure?" },
-                              class:   "btn btn-danger ms-2",
-                              target:  "_self",
-                              onclick: "if (!confirm('Are you sure you want to delete this?')) { return false; }" %>
+                  <%= button_tag("Delete Section",
+                                 type:    "submit",
+                                 form:    "delete-section-#{section.id}",
+                                 class:   "btn btn-danger ms-2",
+                                 onclick: "return confirm('Are you sure you want to delete this?');") %>
                 <% end %>
               </div>
             </div>
@@ -167,6 +165,12 @@
                   data: { turbo: false, section_group: section.section_group.presence } do %>
       <%= hidden_field_tag :return_url, admin_return_url %>
       <%= hidden_field_tag :section_name %>
+    <% end %>
+    <%= form_with url: admin_delete_section_path(section),
+                  method: :delete, local: true,
+                  html: { id: "delete-section-#{section.id}" },
+                  data: { turbo: false } do %>
+      <%= hidden_field_tag :return_url, edit_admin_page_path(controller.get_item, return_url: admin_return_url) %>
     <% end %>
   <% end %>
 <% end %>

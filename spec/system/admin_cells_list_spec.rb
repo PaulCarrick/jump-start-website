@@ -27,7 +27,7 @@ RSpec.describe 'Admin Cells list', type: :system do
     within('.admin-cells-table tbody tr:first-child') do
       expect(page).to have_link('View')
       expect(page).to have_link('Edit')
-      expect(page).to have_link('Delete')
+      expect(page).to have_button('Delete')
     end
     first('a', text: 'Next', exact_text: true).click
     expect(page).to have_css('.admin-cell-record', count: 1)

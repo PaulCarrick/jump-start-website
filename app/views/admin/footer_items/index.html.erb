@@ -31,7 +31,7 @@
           <%= footer_item.link %>
         </div>
         <div class="col-2" style="min-height: 2em;">
-          <% delete_path = admin_footer_item_path(footer_item).to_s + "/delete" %>
+          <% delete_path = admin_footer_item_path(footer_item) %>
           <%= action_links(footer_item,
                            admin_footer_item_path(footer_item),
                            edit_admin_footer_item_path(footer_item),

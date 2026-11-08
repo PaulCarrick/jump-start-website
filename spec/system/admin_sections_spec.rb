@@ -43,7 +43,7 @@ RSpec.describe "Admin Sections", type: :system do
     it "renders action links for each section" do
       expect(page).to have_link("View", href: admin_section_path(section))
       expect(page).to have_link("Edit", href: edit_admin_section_path(section))
-      expect(page).to have_link("Delete", href: admin_destroy_section_path(section))
+      expect(page).to have_css("form[action='#{admin_section_path(section)}'] button", text: "Delete")
     end
 
     it "opens the section editor" do

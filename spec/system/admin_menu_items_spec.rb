@@ -90,7 +90,7 @@ RSpec.describe "Admin Menu Items", type: :system do
     it "renders action links for each menu item" do
       within ".scrollable-container" do
         expect(page).to have_link("Edit", href: edit_admin_menu_item_path(menu_item_1))
-        expect(page).to have_link("Delete", href: admin_destroy_menu_item_path(menu_item_1))
+        expect(page).to have_css("form[action='#{admin_menu_item_path(menu_item_1)}'] button", text: "Delete")
       end
     end
   end

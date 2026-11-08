@@ -162,7 +162,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
       search_blog_posts("Content One")
       expect(page).to have_link("View", href: admin_blog_post_path(blog_post_1))
       expect(page).to have_link("Edit", href: edit_admin_blog_post_path(blog_post_1))
-      expect(page).to have_link("Delete", href: "#{admin_blog_post_path(blog_post_1)}/delete")
+      expect(page).to have_css("form[action='#{admin_blog_post_path(blog_post_1)}'] button", text: "Delete")
     end
 
     it "renders disabled boundaries and navigates while preserving sorting" do
@@ -247,7 +247,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
 
       expect {
         sleep 1
-        click_link "Delete", href: "#{admin_blog_post_path(blog_post_1)}/delete"
+        find("form[action='#{admin_blog_post_path(blog_post_1)}'] button", text: "Delete").click
         sleep 2
         page.driver.browser.switch_to.alert.accept # Confirm the alert
       }.not_to raise_error

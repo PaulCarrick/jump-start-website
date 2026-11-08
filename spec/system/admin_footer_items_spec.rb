@@ -97,7 +97,7 @@ RSpec.describe "Admin Footer Items", type: :system do
     it "renders action links for each footer item" do
       within ".scrollable-container" do
         expect(page).to have_link("Edit", href: edit_admin_footer_item_path(footer_item_1))
-        expect(page).to have_link("Delete", href: admin_destroy_footer_item_path(footer_item_1))
+        expect(page).to have_css("form[action='#{admin_footer_item_path(footer_item_1)}'] button", text: "Delete")
       end
     end
   end

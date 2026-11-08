@@ -18,7 +18,21 @@ class Admin::SectionsController < Admin::AbstractAdminController
     @videos            = []
   end
 
+  # A section always belongs to a page, so "New Section" from the Sections
+  # list first asks which page, then uses that page's Add Section.
   def new
+    if params[:page_id].present?
+      page = Page.find(params[:page_id])
+      redirect_to admin_add_section_to_existing_page_path(page, return_url: admin_sections_path), status: :see_other
+      return
+    end
+
+    unless params[:new_section].present?
+      @pages = Page.order(:title, :name)
+      render :choose_page
+      return
+    end
+
     super
 
     setup_options
@@ -113,16 +127,6 @@ class Admin::SectionsController < Admin::AbstractAdminController
         handle_error(:edit, e)
       end
     end
-  end
-
-  def show
-    if params[:method] == "delete"
-      destroy
-
-      return
-    end
-
-    super
   end
 
   def destroy

@@ -49,7 +49,7 @@
           <%= site_setup.site_url %>
         </div>
         <div class="col-2" style="min-height: 2em;">
-          <% delete_path = admin_site_setup_path(site_setup).to_s + "/delete" %>
+          <% delete_path = admin_site_setup_path(site_setup) %>
           <%= action_links(site_setup,
                            admin_site_setup_path(site_setup),
                            edit_admin_site_setup_path(site_setup),

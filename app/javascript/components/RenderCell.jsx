@@ -16,6 +16,31 @@ import {
   imageFileFindByName,
 } from "./imageProcessingUtilities.jsx";
 
+// Deletes a column with a real DELETE request carrying the security token, then
+// comes back to this page. (A plain link would let another site trigger it.)
+function deleteCell(url) {
+  if (!window.confirm("Are you sure you want to delete this column?")) return;
+
+  const form = document.createElement("form");
+  const fields = {
+    _method:            "delete",
+    authenticity_token: document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") ?? "",
+    return_url:         window.location.pathname + window.location.search,
+  };
+
+  form.method = "post";
+  form.action = url;
+  Object.entries(fields).forEach(([name, value]) => {
+    const input = document.createElement("input");
+    input.type  = "hidden";
+    input.name  = name;
+    input.value = value;
+    form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.submit();
+}
+
 /**
  * @param {{ cell?: import('../types/dataTypes').Cell | null,
  * editing?: boolean, noBorder?: boolean, noHidden?: boolean,
@@ -145,17 +170,13 @@ function renderCell(
             </div>
             <div>
               {urls?.delete?.url && (
-                <a
-                  href={urls["delete"]["url"]}
+                <button
+                  type="button"
                   className="btn btn-danger"
-                  data-turbo="false"
-                  onClick={(event) => {
-                    if (!window.confirm("Are you sure?"))
-                      event.preventDefault();
-                  }}
+                  onClick={() => deleteCell(urls.delete.url)}
                 >
                   Delete Column
-                </a>
+                </button>
               )}
             </div>
           </CellActions>

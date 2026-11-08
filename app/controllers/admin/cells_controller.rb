@@ -106,16 +106,6 @@ class Admin::CellsController < Admin::AbstractAdminController
     end
   end
 
-  def show
-    if params[:method] == "delete"
-      destroy
-
-      return
-    end
-
-    super
-  end
-
   def destroy
     begin
       throw "You are not permitted to change #{class_title}." unless @application_user.admin?

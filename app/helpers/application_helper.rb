@@ -55,16 +55,20 @@ module ApplicationHelper
     ]
 
     if @application_user.admin?
-      links << link_to("Delete",
-                       delete_path,
-                       method:  :delete,
-                       data:    { confirm: "Are you sure?" },
-                       class:   "btn btn-danger",
-                       target:  "_self",
-                       onclick: "if (!confirm('Are you sure you want to delete this?')) { return false; }")
+      links << delete_button("Delete", delete_path)
     end
 
     content_tag(:div, class: "admin-record-actions d-flex justify-content-end flex-wrap gap-2") { safe_join(links) }
+  end
+
+  # A real DELETE request with the security token, after a confirmation.
+  # (A plain link would let another website delete things through an admin's browser.)
+  def delete_button(label, path, form_id: nil)
+    button_to(label, path,
+              method:  :delete,
+              class:   "btn btn-danger",
+              form:    { class: "d-inline", id: form_id, data: { turbo: false } },
+              onclick: "return confirm('Are you sure you want to delete this?');")
   end
 
   def quil_editor(id, value_name, classes = "", styles = "")

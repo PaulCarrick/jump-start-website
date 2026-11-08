@@ -66,7 +66,7 @@ RSpec.describe "Admin Pages", type: :system do
 
     it "renders action links for each page" do
       expect(page).to have_link("Edit", href: edit_admin_page_path(page_record))
-      expect(page).to have_link("Delete", href: "#{admin_page_path(page_record)}/delete")
+      expect(page).to have_css("form[action='#{admin_page_path(page_record)}'] button", text: "Delete")
     end
 
     it "navigates to the new page form" do
@@ -157,7 +157,7 @@ RSpec.describe "Admin Pages", type: :system do
     before { visit admin_pages_path }
 
     it "deletes an page successfully" do
-      click_link "Delete", href: "#{admin_destroy_page_path(page_record)}"
+      find("form[action='#{admin_page_path(page_record)}'] button", text: "Delete").click
       page.driver.browser.switch_to.alert.accept # Confirm alert
       expect(page).to have_no_link("View", href: admin_page_path(page_record))
 

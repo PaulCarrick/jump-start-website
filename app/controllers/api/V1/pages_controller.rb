@@ -6,11 +6,15 @@ module Api
   module V1
     # noinspection RailsParamDefResolve
     class PagesController < ApplicationController
+      # Requests send their fields under "page" themselves. Automatic wrapping
+      # would also put an empty hash in params[:page], which is the page number.
+      wrap_parameters false
+
       def index
         @q            = Page.ransack(params[:q])
         pages         = @q.result(distinct: true)
                           .includes(:sections)
-                          .order(:section_order)
+                          .order(:name)
         @pagy, @pages = pagy(pages, limit: params[:limit] || 100)
 
         pagy_headers_merge(@pagy)

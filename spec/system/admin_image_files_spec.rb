@@ -53,7 +53,7 @@ RSpec.describe "Admin Image Files", type: :system do
 
       expect(page).to have_link("View", href: admin_image_file_path(image_file))
       expect(page).to have_link("Edit", href: edit_admin_image_file_path(image_file))
-      expect(page).to have_link("Delete", href: "#{admin_image_file_path(image_file)}/delete")
+      expect(page).to have_css("form[action='#{admin_image_file_path(image_file)}'] button", text: "Delete")
     end
 
     it "navigates to the new image file page" do
@@ -115,7 +115,7 @@ RSpec.describe "Admin Image Files", type: :system do
 
       expect(page).to have_current_path(/q%5Bname_cont%5D=Test(?:\+|%20)Image/)
       accept_confirm do
-        click_link "Delete", href: admin_destroy_image_file_path(image_file)
+        find("form[action='#{admin_image_file_path(image_file)}'] button", text: "Delete").click
       end
       expect(page).not_to have_content("Test Image")
     end

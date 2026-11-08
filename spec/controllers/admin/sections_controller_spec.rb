@@ -52,7 +52,7 @@ RSpec.describe Admin::SectionsController, type: :controller do
 
   describe "GET #new" do
     it "assigns a new instance of the model and loads content types" do
-      get :new
+      get :new, params: { new_section: "true" }
       expect(assigns(:_section)).to be_a_new(Section)
       expect(assigns(:content_types)).to eq(Section.distinct.pluck(:content_type))
     end

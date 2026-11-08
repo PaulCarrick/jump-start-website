@@ -105,7 +105,7 @@ RSpec.describe "Admin Site Setups", type: :system do
     it "renders action links for each site setup" do
       within ".scrollable-container" do
         expect(page).to have_link("Edit", href: edit_admin_site_setup_path(site_setup))
-        expect(page).to have_link("Delete", href: admin_destroy_site_setup_path(site_setup))
+        expect(page).to have_css("form[action='#{admin_site_setup_path(site_setup)}'] button", text: "Delete")
       end
     end
   end

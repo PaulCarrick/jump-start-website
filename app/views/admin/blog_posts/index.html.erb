@@ -38,7 +38,7 @@
           <%= raw(Utilities.truncate_html(blog.content, 768)) %>
         </div>
         <div class="col-2" style="min-height: 2em;">
-          <% delete_path = admin_blog_post_path(blog).to_s + "/delete" %>
+          <% delete_path = admin_blog_post_path(blog) %>
           <%= action_links(blog, admin_blog_post_path(blog), edit_admin_blog_post_path(blog), delete_path) %>
         </div>
       </div>

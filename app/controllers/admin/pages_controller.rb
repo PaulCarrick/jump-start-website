@@ -43,7 +43,12 @@ class Admin::PagesController < Admin::AbstractAdminController
 
   def edit
     if (params[:canceled] == "true") && (params[:new_section] == "true") && params[:section_id].present?
-      Section.find_by(id: params[:section_id])&.destroy
+      # Cancelling "Add Section" removes the section it just made. Because this
+      # arrives as a plain link, only remove a section of this page that has
+      # never been published, so a crafted link cannot delete real content.
+      section = Section.find_by(id: params[:section_id], page_id: params[:id])
+      never_published = section.present? && !Section.unscoped.where(id: section.id, temporal_state: "live").exists?
+      section.destroy if never_published
     end
 
     super

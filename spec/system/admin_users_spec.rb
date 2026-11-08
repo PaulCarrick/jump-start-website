@@ -39,7 +39,7 @@ RSpec.describe "Admin Users", type: :system do
 
     it "renders action links for each user" do
       expect(page).to have_link("Edit", href: edit_admin_user_path(user))
-      expect(page).to have_link("Delete", href: admin_destroy_user_path(user))
+      expect(page).to have_css("form[action='#{admin_user_path(user)}'] button", text: "Delete")
     end
 
     it "navigates to the new user page" do
@@ -129,7 +129,7 @@ RSpec.describe "Admin Users", type: :system do
     before { visit admin_users_path }
 
     it "deletes a user successfully" do
-      click_link "Delete", href: admin_destroy_user_path(user)
+      find("form[action='#{admin_user_path(user)}'] button", text: "Delete").click
       page.driver.browser.switch_to.alert.accept # Confirm alert
       expect(page).not_to have_content("test@example.com")
     end

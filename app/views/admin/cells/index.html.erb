@@ -45,7 +45,7 @@
               <%= react_component("RenderCell", { cell: cell, editing: false, noBorder: true, noHidden: true }) %>
             </td>
             <td>
-              <% delete_path = admin_cell_path(cell).to_s + "/delete" %>
+              <% delete_path = admin_cell_path(cell) %>
               <%= action_links(cell, admin_cell_path(cell), edit_admin_cell_path(cell), delete_path) %>
             </td>
           </tr>

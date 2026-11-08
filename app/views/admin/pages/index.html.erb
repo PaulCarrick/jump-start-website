@@ -37,7 +37,7 @@
           <%= page.access %>
         </div>
         <div class="col-2" style="min-height: 2em;">
-          <% delete_path = admin_page_path(page).to_s + "/delete" %>
+          <% delete_path = admin_page_path(page) %>
           <%= action_links(page,
                            admin_page_path(page),
                            edit_admin_page_path(page),
