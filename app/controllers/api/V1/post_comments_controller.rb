@@ -28,11 +28,13 @@ module Api
           post_comment = PostComment.new(post_comment_params)
 
           # The writer is always the signed-in user, whatever the request says.
+          # Administrators may set the author and date; everyone else gets their
+          # own name and the current time.
           post_comment.user_id = current_user.id
-          unless current_user.admin?
-            post_comment.author = current_user.name
-            post_comment.posted = Time.current
+          unless current_user.admin? && post_comment.author.present?
+            post_comment.author = current_user.name.presence || "Visitor"
           end
+          post_comment.posted = Time.current unless current_user.admin? && post_comment.posted.present?
 
           post_comment.save!
 

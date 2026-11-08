@@ -1,4 +1,4 @@
-import { siteFetch, sitePath } from "../sitePath";
+import { siteFetch } from "../sitePath";
 import EnabledSwitch from "./EnabledSwitch";
 // /app/javascript/components/CommentEditor.jsx
 // noinspection JSUnusedLocalSymbols
@@ -8,64 +8,67 @@ import PropTypes from 'prop-types';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
+// Writes a new comment, or edits one when `comment` is given. The server sets
+// the author, the date and who wrote it, so they are only shown here.
 const CommentEditor = ({
                            user = {
-                               name: 'Unknown'
+                               name: 'Visitor'
                            },
                            post =  {
                                visibility: 'Public'
                            },
+                           comment = null,
                            blog_type = "Personal",
                            closeEditor = null
                        }) => {
-  const [blogPostId, setBlogPostId] = useState(post?.id || null);
+  const [blogPostId] = useState(post?.id || null);
   const [title, setTitle] = useState(comment?.title || ''); // Use existing title if editing
-  const [author, setAuthor] = useState(user.name); // Always set to the current user
   const [content, setContent] = useState(comment?.content || ''); // Use existing content if editing
-  const [posted, setPosted] = useState(comment?.posted || new Date().toISOString()); // Set posted if editing, otherwise use now
-
   const [enabled, setEnabled] = useState(comment?.enabled !== false);
+  const [error, setError] = useState(null);
+  const author = comment?.author || user?.name || 'Visitor';
+  const isAdministrator = (user?.access === 'admin') || (user?.access === 'super');
 
   const handleSubmit = () => {
-    const getCsrfToken = () => {
-      return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-    };
-
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     const url = comment
       ? `/api/v1/post_comments/${comment.id}` // Include the ID for updates
       : '/api/v1/post_comments'; // Create new comment
+    const fields = { blog_post_id: blogPostId, title, content };
 
-    const method = comment ? 'PUT' : 'POST'; // Use PUT for updates, POST for new
+    if (isAdministrator) fields.enabled = enabled;
 
+    setError(null);
     siteFetch(url, {
-      method,
+      method: comment ? 'PUT' : 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRF-Token': getCsrfToken(), // Include the CSRF token here
+        'X-CSRF-Token': csrfToken,
       },
-      body: JSON.stringify({
-        post_comment: { version: comment?.version, updated_at: comment?.updated_at, enabled, blog_post_id: blogPostId, title, author, content, posted }, // Include all fields
-      }),
+      body: JSON.stringify({ post_comment: fields }),
     })
-      .then((response) => {
+      .then(async (response) => {
         if (response.ok) {
-          console.log('Comment saved successfully!');
-
           if (closeEditor) closeEditor();
 
-          // Redirect to the parent blogs post or refresh comments
-          window.location.href = sitePath(`/blog`);
-        } else {
-          console.error('Failed to save comment');
+          // Show the blog again with the new or changed comment.
+          window.location.reload();
+          return;
         }
+
+        const payload = await response.json().catch(() => ({}));
+        const message = [].concat(payload.errors || payload.error || 'The comment could not be saved.').join(', ');
+
+        setError(message);
       })
-      .catch((error) => console.error('Error:', error));
+      .catch(() => setError('The comment could not be saved. Please try again.'));
   };
 
   // noinspection JSValidateTypes
     return (
     <div>
       <h1>{comment ? 'Edit Comment' : 'Create a New Comment'}</h1>
+      {error && <div className="alert alert-danger">{error}</div>}
       <input
         type="text"
         placeholder="Title"
@@ -80,13 +83,13 @@ const CommentEditor = ({
         className="form-control mb-2"
         readOnly
       />
-      <EnabledSwitch enabled={enabled} onChange={setEnabled} />
+      {isAdministrator && <EnabledSwitch enabled={enabled} onChange={setEnabled} />}
       <ReactQuill value={content} onChange={setContent} />
       <div className="mt-3">
-        <button onClick={handleSubmit} className="btn btn-primary me-2">
+        <button type="button" onClick={handleSubmit} className="btn btn-primary me-2">
           {comment ? 'Update' : 'Submit'}
         </button>
-        <button onClick={closeEditor} className="btn btn-secondary">
+        <button type="button" onClick={closeEditor} className="btn btn-secondary">
           Cancel
         </button>
       </div>
@@ -96,17 +99,19 @@ const CommentEditor = ({
 
 CommentEditor.propTypes = {
   user: PropTypes.shape({
-                          name: PropTypes.string.isRequired,
-                        }).isRequired,
+                          name: PropTypes.string,
+                          access: PropTypes.string,
+                        }),
   post: PropTypes.shape({
                           id: PropTypes.number.isRequired,
                         }).isRequired,
   comment: PropTypes.shape({
                              id: PropTypes.number.isRequired,
-                             title: PropTypes.string.isRequired,
-                             content: PropTypes.string.isRequired,
-                             posted: PropTypes.string.isRequired,
-                           }).isRequired,
+                             title: PropTypes.string,
+                             content: PropTypes.string,
+                             author: PropTypes.string,
+                             enabled: PropTypes.bool,
+                           }),
   closeEditor: PropTypes.func.isRequired,
   blog_type: PropTypes.string,
 };

@@ -29,11 +29,11 @@ export function show(id: number | string, setError: SetErrorCallback | null = nu
 }
 
 export function get(id: number, setError: SetErrorCallback | null = null): MenuItem | null {
-  return sendRequest(`/api/v1/menuItem/${id}`, setError);
+  return sendRequest(`/api/v1/menu_items/${id}`, setError);
 }
 
 export function createMenuItem(menuItem: MenuItem, setError: SetErrorCallback | null = null): MenuItem | null {
-  return sendRequest("/api/v1/menu_items/", setError, "POST", { menuItem: menuItem });
+  return sendRequest("/api/v1/menu_items/", setError, "POST", { menu_item: menuItem });
 }
 
 export function updateMenuItem(menuItem: MenuItem, setError: SetErrorCallback | null = null): MenuItem | null {
@@ -41,7 +41,7 @@ export function updateMenuItem(menuItem: MenuItem, setError: SetErrorCallback | 
     console.error("Error: MenuItem ID is required for updating.");
     return null;
   }
-  return sendRequest(`/api/v1/menu_items/${menuItem.id}`, setError, "PATCH", { menuItem });
+  return sendRequest(`/api/v1/menu_items/${menuItem.id}`, setError, "PATCH", { menu_item: menuItem });
 }
 
 export function deleteMenuItem(id: number, setError: SetErrorCallback | null = null): MenuItem | null {

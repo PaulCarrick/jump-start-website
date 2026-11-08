@@ -47,12 +47,15 @@ class ContactsController < ApplicationController
         @contact.save
       end
 
-      redirect_to action: :new, turbo: false, notice: "There are error in the form. Please try again."
+      redirect_to action: :new, turbo: false, notice: "There are errors in the form. Please try again."
     rescue => e
       debugger if Rails.env == 'development' && ENV["PAUSE_ERRORS"]
 
+      # Show visitors what to fix in the form, but never the server's own error
+      # text (it can name the mail server and its settings). That goes to the log.
+      Rails.logger.error("Contact form could not be sent: #{e.class}: #{e.message}")
       @error_message = @contact&.errors&.full_messages&.join(", ")
-      @error_message = e&.message unless @error_message.present?
+      @error_message = "Your message could not be sent. Please try again later." unless @error_message.present?
       flash[:error]  = @error_message
 
       if @contact&.persisted?
@@ -60,7 +63,7 @@ class ContactsController < ApplicationController
         @contact.save
       end
 
-      redirect_to action: :new, turbo: false, notice: "There are error in the form. Please try again."
+      redirect_to action: :new, turbo: false, notice: "There are errors in the form. Please try again."
     end
   end
 

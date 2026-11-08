@@ -28,11 +28,11 @@ export function show(id: number | string, setError: SetErrorCallback | null = nu
 }
 
 export function get(id: number, setError: SetErrorCallback | null = null): FooterItem | null {
-  return sendRequest(`/api/v1/footer_item/${id}`, setError);
+  return sendRequest(`/api/v1/footer_items/${id}`, setError);
 }
 
 export function createFooterItem(footerItem: FooterItem, setError: SetErrorCallback | null = null): FooterItem | null {
-  return sendRequest("/api/v1/footer_items/", setError, "POST", { footerItem: footerItem });
+  return sendRequest("/api/v1/footer_items/", setError, "POST", { footer_item: footerItem });
 }
 
 export function updateFooterItem(footerItem: FooterItem, setError: SetErrorCallback | null = null): FooterItem | null {
@@ -40,7 +40,7 @@ export function updateFooterItem(footerItem: FooterItem, setError: SetErrorCallb
     console.error("Error: FooterItem ID is required for updating.");
     return null;
   }
-  return sendRequest(`/api/v1/footer_items/${footerItem.id}`, setError, "PATCH", { footerItem });
+  return sendRequest(`/api/v1/footer_items/${footerItem.id}`, setError, "PATCH", { footer_item: footerItem });
 }
 
 export function deleteFooterItem(id: number, setError: SetErrorCallback | null = null): FooterItem | null {

@@ -3,12 +3,14 @@ class ContactMailer < ApplicationMailer
     @sender_email   = email
     @sender_name    = name
     @sender_phone   = phone
-    @sender_message = message
+    @sender_message = HtmlCleaner.clean(message)
+    @owner_name     = site_information.owner_name.presence
 
     mail(
-      from:    site_information.contact_email_from,
-      to:      site_information.contact_email_to,
-      subject: site_information.contact_email_subject
+      from:     site_information.contact_email_from,
+      to:       site_information.contact_email_to,
+      reply_to: email.presence,
+      subject:  site_information.contact_email_subject
     ) do |format|
       format.html
     end

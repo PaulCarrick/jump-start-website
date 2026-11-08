@@ -85,9 +85,9 @@ RSpec.describe ContactsController, type: :controller do
         allow_any_instance_of(Contact).to receive(:save!).and_raise(StandardError, "Unexpected error")
       end
 
-      it "sets a generic error flash message" do
+      it "sets a generic error flash message without the server's error text" do
         post :create, params: valid_params
-        expect(flash[:error]).to eq("Unexpected error")
+        expect(flash[:error]).to eq("Your message could not be sent. Please try again later.")
       end
     end
   end

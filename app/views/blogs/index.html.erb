@@ -7,7 +7,10 @@
   <div class="container mb-5">
     <%= react_component('PostList',
                         {
-                          user: @application_user,
+                          # Visitors who are not signed in get the site's guest user, so say
+                          # explicitly whether someone is signed in.
+                          user: (@application_user&.as_json(only: %w[id name email access]) || {})
+                                  .merge("logged_in" => user_signed_in?),
                           email: @application_user&.email,
                           blog_type: @blog_type }) %>
   </div>

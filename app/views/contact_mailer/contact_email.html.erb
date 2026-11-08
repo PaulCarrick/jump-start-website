@@ -1,4 +1,4 @@
-Paul:
+<%= @owner_name ? "#{@owner_name}:" : "Hello," %>
 <p>
   Someone has requested you to contact them.
 </p>
@@ -41,7 +41,7 @@ Paul:
       </h4>
     </td>
     <td>
-      <%= raw(@sender_message) %>
+      <%= sanitize(@sender_message, tags: HtmlCleaner::ALLOWED_TAGS, attributes: HtmlCleaner::ALLOWED_ATTRIBUTES) %>
     </td>
   </tr>
 </table>

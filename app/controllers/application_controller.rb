@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp image_files, web push, badges, import maps, CSS nesting, and CSS :has.
   #  allow_browser versions: :modern
 
+  before_action :ignore_invalid_page_number
   before_action :setup_site
   before_action :setup_main_menu_items
   before_action :setup_admin_menu_items
@@ -48,6 +49,14 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  # Paged lists expect a page number of 1 or more. Drop anything else
+  # ("abc", 0, -1) so the list shows its first page instead of an error.
+  # A hash in params[:page] is a page record being saved, not a number.
+  def ignore_invalid_page_number
+    page = params[:page]
+    params.delete(:page) if page.is_a?(String) && !page.match?(/\A[1-9]\d*\z/)
+  end
 
   def setup_site
     @site_information = SiteContext.setup_id ? SiteSetup.enabled.find_by(id: SiteContext.setup_id) : nil

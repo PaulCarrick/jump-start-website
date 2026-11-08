@@ -72,7 +72,7 @@ export function updateImageFile(imageFile: ImageFile, setError: SetErrorCallback
     console.error("Error: ImageFile ID is required for updating.");
     return null;
   }
-  return sendRequest(`/api/v1/image_files/${imageFile.id}`, setError, "PATCH", { imageFile });
+  return sendRequest(`/api/v1/image_files/${imageFile.id}`, setError, "PATCH", { image_file: imageFile });
 }
 
 export function deleteImageFile(id: number, setError: SetErrorCallback | null = null): ImageFile | null {

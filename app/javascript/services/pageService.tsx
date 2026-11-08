@@ -138,7 +138,7 @@ export function updatePage(page: Page, setError: SetErrorCallback | null = null)
   delete (pageWithNested as any).menu_item;
   delete (pageWithNested as any).footer_item;
 
-  return sendRequest(`/api/v1/pages/${page.id}`, setError, "PATCH", { pageWithNested });
+  return sendRequest(`/api/v1/pages/${page.id}`, setError, "PATCH", { page: pageWithNested });
 }
 
 export function deletePage(id: number, setError: SetErrorCallback | null = null): Page | null {

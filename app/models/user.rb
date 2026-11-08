@@ -13,8 +13,13 @@ class User < ApplicationRecord
                          if: :devise_will_save_change_to_email?,
                          conditions: -> { working_or_live }
 
+  # The access levels the Users form offers, plus the guest account's. Accounts
+  # made through sign-up have none.
+  ACCESS_LEVELS = %w[regular read_only blogs admin super guest].freeze
+
   validates :password, presence: true, on: :create
-  validates :password, confirmation: true, allow_blank: true
+  # (Devise already checks that the password confirmation matches.)
+  validates :access, inclusion: { in: ACCESS_LEVELS }, allow_blank: true
 
   # Skip password validation if the password is blank during update
   def password_required?
