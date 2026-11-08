@@ -8,8 +8,8 @@ RSpec.describe User, type: :model do
       expect(User.devise_modules).to include(:database_authenticatable)
     end
 
-    it "includes registerable" do
-      expect(User.devise_modules).to include(:registerable)
+    it "does not include registerable (visitors cannot sign up)" do
+      expect(User.devise_modules).not_to include(:registerable)
     end
 
     it "includes recoverable" do

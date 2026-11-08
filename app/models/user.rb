@@ -1,7 +1,9 @@
 class User < ApplicationRecord
   include Enableable
   include BitemporalRecord
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
+  # No :registerable: visitors cannot create their own accounts. Administrators
+  # add users under Admin > Users.
+  devise :database_authenticatable, :recoverable, :rememberable, :validatable
 
   # Devise's unscoped uniqueness check also sees retired temporal versions.
   # Replace only that check, retaining its other email/password validations.
