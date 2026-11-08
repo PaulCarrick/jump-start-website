@@ -36,42 +36,48 @@ import PageEditor from "./PageEditor";
 import RenderImageControl from "./RenderImageControl";
 import AddPageToMenu from "./AddPageToMenu";
 
-try {
-  ReactRailsUJS.register({
-                           NavMenu,
-                           DisplayContent,
-                           SlideShow,
-                           PostList,
-                           PostEditor,
-                           CommentEditor,
-                           PostDetail,
-                           RenderContent,
-                           ContentBlock,
-                           RenderImage,
-                           RenderSingleImage,
-                           RenderSlideShow,
-                           EditableComboBox,
-                           SelectControl,
-                           SectionAttributes,
-                           SectionEditor,
-                           HtmlEditor,
-                           RenderControl,
-                           RenderSection,
-                           RenderCell,
-                           FormattingEditor,
-                           ErrorBoundary,
-                           CellEditor,
-                           GenerateCells,
-                           RenderPage,
-                           PageEditor,
-                           RenderImageControl,
-                           AddPageToMenu
-                         });
-}
-catch (error) {
-  if (!(error instanceof TypeError))
-    throw error;
-}
+// react_ujs mounts each data-react-class by name. Look the name up here rather than
+// through react_ujs's global/eval fallback, which breaks once the bundle is minified
+// (the minifier renames these variables).
+const components = {
+  NavMenu,
+  DisplayContent,
+  SlideShow,
+  PostList,
+  PostEditor,
+  CommentEditor,
+  PostDetail,
+  RenderContent,
+  ContentBlock,
+  RenderImage,
+  RenderSingleImage,
+  RenderSlideShow,
+  EditableComboBox,
+  SelectControl,
+  SectionAttributes,
+  SectionEditor,
+  HtmlEditor,
+  RenderControl,
+  RenderSection,
+  RenderCell,
+  FormattingEditor,
+  ErrorBoundary,
+  CellEditor,
+  GenerateCells,
+  RenderPage,
+  PageEditor,
+  RenderImageControl,
+  AddPageToMenu,
+};
+
+ReactRailsUJS.getConstructor = (className) => {
+  const component = components[className];
+
+  if (!component)
+    console.error(`React component "${className}" is not listed in components/index.jsx.`);
+
+  return component;
+};
 
 document.addEventListener("turbo:load", () => {
   const root = createRoot(

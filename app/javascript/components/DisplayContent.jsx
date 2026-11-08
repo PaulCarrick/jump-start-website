@@ -80,7 +80,7 @@ const DisplayContent = ({
 
 DisplayContent.propTypes = {
   content:         PropTypes.string,
-  image:           PropTypes.oneOfType([PropTypes.string, PropTypes.null]),
+  image:           PropTypes.string,
   link:            PropTypes.string,
   format:          PropTypes.shape({
                                      row_style:         PropTypes.string,

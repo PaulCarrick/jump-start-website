@@ -21,6 +21,9 @@ Rails.application.configure do
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.minute.to_i}" }
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present? || ENV['RAILS_ENV'] == 'production'
 
+  # Compress responses, including the JavaScript and CSS served from public/assets.
+  config.middleware.insert_before ActionDispatch::Static, Rack::Deflater
+
   # Enable serving of image_files, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
 
