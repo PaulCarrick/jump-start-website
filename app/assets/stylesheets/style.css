@@ -613,3 +613,11 @@ body .btn.admin-navigation-readonly:disabled {
   body.site-menu-bottom .site-menu .navbar-nav .dropdown-menu { top: auto; bottom: 100%; margin-bottom: 4px; }
   body.site-menu-bottom .page-edit-moving { bottom: calc(var(--site-menu-height, 88px) + 16px); }
 }
+
+/* Page editing: the box that asks for a duplicate's name. */
+.page-edit-dialog { border: 0; border-radius: 12px; padding: 20px 22px; width: min(440px, 92vw); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25); }
+.page-edit-dialog::backdrop { background: rgba(15, 20, 30, 0.35); }
+.page-edit-dialog h2 { font-size: 1.15rem; margin: 0 0 12px; }
+.page-edit-dialog-hint { margin: 6px 0 0; }
+.page-edit-dialog-error { color: #b42318; margin: 6px 0 0; font-size: 14px; min-height: 1em; }
+.page-edit-dialog-buttons { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }

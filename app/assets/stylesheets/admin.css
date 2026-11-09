@@ -316,6 +316,12 @@
   margin-top: 1.5rem;
   scroll-margin-top: 1rem;
 }
+.admin-help h4 {
+  margin-top: 1.25rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  scroll-margin-top: 1rem;
+}
 .admin-help-shot {
   margin: 1rem 0 1.5rem;
 }
@@ -775,3 +781,10 @@ li.is-dragging > .outline-row { opacity: 0.4; }
 .grammar-problem-kind { font-size: 12px; color: #57606a; text-transform: uppercase; letter-spacing: .03em; }
 .grammar-problem-message { margin: 4px 0 6px; font-size: 14px; }
 .grammar-problem-actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+/* Page workspace: duplicating a section or group, and renaming a group. */
+.workspace-duplicate { margin-bottom: 12px; }
+.workspace-duplicate-row { display: flex; gap: 8px; align-items: center; }
+.workspace-duplicate-row .form-control { flex: 1; min-width: 0; }
+.workspace-duplicate-row .btn { white-space: nowrap; }
+.workspace-group-names { margin-bottom: 16px; }

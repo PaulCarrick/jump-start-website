@@ -44,6 +44,7 @@ Rails.application.routes.draw do
     get "/cells/:id/admin_urls", to: "/api/v1/cells#get_admin_urls"
     resources :sections, except: [ :destroy ]
     post "/pages/:page_id/sections/:id/duplicate", to: "sections#duplicate", as: "duplicate_page_section"
+    patch "/pages/:page_id/section_groups", to: "sections#rename_group", as: "rename_page_section_group"
     delete "/sections/:id", to: "sections#destroy", as: "delete_section"
     get "/sections/:id/admin_urls", to: "/api/v1/sections#get_admin_urls"
     get "/page/new_cell/:id", to: "sections#add_cell_to_section", as: "add_cell_to_existing_section"

@@ -51,15 +51,55 @@
               title: "The classic section editor: name, order, column widths and every column together") %>
 </div>
 
+<% group_members = section.section_group.present? ? Section.where(page_id: page_record.id, section_group: section.section_group).order(Section.arel_table[:section_order].asc.nulls_last, :id).to_a : [] %>
+<% name_pattern = "[A-Za-z0-9_\\-. ]+" %>
+<% if can_change %>
+  <h3 class="admin-tab-section">Duplicate</h3>
+  <p class="form-text">The copy goes at the end of the page, with its columns. You can change the names afterwards.</p>
+  <%= form_with(url: admin_duplicate_page_section_path(page_id: page_record.id, id: section.id), method: :post, local: true,
+                class: "workspace-duplicate", data: { turbo: false }) do %>
+    <%= hidden_field_tag :workspace, 1 %>
+    <%= hidden_field_tag :group, 0, id: "duplicate-section-group-#{section.id}" %>
+    <label class="form-label" for="duplicate-section-name-<%= section.id %>">Name for the copy of this section</label>
+    <div class="workspace-duplicate-row">
+      <%= text_field_tag :section_name, "#{section.section_name}-copy", id: "duplicate-section-name-#{section.id}", class: "form-control",
+                         required: true, pattern: name_pattern, title: "Letters, numbers, spaces, dots, dashes and underscores" %>
+      <%= submit_tag "Duplicate section", class: "btn btn-outline-primary btn-sm" %>
+    </div>
+  <% end %>
+  <% if group_members.size > 0 %>
+    <%= form_with(url: admin_duplicate_page_section_path(page_id: page_record.id, id: section.id), method: :post, local: true,
+                  class: "workspace-duplicate", data: { turbo: false }) do %>
+      <%= hidden_field_tag :workspace, 1 %>
+      <%= hidden_field_tag :group, 1, id: "duplicate-group-flag-#{section.id}" %>
+      <label class="form-label" for="duplicate-group-name-<%= section.id %>">Name for a copy of the whole group (<%= pluralize(group_members.size, "section") %>)</label>
+      <div class="workspace-duplicate-row">
+        <%= text_field_tag :section_name, "#{section.section_group}-copy", id: "duplicate-group-name-#{section.id}", class: "form-control",
+                           required: true, pattern: name_pattern, title: "Letters, numbers, spaces, dots, dashes and underscores" %>
+        <%= submit_tag "Duplicate group", class: "btn btn-outline-primary btn-sm" %>
+      </div>
+      <div class="form-text">This becomes the new group's name and goes in front of each section's name: <%= group_members.first(3).map { |member| "<name>-#{member.section_name}" }.join(", ") %><%= ", …" if group_members.size > 3 %>.</div>
+    <% end %>
+
+    <h3 class="admin-tab-section">Group names</h3>
+    <%= form_with(url: admin_rename_page_section_group_path(page_record), method: :patch, local: true, class: "workspace-group-names", data: { turbo: false }) do %>
+      <%= hidden_field_tag :group, section.section_group %>
+      <%= hidden_field_tag :section_id, section.id %>
+      <label class="form-label" for="rename-group-<%= section.id %>">Group</label>
+      <%= text_field_tag :new_group, section.section_group, id: "rename-group-#{section.id}", class: "form-control mb-2",
+                         required: true, pattern: name_pattern, title: "Letters, numbers, spaces, dots, dashes and underscores" %>
+      <% group_members.each do |member| %>
+        <label class="form-label" for="rename-section-<%= member.id %>">Section <%= member.id == section.id ? "(this one)" : "" %></label>
+        <%= text_field_tag "names[#{member.id}]", member.section_name, id: "rename-section-#{member.id}", class: "form-control mb-2",
+                           required: true, pattern: name_pattern, title: "Letters, numbers, spaces, dots, dashes and underscores" %>
+      <% end %>
+      <%= submit_tag "Save names", class: "btn btn-primary btn-sm" %>
+    <% end %>
+  <% end %>
+<% end %>
+
 <% if can_change %>
   <div class="admin-panel-danger workspace-section-actions">
-    <%= form_with(url: admin_duplicate_page_section_path(page_id: page_record.id, id: section.id), method: :post, local: true,
-                  html: { onsubmit: "return requestSectionDuplicateName(this);" },
-                  data: { turbo: false, section_group: section.section_group.presence }) do %>
-      <%= hidden_field_tag :workspace, 1 %>
-      <%= hidden_field_tag :section_name %>
-      <%= submit_tag(section.section_group.present? ? "Duplicate group" : "Duplicate section", class: "btn btn-outline-secondary btn-sm") %>
-    <% end %>
     <%= button_to("Delete section", admin_delete_section_path(section),
                   method:  :delete,
                   params:  { return_url: workspace.call },

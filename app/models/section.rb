@@ -42,33 +42,86 @@ class Section < ApplicationRecord
     data
   end
 
-  def duplicate!(name:)
+  # Copies this section, or its whole group, to the end of the page.
+  #
+  # One section (group: false): the copy is named +name+, belongs to no group,
+  # and its columns are named after it.
+  # A group (group: true): +name+ is the new group's name and is put in front
+  # of each section's name ("ibi" copies "ibi-description" as
+  # "ibi2-ibi-description" for the name "ibi2"). The copies' Show More buttons
+  # get classes of their own, so they open their own hidden parts, not the
+  # original's.
+  #
+  # Returns the copies, in page order. Raises ActiveRecord::RecordInvalid with
+  # a plain message when a name is not allowed or already taken.
+  def duplicate!(name:, group: section_group.present?)
     self.class.transaction do
       Page.lock.find(page_id)
       source = self.class.lock.find(id)
-      name = name.to_s.strip
-
-      if source.section_group.present?
-        if self.class.where(page_id: source.page_id, section_group: name).exists?
-          source.errors.add(:section_group, "already exists on this page")
-          raise ActiveRecord::RecordInvalid.new(source)
-        end
-
-        members = self.class.where(page_id: source.page_id, section_group: source.section_group)
+      name = name.to_s.squish
+      whole_group = group && source.section_group.present?
+      members = if whole_group
+                  self.class.where(page_id: source.page_id, section_group: source.section_group)
                             .order(self.class.arel_table[:section_order].asc.nulls_last, self.class.arel_table[:id].asc)
                             .lock.to_a
-        last_order = self.class.where(page_id: source.page_id).maximum(:section_order) || 0
-        copy = nil
-        members.each_with_index do |member, index|
-          member_name = member.id == source.id ? name : copy_name_for(self.class, member.section_name, [ name ])
-          member_copy = duplicate_record!(member, name: member_name, group: name,
-            section_order: last_order + (index + 1) * 10)
-          copy = member_copy if member.id == source.id
-        end
-        copy
       else
-        duplicate_record!(source, name: name, group: source.section_group)
+                  [ source ]
       end
+      new_names = members.map { |member| whole_group ? "#{name}-#{member.section_name}" : name }
+
+      problem = duplicate_name_problem(name, new_names, whole_group, source.page_id)
+      if problem
+        source.errors.add(:base, problem)
+        raise ActiveRecord::RecordInvalid.new(source)
+      end
+
+      last_order = self.class.where(page_id: source.page_id).maximum(:section_order).to_i
+      suffix = whole_group ? name.gsub(/[^A-Za-z0-9]/, "").camelize.presence || "Copy" : nil
+      reserved_cell_names = []
+      members.each_with_index.map do |member, index|
+        duplicate_record!(member, name: new_names[index], group: whole_group ? name : nil,
+                                  section_order: last_order + (index + 1) * 10,
+                                  expandable_suffix: suffix, reserved_cell_names: reserved_cell_names)
+      end
+    end
+  end
+
+  # Renames a group and its sections together (from the page workspace or
+  # after duplicating). +names+ maps section ids to their new names.
+  def self.rename_group!(page_id:, group:, new_group:, names:)
+    transaction do
+      Page.lock.find(page_id)
+      members = where(page_id: page_id, section_group: group).lock.to_a
+      raise ActiveRecord::RecordNotFound, "No group #{group} on this page" if members.empty?
+
+      new_group = new_group.to_s.squish
+      wanted = members.to_h { |member| [ member.id, names.fetch(member.id.to_s, names.fetch(member.id, member.section_name)).to_s.squish ] }
+      errors = []
+      errors << "The group needs a name." if new_group.blank?
+      errors << "The group name can only use letters, numbers, spaces, dots, dashes and underscores." if new_group.present? && new_group !~ /\A[\w\-. ]+\z/
+      if new_group != group && where(page_id: page_id, section_group: new_group).exists?
+        errors << "There is already a group called #{new_group} on this page."
+      end
+      wanted.each_value do |section_name|
+        errors << "Each section needs a name." if section_name.blank?
+        errors << "#{section_name} can only use letters, numbers, spaces, dots, dashes and underscores." if section_name.present? && section_name !~ /\A[\w\-. ]+\z/
+      end
+      errors << "Two sections cannot have the same name." if wanted.values.uniq.size != wanted.size
+      taken = where(section_name: wanted.values).where.not(id: members.map(&:id)).pluck(:section_name)
+      errors << "#{taken.to_sentence} #{taken.size == 1 ? 'is' : 'are'} already used by another section." if taken.any?
+      if errors.any?
+        members.first.errors.add(:base, errors.uniq.join(" "))
+        raise ActiveRecord::RecordInvalid.new(members.first)
+      end
+
+      # Free the names first, so two sections can swap names.
+      changing = members.select { |member| member.section_name != wanted[member.id] }
+      changing.each { |member| member.update!(section_name: "#{member.section_name}-renaming-#{member.id}") }
+      members.each do |member|
+        member.reload
+        member.update!(section_name: wanted[member.id], section_group: new_group)
+      end
+      members
     end
   end
 
@@ -157,20 +210,34 @@ class Section < ApplicationRecord
 
   private
 
-  def duplicate_record!(source, name:, group:, section_order: source.section_order)
+  def duplicate_name_problem(name, new_names, whole_group, page_id)
+    return(whole_group ? "Please enter a name for the new group." : "Please enter a name for the copy.") if name.blank?
+    unless name.match?(/\A[\w\-. ]+\z/)
+      return "The name can only use letters, numbers, spaces, dots, dashes and underscores."
+    end
+    if whole_group && self.class.where(page_id: page_id, section_group: name).exists?
+      return "There is already a group called #{name} on this page."
+    end
+
+    taken = self.class.where(section_name: new_names).pluck(:section_name)
+    "#{taken.to_sentence} #{taken.size == 1 ? 'is' : 'are'} already used by another section; choose another name." if taken.any?
+  end
+
+  def duplicate_record!(source, name:, group:, section_order:, expandable_suffix: nil, reserved_cell_names: [])
     # after_find derives display defaults; duplicate the stored values themselves.
     source.restore_attributes
     copy = source.dup
     copy.section_name = name
     copy.section_group = group
     copy.section_order = section_order
-    reserved_names = []
+    copy.formatting = with_expandable_suffix(source.formatting, expandable_suffix) if expandable_suffix && copy.respond_to?(:formatting=)
 
     source.cells.each do |cell|
       child = cell.dup
-      child.cell_name = copy_name_for(Cell, cell.cell_name, reserved_names)
-      reserved_names << child.cell_name
+      child.cell_name = copy_cell_name(cell.cell_name, source.section_name, name, reserved_cell_names)
+      reserved_cell_names << child.cell_name
       child.section_name = copy.section_name
+      child.formatting = with_expandable_suffix(cell.formatting, expandable_suffix) if expandable_suffix
       copy.cells << child
     end
 
@@ -178,14 +245,33 @@ class Section < ApplicationRecord
     copy
   end
 
-  def copy_name_for(model, original, reserved = [])
-    field = model == Section ? :section_name : :cell_name
+  # A column named after its section ("ibi_text") is named after the copy
+  # ("ibi2-ibi_text"); any other column name gets the copy's name in front.
+  # A number is added if the name is taken.
+  def copy_cell_name(original, old_section_name, new_section_name, reserved)
+    original = original.to_s
+    base = if old_section_name.present? && original.start_with?(old_section_name)
+             new_section_name + original.delete_prefix(old_section_name)
+    else
+             [ new_section_name, original.presence ].compact.join("-")
+    end
+    candidate = base
     number = 1
-    loop do
-      name = number == 1 ? "#{original} Copy" : "#{original} #{number} Copy"
-      return name unless reserved.include?(name) || model.exists?(field => name)
-
+    while reserved.include?(candidate) || Cell.exists?(cell_name: candidate)
       number += 1
+      candidate = "#{base}-#{number}"
+    end
+    candidate
+  end
+
+  # "expandableIbiCells" becomes "expandableIbiCellsIbi2", wherever it appears
+  # in a copy's formatting.
+  def with_expandable_suffix(value, suffix)
+    case value
+    when Hash then value.transform_values { |inner| with_expandable_suffix(inner, suffix) }
+    when Array then value.map { |inner| with_expandable_suffix(inner, suffix) }
+    when String then value.gsub(/\bexpandable[A-Za-z0-9_]*/) { |found| "#{found}#{suffix}" }
+    else value
     end
   end
 

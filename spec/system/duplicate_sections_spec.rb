@@ -14,11 +14,11 @@ RSpec.describe "Duplicate a section from the page editor", type: :system do
     button = "duplicate-section-#{section.id}-button"
     accept_prompt(with: "New overview") { click_button button }
     expect(page).to have_current_path(edit_admin_page_path(section.page, section_name: "New overview", return_url: admin_pages_path))
-    expect(page).to have_content("Section duplicated successfully.")
+    expect(page).to have_content("Section duplicated as New overview, at the end of the page.")
     expect(page).to have_button("Duplicate Section", count: 2)
     copy = section.page.sections.find_by!(section_name: "New overview")
     expect(copy.cells.first.content).to eq(cell.content)
-    expect(copy.cells.first.cell_name).to eq("Overview column Copy")
+    expect(copy.cells.first.cell_name).to eq("New overview column")
     within(find(:id, copy.section_name, match: :first)) { expect(page).to have_link("Edit Column") }
     page.execute_script("document.getElementById(arguments[0]).scrollIntoView({block: 'start', behavior: 'instant'});", copy.section_name)
     page.save_screenshot(Rails.root.join("tmp/named-section-duplication.png"))
@@ -45,7 +45,7 @@ RSpec.describe "Duplicate a section from the page editor", type: :system do
     expect(section.class.find(section.id).page.sections.count).to eq(1)
     accept_prompt(with: section.section_name) { click_button button }
     expect(page).to have_current_path(edit_admin_page_path(section.page, return_url: admin_pages_path))
-    expect(page).to have_content("has already been taken")
+    expect(page).to have_content("already used")
     expect(section.class.find(section.id).page.sections.count).to eq(1)
   end
 
@@ -59,8 +59,8 @@ RSpec.describe "Duplicate a section from the page editor", type: :system do
     accept_prompt("Name for the duplicated section group:", with: "New overview group") do
       click_button "duplicate-section-#{section.id}-button"
     end
-    expect(page).to have_current_path(edit_admin_page_path(section.page, section_name: "New overview group", return_url: admin_pages_path))
-    expect(page).to have_content("Section group duplicated successfully.")
+    expect(page).to have_current_path(edit_admin_page_path(section.page, section_name: "New overview group-Overview", return_url: admin_pages_path))
+    expect(page).to have_content("Group duplicated as New overview group")
     expect(section.class.find(section.id).page.sections.where(section_group: "New overview group").count).to eq(2)
     expect(section.class.find(section.id).page.sections.where(section_group: "Overview group").count).to eq(2)
     expect(page).to have_button("Duplicate Group", count: 4)

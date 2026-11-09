@@ -35,6 +35,7 @@
        data-page-editing-workspace-value="<%= admin_page_workspace_path(@page) %>"
        data-page-editing-image-value="<%= admin_locate_image_file_path %>"
        data-page-editing-sections-value="<%= admin_page_editing_sections_path(@page) %>"
+       data-page-editing-duplicate-value="<%= admin_duplicate_page_section_path(page_id: @page.id, id: "SECTION_ID") %>"
        data-action="contextmenu->page-editing#open"
        <% end %>>
   <section class="bg-light text-secondary auto-size">
@@ -45,7 +46,7 @@
         <% move_units = page_editing ? section_move_units(@contents) : {} %>
         <% @contents.each do |content| %>
           <% section_classes = (@focused_section.present? && (@focused_section.section_name == content["section_name"])) ? 'highlight-section' : '' %>
-          <div class="<%= section_classes %><%= ' page-editing-section' if page_editing %>"<% if page_editing %> data-section-id="<%= content['id'] %>" data-section-unit="<%= move_units[content['id']] %>"<% end %>>
+          <div class="<%= section_classes %><%= ' page-editing-section' if page_editing %>"<% if page_editing %> data-section-id="<%= content['id'] %>" data-section-unit="<%= move_units[content['id']] %>" data-section-name="<%= content['section_name'] %>" data-section-group="<%= content['section_group'] %>"<% end %>>
             <%= react_component("RenderSection",
                                 {
                                   section:  content,

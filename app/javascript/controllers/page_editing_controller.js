@@ -7,10 +7,11 @@ import { Controller } from '@hotwired/stimulus';
 // tab; coming back to this tab reloads it to show the drafts.
 // Shift + right-click gives the browser's own menu.
 export default class extends Controller {
-  static values = { workspace: String, image: String, sections: String };
+  static values = { workspace: String, image: String, sections: String, duplicate: String };
 
   connect() {
     this.addSectionHandles();
+    this.showDuplicated();
     this.close = this.close.bind(this);
     this.returned = this.returned.bind(this);
     this.escape = event => { if (event.key === 'Escape') this.close(); };
@@ -78,10 +79,30 @@ export default class extends Controller {
       window.open(choice.url, '_blank', 'noopener');
       this.close();
     });
+    menu.append(item);
+    // Duplicating: the section under the pointer, or its whole group.
+    const section = event.target.closest?.('[data-section-id]');
+    if (section && this.duplicateValue) {
+      const extra = [ { label: 'Duplicate section…', group: false } ];
+      if (section.dataset.sectionGroup) extra.push({ label: `Duplicate group “${section.dataset.sectionGroup}”…`, group: true });
+      extra.forEach(choiceForCopy => {
+        const copyItem = document.createElement('button');
+        copyItem.type = 'button';
+        copyItem.className = 'page-edit-menu-item';
+        copyItem.setAttribute('role', 'menuitem');
+        copyItem.textContent = choiceForCopy.label;
+        copyItem.addEventListener('click', clickEvent => {
+          clickEvent.stopPropagation();
+          this.close();
+          this.askDuplicate(section, choiceForCopy.group);
+        });
+        menu.append(copyItem);
+      });
+    }
     const hint = document.createElement('div');
     hint.className = 'page-edit-menu-hint';
     hint.textContent = 'Shift + right-click: browser menu';
-    menu.append(item, hint);
+    menu.append(hint);
     document.body.append(menu);
     const width = menu.offsetWidth;
     const height = menu.offsetHeight;
@@ -259,6 +280,113 @@ export default class extends Controller {
       this.flash(`${error.message} Reloading…`);
     }
     setTimeout(() => window.location.reload(), 500);
+  }
+
+  // Duplicating ---------------------------------------------------------------
+  // A small box asks for the name: the copy's name for one section, or the new
+  // group's name (put in front of each section's name) for a group. The copies
+  // go at the end of the page, as drafts; the page reloads and scrolls to them.
+
+  askDuplicate(section, wholeGroup) {
+    this.dialog?.remove();
+    const name = section.dataset.sectionName || 'section';
+    const group = section.dataset.sectionGroup;
+    const members = Array.from(this.element.querySelectorAll('[data-section-id]'))
+      .filter(block => block.dataset.sectionGroup === group)
+      .map(block => block.dataset.sectionName)
+      .filter((value, index, list) => list.indexOf(value) === index);
+    const dialog = document.createElement('dialog');
+    dialog.className = 'page-edit-dialog';
+    dialog.innerHTML = `
+      <form method="dialog">
+        <h2></h2>
+        <label class="form-label"></label>
+        <input class="form-control" required pattern="[A-Za-z0-9_\\-. ]+" title="Letters, numbers, spaces, dots, dashes and underscores">
+        <p class="form-text page-edit-dialog-hint"></p>
+        <p class="page-edit-dialog-error" role="alert"></p>
+        <div class="page-edit-dialog-buttons">
+          <button type="button" class="btn btn-outline-secondary" value="cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary">Duplicate</button>
+        </div>
+      </form>`;
+    const input = dialog.querySelector('input');
+    const hint = dialog.querySelector('.page-edit-dialog-hint');
+    if (wholeGroup) {
+      dialog.querySelector('h2').textContent = `Duplicate the group “${group}”`;
+      dialog.querySelector('label').textContent = 'Name for the new group';
+      input.value = `${group}-copy`;
+      const preview = () => {
+        const prefix = input.value.trim() || 'name';
+        hint.textContent = `${members.length} sections, named ${members.slice(0, 3).map(member => `${prefix}-${member}`).join(', ')}${members.length > 3 ? ', …' : ''}. They go at the end of the page.`;
+      };
+      input.addEventListener('input', preview);
+      preview();
+    } else {
+      dialog.querySelector('h2').textContent = `Duplicate the section “${name}”`;
+      dialog.querySelector('label').textContent = 'Name for the copy';
+      input.value = `${name}-copy`;
+      hint.textContent = 'The copy and its columns go at the end of the page.';
+    }
+    dialog.querySelector('[value="cancel"]').addEventListener('click', () => dialog.close());
+    dialog.addEventListener('close', () => dialog.remove());
+    dialog.querySelector('form').addEventListener('submit', submitEvent => {
+      submitEvent.preventDefault();
+      if (!input.reportValidity()) return;
+      this.duplicate(section, wholeGroup, input.value.trim(), dialog);
+    });
+    document.body.append(dialog);
+    this.dialog = dialog;
+    dialog.showModal();
+    input.select();
+  }
+
+  async duplicate(section, wholeGroup, name, dialog) {
+    const error = dialog.querySelector('.page-edit-dialog-error');
+    const button = dialog.querySelector('[type="submit"]');
+    button.disabled = true;
+    error.textContent = '';
+    try {
+      const token = document.querySelector('meta[name="csrf-token"]')?.content;
+      const response = await fetch(this.duplicateValue.replace('SECTION_ID', section.dataset.sectionId), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json', 'X-CSRF-Token': token },
+        body: JSON.stringify({ section_name: name, group: wholeGroup ? 1 : 0 })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'The section could not be duplicated.');
+      try {
+        sessionStorage.setItem('page-editing-duplicated', JSON.stringify({ id: result.sections?.[0]?.id, message: result.message }));
+      } catch (_storageError) {
+        // Without storage the page still reloads with the copies.
+      }
+      window.location.reload();
+    } catch (failure) {
+      error.textContent = failure.message;
+      button.disabled = false;
+    }
+  }
+
+  // After the reload: scroll to the first copy and say what was made.
+  showDuplicated() {
+    let note = null;
+    try {
+      note = JSON.parse(sessionStorage.getItem('page-editing-duplicated') || 'null');
+      sessionStorage.removeItem('page-editing-duplicated');
+    } catch (_error) {
+      note = null;
+    }
+    if (!note) return;
+    const block = note.id && this.element.querySelector(`[data-section-id="${note.id}"]`);
+    if (block) {
+      block.scrollIntoView({ block: 'center' });
+      block.classList.add('page-edit-target');
+      setTimeout(() => block.classList.remove('page-edit-target'), 2500);
+    }
+    if (note.message) {
+      this.flash(`${note.message} Right-click it and choose Edit section to change the names.`);
+      clearTimeout(this.flashTimer);
+      this.flashTimer = setTimeout(() => document.querySelector('.page-edit-moving')?.remove(), 7000);
+    }
   }
 
   // Back from an editor tab: show what was saved there.

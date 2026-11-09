@@ -21,7 +21,7 @@ module AdminHelpHelper
     end
     html = RDoc::Markdown.parse(source).accept(RDoc::Markup::ToHtml.new(RDoc::Options.new))
     document = Nokogiri::HTML::DocumentFragment.parse(html)
-    document.css("h1, h2, h3").each do |heading|
+    document.css("h1, h2, h3, h4").each do |heading|
       heading.css("span").remove # RDoc's generated navigation uses different anchors.
       heading["id"] = heading.text.parameterize
     end
@@ -39,7 +39,7 @@ module AdminHelpHelper
       end
     end
     sanitize(document.to_html,
-             tags: %w[h1 h2 h3 p a ul ol li strong em code pre blockquote hr figure figcaption img],
+             tags: %w[h1 h2 h3 h4 p a ul ol li strong em code pre blockquote hr figure figcaption img],
              attributes: %w[id href title src alt loading class target rel width height])
   end
 

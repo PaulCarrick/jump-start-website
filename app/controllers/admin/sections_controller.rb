@@ -43,26 +43,60 @@ class Admin::SectionsController < Admin::AbstractAdminController
     @new_section            = params[:new_section].present? ? params[:new_section] : false
   end
 
+  # Copies a section, or its whole group (group=1), to the end of the page,
+  # under the name given (see Section#duplicate!). Answers the page workspace,
+  # the classic page editor, and the page's own editing mode (JSON).
   def duplicate
     page = Page.find(params[:page_id])
     unless @application_user&.admin?
+      return render(json: { error: "You are not permitted to duplicate sections." }, status: :forbidden) if request.format.json?
+
       redirect_to edit_admin_page_path(page, return_url: params[:return_url].present? ? admin_return_url : nil), status: :see_other, alert: "You are not permitted to duplicate sections."
       return
     end
 
     section = page.sections.find(params[:id])
-    grouped = section.section_group.present?
-    copy = section.duplicate!(name: params[:section_name])
-    if params[:workspace].present?
-      redirect_to admin_page_workspace_path(page, section: copy.id), status: :see_other,
-                  notice: grouped ? "Section group duplicated successfully." : "Section duplicated successfully."
-      return
+    whole_group = params.key?(:group) ? ActiveModel::Type::Boolean.new.cast(params[:group]) : section.section_group.present?
+    copies = section.duplicate!(name: params[:section_name], group: whole_group)
+    message = if copies.size > 1
+                "Group duplicated as #{copies.first.section_group}: #{copies.map(&:section_name).join(', ')}. They are at the end of the page."
+    else
+                "Section duplicated as #{copies.first.section_name}, at the end of the page."
     end
-    redirect_to edit_admin_page_path(page, section_name: copy.section_name, return_url: params[:return_url].present? ? admin_return_url : nil),
-                status: :see_other, notice: grouped ? "Section group duplicated successfully." : "Section duplicated successfully."
+    if request.format.json?
+      render json: { message: message, sections: copies.map { |copy| { id: copy.id, name: copy.section_name, group: copy.section_group } } }
+    elsif params[:workspace].present?
+      redirect_to admin_page_workspace_path(page, section: copies.first.id), status: :see_other, notice: message
+    else
+      redirect_to edit_admin_page_path(page, section_name: copies.first.section_name, return_url: params[:return_url].present? ? admin_return_url : nil),
+                  status: :see_other, notice: message
+    end
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique => e
-    redirect_to edit_admin_page_path(page, return_url: params[:return_url].present? ? admin_return_url : nil), status: :see_other,
-                alert: "Could not duplicate section: #{e.message}"
+    message = e.respond_to?(:record) && e.record ? e.record.errors.full_messages.to_sentence : e.message
+    if request.format.json?
+      render json: { error: message }, status: :unprocessable_content
+    elsif params[:workspace].present?
+      redirect_to admin_page_workspace_path(page, section: params[:id]), status: :see_other, alert: "Could not duplicate: #{message}"
+    else
+      redirect_to edit_admin_page_path(page, return_url: params[:return_url].present? ? admin_return_url : nil), status: :see_other,
+                  alert: "Could not duplicate: #{message}"
+    end
+  end
+
+  # Renames a group and the sections in it, all at once (the page workspace's
+  # group names form).
+  def rename_group
+    page = Page.find(params[:page_id])
+    head(:forbidden) and return unless @application_user&.admin?
+
+    names = params[:names].respond_to?(:to_unsafe_h) ? params[:names].to_unsafe_h : {}
+    members = Section.rename_group!(page_id: page.id, group: params[:group].to_s, new_group: params[:new_group], names: names)
+    redirect_to admin_page_workspace_path(page, section: params[:section_id].presence || members.first.id), status: :see_other,
+                notice: "Group renamed to #{members.first.section_group}."
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to admin_page_workspace_path(page, section: params[:section_id]), status: :see_other, alert: e.record.errors.full_messages.to_sentence
+  rescue ActiveRecord::RecordNotFound
+    redirect_to admin_page_workspace_path(page), status: :see_other, alert: "That group is no longer on this page."
   end
 
   def create

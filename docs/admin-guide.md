@@ -229,7 +229,7 @@ Further down the panel:
 
 - **+ Add column** adds an empty text column at the end.
 - **Edit section layout** opens the classic section editor (name, order and column widths).
-- **Duplicate section** (or **Duplicate group** when the section has a group) asks for a new name and copies it.
+- **Duplicate**: copy the section, or its whole group, to the end of the page (see [Section groups and duplication](#section-groups-and-duplication)).
 - **Delete section** removes it and its columns.
 
 ### How to create a page
@@ -279,6 +279,8 @@ Save Changes and Cancel only touch what you changed after choosing Edit Page. Ch
 3. Make the change there and save it.
 4. Come back to the page's tab: it reloads and shows what you saved.
 
+On a section, the menu also offers **Duplicate section…** and, for a section in a group, **Duplicate group…** (see [Duplicating from the page itself](#duplicating-from-the-page-itself)).
+
 Hold **Shift** while right-clicking to get the browser's own menu.
 
 ![Right-click a picture and choose Edit image](../public/admin-help/site-right-click-image.webp)
@@ -308,11 +310,38 @@ Sections are normally edited from the page workspace (see [How to edit a section
 
 Give sections that belong together the same **Section group** name. Leave it empty for a section on its own.
 
-**To duplicate a section:** open it in the workspace panel, choose **Duplicate section**, type the new section's name and confirm. The section and its columns are copied after the existing sections.
+#### How to duplicate a section
 
-**To duplicate a group:** open any section of the group and choose **Duplicate group**, then type the new group's name. All the group's sections and columns are copied.
+1. Open the page's workspace and click the section's name in the outline.
+2. In the panel, under **Duplicate**, type the **Name for the copy of this section** (it starts as the name with "-copy").
+3. Choose **Duplicate section**. The copy, with all its columns, is added at the end of the page and opens in the panel.
+4. Move it where you want it and publish.
 
-Names must be valid and must not already be in use.
+The copy is not in any group. Its columns are named after it (a copy of "roses" called "tulips" has the column "tulips_text").
+
+#### How to duplicate a whole group
+
+1. Click any section of the group.
+2. Under **Duplicate**, type the **Name for a copy of the whole group**. It becomes the new group's name and goes in front of every section's name: copying the group "amazon" as "google" makes "google-amazon" and "google-amazon-description".
+3. Choose **Duplicate group**. All the group's sections and columns are copied, in the same order, to the end of the page.
+
+The copies' **Show More** buttons open their own hidden parts, not the original's.
+
+![Duplicate in the section panel, with the group names under it](../public/admin-help/duplicate-panel.webp)
+
+#### How to rename a group and its sections
+
+Under **Group names**, change the group's name and the name of each of its sections, then choose **Save names**. All are renamed together, and each section's columns follow it. This is the quick way to tidy the names of a copied group. A single section is renamed in its **Section name** field above.
+
+A name must not already be used by another section. The page says which name is taken, and nothing is copied or renamed until all the names are free.
+
+#### Duplicating from the page itself
+
+While editing a page on the site (**Edit Page**), right-click a section and choose **Duplicate section…** or **Duplicate group “…”…**. A small box asks for the name and shows what the copies will be called. Choose **Duplicate**: the page reloads at the copies, at the end of the page. **Save Changes** publishes them with your other changes; to rename them, right-click a copy and choose **Edit section**.
+
+![Right-click a section to duplicate it, or its whole group](../public/admin-help/duplicate-site-menu.webp)
+
+![The name box, with the names the copies will get](../public/admin-help/duplicate-site-dialog.webp)
 
 ## Columns
 
