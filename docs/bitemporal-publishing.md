@@ -45,7 +45,7 @@ The new application refuses writes when it still sees the old schema; do not byp
 - Public pages and existing links look unchanged before any edit/deployment.
 - Current admins can sign in with existing credentials.
 - A saved edit is visible in admin and an authorized draft preview, but not on the public page.
-- Deploy Changes publishes the reviewed changes together.
+- Review and publish (the top bar's Publish) publishes the reviewed changes together. Changes are grouped by page (`PublishingReview`); unticked groups stay drafts (`Publishing.deploy!(only:)`), and a group that changed after the review was opened is refused. Each deployment records its contents.
 - Discard leaves live content unchanged.
 - Existing and replacement image files remain available appropriately.
 - History shows both validity and recording periods.
@@ -56,7 +56,7 @@ Then resume normal traffic and workers. Preserve the backup and old release acco
 
 Automatic `db:rollback` intentionally refuses to collapse temporal data into one version. Before accepting new writes, a failed rollout can be reverted by restoring the verified pre-migration database/files and previous application release. After accepting new writes, use a forward repair or a deliberately reviewed data recovery procedure; blindly restoring the old backup would lose those writes and history.
 
-Content rollback is separate from schema rollback: History → Restore as Draft → review → Deploy Changes creates a new live version without rewriting the past.
+Content rollback is separate from schema rollback: History → Restore as Draft → review → Publish creates a new live version without rewriting the past.
 
 ## Verification
 

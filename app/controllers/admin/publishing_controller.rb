@@ -2,19 +2,35 @@ class Admin::PublishingController < ApplicationController
   before_action :authenticate_user!
   before_action :require_publisher
 
-  def index
-    @pending = Publishing.pending
-    @database_syncs = SiteContext.catalog? ? SiteDatabaseSyncRequest.where.not(status: 'completed').order(:id) : []
-    @deployments = Deployment.order(created_at: :desc).limit(30)
+  def initialize(...)
+    super
+
+    set_title("#{get_site_information.site_name} - Admin Dashboard: Review and publish")
   end
 
+  def index
+    @pending = Publishing.pending
+    @groups = PublishingReview.groups(@pending)
+    @database_syncs = SiteContext.catalog? ? SiteDatabaseSyncRequest.where.not(status: 'completed').order(:id) : []
+    @deployments = Deployment.order(created_at: :desc).limit(30)
+    @actors = User.unscoped.where(id: @deployments.map(&:actor_id).compact.uniq).order(version: :desc).to_a.uniq(&:id).index_by(&:id)
+  end
+
+  # Publishes the groups ticked on the review page (all pending changes when
+  # no groups are sent, as before). Nothing is published if the chosen groups
+  # changed after the page was opened.
   def deploy
-    deployment = Publishing.deploy!(actor: current_user, summary: params[:summary].to_s.truncate(1000))
+    only, groups = chosen_drafts
+    contents = (groups || PublishingReview.groups).map(&:summary).join(', ')
+    deployment = Publishing.deploy!(actor: current_user, summary: params[:summary].to_s.truncate(1000), only: only, contents: contents)
     sync = SiteDatabaseSyncRequest.find_by(deployment_id: deployment.id) if SiteContext.catalog?
     if sync && sync.status != 'completed'
       redirect_to admin_publishing_path, alert: "Content deployed (deployment #{deployment.id}), but site database synchronization is pending. Review the status below and retry.", status: :see_other
     else
-      redirect_to admin_publishing_path, notice: "Changes deployed successfully (deployment #{deployment.id}).", status: :see_other
+      left = Publishing.pending.size
+      notice = "Changes deployed successfully (deployment #{deployment.id}): #{contents}."
+      notice += " #{left} #{left == 1 ? 'change is' : 'changes are'} still waiting." if left.positive?
+      redirect_to admin_publishing_path, notice: notice.truncate(400), status: :see_other
     end
   rescue Publishing::Conflict, ActiveRecord::ActiveRecordError => e
     redirect_to admin_publishing_path, alert: publishing_error_message(e, prefix: 'Nothing was deployed'), status: :see_other
@@ -31,8 +47,12 @@ class Admin::PublishingController < ApplicationController
   end
 
   def discard
-    Publishing.discard!
-    redirect_to admin_publishing_path, notice: 'Pending changes discarded. Live content is unchanged.', status: :see_other
+    only, groups = chosen_drafts
+    Publishing.discard!(only: only)
+    message = groups ? "Discarded: #{groups.map(&:summary).join(', ')}. Live content is unchanged." : 'Pending changes discarded. Live content is unchanged.'
+    redirect_to admin_publishing_path, notice: message.truncate(400), status: :see_other
+  rescue Publishing::Conflict => e
+    redirect_to admin_publishing_path, alert: publishing_error_message(e, prefix: 'Nothing was discarded'), status: :see_other
   end
 
   def restore
@@ -53,6 +73,28 @@ class Admin::PublishingController < ApplicationController
   end
 
   private
+
+  # The drafts of the groups ticked on the review page, as [class name, id]
+  # pairs, and those groups. [nil, nil] when the request names no groups
+  # (publish or discard everything). Each group's changes must be exactly the
+  # ones the page showed ("reviewed"), or nothing happens.
+  def chosen_drafts
+    return [ nil, nil ] unless params.key?(:reviewed)
+
+    keys = Array(params[:groups]).map(&:to_s).uniq
+    raise Publishing::Conflict, 'Tick at least one group.' if keys.empty?
+
+    current = PublishingReview.groups.index_by(&:key)
+    reviewed = Array(params[:reviewed]).map(&:to_s)
+    groups = keys.map do |key|
+      group = current[key]
+      shown = reviewed.filter_map { |token| token.delete_prefix("#{key}|") if token.start_with?("#{key}|") }.sort
+      raise Publishing::Conflict, 'Some changes were made after this page was opened. Review them again.' unless group && group.tokens == shown
+
+      group
+    end
+    [ groups.flat_map { |group| group.changes.map { |change| [ change.record.class.name, change.record.id ] } }, groups ]
+  end
 
   def publishing_error_message(error, prefix:)
     # SQL exception messages can contain entire content rows and exceed the

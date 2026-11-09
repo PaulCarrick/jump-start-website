@@ -80,50 +80,47 @@ For a release with published images, obtain the release's Compose file and setup
 
 We will build a small example called **Willow Studio**. Substitute your own name, wording, and photographs.
 
-1. Sign in and open the admin area. Choose **Site Setups** in the sidebar.
-2. Edit the existing default setup. For your first website, use this starter setup rather than creating a second site database.
-3. Set Site Name to **Willow Studio**. Review Configuration Name, owner name, copyright, colors, and the header/footer settings. Keep the existing database value: changing that field does not rename the running database.
-4. Keep Site URL at `http://localhost:3000` while following the tutorial locally. Keep the domain/host consistent with that address. Changing the URL to a public domain before it resolves to this server can prevent the local address from matching the site.
-5. Review the email and CAPTCHA settings. Leave optional integrations disabled until you have their actual credentials and have tested them.
-6. Save the Site Setup. Saving creates a draft; review it under **Deploy Changes** and deploy it when ready. Confirm the website still opens and displays the new site name.
+1. Sign in and open the admin area. Choose **Settings** in the sidebar, then edit the existing default setup. For your first website, use this starter setup rather than creating a second site database.
+2. On the **General** tab, set Site Name to **Willow Studio** and review the owner name and copyright line. Keep Site URL at `http://localhost:3000` while following the tutorial locally, and keep the domain and host consistent with it. Changing the URL to a public domain before it resolves to this server can prevent the local address from matching the site.
+3. On the **Appearance** tab, choose the header, page and footer colors; the small preview shows how they look together.
+4. On the **Email** tab, review the mail server and contact addresses. After saving, **Send a test email** tells you whether they work. Leave optional integrations disabled until you have their actual credentials.
+5. On the **Advanced** tab, keep the existing database value: changing that field does not rename the running database.
+6. Choose **Save Site Setup**. Saving creates a draft. Choose **Publish** in the top bar, check the Settings group and publish it. Confirm the website still opens and displays the new site name.
 
 If you intend to add another independently routed website to an existing installation, use **New Site Setup** instead, give it a unique database name and URL, and follow the separate site-database provisioning procedure. That is different from adding pages to this first website.
 
 ## Edit the home page
 
-1. Open **Pages**. Locate the starter home page and choose **Edit**. Keep its existing Page Name and Section Group so the home route continues to find its content.
-2. Change its title to **Welcome to Willow Studio**.
-3. Review the existing sections. Edit the welcome section, or choose **Add Section** to add one. Choose a **Text Only** template for the introduction.
-4. Give the section a descriptive name, such as **Home introduction**, and enable it. Set its order so it appears before later sections.
-5. Open **Edit Column** on the text column. Enter: “Welcome to Willow Studio. We create thoughtful spaces for everyday living.” Use the rich-text toolbar for headings, paragraphs, and emphasis; you do not need to write HTML.
-6. Choose **Save Column**, then save the section. If you opened editors inside another editor, save each parent after returning to it. Finally save the page.
-7. Review the page preview. Changes remain drafts until deployed; the public site can still show the previous version.
+1. Open **Pages** and click the starter home page's title. It opens in the page workspace: the outline on the left, the preview in the middle and the panel on the right.
+2. Choose **Page settings**, change the title to **Welcome to Willow Studio**, and save. Keep its Page Name and Section field so the home address continues to find its content.
+3. Click the welcome section in the preview, or choose **+ Add section** under the outline and pick the **Text Only** layout for an introduction.
+4. In the outline, click the text column. In the panel's **Content** tab enter: "Welcome to Willow Studio. We create thoughtful spaces for everyday living." Use the toolbar for headings, paragraphs and emphasis; you do not need to write HTML.
+5. Choose **Save Column**. The preview shows the change. Use **↑** and **↓** in the outline to put the section where you want it.
+6. Changes remain drafts until published; the public site still shows the previous version.
 
 ## Add your first image
 
-1. Open **Image Files**, then **New Image**. Alternatively, use **New Image** beside an image selector while editing a column.
-2. Enter a useful unique name, such as `willow-studio-welcome`. Choose a JPEG or PNG photograph and check its MIME type. Add a caption and description where appropriate. Use a reasonably sized web image rather than an unnecessarily large original.
-3. Choose **Save Image**. If you used the dialog, return to the image selector and select the new image. Uploading saves the file separately; cancelling a page draft does not undo an upload.
-4. Return to the home page. Add a section using an image/text template, or edit an existing image column.
-5. Select the uploaded image and enter accompanying text such as “Explore our recent projects.” Check the column widths and image fit in the preview.
-6. Save the column, section, and page as applicable. Review **Deploy Changes**, deploy the intended records, and open the home page to check the result.
+1. Open **Media** and drop a photograph on the upload area (or choose **choose files**), then **Upload**. It is named after its file, for example `willow-studio-welcome`. Use a reasonably sized web image rather than an unnecessarily large original. Click its thumbnail to add a caption with **Edit caption, description or file**.
+2. Return to the home page's workspace. Add a section with an image and text layout, or click an existing image column.
+3. In the panel's **Image** tab, select the uploaded image (or use **New Image** to upload one without leaving the page). In the **Content** tab enter accompanying text such as "Explore our recent projects." Choose **Save Column** and check the image's fit in the preview.
+4. Choose **Publish**, check the home page's group and publish it, then open the home page to check the result. Back in **Media**, the image's details now list the home page under **Used on**.
 
 ## Create an About page with text and images
 
 1. Open **Pages**, then **New page**.
-2. Enter Page Title **About Willow Studio**, a unique Page Name such as `about`, and a unique Section Group such as `about-willow`. Set Page Access for public viewing and ensure the content is enabled.
-3. Once the required fields are filled, choose **New Section**, or save the page and use **Add Section**.
-4. Choose a text/image template. Name the section **Our story**, enable it, and set its order.
-5. Edit the text column. Add a heading and two short paragraphs explaining who you are, what you offer, and whom you help. Save the column.
-6. Edit the image column. Select an existing image or use **New Image** to upload another. Save the column and section, then save the page.
-7. Add another Text Only section called **What we do** if you want more content. Use a list for your services. Save all open editors.
+2. Enter Page Title **About Willow Studio**, a unique Page Name such as `about`, and a unique Section such as `about-willow`. Set Access for public viewing and ensure the page is enabled. Save it.
+3. Open the new page from the Pages list and choose **+ Add section**.
+4. Choose a text and image layout, fill in what it asks for, choose **Generate Columns**, name the section **Our story**, and choose **Save Section**. You return to the workspace.
+5. Click the text column and add a heading and two short paragraphs explaining who you are, what you offer, and whom you help. Save the column.
+6. Click the image column and select an image in the **Image** tab. Save the column.
+7. Add another Text Only section called **What we do** if you want more content. Use a list for your services.
 
 ## Add the page to navigation
 
-1. Use the page editor's menu placement controls if offered. Otherwise, open **Menu Items** and choose **New Menu Item**.
-2. Choose Menu Type **Main**. Set the visible label to **About** and use the page selection control to link to your About page where available. For this example, the manual link is `/about`, based on the Page Name `about`; the display title is not its URL.
-3. Set Enabled, choose the appropriate parent/group if needed, and set the order relative to the other navigation items. Save.
-4. Open **Deploy Changes**. Review the Site Setup, page, sections, columns, and menu drafts you intend to publish. Deploy the selected changes and read any reported errors before proceeding.
+1. Open **Menus**. With **Header menu** chosen, choose **Add an item**.
+2. Set the Label to **About**. In **Links to**, choose `/about` from the list of the site's pages (the page's name, not its title). Choose **Add item**.
+3. The item is added at the end. Drag its **⠿** handle, or use the arrow buttons, to put it where you want it; **→** puts it inside the item above, as a dropdown entry.
+4. Choose **Publish**. The About page's group holds its page, sections and columns; the Header menu group holds the new item. Tick both, read the list, and publish. Read any reported errors before proceeding.
 5. Open the public website and click **About**. Check that it opens the intended page and that the text and images appear. Repeat these steps for Services, Projects, or another page.
 
 ## Review before sharing
@@ -131,14 +128,14 @@ If you intend to add another independently routed website to an existing install
 1. Check Home and every new page both signed in and signed out. Confirm public pages do not require an administrator login.
 2. Narrow the browser to a phone-sized width. Check text wrapping, image cropping, button alignment, and the navigation menu.
 3. Test links and review spelling, captions, and image descriptions. Confirm the new page is reachable from navigation.
-4. Confirm only intended drafts were deployed. Saving and deploying are separate steps; cancelling an editor does not undo an earlier save.
+4. Confirm only intended drafts were published: **Publish** in the top bar shows how many are still waiting. Saving and publishing are separate steps; cancelling an editor does not undo an earlier save.
 5. Back up the database, uploaded files, and private configuration before upgrading or moving the site.
 6. For public hosting, configure your domain, HTTPS, and forwarding first, then update Site URL and related settings to the real address. The container quick start is local HTTP by default. Do not replace an existing production deployment with it without a migration plan.
 
 ## If something does not appear
 
-- **A new page is missing:** check Enabled, access, its navigation link, and whether its drafts were deployed.
-- **Text changes disappeared after closing an editor:** save the column, then its parent section/page where required.
-- **An uploaded image is not shown:** select it in the column, save the content, and deploy the draft. Uploading alone does not place an image on a page.
+- **A new page is missing:** check Enabled, access, its navigation link on the Menus screen, and whether its group was published.
+- **Text changes disappeared after closing an editor:** choose **Save Column** before selecting something else in the workspace.
+- **An uploaded image is not shown:** select it in the column's Image tab, save the column, and publish. Uploading alone does not place an image on a page; the image's **Used on** list in Media shows where it is used.
 - **The site stops matching the local address:** check Site URL and routing settings. Use the same address the setup is configured to serve.
 - **Containers do not start:** run `docker compose ps` and `docker compose logs rails db`; keep the private configuration and volumes intact while investigating.

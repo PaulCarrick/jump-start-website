@@ -30,3 +30,6 @@ application.register("page-outline", PageOutlineController)
 
 import PagePreviewController from "./page_preview_controller"
 application.register("page-preview", PagePreviewController)
+
+import PublishReviewController from "./publish_review_controller"
+application.register("publish-review", PublishReviewController)

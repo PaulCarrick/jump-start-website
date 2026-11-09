@@ -1403,7 +1403,8 @@ CREATE TABLE public.deployments (
     effective_at timestamp(6) without time zone NOT NULL,
     summary text,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    contents text
 );
 
 
@@ -3770,6 +3771,7 @@ ALTER TABLE ONLY public.cells
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261108160000'),
 ('20261108140000'),
 ('20261108120000'),
 ('20261101160000'),

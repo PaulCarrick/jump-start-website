@@ -11,7 +11,7 @@ RSpec.describe 'Password login form', type: :system do
     click_button 'Log in'
     expect(page).to have_no_current_path(new_user_session_path, ignore_query: true)
     visit admin_publishing_path
-    expect(page).to have_content('Deploy Changes')
+    expect(page).to have_content('Review and publish')
     expect(page).to have_no_button('Log in')
   end
 end

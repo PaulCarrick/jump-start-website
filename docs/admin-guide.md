@@ -1,10 +1,11 @@
 # Admin user guide
 
-Use this guide to maintain the website through the admin sidebar. It covers creating content, arranging pages, managing navigation, and finding existing records. Open **Help** at the bottom of the sidebar to return here.
+Use this guide to maintain the website from the admin. It covers editing pages, managing media and menus, changing settings, and publishing. Open **Help** at the bottom of the sidebar to return here.
 
 ## Table of contents
 
 - [Getting started](#getting-started)
+- [Publishing changes](#publishing-changes)
 - [Using list pages](#using-list-pages)
 - [Pages, sections, and columns](#pages-sections-and-columns)
 - [Pages](#pages)
@@ -13,8 +14,7 @@ Use this guide to maintain the website through the admin sidebar. It covers crea
 - [Writing and formatting content](#writing-and-formatting-content)
 - [Image files and groups](#image-files-and-groups)
 - [Blogs](#blogs)
-- [Menu items](#menu-items)
-- [Footer items](#footer-items)
+- [Menus](#menus)
 - [Users and access](#users-and-access)
 - [Site setups](#site-setups)
 - [Keyboard shortcuts](#keyboard-shortcuts)
@@ -22,203 +22,212 @@ Use this guide to maintain the website through the admin sidebar. It covers crea
 
 ## Getting started
 
-### Saving drafts and deploying changes
+Sign in with an account that has access to administration. The admin has its own frame:
 
-Admin edits are saved as drafts. Existing live content stays unchanged until you choose **Deploy Changes** in the sidebar. New records and deletions are also pending changes.
-
-1. Edit and save the records you want to change. Related page, section, column, menu, footer, and image changes can be prepared together.
-2. Open **Deploy Changes** to review the shared workspace. It includes pending changes made by all administrators.
-3. Use **Edit Draft** or **Preview Draft** to review content. Draft previews require an administrator account and are never public.
-4. Enter a deployment summary and select **Deploy Changes**. The complete group is validated and published in one transaction; if any record fails, nothing is published.
-5. Use **History** to see application validity and database recording periods, or **Restore as Draft** to prepare a previous version for review and redeployment. Secret credentials are excluded from restoration. Existing IDs and public addresses remain stable unless you deliberately rename a page.
-
-**Discard All Drafts** removes unpublished changes and leaves the live website unchanged. It discards the shared workspace, so coordinate with other administrators first. Deleted records remain recoverable in temporal history; deleting from admin marks a pending deletion until deployment.
-
-Changing an account's password or access in admin is also pending until deployment. History pages show timing metadata and do not display passwords, tokens, or email credentials.
-
-Sign in with an account that has access to administration. Use the sidebar to choose the kind of record you want to work on. The sidebar entries come from the site's Admin menu, so their labels and order may vary.
+- The **top bar** shows the site's name, **View site** (opens the public site in a new tab), **Publish** with the number of changes waiting, your name and **Log out**.
+- The **sidebar** is grouped: **Dashboard**; **Content** (Pages, Blog, Media); **Site** (Menus, Settings, Users); **Page parts** (Sections, Columns, the classic lists); and **Help** and **New Site Tutorial** at the bottom. On a phone, the ☰ button opens it.
+- The **Dashboard** shows what is waiting to be published, the site's counts, the last publish, quick actions and the pages and posts edited most recently.
 
 A typical content change is:
 
-1. Open **Pages** and find the page.
-2. Choose **Edit**.
-3. Find the section and choose **Edit Column** for the content you want to change.
-4. Change the content and save it.
-5. Review the page on the website.
+1. Open **Pages** and click the page's title. The page opens in its workspace.
+2. Click the section in the preview, or the column in the outline.
+3. Change the content in the panel on the right and choose **Save Column**.
+4. Choose **Publish** in the top bar, check the change, and publish it.
 
 The **Enabled** switch controls whether a record appears on the public website. New and existing records start enabled. Switch it off and save to hide content without deleting it; it remains visible and editable in admin. Disabling a page hides its sections and columns from that page. Disabled sections hide their columns, and disabled images are excluded from public image lookups and groups. Public navigation and blogs also honor Enabled. The user switch controls the record's enabled status; it does not change the account's access level or password.
 
 Fields marked with an asterisk are required. Some editors keep Save disabled until the necessary data is available. A disabled Save button cannot be activated with its keyboard shortcut.
 
-**Cancel** returns from an editor without saving its current changes. It does not undo changes you have already saved. When an editor opens inside another editor, saving may return the updated draft to the parent editor; save the parent too to finish the operation.
+**Cancel** returns from an editor without saving its current changes. It does not undo changes you have already saved.
+
+## Publishing changes
+
+Admin edits are saved as **drafts**. Visitors keep seeing the live site until you publish. New records and deletions are drafts too. Lists show each record's status: **Live**, **Draft changes**, **New** or **Hidden**.
+
+Choose **Publish** in the top bar (the number is how many changes are waiting) to open **Review and publish**:
+
+1. Changes are **grouped by page**: a page's settings, its sections and columns, and the menu and footer entries that point to it form one group. Changes elsewhere are grouped as Header menu, Footer, Blog, Media, Settings and Users.
+2. Each change says what it is (**New**, **Changed**, **Moved** or **Deleted**) and, for a change, shows each field **live now** and **after publishing**. Long texts are shown from just before the first difference.
+3. **Open page** opens the page's workspace; **Preview draft** shows the page with its drafts, for administrators only; **Edit** opens the record; **History** lists its versions.
+4. Untick a group to leave it as a draft. A group is published or left as a whole, so a page never goes live half-finished.
+5. Optionally add a **note for the history**, then choose **Publish** (the button says how many changes). Confirm, and the ticked changes go live together. If anything fails, nothing is published.
+
+If someone saves a change in a ticked group after you opened the page, nothing is published and you are asked to review again. Several administrators share one set of drafts, so coordinate before publishing or discarding.
+
+**Discard selected** deletes the ticked drafts and leaves the live site as it is.
+
+**Published before** lists each publish: when, by whom, what it contained, and its note.
+
+**History** (on a record, or on any edit screen) shows the record's versions. **Restore as Draft** prepares an earlier version as a draft to review and publish. Passwords and secret credentials are never restored. Changing an account's password or access is also a draft until published.
 
 ## Using list pages
 
-List pages show records with **View**, **Edit**, and, where permitted, **Delete** actions. **New …** buttons appear above the lists where available.
+Lists (Pages, Blog, Users and others) share one layout:
 
-### Sorting and column headings
+- The heading shows how many items there are and the **New …** button.
+- One **search box** searches the main fields (the Blog list has separate Title, Author, Contents and Posted fields). **Clear** removes the search.
+- Click a **column heading** to sort by it; click it again to reverse. The arrow shows the current sort. **Clear Sort** returns to the default order.
+- Each row has a **status** and an **Edit** button. The **⋯** menu holds **View**, **History** and, for administrators, **Delete** (which asks before deleting). For pages it also holds **Classic editor**.
+- **First**, **Previous**, **Next** and **Last** move between pages of results.
 
-Grey headings with arrows are sortable. Select a heading to sort by that column; select it again to reverse the direction. **Clear Sort** returns to the list's default ordering.
-
-Lighter grey headings without arrows are labels, not sorting controls. For example, the Column preview column is not sortable.
-
-### Searching
-
-Lists that support searching have a search form below the records. Fill in one or more fields, then choose **Search …**. Use **Clear Search** to remove the filters. Sorting and searching are separate controls.
-
-### Pagination
-
-**First**, **Previous**, **Next**, and **Last** move between result pages. The page indicator shows your current position. Unavailable directions appear disabled. The Columns list displays five records per page, with each preview in its own column.
-
-### Deleting
-
-Check the record carefully before confirming **Delete**. A confirmation asks whether to proceed. Cancel the confirmation if you selected the wrong record. The exact effect on related records depends on the record type; deleting a section also removes its columns.
+Deleting a section also removes its columns. A deletion is a draft until published.
 
 ## Pages, sections, and columns
 
 The content structure has three levels:
 
-- A **page** is a website destination with a title, name, access setting, and content.
+- A **page** is a website destination with a title, name (its address), access setting, and content.
 - A **section** is an ordered block within a page. A section contains one or more columns.
 - A **column** contains text, an image, video, or a combination of content and formatting.
 
-A page's **Section Group** field and a section's **Section group** field serve different purposes. The page field identifies its section/content category. The section field groups neighboring sections so they can be kept together and duplicated as a unit.
+A page's **Section** field and a section's **Section group** field serve different purposes. The page field names the set of sections shown on that page. The section field groups neighboring sections so they can be kept together and duplicated as a unit.
 
 ## Pages
+
+### The page workspace
+
+Open **Pages** and click a page's title (or **Edit**). The workspace has three parts:
+
+- The **outline** (left) lists the sections and the columns in each. Click a name to edit it.
+- The **preview** (middle) shows the page as it will look. Click a section to select it. Links in the preview do not navigate away.
+- The **panel** (right) edits what you selected.
+
+**Reordering:** use **↑** and **↓** in the outline, or drag the **⠿** handle. Sections move within the page; columns move within their section. The new order is saved as a draft at once and the preview updates.
+
+**A column** opens in the panel with four tabs:
+
+- **Content**: the text (with **Switch to HTML View**) and the column's link.
+- **Image**: the picture, image group, slide show or video, and **New Image**.
+- **Layout**: the formatting fields (margins, background, image and caption classes and styles, and the rest).
+- **Advanced**: Enabled, the column's name and its order.
+
+An image column opens on the Image tab. A small preview of the column sits under the tabs; the page preview updates when you choose **Save Column**. **Delete this column** removes it.
+
+**A section** shows its **Section group** and Enabled switch (**Save section**), its columns, **+ Add column** (an empty text column at the end), **Edit section layout** (the classic section editor, for the section's name, order and column widths), **Duplicate section** or **Duplicate group** (asks for the new name), and **Delete section**.
+
+**Page settings** (top of the workspace) edits the title, the name, access, the Section field and Enabled. Changing the name changes the page's address; update menu links to match.
+
+**+ Add section** (under the outline) opens the layout chooser: Text Only, Image Only, dual-column text and image arrangements, and layouts with several columns. Choose a layout, fill in what it asks for, choose **Generate Columns**, then **Save Section**. Cancel removes the new, empty section. Either way you return to the workspace.
+
+**View page** opens the live page; **Classic editor** opens the previous page editor, which is kept while the workspace is new.
 
 ### Creating a page
 
 1. Open **Pages**, then **New page**.
-2. Enter the Page Title and a unique Page Name. The name identifies the page, so choose it deliberately.
-3. Enter the required Section Group. Fill in Page Access if needed.
-4. When the required name and section fields are complete, **Save Page** becomes available and **New Section** appears.
-5. Choose **New Section** to build content, or save the page first.
-6. Complete any offered menu/footer placement controls if you want to link the page from site navigation.
-7. Save the page and review it on the website.
-
-### Editing a page
-
-The saved-page editor shows page fields and a preview of its sections. Section actions include **Edit Section**, **Duplicate Section** or **Duplicate Group**, and **Delete Section**. Each column has its own **Edit Column** and **Delete Column** buttons.
-
-**Add Section** opens the section editor for that page. Save changes in the editor you opened; after returning, review the page and save any remaining page-field changes.
+2. Enter the Page Title and a unique Page Name. The name is the page's address, so choose it deliberately.
+3. Enter the Section field. Fill in Access if needed.
+4. Save the page, then open it from the Pages list and use **+ Add section**.
+5. Add the page to the header menu or footer on the **Menus** screen if visitors should find it there.
+6. Publish the page with its sections and columns.
 
 ### Section ordering
 
-Sections have numeric order values. Use the page's renumbering control to normalize the sequence when needed. Grouped sections stay together during renumbering. Review the preview after changing order values.
+Sections have numeric order values; reordering in the outline sets them to 10, 20, 30 and so on. The classic editor's **Renumber Sections** does the same for the whole page. Grouped sections stay together when duplicated.
 
 ## Sections
 
+Sections are normally edited from the page workspace. The **Sections** list under Page parts shows every section of every page, for finding one by name.
+
 ### Creating a section
 
-1. Use **New Section** on the Sections list, or **Add Section** from a saved page.
-2. Choose a template. Available column templates include Text Only, Image Only, dual-column text/image arrangements, and layouts with several columns.
-3. Enter the text and select the image or media requested by the template.
-4. Choose **Generate Columns**.
-5. Review the generated columns. Set the section name, order, and optional group.
-6. Choose **Save Section**.
+Use **+ Add section** in a page's workspace (or **New Section** on the Sections list), then:
 
-Save Section is visible but disabled before columns are generated. Generating columns prepares an editable draft; it does not by itself save the section.
+1. Choose a template.
+2. Enter the text and select the image or media requested by the template.
+3. Choose **Generate Columns**.
+4. Review the generated columns. Set the section name, order, and optional group.
+5. Choose **Save Section**.
 
-### Editing columns inside a section
-
-Choose **Edit Column** for the desired column. Save Column returns the edited column to the section draft. Choose **Save Section** to persist the section changes. Cancel in a nested editor returns to the parent draft.
+Save Section is disabled until columns are generated. Generating columns prepares an editable draft; it does not by itself save the section.
 
 ### Section groups and duplication
 
 Give related sections the same **Section group** name to group them. Leave the field blank for an independent section.
 
-From the page editor, **Duplicate Section** asks for a new section name and copies that section and its columns. **Duplicate Group** asks for a new group name and copies all sections in the group, including their columns. The copied group is placed after existing sections. Names must be valid and must not conflict with existing names.
-
-The page preview uses stronger horizontal rules between groups and lighter rules within a group. Vertical rules separate adjacent columns.
+**Duplicate section** asks for a new section name and copies that section and its columns. **Duplicate group** asks for a new group name and copies all sections in the group, including their columns. The copy is placed after the existing sections. Names must be valid and must not conflict with existing names.
 
 ## Columns
 
-The Columns list shows Section, Name, Order, Image, Type, a rendered Column preview, and action buttons. Images scale to fit the preview column and text wraps. Five columns appear per page.
-
-Choose **New Column** at the top of Manage Columns to add a column to an existing section. Choose **Edit** to open a column directly. You can also use **Edit Column** from a page or section. Depending on the editor and content type, controls include content, image/media selection, link, ordering, width, and formatting.
-
-Use **Save Column** to finish. In a standalone column editor, this saves the column. Inside a section editor, it updates the section draft; save the section afterward.
+Columns are normally edited in the panel of the [page workspace](#the-page-workspace). The **Columns** list under Page parts shows every column with a preview and can open the classic column editor, which has the same fields on one long form.
 
 ## Writing and formatting content
 
-The rich-text editor supports formatted text such as paragraphs, headings, emphasis, and lists. Use its toolbar to apply formatting and review the preview before saving.
+The rich-text editor supports paragraphs, headings, emphasis, lists and links. Use its toolbar and check the preview before saving.
 
-**Switch to HTML View** exposes the underlying markup for advanced editing. Use it only when you are comfortable editing HTML, then switch back and check the result. Layout changes can affect how text and media fit on narrow screens.
+**Switch to HTML View** shows the underlying markup for advanced editing. Use it only when you are comfortable editing HTML, then switch back and check the result. Layout changes can affect how text and media fit on narrow screens.
+
+Formatting fields (the **Layout** tab) offer pickers for margins, colors from the site's palette, and classes. **Switch to Formatting Mode** exposes the raw CSS classes and styles for advanced use.
 
 Some content supports expandable text with **Show More** and **Show Less** controls. Review both the collapsed and expanded presentation on the website.
 
 ## Image files and groups
 
-### Uploading an image
+### The media library
 
-1. Open **Image Files**, then **New Image**.
-2. Enter a unique Name and select the file to upload.
-3. Choose a MIME type appropriate to the file, such as JPEG or PNG. Video entries use the appropriate video type.
-4. Optionally set a Group, Slide Order, Caption, and Description.
-5. Choose **Save Image**.
+Open **Media**. Files are shown as thumbnails, newest first, 24 to a page. Videos show a ▶ mark; hidden files are faded.
 
-An existing image's Name is read-only. Content refers to images by name, so choose a useful name when creating the image.
+- **Group chips** filter by image group (each shows its count), **No group** shows files without one, and **All** shows everything.
+- The **search box** searches name, caption, description and group.
+- Click a thumbnail to open its **details**: the file, its caption and description, and **Used on**, the pages that show it as a picture, a video or in a group's slide show.
 
-### Groups
+In the details you can change the file's **Group**, **Slide order** and **Enabled**, then **Save**. Choosing another group fills in the next slide number, so the file goes to the end of that group's slide show. **Edit caption, description or file** opens the full form (with the HTML view) and returns to the library; **View**, **History** and **Delete this file** are there too. Delete warns you when the file is used on a page.
 
-The Group field organizes images for selection and grouped displays. Use **Add Group** on a list row to assign a group. In an image form, enter a group or select an existing one. Slide Order controls ordering for displays that use ordered images.
+### Uploading
 
-Image groups and section groups are separate concepts even when they use similar names.
+Drop images or MP4 videos on the upload area, or choose **choose files**, then **Upload**. Up to 20 files go at once.
+
+- Each file is named after itself without its extension. If the name is taken, it gets "-2", "-3" and so on, because pages refer to images by name.
+- The file's type is read from the file itself; anything that is not an image or an MP4 video is skipped with a message.
+- Enter a group to add the uploads to the end of that group's slide show.
+
+**New Image** adds one file with its caption and description on the full form. An existing image's name cannot be changed, because pages refer to it.
 
 ### Uploading while editing content
 
-Image selectors can offer **New Image**. This opens an upload dialog without leaving the content draft. Save the image to make it available in the selector, then select it and finish saving the content. Cancel closes the image workflow without creating that image.
+The image picker in the column editor offers **New Image**. This opens the upload form without leaving the draft. Save the image to make it available in the picker, then select it and save the column. Uploading saves the image separately; cancelling the column does not undo it.
 
-Uploading an image saves the image record separately; cancelling the surrounding page or section draft does not undo a completed image upload.
+Image groups and section groups are separate concepts even when they use similar names.
 
 ## Blogs
 
-Use **Blogs** to create and maintain blog posts. The list includes author, title, posted date, content, and record actions. Search fields include author, title, posted date, and contents; follow the date format shown in the form.
+Use **Blog** to create and maintain posts. The list shows each post's title with the start of its text, author, type, posted date and status, 20 to a page. Search by title, author, contents or posted date (YYYY-MM-DD).
 
-Choose **New Blog** to create a post or **Edit** to update one. Enter the post fields and content, then save. **View** lets you inspect an existing post.
+Choose **New Blog** to create a post or **Edit** to update one. Enter the post fields and content, then save.
 
-## Menu items
+## Menus
 
-Menu items define navigation links. **Main** items are used for the website menu; **Admin** items are used for the admin sidebar.
+Open **Menus** to arrange the **Header menu** and the **Footer** (switch between them at the top). Each is shown as a tree of up to two levels, like the public site: top items, and items inside them (a dropdown in the header, a column in the footer).
 
-1. Choose **New Menu Item** or edit an existing item.
-2. Select Menu Type.
-3. Enter the required Label and Menu Order. Lower order values appear earlier.
-4. Set Link to the destination, such as a website page path.
-5. Select a Parent menu to make the item a child/dropdown entry, or leave it blank for a top-level entry.
-6. Set optional Icon, Options, and Access values only when needed.
-7. Save and check the corresponding menu.
+- **Move** an item with **↑** and **↓**, **←** (out one level) and **→** (inside the item above), or drag its **⠿** handle above, below or onto another item. Each move is saved as a draft at once.
+- **Edit** an item by clicking its name: the panel holds **Label**, **Links to** (choose one of the site's pages, or type an address such as `https://example.com` or `mailto:you@example.com`), Enabled, and under **More settings** Access, Icon and Options. Addresses that could run code are refused.
+- **Add an item** adds it at the end; drag it into place afterwards. **Delete this item** moves the items inside it to the top level.
 
-Access is a visibility setting tied to the site's access/role configuration. Preserve established conventions when editing it. Options and icon values also depend on the site's existing configuration.
-
-The Help link is provided by the application beneath the configured admin menu entries.
-
-## Footer items
-
-Footer items define links in the website footer. Create or edit a footer item, supply its Label, Link, and Footer Order, and optionally select a Parent footer. Lower order values appear earlier.
-
-Icon, Options, and Access fields work with the site's existing footer configuration. Save and review the footer on the website.
+Items that link to `/admin` can be moved but not changed. **Show the header menu as a list** opens the classic list, which also holds the old "Admin" menu entries; the admin sidebar itself no longer comes from them.
 
 ## Users and access
 
-Use **Users** to create accounts and update names, email addresses, access levels, and roles. Access controls administrative capabilities; Roles are a separate field used by site content/navigation rules.
+Use **Users** to create accounts and update names, email addresses, access levels, and roles. Access controls administrative capabilities; Roles are a separate field used by site content and navigation rules.
 
-The system distinguishes regular users, read-only users, blog-capable users, administrators, and super users. Administrator and super accounts are treated as admin accounts by the content-editing permission checks. The controls available to a user depend on the area being accessed; visible controls do not necessarily grant permission to save.
+The system distinguishes regular users, read-only users, blog-capable users, administrators, and super users. Administrator and super accounts can change content and publish. Public sign-up is closed; administrators create accounts here.
 
-New users need a password and confirmation. When editing an existing user, leave password fields blank to keep the current password. Enter a new password and matching confirmation only when changing it.
+New users need a password and confirmation. When editing an existing user, leave the password fields blank to keep the current password.
 
 ## Site setups
 
-Site setups contain the website's configuration. The required **Database** field stores a database name and defaults to `paul-carrick`. Deploying a new non-default setup provisions that database and its initial accounts; saving a draft does not. Deploying any Site Setup change synchronizes the setup catalog to all managed databases. See [Site databases](site-databases.md) for USER_PASSWORD, permissions, and recovery steps. Requests select a site by its Site URL hostname and longest matching path prefix. The default setup keeps the original application database connection.
+**Settings** edits the site's configuration on one form, in tabs, with one **Save**:
 
-The form groups information such as:
+- **General**: configuration name, site name, owner, domain, host, address and the copyright line. Changing the configuration name suggests the site name, owner, address and database.
+- **Email**: the mail server the contact form uses and the contact addresses and subject. **Send a test email** sends a short message to the "to" address using the settings as last saved, and reports whether it worked; save first if you changed them.
+- **Appearance**: header, page and footer colors, each with a swatch and a small preview, and the background image.
+- **Social links**: the footer's social icons; leave a box empty to hide its icon.
+- **Advanced**: database, guest user name and the default setup.
 
-- Configuration name and default-setup selection.
-- Owner, site name, domain, host, URL, and guest-user information.
-- Email server settings and contact email addresses/subject.
-- Header, footer, content colors, background, and other presentation settings.
+If a required field on another tab is empty, Save opens that tab.
 
-Required fields are marked in the form. Save the setup and check the affected website behavior. Coordinate changes to domains, email settings, or the default setup with the person maintaining the running site; some deployment settings also come from the server environment.
+The required **Database** field stores a database name and defaults to `paul-carrick`. Publishing a new non-default setup provisions that database and its initial accounts; saving a draft does not. Publishing any Site Setup change synchronizes the setup catalog to all managed databases. See [Site databases](site-databases.md) for USER_PASSWORD, permissions, and recovery steps. Requests select a site by its Site URL hostname and longest matching path prefix. The default setup keeps the original application database connection.
+
+Coordinate changes to domains, email settings, or the default setup with the person maintaining the running site; some deployment settings also come from the server environment.
 
 ## Keyboard shortcuts
 
@@ -232,30 +241,34 @@ On Chrome for Mac, use **Control + Option + letter**. On the configured desktop 
 - **E**: Edit, when unique.
 - **F**, **P**, **L**: First, Previous, Last, when unique.
 
-Shortcuts are omitted when several visible actions would use the same key. For example, repeated row Edit buttons do not receive shortcuts. Top and bottom pagination can also make navigation shortcuts ambiguous. Disabled buttons have no active shortcut.
+Shortcuts are omitted when several visible actions would use the same key. For example, repeated row Edit buttons do not receive shortcuts. Disabled buttons have no active shortcut.
 
 Escape gives open dialogs, menus, and selection controls priority rather than immediately cancelling the form. Within a native dropdown, close or leave the dropdown before using Escape to cancel the editor.
 
 ## Common questions
 
+### Why don't visitors see my change?
+
+It is a draft. Choose **Publish** in the top bar, check that its group is ticked, and publish it.
+
 ### Why is Save disabled?
 
-The draft is not ready. For a new page, fill in Page Name and Section Group. For a new section, generate columns first. Some accounts also lack permission to save changes.
+The draft is not ready. For a new section, generate columns first. Some accounts also lack permission to save changes.
 
-### Why did editing a column return me to another editor?
+### Can I publish one page and not another?
 
-You opened a nested editor. Save Column updates the parent section draft; Save Section completes that section. A new page may hold that section as part of its own draft, which is completed with Save Page.
+Yes. On **Review and publish**, untick the groups to leave as drafts. A page's own changes (its settings, sections, columns and menu entries) are published together.
 
-### Why is a column heading lighter grey?
+### Why did publishing say "Review them again"?
 
-It is a label rather than a sorting control. Only headings with arrows can change the order.
+Someone saved a change in a ticked group after you opened the page. Nothing was published. Look at the list again and publish.
 
 ### Why is a keyboard shortcut missing?
 
-The action may be disabled, or the same key may match multiple visible controls. Use the mouse or Tab and Enter to choose the intended button.
+The action may be disabled, or the same key may match several visible controls. Use the mouse or Tab and Enter to choose the intended button.
 
 ### How do I link directly to a help topic?
 
-The entire guide is one document. Its table of contents links to stable section anchors. For example, the Pages topic is at `/admin/help#pages`, and Image Files is at `/admin/help#image-files-and-groups`. These addresses can also be used for future help links on individual admin pages.
+The entire guide is one document. Its table of contents links to stable section anchors. For example, the Pages topic is at `/admin/help#pages`, and Media is at `/admin/help#image-files-and-groups`.
 
 [Back to table of contents](#table-of-contents)

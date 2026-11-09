@@ -58,7 +58,7 @@ RSpec.describe 'Browser navigation within a site database', type: :system do
     click_button 'Save Column'
     expect(page).to have_current_path('/browser-site/admin/cells', ignore_query: true)
     visit '/browser-site/admin/publishing'
-    click_button 'Deploy Changes'
+    accept_confirm { click_button 'Publish 1 change' }
     expect(page).to have_content('Changes deployed successfully')
     visit '/browser-site/home'
     expect(page).to have_content('Published within this tenant only')

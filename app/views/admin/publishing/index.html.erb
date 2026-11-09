@@ -1,47 +1,108 @@
+<%# Review and publish (docs/admin-redesign-plan.md, stage 6). %>
+<%
+  edit_link = lambda do |record, group|
+    page = group.page
+    case record
+    when Page then admin_page_workspace_path(record) unless record.temporal_deleted?
+    when Section then admin_page_workspace_path(page, section: record.id) if page && !record.temporal_deleted?
+    when Cell then admin_page_workspace_path(page, cell: record.id) if page && !record.temporal_deleted?
+    when Contact, PostComment then nil
+    else url_for(controller: "admin/#{record.class.table_name}", action: :edit, id: record.id) unless record.temporal_deleted?
+    end
+  end
+  change_count = @groups.sum { |group| group.changes.size }
+%>
 <%= render layout: "layouts/admin_page" do %>
-  <h1>Deploy Changes</h1>
-  <p>Saving in admin saves a draft. The public website continues to show the live version until you deploy. This is a shared workspace: deployment includes all pending changes below.</p>
-  <% if @pending.empty? %>
-    <p>No pending changes.</p>
+  <div class="admin-list-heading">
+    <h1 class="admin-page-title">Review and publish</h1>
+    <span class="admin-list-count"><%= pluralize(change_count, "change") %> waiting</span>
+  </div>
+  <p class="admin-tab-lead">
+    Saving in the admin makes a draft. Visitors keep seeing the live site until you publish. Changes are grouped by page;
+    a group is published (or discarded) as a whole, so a page never goes live half-finished. Untick a group to leave it as a draft.
+  </p>
+
+  <% if @groups.empty? %>
+    <p class="admin-list-empty admin-table-box">No pending changes. Everything on the site is published.</p>
   <% else %>
-    <div class="table-responsive">
-      <table class="table">
-        <thead><tr><th>Record</th><th>ID</th><th>Version</th><th>Change</th><th>Review</th></tr></thead>
-        <tbody>
-        <% @pending.each do |record| %>
-          <tr>
-            <td><%= record.class.model_name.human %>
-              <details><summary>Review draft values</summary>
-                <% Publishing.review_attributes(record).each do |field, value| %>
-                  <p><strong><%= record.class.human_attribute_name(field) %>:</strong> <%= value.to_s.truncate(3000) %></p>
+    <%= form_with url: admin_deploy_publishing_path, method: :post, local: true, id: "publish-form",
+                  data: { controller: "publish-review", action: "submit->publish-review#confirm", turbo: false } do |form| %>
+      <div class="publish-toolbar">
+        <button type="button" class="btn btn-sm btn-light" data-action="publish-review#all">Select all</button>
+        <button type="button" class="btn btn-sm btn-light" data-action="publish-review#none">Select none</button>
+      </div>
+
+      <% @groups.each do |group| %>
+        <section class="publish-group" aria-labelledby="publish-group-<%= group.key.parameterize %>">
+          <header class="publish-group-header">
+            <label class="publish-group-choose">
+              <input type="checkbox" name="groups[]" value="<%= group.key %>" checked
+                     data-publish-review-target="group" data-count="<%= group.changes.size %>" data-title="<%= group.title %>"
+                     data-action="change->publish-review#update">
+              <span id="publish-group-<%= group.key.parameterize %>" class="publish-group-title"><%= group.title %></span>
+            </label>
+            <span class="admin-list-count"><%= pluralize(group.changes.size, "change") %></span>
+            <% if group.page %>
+              <span class="publish-group-links">
+                <%= link_to("Open page", admin_page_workspace_path(group.page), target: "_self") unless group.page.temporal_deleted? %>
+                <%= link_to("Preview draft ↗", page_path(group.page.name, preview: "draft"), target: "_blank", rel: "noopener") %>
+              </span>
+            <% end %>
+          </header>
+          <% group.changes.each do |change| %>
+            <%= hidden_field_tag "reviewed[]", "#{group.key}|#{change.token}", id: nil %>
+          <% end %>
+          <ul class="publish-changes">
+            <% group.changes.each do |change| %>
+              <li class="publish-change">
+                <div class="publish-change-line">
+                  <span class="admin-badge publish-kind publish-kind-<%= change.kind.downcase %>"><%= change.kind %></span>
+                  <span class="publish-change-label"><%= change.label %></span>
+                  <span class="publish-change-links">
+                    <% if (path = edit_link.call(change.record, group)) %><%= link_to("Edit", path, target: "_self") %><% end %>
+                    <%= link_to("History", admin_publishing_history_path(model: change.record.class.name, record_id: change.record.id), target: "_self") %>
+                  </span>
+                </div>
+                <% if change.fields.any? %>
+                  <details class="publish-fields"<%= " open" if change.fields.size <= 2 %>>
+                    <summary><%= change.fields.map(&:name).join(", ") %></summary>
+                    <table class="publish-diff">
+                      <thead><tr><th scope="col">Field</th><th scope="col">Live now</th><th scope="col">After publishing</th></tr></thead>
+                      <tbody>
+                        <% change.fields.each do |field| %>
+                          <tr>
+                            <th scope="row"><%= field.name %></th>
+                            <td class="publish-before"><%= field.before.presence || "—" %></td>
+                            <td class="publish-after"><%= field.after.presence || "—" %></td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </details>
                 <% end %>
-              </details>
-            </td>
-            <td><%= record.id %></td>
-            <td><%= record.version %></td>
-            <td><%= record.temporal_deleted? ? 'Delete' : record.base_version.present? ? 'Update' : 'New' %></td>
-            <td class="d-flex flex-wrap gap-2">
-              <% unless record.temporal_deleted? || %w[Contact PostComment].include?(record.class.name) %>
-                <%= link_to 'Edit Draft', url_for(controller: "admin/#{record.class.table_name}", action: :edit, id: record.id), class: 'btn btn-primary' %>
-              <% end %>
-              <% page = record.is_a?(Page) ? record : record.is_a?(Section) ? record.page : record.is_a?(Cell) ? record.section.page : nil %>
-              <% if page %><%= link_to 'Preview Draft', page_path(page.name, preview: 'draft'), class: 'btn btn-secondary', target: '_blank', rel: 'noopener' %><% end %>
-              <%= link_to 'History', admin_publishing_history_path(model: record.class.name, record_id: record.id), class: 'btn btn-secondary' %>
-            </td>
-          </tr>
-        <% end %>
-        </tbody>
-      </table>
-    </div>
-    <%= form_with url: admin_deploy_publishing_path, method: :post, local: true do |form| %>
-      <%= form.label :summary, 'Deployment summary', class: 'form-label' %>
-      <%= form.text_field :summary, maxlength: 1000, class: 'form-control mb-3' %>
-      <%= form.submit 'Deploy Changes', class: 'btn btn-primary' %>
+              </li>
+            <% end %>
+          </ul>
+        </section>
+      <% end %>
+
+      <div class="publish-actions">
+        <label class="publish-note">
+          <span>Note for the history (optional)</span>
+          <%= form.text_field :summary, maxlength: 1000, class: "form-control", placeholder: "For example: spring photos" %>
+        </label>
+        <p class="publish-selection" role="status" aria-live="polite" data-publish-review-target="status"></p>
+        <div class="publish-buttons">
+          <%= form.button "Discard selected", type: "submit", class: "btn btn-outline-danger", formaction: admin_discard_publishing_path,
+                          data: { publish_review_target: "discard" } %>
+          <%= form.button "Publish selected", type: "submit", class: "btn btn-primary", data: { publish_review_target: "publish" } %>
+        </div>
+      </div>
     <% end %>
-    <%= button_to 'Discard All Drafts', admin_discard_publishing_path, method: :post, class: 'btn btn-danger mt-3', form: { data: { turbo_confirm: 'Discard all pending changes? Live content will stay unchanged.' } } %>
   <% end %>
+
   <% if @database_syncs.any? %>
-    <h2 class="mt-4">Site database synchronization</h2>
+    <h2 class="admin-tab-section mt-4">Site database synchronization</h2>
     <% @database_syncs.each do |sync| %>
       <div class="alert alert-warning">
         <p>Deployment #<%= sync.deployment_id %> — <%= sync.status.humanize %>. <%= sync.error_message %></p>
@@ -49,8 +110,26 @@
       </div>
     <% end %>
   <% end %>
-  <h2 class="mt-4">Recent deployments</h2>
-  <% @deployments.each do |deployment| %>
-    <p><strong>#<%= deployment.id %></strong> — <%= deployment.effective_at %> — <%= deployment.summary %></p>
+
+  <h2 class="admin-tab-section mt-4">Published before</h2>
+  <% if @deployments.empty? %>
+    <p class="form-text">Nothing has been published yet.</p>
+  <% else %>
+    <div class="admin-table-box">
+      <table class="admin-table publish-history">
+        <thead><tr><th scope="col">When</th><th scope="col">By</th><th scope="col">What</th><th scope="col">Note</th></tr></thead>
+        <tbody>
+          <% @deployments.each do |deployment| %>
+            <% actor = @actors[deployment.actor_id] %>
+            <tr>
+              <td class="admin-cell-muted"><time datetime="<%= deployment.effective_at.iso8601 %>"><%= l(deployment.effective_at.in_time_zone, format: :long) %></time></td>
+              <td><%= actor ? (actor.name.presence || actor.email) : "—" %></td>
+              <td><%= deployment.try(:contents).presence || "—" %></td>
+              <td><%= deployment.summary.presence || "—" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   <% end %>
 <% end %>

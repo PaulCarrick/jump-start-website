@@ -10,13 +10,18 @@ class Publishing
     models.flat_map { |model| model.pending_versions.to_a }.sort_by { |record| [ record.class.name, record.id ] }
   end
 
-  def self.deploy!(actor:, summary:)
+  # only: publish just these drafts, given as [class name, id] pairs (the
+  # review page publishes whole groups); nil publishes everything pending.
+  # contents: what was published, in plain words, for the history.
+  def self.deploy!(actor:, summary:, only: nil, contents: nil)
     raise SecurityError, 'Administrator access is required' unless actor&.admin?
+    only = only&.map { |model_name, id| [ model_name.to_s, id.to_i ] }&.to_set
     deployment = ApplicationRecord.transaction do
       # Serialize deployment and discard, and lock the actual draft rows. The
       # model callbacks also lock identity anchors when creating a draft.
       ApplicationRecord.connection.execute('SELECT pg_advisory_xact_lock(87342, 1)')
       drafts = models.flat_map { |model| model.pending_versions.order(:id).lock.to_a }
+      drafts = drafts.select { |draft| only.include?([ draft.class.name, draft.id ]) } if only
       raise Conflict, 'There are no pending changes.' if drafts.empty?
       site_setup_changes = drafts.any? { |draft| draft.is_a?(SiteSetup) }
       if site_setup_changes
@@ -29,7 +34,9 @@ class Publishing
         end
       end
       now = Time.current
-      deployment = Deployment.create!(actor_id: actor.id, effective_at: now, summary: summary)
+      attributes = { actor_id: actor.id, effective_at: now, summary: summary }
+      attributes[:contents] = contents.to_s.truncate(2000) if contents.present? && Deployment.column_names.include?('contents')
+      deployment = Deployment.create!(attributes)
       old_context = PublishingContext.deploying
       old_live = PublishingContext.live
       PublishingContext.deploying = true
@@ -105,10 +112,18 @@ class Publishing
     PublishingContext.editing = previous
   end
 
-  def self.discard!
+  # only: discard just these drafts ([class name, id] pairs); nil discards all.
+  def self.discard!(only: nil)
+    only = only&.map { |model_name, id| [ model_name.to_s, id.to_i ] }&.to_set
     ApplicationRecord.transaction do
       ApplicationRecord.connection.execute('SELECT pg_advisory_xact_lock(87342, 1)')
-      models.each { |model| model.pending_versions.lock.each { |draft| model.unscoped.where(id: draft.id, version: draft.version).delete_all } }
+      models.each do |model|
+        model.pending_versions.lock.each do |draft|
+          next if only && !only.include?([ model.name, draft.id ])
+
+          model.unscoped.where(id: draft.id, version: draft.version).delete_all
+        end
+      end
     end
   end
 end

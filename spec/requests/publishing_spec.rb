@@ -19,7 +19,7 @@ RSpec.describe 'Publishing UI and authorization', type: :request do
     expect(response.body).not_to include('Pending title')
     get admin_publishing_path
     expect(response).to have_http_status(:ok)
-    expect(response.body).to include('Deploy Changes', 'Preview Draft')
+    expect(response.body).to include('Review and publish', 'Preview draft', 'Public title', 'Pending title')
     post admin_deploy_publishing_path, params: { summary: 'Review complete' }
     expect(response).to redirect_to(admin_publishing_path)
     expect(Deployment.last.summary).to eq('Review complete')
@@ -46,5 +46,65 @@ RSpec.describe 'Publishing UI and authorization', type: :request do
     expect(response).to have_http_status(:ok)
     expect(response.body).to include('Your drafts are still available')
     expect(response.body).not_to include('private row contents')
+  end
+end
+
+RSpec.describe 'Publishing chosen groups from the review page', type: :request do
+  let!(:setup) { create(:site_setup) }
+  let!(:garden) { create(:page, name: 'garden', title: 'Garden') }
+  let!(:kitchen) { create(:page, name: 'kitchen', title: 'Kitchen') }
+
+  before do
+    sign_in create(:user, access: 'super')
+    patch admin_page_path(garden), params: { page: { title: 'Our Garden' } }
+    patch admin_page_path(kitchen), params: { page: { title: 'Our Kitchen' } }
+  end
+
+  # The checkboxes and the list of reviewed changes, as the page sends them.
+  def review_form
+    get admin_publishing_path
+    document = Nokogiri::HTML(response.body)
+    {
+      groups: document.css('input[name="groups[]"]').to_h { |box| [ box.parent.text.squish, box['value'] ] },
+      reviewed: document.css('input[name="reviewed[]"]').map { |field| field['value'] }
+    }
+  end
+
+  it 'publishes the ticked group, records what it contained and leaves the other' do
+    form = review_form
+    expect(form[:groups].keys).to eq([ 'Our Garden', 'Our Kitchen' ])
+    post admin_deploy_publishing_path, params: { groups: [ form[:groups]['Our Garden'] ], reviewed: form[:reviewed], summary: 'Garden only' }
+
+    expect(flash[:notice]).to include('Our Garden (1 change)', '1 change is still waiting')
+    expect(Page.live_versions.find_by(id: garden.id).title).to eq('Our Garden')
+    expect(Page.live_versions.find_by(id: kitchen.id).title).to eq('Kitchen')
+    expect(Deployment.last).to have_attributes(summary: 'Garden only', contents: 'Our Garden (1 change)')
+    follow_redirect!
+    expect(response.body).to include('Our Garden (1 change)', 'Garden only')
+  end
+
+  it 'publishes nothing when a ticked group changed after the page was opened' do
+    form = review_form
+    patch admin_page_path(garden), params: { page: { title: 'Our Lovely Garden' } }
+    post admin_deploy_publishing_path, params: { groups: [ form[:groups]['Our Garden'] ], reviewed: form[:reviewed] }
+
+    expect(flash[:alert]).to include('Review them again')
+    expect(Page.live_versions.find_by(id: garden.id).title).to eq('Garden')
+    expect(Deployment.count).to eq(0)
+  end
+
+  it 'asks for at least one group' do
+    form = review_form
+    post admin_deploy_publishing_path, params: { reviewed: form[:reviewed] }
+    expect(flash[:alert]).to include('Tick at least one group')
+    expect(Publishing.pending.size).to eq(2)
+  end
+
+  it 'discards only the ticked group' do
+    form = review_form
+    post admin_discard_publishing_path, params: { groups: [ form[:groups]['Our Kitchen'] ], reviewed: form[:reviewed] }
+
+    expect(flash[:notice]).to include('Discarded: Our Kitchen (1 change)')
+    expect(Publishing.pending.map(&:id)).to eq([ garden.id ])
   end
 end

@@ -9,6 +9,6 @@ RSpec.describe 'Login with temporal users', type: :request do
     expect(response).to have_http_status(:redirect)
     get admin_publishing_path
     expect(response).to have_http_status(:ok)
-    expect(response.body).to include('Deploy Changes')
+    expect(response.body).to include('Review and publish')
   end
 end

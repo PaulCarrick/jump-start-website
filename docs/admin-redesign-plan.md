@@ -103,6 +103,8 @@ Each stage: build, update the affected tests (system specs and `spec/e2e`), chec
 - A confirmation step, and a history that says what each publish contained (store a short summary on `Deployment`).
 - Tests: publishing specs, plus new ones for partial publishing (dependent records, conflicts, the advisory lock).
 
+**Built (2026-11-08):** `PublishingReview` groups the drafts (one group per page with its sections, columns and menu and footer entries; then Header menu, Footer, Blog, Media, Settings, Users); `Publishing.deploy!` and `discard!` take `only:`; the review page sends `groups[]` and the `reviewed[]` tokens (class, id, version, saved time) and nothing is published if they no longer match; `deployments.contents` (migration 20261108160000) records what each publish held. Without `groups[]`, publish and discard work on everything, as before.
+
 ## Risks and how they are handled
 
 - **Many tests drive the current admin markup** (about 30 system specs and the Selenium e2e run). Each stage updates the specs for the screens it changes, in the same commit.

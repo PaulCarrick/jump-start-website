@@ -24,7 +24,7 @@ provisioned databases when their Site URL matches the incoming request.
    to the original Site URL. Repeated edits replace the suffix rather than stacking
    it. Other fields remain editable. Use a valid Site Domain and the desired Guest
    User Name, then save the draft. Opening/saving the form creates no database.
-4. Review and Deploy Changes. Database provisioning follows the content commit.
+4. Review and publish the Settings group. Database provisioning follows the content commit.
 
 Each new database gets the repository's SQL schema (including native bitemporal
 functions/history), but no pages, uploads, blog posts, or existing user accounts.
@@ -67,7 +67,7 @@ PostgreSQL cannot atomically CREATE DATABASE and commit content across separate
 databases. A durable synchronization request is saved with the deployment before
 provisioning begins. Missing USER_PASSWORD, invalid names, and existing unmanaged
 databases are rejected before content is published. Later connection/initialization
-failures leave a visible pending/failed status under Deploy Changes. The UI says
+failures leave a visible pending/failed status under Review and publish. The UI says
 content was deployed but synchronization is pending, rather than claiming rollback.
 
 Use **Retry Database Sync** to resume. Requests are serialized with publishing;
