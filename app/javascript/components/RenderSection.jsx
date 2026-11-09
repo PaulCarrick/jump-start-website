@@ -18,6 +18,7 @@ import {
   processVideoImageTag,
   imageFileFindByName,
   missingImageUrl,
+  VIDEO_IMAGE_PATTERN,
 } from "./imageProcessingUtilities.jsx";
 
 /**
@@ -212,7 +213,7 @@ function processCell(cell) {
   if (!cell) return;
 
   if (cell.content) {
-    const match = cell.content.match(/VideoImage:\s*"(.+)"/);
+    const match = cell.content.match(VIDEO_IMAGE_PATTERN);
 
     if (match) cell.content = processVideoImageTag(cell.content, match[1]);
   }
@@ -239,7 +240,7 @@ function processSection(section) {
     return [section];
 
   const imageGroupRegex = /^\s*ImageGroup:\s*(.+)\s*$/;
-  const videoRegex = /^\s*VideoImage:"\s*(.+)\s*"$/;
+  const videoRegex = /^\s*VideoImage:\s*(?:"|&quot;)\s*(.+?)\s*(?:"|&quot;)\s*$/;
   const imageFileRegex = /^\s*ImageFile:\s*(.+)\s*$/;
   const imageSectionRegex = /^\s*ImageSection:\s*(.+)\s*$/;
   const imageArrayRegex = /^\s*\[\s*(.+?)\s*\]\s*$/m;

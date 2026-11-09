@@ -41,7 +41,7 @@ class ImageUsage
     ways = []
     ways << "Picture" if image.to_s.match?(/\A\s*ImageFile:\s*#{Regexp.escape(@name)}\s*\z/)
     ways << "Slide show (group #{@group})" if @group && image.to_s.match?(/\A\s*ImageGroup:\s*#{Regexp.escape(@group)}\s*\z/)
-    ways << "Video" if [ image, text ].any? { |value| value.to_s.match?(/VideoImage:\s*"#{Regexp.escape(@name)}"/) }
+    ways << "Video" if [ image, text ].any? { |value| value.to_s.match?(/VideoImage:\s*(?:"|&quot;)\s*#{Regexp.escape(@name)}\s*(?:"|&quot;)/) }
     ways
   end
 end

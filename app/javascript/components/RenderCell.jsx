@@ -237,7 +237,7 @@ function processCell(cell) {
   if (cell === null || !cell.image) return cell;
 
   const imageGroupRegex = /^\s*ImageGroup:\s*(.+)\s*$/;
-  const videoRegex = /^\s*VideoImage:"(.+)"$/;
+  const videoRegex = /^\s*VideoImage:\s*(?:"|&quot;)\s*(.+?)\s*(?:"|&quot;)\s*$/;
   const imageFileRegex = /^\s*ImageFile:\s*(.+)\s*$/;
   const imageArrayRegex = /^\s*\[\s*(.+?)\s*\]\s*$/m;
 

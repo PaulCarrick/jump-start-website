@@ -3,6 +3,10 @@ import { sitePath } from "../sitePath";
 
 import {isPresent} from "./utilities";
 
+// The video tag written in text: VideoImage:"name". The rich-text editor
+// saves quote marks in text as &quot;, so either form is accepted.
+export const VIDEO_IMAGE_PATTERN = /VideoImage:\s*(?:"|&quot;)\s*(.+?)\s*(?:"|&quot;)/;
+
 export function handleImageGroup(group, formatting) {
   const imageFiles = imageFilesFindByGroup(group)
 
@@ -25,7 +29,7 @@ export function processVideoImages(contents) {
   contents.forEach(content => {
     if (!isPresent(content?.description)) return;
 
-    const match = content.description.match(/VideoImage:\s*"(.+)"/);
+    const match = content.description.match(VIDEO_IMAGE_PATTERN);
 
     if (match) replaceVideoImageTag(content, match[1]);
   });
@@ -33,7 +37,7 @@ export function processVideoImages(contents) {
 
 export function handleVideoImageTag(description) {
   if (isPresent(description)) {
-    const match = description.match(/VideoImage:\s*"(.+)"/);
+    const match = description.match(VIDEO_IMAGE_PATTERN);
 
     if (match) description = processVideoImageTag(description, match[1]);
   }
@@ -58,7 +62,7 @@ export function processVideoImageTag(description, name) {
 
     const videoTag = `<a href="#" onclick="showVideoPlayer('${imageUrl}')">${label}</a>`;
 
-    results = results.replace(/VideoImage:\s*"(.+)"/, videoTag);
+    results = results.replace(VIDEO_IMAGE_PATTERN, videoTag);
   }
 
   return results;

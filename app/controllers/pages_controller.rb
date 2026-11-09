@@ -5,6 +5,9 @@
 include HtmlSanitizer
 
 class PagesController < ApplicationController
+  # The video tag written in text: VideoImage:"name". The rich-text editor
+  # saves quote marks in text as &quot;, so either form is accepted.
+  VIDEO_IMAGE_PATTERN = /VideoImage:\s*(?:"|&quot;)\s*(.+?)\s*(?:"|&quot;)/
   def show
     load_page
   end
@@ -165,7 +168,7 @@ class PagesController < ApplicationController
 
   def process_video_images
     @contents.each do |content|
-      next unless content.description =~ /VideoImage:\s*"(.+)"/
+      next unless content.description =~ VIDEO_IMAGE_PATTERN
 
       replace_video_image_tag(content, Regexp.last_match(1))
     end
@@ -182,7 +185,7 @@ class PagesController < ApplicationController
       video_tag = view_context.link_to(label,
                                        '#',
                                        onclick: "showVideoPlayer('#{image_url}')")
-      content.description.gsub!(/VideoImage:\s*"(.+)"/, video_tag)
+      content.description.gsub!(VIDEO_IMAGE_PATTERN, video_tag)
     end
   end
 
