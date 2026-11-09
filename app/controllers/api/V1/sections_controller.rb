@@ -50,13 +50,22 @@ module Api
 
       def update
         section = Section.find_by(id: params[:id])
+        saved = false
+        no_cells = false
 
-        if section&.update(section_params)
-          if section.cells.blank?
-            render json: { errors: [ "Section must have at least one cell" ] }, status: :unprocessable_entity
-          else
-            render json: section
+        # A section without columns is refused, and then nothing is saved.
+        Section.transaction do
+          saved = section&.update(section_params)
+          if saved && section.cells.reload.blank?
+            no_cells = true
+            raise ActiveRecord::Rollback
           end
+        end
+
+        if no_cells
+          render json: { errors: [ "Section must have at least one cell" ] }, status: :unprocessable_entity
+        elsif saved
+          render json: section
         else
           render json: { errors: section&.errors&.full_messages || [ "Section cannot be updated" ] }, status: :unprocessable_entity
         end
