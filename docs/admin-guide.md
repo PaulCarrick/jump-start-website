@@ -1,6 +1,8 @@
 # Admin user guide
 
-Use this guide to maintain the website from the admin. It covers editing pages, managing media and menus, changing settings, and publishing. Open **Help** at the bottom of the sidebar to return here.
+Use this guide to keep the website up to date: edit pages, manage pictures and menus, change settings and publish. Every task has numbered steps and a picture of the screen. Click a picture to open it full size. Open **Help** at the bottom of the sidebar to come back here.
+
+The pictures show the paul-carrick.com site. Your own site shows your own pages and pictures in the same places.
 
 ## Table of contents
 
@@ -9,6 +11,7 @@ Use this guide to maintain the website from the admin. It covers editing pages, 
 - [Using list pages](#using-list-pages)
 - [Pages, sections, and columns](#pages-sections-and-columns)
 - [Pages](#pages)
+- [Editing from the page itself](#editing-from-the-page-itself)
 - [Sections](#sections)
 - [Columns](#columns)
 - [Writing and formatting content](#writing-and-formatting-content)
@@ -17,260 +20,507 @@ Use this guide to maintain the website from the admin. It covers editing pages, 
 - [Menus](#menus)
 - [Users and access](#users-and-access)
 - [Site setups](#site-setups)
+- [History and restoring an earlier version](#history-and-restoring-an-earlier-version)
 - [Keyboard shortcuts](#keyboard-shortcuts)
 - [Common questions](#common-questions)
 
 ## Getting started
 
-Sign in with an account that has access to administration. The admin has its own frame:
+Sign in with an account that has administrator access, then open the admin: choose the gear icon in the site's header (it opens in a new tab), or go to `/admin`.
+
+![The Dashboard: what is waiting to be published, the site's counts, quick actions and recent edits](../public/admin-help/dashboard.webp)
+
+The admin has three parts:
 
 - The **top bar** shows the site's name, **View site** (opens the public site in a new tab), **Publish** with the number of changes waiting, your name and **Log out**.
-- The **sidebar** is grouped: **Dashboard**; **Content** (Pages, Blog, Media); **Site** (Menus, Settings, Users); **Page parts** (Sections, Columns, the classic lists); and **Help** and **New Site Tutorial** at the bottom. On a phone, the ☰ button opens it.
-- The **Dashboard** shows what is waiting to be published, the site's counts, the last publish, quick actions and the pages and posts edited most recently.
+- The **sidebar** is grouped: **Dashboard**; **Content** (Pages, Blog, Media); **Site** (Menus, Settings, Users); **Page parts** (Sections, Columns); and **Help** and **New Site Tutorial** at the bottom. On a phone, the ☰ button opens it.
+- The **Dashboard** shows how many changes are not published yet, the site's counts, when it was last published, **Quick actions** (New page, New blog post, Upload an image, Edit the header menu) and the pages and posts edited most recently. Click one of them to open it.
 
-A typical content change is:
+### A typical change, start to finish
 
-1. Open **Pages** and click the page's title. The page opens in its workspace.
-2. Click the section in the preview, or the column in the outline.
-3. Change the content in the panel on the right and choose **Save Column**.
-4. Choose **Publish** in the top bar, check the change, and publish it.
+1. Choose **Pages** in the sidebar and click the page's title. The page opens in its workspace.
+2. Click the section in the preview, or the column's name in the outline.
+3. Change the text in the panel on the right and choose **Save Column**. The change is saved as a draft; visitors do not see it yet.
+4. Choose **Publish** in the top bar, check the change, and choose **Publish**. Now visitors see it.
 
-The **Enabled** switch controls whether a record appears on the public website. New and existing records start enabled. Switch it off and save to hide content without deleting it; it remains visible and editable in admin. Disabling a page hides its sections and columns from that page. Disabled sections hide their columns, and disabled images are excluded from public image lookups and groups. Public navigation and blogs also honor Enabled. The user switch controls the record's enabled status; it does not change the account's access level or password.
+### Things that work the same everywhere
 
-Fields marked with an asterisk are required. Some editors keep Save disabled until the necessary data is available. A disabled Save button cannot be activated with its keyboard shortcut.
-
-**Cancel** returns from an editor without saving its current changes. It does not undo changes you have already saved.
+- **Enabled** decides whether something shows on the public site. Switch it off and save to hide a page, section, column, picture, menu item or post without deleting it. It stays in the admin, where you can switch it on again. Hiding a page hides everything on it; hiding a section hides its columns.
+- Fields marked with an **asterisk (\*)** must be filled in.
+- A **Save** button stays greyed out until the form is ready to save (for example, a new section needs its columns generated first).
+- **Cancel** leaves a form without saving what you typed. It does not undo something you already saved.
+- **History** (top right of most edit screens) lists the earlier versions of what you are editing. See [History and restoring an earlier version](#history-and-restoring-an-earlier-version).
 
 ## Publishing changes
 
-Admin edits are saved as **drafts**. Visitors keep seeing the live site until you publish. New records and deletions are drafts too. Lists show each record's status: **Live**, **Draft changes**, **New** or **Hidden**.
+Everything you save in the admin is a **draft**. Visitors keep seeing the live site until you publish. New things and deletions are drafts too. Lists show each item's status: **Live**, **Draft changes**, **New** or **Hidden**.
 
-Choose **Publish** in the top bar (the number is how many changes are waiting) to open **Review and publish**:
+The number on the **Publish** button in the top bar is how many changes are waiting.
 
-1. Changes are **grouped by page**: a page's settings, its sections and columns, and the menu and footer entries that point to it form one group. Changes elsewhere are grouped as Header menu, Footer, Blog, Media, Settings and Users.
-2. Each change says what it is (**New**, **Changed**, **Moved** or **Deleted**) and, for a change, shows each field **live now** and **after publishing**. Long texts are shown from just before the first difference.
-3. **Open page** opens the page's workspace; **Preview draft** shows the page with its drafts, for administrators only; **Edit** opens the record; **History** lists its versions.
-4. Untick a group to leave it as a draft. A group is published or left as a whole, so a page never goes live half-finished.
-5. Optionally add a **note for the history**, then choose **Publish** (the button says how many changes). Confirm, and the ticked changes go live together. If anything fails, nothing is published.
+![The Publish button in the top bar, with the number of changes waiting](../public/admin-help/publish-button.webp)
 
-If someone saves a change in a ticked group after you opened the page, nothing is published and you are asked to review again. Several administrators share one set of drafts, so coordinate before publishing or discarding.
+### How to publish your changes
 
-**Discard selected** deletes the ticked drafts and leaves the live site as it is.
+1. Choose **Publish** in the top bar. **Review and publish** opens.
+2. Read the list. Changes are **grouped by page**: a page's settings, its sections and columns, and the menu and footer entries that point to it form one group. Changes elsewhere are grouped as Header menu, Footer, Blog, Media, Settings and Users.
+3. Each change says what it is (**New**, **Changed**, **Moved** or **Deleted**). Open a change to compare each field **Live now** (red) with **After publishing** (green).
+4. To look before you publish, choose **Preview draft ↗** beside a page group: it shows the page with its drafts, to administrators only. **Open page** opens the page's workspace; **Edit** opens the record; **History** lists its versions.
+5. **Untick** any group you want to leave as a draft for now. A group is published or left as a whole, so a page never goes live half-finished. **Select all** and **Select none** tick or untick every group.
+6. If you like, type a **Note for the history** (for example "spring photos").
+7. Choose **Publish N changes** and confirm. The ticked changes go live together. If anything fails, nothing is published.
 
-**Published before** lists each publish: when, by whom, what it contained, and its note.
+![Review and publish: one group per page, each change shown live now and after publishing](../public/admin-help/review-publish.webp)
 
-**History** (on a record, or on any edit screen) shows the record's versions. **Restore as Draft** prepares an earlier version as a draft to review and publish. Passwords and secret credentials are never restored. Changing an account's password or access is also a draft until published.
+### How to throw away changes you do not want
+
+1. Choose **Publish** in the top bar.
+2. Tick only the groups you want to throw away.
+3. Choose **Discard selected** and confirm. The drafts are deleted and the live site stays as it is.
+
+### Good to know
+
+- If someone saves a change in a ticked group after you opened the page, nothing is published and you are asked to review again.
+- Several administrators share one set of drafts, so agree before publishing or discarding someone else's work.
+- **Published before**, at the foot of the page, lists each publish: when, by whom, what it contained and its note.
+
+![Published before: every publish with its date, author, contents and note](../public/admin-help/publish-history.webp)
 
 ## Using list pages
 
-Lists (Pages, Blog, Users and others) share one layout:
+Pages, Blog, Users, Settings, Sections and Columns are lists that all work the same way.
+
+![The Pages list: search, sortable columns, status, Edit and the ⋯ menu](../public/admin-help/pages-list.webp)
 
 - The heading shows how many items there are and the **New …** button.
-- One **search box** searches the main fields (the Blog list has separate Title, Author, Contents and Posted fields). **Clear** removes the search.
-- Click a **column heading** to sort by it; click it again to reverse. The arrow shows the current sort. **Clear Sort** returns to the default order.
-- Each row has a **status** and an **Edit** button. The **⋯** menu holds **View**, **History** and, for administrators, **Delete** (which asks before deleting). For pages it also holds **Classic editor**.
+- **Search:** type in the search box and choose **Search**. **Clear** removes the search. (The Blog list has separate Title, Author, Contents and Posted boxes.)
+- **Sort:** click a column heading to sort by it; click it again to reverse. The arrow shows the current sort. **Clear Sort** goes back to the normal order.
+- **Edit** opens the item.
+- **⋯** opens a menu with **View**, **History** and **Delete**. For pages it also holds **Classic editor**.
 - **First**, **Previous**, **Next** and **Last** move between pages of results.
 
-Deleting a section also removes its columns. A deletion is a draft until published.
+![The ⋯ menu on a row: View, Classic editor, History and Delete](../public/admin-help/list-row-menu.webp)
+
+### How to delete something
+
+1. Find it in its list.
+2. Choose **⋯**, then **Delete**, and confirm.
+3. The deletion is a draft. Choose **Publish** to remove it from the site, or **Discard selected** on Review and publish to keep it.
+
+Deleting a section also removes its columns.
 
 ## Pages, sections, and columns
 
-The content structure has three levels:
+Every page is built from three levels:
 
-- A **page** is a website destination with a title, name (its address), access setting, and content.
-- A **section** is an ordered block within a page. A section contains one or more columns.
-- A **column** contains text, an image, video, or a combination of content and formatting.
+- A **page** is one address on the site, such as `/portfolio`. It has a title, a name (the address) and an access setting.
+- A **section** is a block on the page, one under the other. Each section holds one or more columns.
+- A **column** holds text, a picture, a video, or text with a picture.
 
-A page's **Section** field and a section's **Section group** field serve different purposes. The page field names the set of sections shown on that page. The section field groups neighboring sections so they can be kept together and duplicated as a unit.
+A page's **Section** field and a section's **Section group** field do different things. The page's Section field names the set of sections shown on that page. A section's Section group ties neighbouring sections together so they move and are duplicated together.
 
 ## Pages
 
 ### The page workspace
 
-Open **Pages** and click a page's title (or **Edit**). The workspace has three parts:
+1. Choose **Pages** in the sidebar.
+2. Click the page's title (or **Edit**). The workspace opens.
 
-- The **outline** (left) lists the sections and the columns in each. Click a name to edit it.
-- The **preview** (middle) shows the page as it will look. Click a section to select it. Links in the preview do not navigate away.
-- The **panel** (right) edits what you selected.
+![The page workspace: the outline on the left, the preview in the middle and the panel on the right](../public/admin-help/workspace.webp)
 
-**Reordering:** use **↑** and **↓** in the outline, or drag the **⠿** handle. Sections move within the page; columns move within their section. The new order is saved as a draft at once and the preview updates.
+The workspace has three parts:
 
-**A column** opens in the panel with four tabs:
+- The **outline** (left) lists the sections (bold) and the columns in each. Click a name to edit it.
+- The **preview** (middle) shows the page as it will look. Click a section to select it. Links in the preview do not take you away.
+- The **panel** (right) edits whatever you selected.
+
+At the top: **History**, **Page settings**, **View page ↗** (the live page in a new tab) and **Classic editor** (the older page editor).
+
+### How to change a page's title, address or access
+
+1. Open the page's workspace and choose **Page settings**.
+2. Change what you need:
+   - **Title**: the name shown in the browser tab and in lists.
+   - **Name**: the page's address (`portfolio` is `/portfolio`). Changing it changes the address, so update menu links to match.
+   - **Access**: who may see the page. Leave it empty for everyone.
+   - **Section**: which set of sections the page shows. Change it only to show another set.
+   - **Enabled**: switch off to hide the whole page.
+3. Choose **Save Page**, then publish.
+
+![Page settings: Enabled, Title, Name, Access and Section](../public/admin-help/page-settings.webp)
+
+### How to change the text of a column
+
+1. Open the page's workspace.
+2. Click the column's name in the outline (the lighter names under each section), or click the section in the preview and then the column in the panel's list.
+3. The panel opens on the **Content** tab. Change the text in the editor.
+4. Choose **Save Column**. The preview updates.
+5. Publish when you are ready.
+
+![A column open in the panel, on its Content tab](../public/admin-help/column-content.webp)
+
+The panel has four tabs:
 
 - **Content**: the text (with **Switch to HTML View**) and the column's link.
-- **Image**: the picture, image group, slide show or video, and **New Image**.
-- **Layout**: the formatting fields (margins, background, image and caption classes and styles, and the rest).
+- **Image**: the picture, image group, slide show or video, with **New Image** and **Remove Image**.
+- **Layout**: the formatting fields (margins, background, image and caption classes and styles).
 - **Advanced**: Enabled, the column's name and its order.
 
-An image column opens on the Image tab. A small preview of the column sits under the tabs; the page preview updates when you choose **Save Column**. **Delete this column** removes it.
+A small preview of the column sits under the tabs. **Delete this column** removes it.
 
-**A section** shows its **Section group** and Enabled switch (**Save section**), its columns, **+ Add column** (an empty text column at the end), **Edit section layout** (the classic section editor, for the section's name, order and column widths), **Duplicate section** or **Duplicate group** (asks for the new name), and **Delete section**.
+### How to change a column's picture
 
-**Page settings** (top of the workspace) edits the title, the name, access, the Section field and Enabled. Changing the name changes the page's address; update menu links to match.
+1. Open the page's workspace and click the picture column's name in the outline. A picture column opens on the **Image** tab.
+2. In **Image**, choose a picture from the list (type to search by name). Or choose **New Image** to upload one without leaving the page.
+3. To show a slide show instead, fill in **Image Group** with the group's name.
+4. Choose **Save Column**, then publish.
 
-**+ Add section** (under the outline) opens the layout chooser: Text Only, Image Only, dual-column text and image arrangements, and layouts with several columns. Choose a layout, fill in what it asks for, choose **Generate Columns**, then **Save Section**. Cancel removes the new, empty section. Either way you return to the workspace.
+![The Image tab: choose a picture, upload a new one, or name an image group](../public/admin-help/column-image.webp)
 
-**View page** opens the live page; **Classic editor** opens the previous page editor, which is kept while the workspace is new.
+### How to change a column's layout
 
-### Editing from the page itself
+1. Open the column and choose the **Layout** tab.
+2. Use the pickers for margins, colours (from the site's palette) and classes. **Switch to Formatting Mode** shows the raw CSS classes and styles, for advanced use.
+3. Choose **Save Column** and check the preview, on a narrow window too.
 
-Signed in as an administrator, every page of the site has **Edit Page** at the bottom. Choosing it puts the page in editing mode: the page shows your drafts, and the button becomes **Editing… Save Changes** with **Cancel** beside it.
+![The Layout tab: margins, backgrounds and classes](../public/admin-help/column-layout.webp)
 
-Right-click the page and choose **Edit** to open the matching editor in a new tab:
+The **Advanced** tab holds the column's Enabled switch, its name and its order in the section.
 
-- on a **picture**: the media library with that picture selected;
-- on a **column's** text or the space beside it: that column in the page workspace;
-- on the **space above or below a section's content**: that section in the page workspace;
-- anywhere else, such as **beside the buttons**: the page workspace.
+![The Advanced tab: Enabled, the column's name and its order](../public/admin-help/column-advanced.webp)
 
-To move a section, point at it: a small handle (**⠿ Move ↑ ↓**) appears in its top-left corner. Drag **⠿ Move** above or below another section, or use the arrows to move it one place. The new order is saved as a draft straight away, like any other change. A section with a **Show More** button moves together with the sections it opens (and the sections of one section group move together), so a project never gets split from its hidden part; moving any one of them gathers the group in one place.
+### How to change the order of sections or columns
 
-Coming back to the page's tab shows what you saved. **Save Changes** publishes the changes made since you chose Edit Page, and **Cancel** discards them (it asks first). Changes made before you started, by you or by others, are left alone; the bar says when some are waiting, with a link to Review and publish. Shift + right-click still gives the browser's own menu.
+1. Open the page's workspace.
+2. In the outline, choose **↑** or **↓** beside a section or column to move it one place. Or drag its **⠿** handle up or down.
+3. Sections move within the page; columns move within their section. The new order is saved as a draft at once and the preview updates.
+4. Publish when you are ready.
 
-Links to the admin in the site's header and footer open it in a new tab.
+![The ↑ and ↓ buttons beside each name in the outline](../public/admin-help/outline-reorder.webp)
 
-### Creating a page
+You can also move sections on the page itself: see [Editing from the page itself](#editing-from-the-page-itself).
 
-1. Open **Pages**, then **New page**.
-2. Enter the Page Title and a unique Page Name. The name is the page's address, so choose it deliberately.
-3. Enter the Section field. Fill in Access if needed.
-4. Save the page, then open it from the Pages list and use **+ Add section**.
-5. Add the page to the header menu or footer on the **Menus** screen if visitors should find it there.
+### How to add a section
+
+1. Open the page's workspace and choose **+ Add section** under the outline.
+2. In **Templates**, choose a layout: Text Only, Image Only, Dual Column (text left or right), Three, Four or Five Column, Dual Row (text top or bottom), or Header Section.
+3. Fill in what the layout asks for: the text in the editor and, for a layout with a picture, the **Image**.
+4. Choose **Generate Columns**. The new columns appear below.
+5. Check the columns. Set the section's name, its **Section group** if it belongs with others, and its order. For two columns, **Div Ratio** sets their widths (for example 50:50 or 7:5); choose **Apply Ratio** to see it.
+6. Choose **Save Section**. You return to the workspace.
+7. Publish when you are ready.
+
+**Cancel** removes the new, empty section.
+
+![+ Add section under the outline](../public/admin-help/add-section-button.webp)
+
+![Choose a layout in Templates and fill in its text and picture](../public/admin-help/template-filled.webp)
+
+![After Generate Columns: the new columns, ready to check and save](../public/admin-help/columns-generated.webp)
+
+### How to edit a section
+
+1. Open the page's workspace and click the section's name (bold) in the outline, or click the section in the preview.
+2. The panel shows the section: **Enabled**, **Section name**, **Section group** and its **Columns**.
+3. Change what you need and choose **Save section**.
+
+![A section in the panel: Enabled, name, group and its columns](../public/admin-help/section-panel.webp)
+
+Further down the panel:
+
+- **+ Add column** adds an empty text column at the end.
+- **Edit section layout** opens the classic section editor (name, order and column widths).
+- **Duplicate section** (or **Duplicate group** when the section has a group) asks for a new name and copies it.
+- **Delete section** removes it and its columns.
+
+### How to create a page
+
+1. Choose **Pages**, then **New page** (or **+ New page** on the Dashboard).
+2. Fill in:
+   - **Page Title**: the name visitors see.
+   - **Page Name**: the address, such as `about` for `/about`. It must be unique; choose it carefully.
+   - **Section Group**: the name of the page's set of sections, such as `about-us`. Use a new name for a new page.
+   - **Page Access**: leave empty for everyone.
+3. Choose **Save Page**.
+4. Open the new page from the Pages list and use **+ Add section** (see above) to fill it.
+5. To let visitors find it, add it to the header menu or footer (see [Menus](#menus)).
 6. Publish the page with its sections and columns.
+
+![New page: Title, Name, Section Group and Access](../public/admin-help/new-page.webp)
 
 ### Section ordering
 
-Sections have numeric order values; reordering in the outline sets them to 10, 20, 30 and so on. The classic editor's **Renumber Sections** does the same for the whole page. Grouped sections stay together when duplicated.
+Sections have order numbers. Moving them in the outline numbers them 10, 20, 30 and so on. The classic editor's **Renumber Sections** does the same for the whole page. Grouped sections stay together when duplicated.
+
+## Editing from the page itself
+
+You can also edit while looking at the real page.
+
+### How to start and finish
+
+1. Signed in as an administrator, open any page of the site and scroll to the bottom.
+2. Choose **Edit Page**. The page now shows your drafts, and the button becomes **Editing… Save Changes** with **Cancel** beside it.
+3. Make your changes (see below).
+4. Choose **Save Changes** to publish the changes you made since you chose Edit Page. Or choose **Cancel** to throw them away (it asks first).
+
+![Edit Page at the bottom of every page](../public/admin-help/site-edit-page-button.webp)
+
+![Editing… Save Changes and Cancel, with a hint and a note about other waiting changes](../public/admin-help/site-editing-bar.webp)
+
+Save Changes and Cancel only touch what you changed after choosing Edit Page. Changes made before, by you or by others, are left alone; the bar says when some are waiting and links to Review and publish.
+
+### How to open the right editor with a right-click
+
+1. While editing, right-click the part of the page you want to change.
+2. Choose **Edit** in the small menu. The matching editor opens in a new tab:
+   - on a **picture**: the media library, with that picture selected;
+   - on a **column's** text or the space beside it: that column in the page workspace;
+   - on the **space above or below a section's content**: that section in the page workspace;
+   - anywhere else, such as **beside the buttons**: the page workspace.
+3. Make the change there and save it.
+4. Come back to the page's tab: it reloads and shows what you saved.
+
+Hold **Shift** while right-clicking to get the browser's own menu.
+
+![Right-click a picture and choose Edit image](../public/admin-help/site-right-click-image.webp)
+
+![Right-click a column's text to edit that column](../public/admin-help/site-right-click-column.webp)
+
+### How to move a section on the page
+
+1. While editing, point at the section. A small handle, **⠿ Move ↑ ↓**, appears in its top-left corner.
+2. Drag **⠿ Move** above or below another section, or choose **↑** or **↓** to move it one place.
+3. The new order is saved as a draft at once and the page reloads to show it.
+4. Choose **Save Changes** to publish it.
+
+![The ⠿ Move ↑ ↓ handle on a section](../public/admin-help/site-move-handle.webp)
+
+A section with a **Show More** button moves together with the sections it opens (and the sections of one section group move together), so a project never gets split from its hidden part. Moving any one of them gathers the group in one place. A heading that sits in its own section, above the section with the Show More, still moves on its own: move it next to its project afterwards.
+
+Links to the admin in the site's header and footer open it in a new tab.
 
 ## Sections
 
-Sections are normally edited from the page workspace. The **Sections** list under Page parts shows every section of every page, for finding one by name.
+Sections are normally edited from the page workspace (see [How to edit a section](#how-to-edit-a-section)). The **Sections** list under Page parts shows every section of every page, to find one by name.
 
-### Creating a section
-
-Use **+ Add section** in a page's workspace (or **New Section** on the Sections list), then:
-
-1. Choose a template.
-2. Enter the text and select the image or media requested by the template.
-3. Choose **Generate Columns**.
-4. Review the generated columns. Set the section name, order, and optional group.
-5. Choose **Save Section**.
-
-Save Section is disabled until columns are generated. Generating columns prepares an editable draft; it does not by itself save the section.
+![The Sections list](../public/admin-help/sections-list.webp)
 
 ### Section groups and duplication
 
-Give related sections the same **Section group** name to group them. Leave the field blank for an independent section.
+Give sections that belong together the same **Section group** name. Leave it empty for a section on its own.
 
-**Duplicate section** asks for a new section name and copies that section and its columns. **Duplicate group** asks for a new group name and copies all sections in the group, including their columns. The copy is placed after the existing sections. Names must be valid and must not conflict with existing names.
+**To duplicate a section:** open it in the workspace panel, choose **Duplicate section**, type the new section's name and confirm. The section and its columns are copied after the existing sections.
+
+**To duplicate a group:** open any section of the group and choose **Duplicate group**, then type the new group's name. All the group's sections and columns are copied.
+
+Names must be valid and must not already be in use.
 
 ## Columns
 
-Columns are normally edited in the panel of the [page workspace](#the-page-workspace). The **Columns** list under Page parts shows every column with a preview and can open the classic column editor, which has the same fields on one long form.
+Columns are normally edited in the panel of the [page workspace](#the-page-workspace). The **Columns** list under Page parts shows every column with a small preview and can open the classic column editor, which has the same fields on one long form.
+
+![The Columns list](../public/admin-help/columns-list.webp)
 
 ## Writing and formatting content
 
-The rich-text editor supports paragraphs, headings, emphasis, lists and links. Use its toolbar and check the preview before saving.
+The text editor works like a word processor: use its toolbar for headings, **bold**, *italic*, underline, lists, links, quotes and pictures, then save.
 
-**Switch to HTML View** shows the underlying markup for advanced editing. Use it only when you are comfortable editing HTML, then switch back and check the result. Layout changes can affect how text and media fit on narrow screens.
-
-Formatting fields (the **Layout** tab) offer pickers for margins, colors from the site's palette, and classes. **Switch to Formatting Mode** exposes the raw CSS classes and styles for advanced use.
-
-Some content supports expandable text with **Show More** and **Show Less** controls. Review both the collapsed and expanded presentation on the website.
+- **Switch to HTML View** shows the page's code (HTML) for advanced editing. Use it only if you know HTML, then switch back and check the result.
+- Formatting fields (the **Layout** tab) offer pickers for margins, colours from the site's palette, and classes. **Switch to Formatting Mode** shows the raw CSS classes and styles.
+- Some content uses **Show More** and **Show Less** to hide part of a project until it is clicked. Check both the closed and the open view on the site.
+- To link a video stored in Media, type `VideoImage:"name"` in a column's text, using the video's name. The page shows a link, labelled with the video's caption, that plays it.
 
 ## Image files and groups
 
 ### The media library
 
-Open **Media**. Files are shown as thumbnails, newest first, 24 to a page. Videos show a ▶ mark; hidden files are faded.
+Choose **Media** in the sidebar. Files are shown as thumbnails, newest first, 24 to a page. Videos show a ▶ mark; hidden files are faded.
 
-- **Group chips** filter by image group (each shows its count), **No group** shows files without one, and **All** shows everything.
-- The **search box** searches name, caption, description and group.
-- Click a thumbnail to open its **details**: the file, its caption and description, and **Used on**, the pages that show it as a picture, a video or in a group's slide show.
+![Media: the upload area, search, group chips and thumbnails](../public/admin-help/media-library.webp)
 
-In the details you can change the file's **Group**, **Slide order** and **Enabled**, then **Save**. Choosing another group fills in the next slide number, so the file goes to the end of that group's slide show. **Edit caption, description or file** opens the full form (with the HTML view) and returns to the library; **View**, **History** and **Delete this file** are there too. Delete warns you when the file is used on a page.
+### How to find a picture
 
-### Uploading
+1. Choose **Media**.
+2. Click a **group chip** (each shows how many files it has) to see only that group, **No group** for files without one, or **All** for everything.
+3. Or type part of a name, caption, description or group in the search box and choose **Search**.
 
-Drop images or MP4 videos on the upload area, or choose **choose files**, then **Upload**. Up to 20 files go at once.
+### How to change a picture's caption, group or order
 
-- Each file is named after itself without its extension. If the name is taken, it gets "-2", "-3" and so on, because pages refer to images by name.
-- The file's type is read from the file itself; anything that is not an image or an MP4 video is skipped with a message.
-- Enter a group to add the uploads to the end of that group's slide show.
+1. Click its thumbnail. Its **details** open on the right: the file, its caption and description, and **Used on** (the pages that show it).
+2. Change **Group**, **Slide order** or **Enabled** and choose **Save**. Choosing another group fills in the next slide number, so the picture goes to the end of that group's slide show.
+3. To change the caption, description or the file itself, choose **Edit caption, description or file**. Save there, and you return to the library.
+4. Publish when you are ready.
 
-**New Image** adds one file with its caption and description on the full form. An existing image's name cannot be changed, because pages refer to it.
+![A picture's details: caption, Used on, Group, Slide order and Enabled](../public/admin-help/media-details.webp)
 
-### Uploading while editing content
+**View**, **History** and **Delete this file** are in the details too. Delete warns you when the picture is used on a page.
 
-The image picker in the column editor offers **New Image**. This opens the upload form without leaving the draft. Save the image to make it available in the picker, then select it and save the column. Uploading saves the image separately; cancelling the column does not undo it.
+### How to upload pictures or videos
 
-Image groups and section groups are separate concepts even when they use similar names.
+1. Choose **Media**.
+2. Drop the files on the area that says **Drop images or MP4 videos here**, or choose **choose files**. Up to 20 at once.
+3. To add them to a slide show, type the group's name in **Add to group (optional)**.
+4. Choose **Upload**.
+
+Each file is named after itself without its extension (`garden.jpg` becomes `garden`). If the name is taken it gets "-2", "-3" and so on, because pages find pictures by name. Anything that is not a picture or an MP4 video is skipped with a message.
+
+**New Image** (top right) adds one file with its caption and description on the full form. A picture's name cannot be changed later, because pages refer to it.
+
+### How to upload while editing a column
+
+1. In the column's **Image** tab, choose **New Image**.
+2. Choose the file, fill in its caption and save. You return to the column with your draft still there.
+3. Choose the new picture in **Image** and choose **Save Column**.
+
+Uploading saves the picture on its own: cancelling the column does not remove it.
+
+Image groups and section groups are different things, even when they have similar names.
 
 ## Blogs
 
-Use **Blog** to create and maintain posts. The list shows each post's title with the start of its text, author, type, posted date and status, 20 to a page. Search by title, author, contents or posted date (YYYY-MM-DD).
+Choose **Blog** in the sidebar. The list shows each post's title with the start of its text, its author, type, posted date and status, 20 to a page. Search by title, author, contents or posted date (YYYY-MM-DD).
 
-Choose **New Blog** to create a post or **Edit** to update one. Enter the post fields and content, then save.
+![The Blog list](../public/admin-help/blog-list.webp)
+
+### How to write a blog post
+
+1. Choose **Blog**, then **New Blog** (or **+ New blog post** on the Dashboard).
+2. Fill in:
+   - **Author** (filled in with your name) and **Title**.
+   - **Visibility**: Public for everyone.
+   - **Blog Type**: which blog it belongs to, such as Personal or Professional.
+   - **Posted**: the date shown on the post. Posts are listed newest first.
+   - **Post**: the text, with the same editor as columns.
+3. Choose the **Save** button at the bottom, then publish.
+
+![New Blog Post: Author, Title, Visibility, Blog Type, Posted and the text](../public/admin-help/blog-new.webp)
+
+To change a post, choose **Edit** beside it in the list, make the change, save and publish.
 
 ## Menus
 
-Open **Menus** to arrange the **Header menu** and the **Footer** (switch between them at the top). Each is shown as a tree of up to two levels, like the public site: top items, and items inside them (a dropdown in the header, a column in the footer).
+Choose **Menus** in the sidebar to arrange the **Header menu** and the **Footer**. Switch between them at the top. Each is shown as a tree of up to two levels, like on the site: top items, and items inside them (a dropdown in the header, a column in the footer).
 
-- **Move** an item with **↑** and **↓**, **←** (out one level) and **→** (inside the item above), or drag its **⠿** handle above, below or onto another item. Each move is saved as a draft at once.
-- **Edit** an item by clicking its name: the panel holds **Label**, **Links to** (choose one of the site's pages, or type an address such as `https://example.com` or `mailto:you@example.com`), Enabled, and under **More settings** Access, Icon and Options. Addresses that could run code are refused.
-- **Add an item** adds it at the end; drag it into place afterwards. **Delete this item** moves the items inside it to the top level.
+![The header menu as a tree, with move buttons on each item](../public/admin-help/menus-header.webp)
 
-Items that link to `/admin` can be moved but not changed. **Show the header menu as a list** opens the classic list, which also holds the old "Admin" menu entries; the admin sidebar itself no longer comes from them.
+![The footer's columns and links](../public/admin-help/menus-footer.webp)
+
+### How to add a menu item
+
+1. Choose **Menus** and pick **Header menu** or **Footer**.
+2. Choose **Add an item**.
+3. Type the **Label** (the words visitors see).
+4. In **Links to**, choose one of the site's pages, or type an address such as `https://example.com` or `mailto:you@example.com`.
+5. Choose **Add item**. It is added at the end.
+6. Move it into place (see below) and publish.
+
+![Add an item: Label, Links to and More settings](../public/admin-help/menu-add-item.webp)
+
+### How to change or remove a menu item
+
+1. Click the item's name. The panel shows **Enabled**, **Label**, **Links to** and, under **More settings**, Access, Icon and Options.
+2. Change what you need and choose **Save item**.
+3. To remove it, choose **Delete this item**. Items inside it move to the top level.
+
+![An item open in the panel](../public/admin-help/menu-item-panel.webp)
+
+### How to move a menu item
+
+- **↑** and **↓** move it up or down.
+- **←** moves it out one level; **→** puts it inside the item above (as a dropdown entry or footer link).
+- Or drag its **⠿** handle above, below or onto another item.
+
+Each move is saved as a draft at once. Items that link to `/admin` can be moved but not changed. Addresses that could run code are refused.
 
 ## Users and access
 
-Use **Users** to create accounts and update names, email addresses, access levels, and roles. Access controls administrative capabilities; Roles are a separate field used by site content and navigation rules.
+Choose **Users** in the sidebar to create accounts and change names, email addresses, access and roles.
 
-The system distinguishes regular users, read-only users, blog-capable users, administrators, and super users. Administrator and super accounts can change content and publish. Public sign-up is closed; administrators create accounts here.
+![The Users list](../public/admin-help/users-list.webp)
 
-New users need a password and confirmation. When editing an existing user, leave the password fields blank to keep the current password.
+### How to add a user
+
+1. Choose **Users**, then **New User**.
+2. Fill in **Email**, **Name** and **Password**.
+3. Choose **Access**: **Regular**, **Read Only**, **Post Blogs** (may write posts), **Administrator** or **Super User**. Administrators and super users can change content and publish.
+4. **Roles** is a separate field used by page and menu rules; leave it empty if you do not use it.
+5. Choose **Save User**, then publish. Tell the person their password privately.
+
+![New User: Email, Name, Password, Access and Roles](../public/admin-help/user-new.webp)
+
+Visitors cannot sign up themselves; administrators create accounts here. When editing a user, leave the password fields empty to keep the current password. A new password or access level is a draft until published.
 
 ## Site setups
 
-**Settings** edits the site's configuration on one form, in tabs, with one **Save**:
+**Settings** in the sidebar holds the site's configuration: one form in tabs, with one **Save**.
 
-- **General**: configuration name, site name, owner, domain, host, address and the copyright line. Changing the configuration name suggests the site name, owner, address and database.
-- **Email**: the mail server the contact form uses and the contact addresses and subject. **Send a test email** sends a short message to the "to" address using the settings as last saved, and reports whether it worked; save first if you changed them.
-- **Appearance**: header, page and footer colors, each with a swatch and a small preview, and the background image.
-- **Social links**: the footer's social icons; leave a box empty to hide its icon.
-- **Advanced**: database, guest user name and the default setup.
+### How to change the site's settings
 
-If a required field on another tab is empty, Save opens that tab.
+1. Choose **Settings**, then **Edit** beside the site.
+2. Choose a tab and change what you need (each tab is described below).
+3. Choose **Save Site Setup**. If a required field on another tab is empty, Save opens that tab.
+4. Publish the Settings group.
 
-The required **Database** field stores a database name and defaults to `paul-carrick`. Publishing a new non-default setup provisions that database and its initial accounts; saving a draft does not. Publishing any Site Setup change synchronizes the setup catalog to all managed databases. See [Site databases](site-databases.md) for USER_PASSWORD, permissions, and recovery steps. Requests select a site by its Site URL hostname and longest matching path prefix. The default setup keeps the original application database connection.
+**General**: configuration name, site name, owner, domain, host, address (Site URL) and the copyright line. Changing the configuration name suggests the site name, owner, address and database.
 
-Coordinate changes to domains, email settings, or the default setup with the person maintaining the running site; some deployment settings also come from the server environment.
+![Settings, General tab](../public/admin-help/settings-general.webp)
+
+**Email**: the mail server the contact form sends through, and where those messages go (from and to addresses and the subject line). **Send a test email** sends a short message to the "to" address using the settings as last saved and says whether it worked; save first if you changed them.
+
+![Settings, Email tab](../public/admin-help/settings-email.webp)
+
+**Appearance**: header, page and footer colours, each with a swatch and a small preview, and the background picture.
+
+![Settings, Appearance tab](../public/admin-help/settings-appearance.webp)
+
+**Social links**: the footer's social icons. Leave a box empty to hide its icon.
+
+![Settings, Social links tab](../public/admin-help/settings-social.webp)
+
+**Advanced**: the database, the guest user's name and the default setup.
+
+![Settings, Advanced tab](../public/admin-help/settings-advanced.webp)
+
+The required **Database** field holds a database name and defaults to `paul-carrick`. Changing it does not rename the running database. Publishing a new, non-default setup creates that database and its first accounts; saving a draft does not. See [Site databases](site-databases.md) for the details. The site is chosen by the Site URL's host name.
+
+Agree changes to domains, email settings or the default setup with whoever runs the server; some settings also come from the server itself.
+
+## History and restoring an earlier version
+
+Everything keeps its earlier versions.
+
+### How to go back to an earlier version
+
+1. Open the record (a page, column, picture, menu item and so on) and choose **History**, top right. Or choose **⋯**, then **History**, in its list.
+2. Find the version you want. **Valid period** is when it was on the site; **Recorded period** is when it was saved.
+3. Choose **Restore as Draft** beside it. It becomes a draft.
+4. Check it on **Review and publish**, then publish it.
+
+![A page's history, with Restore as Draft beside each version](../public/admin-help/record-history.webp)
+
+Passwords and secret settings are never restored.
 
 ## Keyboard shortcuts
 
-On Chrome for Mac, use **Control + Option + letter**. On the configured desktop browser shortcuts for other platforms, the hint uses **Alt + Shift + letter**. Hover over an eligible button to see its shortcut.
+On Chrome for Mac, use **Control + Option + letter**. Elsewhere, the hint shows **Alt + Shift + letter**. Point at a button to see its shortcut.
 
 - **S**: Save.
-- **Escape**: Cancel, without modifier keys.
+- **Escape**: Cancel (with no other key).
 - **C**: Clear Sort.
-- **N**: New or Next, only when the key identifies one action.
-- **V**: View, when unique.
-- **E**: Edit, when unique.
-- **F**, **P**, **L**: First, Previous, Last, when unique.
+- **N**: New or Next, when only one button matches.
+- **V**: View, **E**: Edit, when only one button matches.
+- **F**, **P**, **L**: First, Previous, Last, when only one button matches.
 
-Shortcuts are omitted when several visible actions would use the same key. For example, repeated row Edit buttons do not receive shortcuts. Disabled buttons have no active shortcut.
-
-Escape gives open dialogs, menus, and selection controls priority rather than immediately cancelling the form. Within a native dropdown, close or leave the dropdown before using Escape to cancel the editor.
+A shortcut is left out when several visible buttons would share the key (for example the Edit button on every row), and greyed-out buttons have none. Escape closes an open dialog, menu or list first, before it cancels the form.
 
 ## Common questions
 
 ### Why don't visitors see my change?
 
-It is a draft. Choose **Publish** in the top bar, check that its group is ticked, and publish it.
+It is still a draft. Choose **Publish** in the top bar, check that its group is ticked, and publish it.
 
-### Why is Save disabled?
+### Why is Save greyed out?
 
-The draft is not ready. For a new section, generate columns first. Some accounts also lack permission to save changes.
+The form is not ready: for a new section, choose **Generate Columns** first. Some accounts are also not allowed to save.
 
 ### Can I publish one page and not another?
 
@@ -280,12 +530,16 @@ Yes. On **Review and publish**, untick the groups to leave as drafts. A page's o
 
 Someone saved a change in a ticked group after you opened the page. Nothing was published. Look at the list again and publish.
 
+### I moved a section and the Show More disappeared
+
+A project's heading and the section with its Show More may be separate sections. Move the heading back next to its project; the Show More and the hidden parts move together.
+
 ### Why is a keyboard shortcut missing?
 
-The action may be disabled, or the same key may match several visible controls. Use the mouse or Tab and Enter to choose the intended button.
+The button may be greyed out, or several visible buttons share the key. Use the mouse, or Tab and Enter.
 
-### How do I link directly to a help topic?
+### How do I link to one part of this guide?
 
-The entire guide is one document. Its table of contents links to stable section anchors. For example, the Pages topic is at `/admin/help#pages`, and Media is at `/admin/help#image-files-and-groups`.
+Each heading has its own address. For example, Pages is `/admin/help#pages` and Media is `/admin/help#image-files-and-groups`.
 
 [Back to table of contents](#table-of-contents)

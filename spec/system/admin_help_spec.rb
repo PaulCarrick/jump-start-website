@@ -23,6 +23,24 @@ RSpec.describe 'Admin Help', type: :system do
     page.save_screenshot(Rails.root.join('tmp/admin-help.png'))
   end
 
+  it 'shows a captioned screenshot for the steps, each loading and opening full size' do
+    login_as(create(:user, access: 'super'))
+    [ admin_help_path, admin_tutorial_path ].each do |path|
+      visit path
+      expect(page).to have_css('.admin-help-shot img', minimum: 10)
+      expect(page).to have_css('.admin-help-shot figcaption', text: /\w+ \w+/)
+      expect(page).to have_no_text('HELPSHOT')
+      broken = page.evaluate_async_script(<<~JS)
+        const done = arguments[0];
+        const images = Array.from(document.querySelectorAll('.admin-help-shot img'));
+        images.forEach(image => { image.loading = 'eager'; });
+        Promise.all(images.map(image => image.decode().then(() => null, () => image.getAttribute('src')))).then(done);
+      JS
+      expect(broken.compact).to be_empty
+      expect(page).to have_css('.admin-help-shot a[target="_blank"][href^="/admin-help/"]', minimum: 10)
+    end
+  end
+
   it 'opens the step-by-step tutorial below Help' do
     login_as(create(:user, access: 'super'))
     visit admin_help_path

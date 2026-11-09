@@ -80,37 +80,67 @@ For a release with published images, obtain the release's Compose file and setup
 
 We will build a small example called **Willow Studio**. Substitute your own name, wording, and photographs.
 
+The pictures in this tutorial show the paul-carrick.com site; yours will show your own names and content in the same places. Click a picture to open it full size.
+
 1. Sign in and open the admin area. Choose **Settings** in the sidebar, then edit the existing default setup. For your first website, use this starter setup rather than creating a second site database.
 2. On the **General** tab, set Site Name to **Willow Studio** and review the owner name and copyright line. Keep Site URL at `http://localhost:3000` while following the tutorial locally, and keep the domain and host consistent with it. Changing the URL to a public domain before it resolves to this server can prevent the local address from matching the site.
+
+    ![Settings, General tab: Site Name, Owner Name, domain, host, Site URL and copyright](../public/admin-help/settings-general.webp)
 3. On the **Appearance** tab, choose the header, page and footer colors; the small preview shows how they look together.
+
+    ![The Appearance tab: colours with a small preview](../public/admin-help/settings-appearance.webp)
 4. On the **Email** tab, review the mail server and contact addresses. After saving, **Send a test email** tells you whether they work. Leave optional integrations disabled until you have their actual credentials.
+
+    ![The Email tab: the mail server and the contact form's addresses](../public/admin-help/settings-email.webp)
 5. On the **Advanced** tab, keep the existing database value: changing that field does not rename the running database.
 6. Choose **Save Site Setup**. Saving creates a draft. Choose **Publish** in the top bar, check the Settings group and publish it. Confirm the website still opens and displays the new site name.
+
+    ![Review and publish: tick the groups to publish, then choose Publish](../public/admin-help/review-publish.webp)
 
 If you intend to add another independently routed website to an existing installation, use **New Site Setup** instead, give it a unique database name and URL, and follow the separate site-database provisioning procedure. That is different from adding pages to this first website.
 
 ## Edit the home page
 
 1. Open **Pages** and click the starter home page's title. It opens in the page workspace: the outline on the left, the preview in the middle and the panel on the right.
+
+    ![The page workspace: outline, preview and panel](../public/admin-help/workspace.webp)
 2. Choose **Page settings**, change the title to **Welcome to Willow Studio**, and save. Keep its Page Name and Section field so the home address continues to find its content.
+
+    ![Page settings: change the Title and choose Save Page](../public/admin-help/page-settings.webp)
 3. Click the welcome section in the preview, or choose **+ Add section** under the outline and pick the **Text Only** layout for an introduction.
 4. In the outline, click the text column. In the panel's **Content** tab enter: "Welcome to Willow Studio. We create thoughtful spaces for everyday living." Use the toolbar for headings, paragraphs and emphasis; you do not need to write HTML.
+
+    ![A text column open on the Content tab](../public/admin-help/column-content.webp)
 5. Choose **Save Column**. The preview shows the change. Use **↑** and **↓** in the outline to put the section where you want it.
 6. Changes remain drafts until published; the public site still shows the previous version.
 
 ## Add your first image
 
 1. Open **Media** and drop a photograph on the upload area (or choose **choose files**), then **Upload**. It is named after its file, for example `willow-studio-welcome`. Use a reasonably sized web image rather than an unnecessarily large original. Click its thumbnail to add a caption with **Edit caption, description or file**.
+
+    ![Media: drop files on the upload area, then choose Upload](../public/admin-help/media-library.webp)
+
+    ![Click a thumbnail to see its details and edit its caption](../public/admin-help/media-details.webp)
 2. Return to the home page's workspace. Add a section with an image and text layout, or click an existing image column.
 3. In the panel's **Image** tab, select the uploaded image (or use **New Image** to upload one without leaving the page). In the **Content** tab enter accompanying text such as "Explore our recent projects." Choose **Save Column** and check the image's fit in the preview.
+
+    ![The Image tab: choose the uploaded picture](../public/admin-help/column-image.webp)
 4. Choose **Publish**, check the home page's group and publish it, then open the home page to check the result. Back in **Media**, the image's details now list the home page under **Used on**.
 
 ## Create an About page with text and images
 
 1. Open **Pages**, then **New page**.
 2. Enter Page Title **About Willow Studio**, a unique Page Name such as `about`, and a unique Section such as `about-willow`. Set Access for public viewing and ensure the page is enabled. Save it.
+
+    ![New page: Page Title, Page Name, Section Group and Access](../public/admin-help/new-page.webp)
 3. Open the new page from the Pages list and choose **+ Add section**.
+
+    ![+ Add section under the outline](../public/admin-help/add-section-button.webp)
 4. Choose a text and image layout, fill in what it asks for, choose **Generate Columns**, name the section **Our story**, and choose **Save Section**. You return to the workspace.
+
+    ![Choose a layout in Templates and fill in its text](../public/admin-help/template-filled.webp)
+
+    ![After Generate Columns: check the columns, then Save Section](../public/admin-help/columns-generated.webp)
 5. Click the text column and add a heading and two short paragraphs explaining who you are, what you offer, and whom you help. Save the column.
 6. Click the image column and select an image in the **Image** tab. Save the column.
 7. Add another Text Only section called **What we do** if you want more content. Use a list for your services.
@@ -118,10 +148,27 @@ If you intend to add another independently routed website to an existing install
 ## Add the page to navigation
 
 1. Open **Menus**. With **Header menu** chosen, choose **Add an item**.
+
+    ![Add an item: Label and Links to](../public/admin-help/menu-add-item.webp)
 2. Set the Label to **About**. In **Links to**, choose `/about` from the list of the site's pages (the page's name, not its title). Choose **Add item**.
 3. The item is added at the end. Drag its **⠿** handle, or use the arrow buttons, to put it where you want it; **→** puts it inside the item above, as a dropdown entry.
+
+    ![Move the item with its handle or the arrow buttons](../public/admin-help/menus-header.webp)
 4. Choose **Publish**. The About page's group holds its page, sections and columns; the Header menu group holds the new item. Tick both, read the list, and publish. Read any reported errors before proceeding.
 5. Open the public website and click **About**. Check that it opens the intended page and that the text and images appear. Repeat these steps for Services, Projects, or another page.
+
+## Edit a page while looking at it
+
+You can also change a page while viewing it on the site.
+
+1. Open the page on the site, scroll to the bottom and choose **Edit Page**.
+2. Right-click a picture, a column's text or the space around a section and choose **Edit**. The matching editor opens in a new tab; save your change there and come back.
+3. To move a section, point at it and use its **⠿ Move ↑ ↓** handle.
+4. Choose **Save Changes** to publish what you changed, or **Cancel** to throw it away.
+
+    ![Editing… Save Changes and Cancel at the bottom of the page](../public/admin-help/site-editing-bar.webp)
+
+    ![Right-click a column and choose Edit](../public/admin-help/site-right-click-column.webp)
 
 ## Review before sharing
 
