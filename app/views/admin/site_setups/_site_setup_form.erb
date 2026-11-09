@@ -213,7 +213,7 @@
 
     <%# Appearance %>
     <div class="tab-pane<%= ' show active' if active_tab == 'appearance' %>" id="settings-appearance" role="tabpanel" aria-labelledby="settings-tab-appearance">
-      <p class="admin-tab-lead">The colors of the header, the page and the footer.</p>
+      <p class="admin-tab-lead">The colors of the header, the page and the footer, and where the menu sits.</p>
       <div class="admin-appearance">
         <div class="admin-field-grid">
           <% [
@@ -253,6 +253,20 @@
           <figcaption class="form-text">Preview</figcaption>
         </figure>
       </div>
+
+      <fieldset class="mb-3 admin-menu-position">
+        <legend class="form-label">Menu position</legend>
+        <p class="form-text mt-0">Where the site's menu sits on wide screens. On a phone it is always the ☰ button at the top.</p>
+        <div class="admin-menu-position-choices">
+          <% SiteSetup::MENU_POSITIONS.each do |value, label| %>
+            <label class="admin-menu-position-choice">
+              <%= form.radio_button :menu_position, value, checked: (site_setup.try(:menu_position).presence || "top") == value %>
+              <span class="admin-menu-position-picture is-<%= value %>" aria-hidden="true"><span></span></span>
+              <span><%= label %></span>
+            </label>
+          <% end %>
+        </div>
+      </fieldset>
 
       <div class="mb-3">
         <%= form.label :page_background_image, "Background Image", class: "form-label" %>

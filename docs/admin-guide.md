@@ -482,7 +482,7 @@ Visitors cannot sign up themselves; administrators create accounts here. When ed
 
 ![Settings, Email tab](../public/admin-help/settings-email.webp)
 
-**Appearance**: header, page and footer colours, each with a swatch and a small preview, and the background picture.
+**Appearance**: header, page and footer colours, each with a swatch and a small preview, where the menu sits (see below), and the background picture.
 
 ![Settings, Appearance tab](../public/admin-help/settings-appearance.webp)
 
@@ -497,6 +497,23 @@ Visitors cannot sign up themselves; administrators create accounts here. When ed
 The required **Database** field holds a database name and defaults to `paul-carrick`. Changing it does not rename the running database. Publishing a new, non-default setup creates that database and its first accounts; saving a draft does not. See [Site databases](site-databases.md) for the details. The site is chosen by the Site URL's host name.
 
 Agree changes to domains, email settings or the default setup with whoever runs the server; some settings also come from the server itself.
+
+### How to move the site's menu
+
+The site's menu can sit along the top (the normal place), down the left or right side, or along the bottom of the screen.
+
+1. Choose **Settings**, then **Edit** beside the site, then the **Appearance** tab.
+2. Under **Menu position**, click **Top**, **Left sidebar**, **Right sidebar** or **Bottom bar**.
+3. Choose **Save Site Setup**.
+4. Choose **Publish** in the top bar and publish the Settings group. Visitors see the menu in its new place at once.
+
+![Menu position on the Appearance tab](../public/admin-help/settings-menu-position.webp)
+
+In a sidebar, a menu with items inside it (such as Personal) opens beside the sidebar; in the bottom bar it opens upwards. The admin always keeps its own layout, and on a phone or other narrow screen the menu is always the ☰ button at the top, wherever it is set.
+
+![The menu as a left sidebar, with Personal open beside it](../public/admin-help/site-menu-left.webp)
+
+![The menu as a bar along the bottom of the screen](../public/admin-help/site-menu-bottom.webp)
 
 ## History and restoring an earlier version
 

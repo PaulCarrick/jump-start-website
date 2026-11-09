@@ -1,6 +1,6 @@
 <header>
   <div class="bg-light">
-    <nav class="header-bg navbar navbar-dark navbar-expand-lg py-4" data-controller="navigation">
+    <nav class="header-bg navbar navbar-dark navbar-expand-lg py-4 site-menu" data-controller="navigation" aria-label="Site menu">
       <div class="header-bg container">
         <!-- Brand Name -->
         <%= link_to @site_information.site_name,
@@ -26,7 +26,7 @@
               <li class="header-bg nav-item">
                 <% if menu_item.sub_items.publicly_enabled.any? %>
                   <!-- Dropdown Menu -->
-                  <div class="header-bg dropdown">
+                  <div class="header-bg dropdown <%= { "left" => "dropend", "right" => "dropstart", "bottom" => "dropup" }[site_menu_position] %>">
                     <%= link_to "#",
                                 class: "header-bg header-text nav-link dropdown-toggle px-lg-3 py-lg-4 text-uppercase",
                                 id:    "navbarDropdown-#{index}",

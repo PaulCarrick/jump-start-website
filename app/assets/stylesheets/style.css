@@ -560,3 +560,56 @@ body .btn.admin-navigation-readonly:disabled {
   position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 2100;
   padding: 8px 16px; border-radius: 8px; background: #1d2433; color: #fff; font-size: 14px;
 }
+
+/* Where the site's menu sits (Settings > Appearance > Menu position). "top" is
+   the normal header. On narrow screens every position uses the top bar with
+   its ☰ button. */
+@media (min-width: 992px) {
+  body.site-menu-left, body.site-menu-right { --site-menu-width: 250px; }
+  body.site-menu-left { padding-left: var(--site-menu-width); }
+  body.site-menu-right { padding-right: var(--site-menu-width); }
+  body.site-menu-left > header, body.site-menu-right > header,
+  body.site-menu-left header:has(> div > .site-menu), body.site-menu-right header:has(> div > .site-menu) {
+    position: fixed; top: 0; bottom: 0; width: var(--site-menu-width); z-index: 1030;
+  }
+  body.site-menu-left header:has(.site-menu) { left: 0; }
+  body.site-menu-right header:has(.site-menu) { right: 0; }
+  body.site-menu-left header:has(.site-menu) > div,
+  body.site-menu-right header:has(.site-menu) > div { height: 100%; }
+  body.site-menu-left .site-menu, body.site-menu-right .site-menu {
+    height: 100%; align-items: flex-start; padding: 24px 0 !important; overflow-y: auto;
+  }
+  body.site-menu-left .site-menu > .container, body.site-menu-right .site-menu > .container {
+    flex-direction: column; align-items: stretch; justify-content: flex-start; max-width: none; padding: 0 16px;
+  }
+  body.site-menu-left .site-menu > .container > .nav-link, body.site-menu-right .site-menu > .container > .nav-link {
+    white-space: normal; font-size: 1.5rem !important; line-height: 1.2; padding: 0 12px 12px;
+  }
+  body.site-menu-left .site-menu .navbar-collapse, body.site-menu-right .site-menu .navbar-collapse { flex-grow: 0; }
+  body.site-menu-left .site-menu .navbar-nav, body.site-menu-right .site-menu .navbar-nav {
+    flex-direction: column; margin-left: 0 !important; width: 100%;
+  }
+  body.site-menu-left .site-menu .nav-link, body.site-menu-right .site-menu .nav-link {
+    padding: 10px 12px !important;
+  }
+  body.site-menu-left .site-menu .navbar-nav img.nav-link, body.site-menu-right .site-menu .navbar-nav img.nav-link {
+    width: 48px; padding: 10px 12px !important;
+  }
+  /* The sidebar scrolls when it is taller than the window, so its dropdowns
+     open beside it, fixed to the window, rather than inside it. */
+  body.site-menu-left .site-menu .navbar-nav .dropdown-menu,
+  body.site-menu-right .site-menu .navbar-nav .dropdown-menu {
+    position: fixed; top: auto; margin: -44px 0 0; min-width: 220px;
+  }
+  body.site-menu-left .site-menu .navbar-nav .dropdown-menu { left: var(--site-menu-width); }
+  body.site-menu-right .site-menu .navbar-nav .dropdown-menu { left: auto; right: var(--site-menu-width); }
+
+  body.site-menu-bottom { padding-bottom: var(--site-menu-height, 88px); }
+  body.site-menu-bottom header:has(.site-menu) {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 1030; box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.12);
+  }
+  body.site-menu-bottom .site-menu { padding: 8px 0 !important; }
+  body.site-menu-bottom .site-menu .nav-link { padding-top: 12px !important; padding-bottom: 12px !important; }
+  body.site-menu-bottom .site-menu .navbar-nav .dropdown-menu { top: auto; bottom: 100%; margin-bottom: 4px; }
+  body.site-menu-bottom .page-edit-moving { bottom: calc(var(--site-menu-height, 88px) + 16px); }
+}

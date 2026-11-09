@@ -86,7 +86,7 @@ The pictures in this tutorial show the paul-carrick.com site; yours will show yo
 2. On the **General** tab, set Site Name to **Willow Studio** and review the owner name and copyright line. Keep Site URL at `http://localhost:3000` while following the tutorial locally, and keep the domain and host consistent with it. Changing the URL to a public domain before it resolves to this server can prevent the local address from matching the site.
 
     ![Settings, General tab: Site Name, Owner Name, domain, host, Site URL and copyright](../public/admin-help/settings-general.webp)
-3. On the **Appearance** tab, choose the header, page and footer colors; the small preview shows how they look together.
+3. On the **Appearance** tab, choose the header, page and footer colors; the small preview shows how they look together. Under **Menu position**, keep **Top** or put the menu in a left or right sidebar or a bottom bar.
 
     ![The Appearance tab: colours with a small preview](../public/admin-help/settings-appearance.webp)
 4. On the **Email** tab, review the mail server and contact addresses. After saving, **Send a test email** tells you whether they work. Leave optional integrations disabled until you have their actual credentials.

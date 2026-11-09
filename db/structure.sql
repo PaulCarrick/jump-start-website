@@ -766,8 +766,8 @@ CREATE FUNCTION public.sys_ver_func_c0d9b0ff72() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
   BEGIN
-    INSERT INTO "site_setups_history" ("id", "configuration_name", "site_name", "site_domain", "site_host", "site_url", "header_background", "header_text_color", "footer_background", "footer_text_color", "container_background", "container_text_color", "page_background_image", "facebook_url", "twitter_url", "instagram_url", "linkedin_url", "github_url", "owner_name", "copyright", "created_at", "updated_at", "default_setup", "guest_user_name", "special_user_name", "smtp_server", "smtp_port", "smtp_user", "smtp_password", "smtp_domain", "smtp_authentication", "contact_email_from", "contact_email_to", "contact_email_subject", "captcha_site_key", "captcha_secret_key", "enabled", "version", "validity", "temporal_state", "base_version", "base_updated_at", "deployment_id", "temporal_deleted", "database", "routing_host", "routing_path", system_period)
-    VALUES (NEW."id", NEW."configuration_name", NEW."site_name", NEW."site_domain", NEW."site_host", NEW."site_url", NEW."header_background", NEW."header_text_color", NEW."footer_background", NEW."footer_text_color", NEW."container_background", NEW."container_text_color", NEW."page_background_image", NEW."facebook_url", NEW."twitter_url", NEW."instagram_url", NEW."linkedin_url", NEW."github_url", NEW."owner_name", NEW."copyright", NEW."created_at", NEW."updated_at", NEW."default_setup", NEW."guest_user_name", NEW."special_user_name", NEW."smtp_server", NEW."smtp_port", NEW."smtp_user", NEW."smtp_password", NEW."smtp_domain", NEW."smtp_authentication", NEW."contact_email_from", NEW."contact_email_to", NEW."contact_email_subject", NEW."captcha_site_key", NEW."captcha_secret_key", NEW."enabled", NEW."version", NEW."validity", NEW."temporal_state", NEW."base_version", NEW."base_updated_at", NEW."deployment_id", NEW."temporal_deleted", NEW."database", NEW."routing_host", NEW."routing_path", tstzrange(NOW(), 'infinity'));
+    INSERT INTO "site_setups_history" ("id", "configuration_name", "site_name", "site_domain", "site_host", "site_url", "header_background", "header_text_color", "footer_background", "footer_text_color", "container_background", "container_text_color", "page_background_image", "facebook_url", "twitter_url", "instagram_url", "linkedin_url", "github_url", "owner_name", "copyright", "created_at", "updated_at", "default_setup", "guest_user_name", "special_user_name", "smtp_server", "smtp_port", "smtp_user", "smtp_password", "smtp_domain", "smtp_authentication", "contact_email_from", "contact_email_to", "contact_email_subject", "captcha_site_key", "captcha_secret_key", "enabled", "version", "validity", "temporal_state", "base_version", "base_updated_at", "deployment_id", "temporal_deleted", "database", "routing_host", "routing_path", "menu_position", system_period)
+    VALUES (NEW."id", NEW."configuration_name", NEW."site_name", NEW."site_domain", NEW."site_host", NEW."site_url", NEW."header_background", NEW."header_text_color", NEW."footer_background", NEW."footer_text_color", NEW."container_background", NEW."container_text_color", NEW."page_background_image", NEW."facebook_url", NEW."twitter_url", NEW."instagram_url", NEW."linkedin_url", NEW."github_url", NEW."owner_name", NEW."copyright", NEW."created_at", NEW."updated_at", NEW."default_setup", NEW."guest_user_name", NEW."special_user_name", NEW."smtp_server", NEW."smtp_port", NEW."smtp_user", NEW."smtp_password", NEW."smtp_domain", NEW."smtp_authentication", NEW."contact_email_from", NEW."contact_email_to", NEW."contact_email_subject", NEW."captcha_site_key", NEW."captcha_secret_key", NEW."enabled", NEW."version", NEW."validity", NEW."temporal_state", NEW."base_version", NEW."base_updated_at", NEW."deployment_id", NEW."temporal_deleted", NEW."database", NEW."routing_host", NEW."routing_path", NEW."menu_position", tstzrange(NOW(), 'infinity'));
 
     RETURN NULL;
   END;
@@ -778,7 +778,7 @@ $$;
 -- Name: FUNCTION sys_ver_func_c0d9b0ff72(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.sys_ver_func_c0d9b0ff72() IS '{"verb":"insert","source_table":"site_setups","history_table":"site_setups_history","columns":["id","configuration_name","site_name","site_domain","site_host","site_url","header_background","header_text_color","footer_background","footer_text_color","container_background","container_text_color","page_background_image","facebook_url","twitter_url","instagram_url","linkedin_url","github_url","owner_name","copyright","created_at","updated_at","default_setup","guest_user_name","special_user_name","smtp_server","smtp_port","smtp_user","smtp_password","smtp_domain","smtp_authentication","contact_email_from","contact_email_to","contact_email_subject","captcha_site_key","captcha_secret_key","enabled","version","validity","temporal_state","base_version","base_updated_at","deployment_id","temporal_deleted","database","routing_host","routing_path"],"gem_version":"0.4.0"}';
+COMMENT ON FUNCTION public.sys_ver_func_c0d9b0ff72() IS '{"verb":"insert","source_table":"site_setups","history_table":"site_setups_history","columns":["id","configuration_name","site_name","site_domain","site_host","site_url","header_background","header_text_color","footer_background","footer_text_color","container_background","container_text_color","page_background_image","facebook_url","twitter_url","instagram_url","linkedin_url","github_url","owner_name","copyright","created_at","updated_at","default_setup","guest_user_name","special_user_name","smtp_server","smtp_port","smtp_user","smtp_password","smtp_domain","smtp_authentication","contact_email_from","contact_email_to","contact_email_subject","captcha_site_key","captcha_secret_key","enabled","version","validity","temporal_state","base_version","base_updated_at","deployment_id","temporal_deleted","database","routing_host","routing_path","menu_position"],"gem_version":"0.4.0"}';
 
 
 --
@@ -916,9 +916,9 @@ CREATE FUNCTION public.sys_ver_func_ed39d69bbb() RETURNS trigger
     SET system_period = tstzrange(lower(system_period), NOW())
     WHERE "id" = OLD."id" AND "version" = OLD."version" AND upper(system_period) = 'infinity' AND lower(system_period) < NOW();
 
-    INSERT INTO "site_setups_history" ("id", "configuration_name", "site_name", "site_domain", "site_host", "site_url", "header_background", "header_text_color", "footer_background", "footer_text_color", "container_background", "container_text_color", "page_background_image", "facebook_url", "twitter_url", "instagram_url", "linkedin_url", "github_url", "owner_name", "copyright", "created_at", "updated_at", "default_setup", "guest_user_name", "special_user_name", "smtp_server", "smtp_port", "smtp_user", "smtp_password", "smtp_domain", "smtp_authentication", "contact_email_from", "contact_email_to", "contact_email_subject", "captcha_site_key", "captcha_secret_key", "enabled", "version", "validity", "temporal_state", "base_version", "base_updated_at", "deployment_id", "temporal_deleted", "database", "routing_host", "routing_path", system_period)
-    VALUES (NEW."id", NEW."configuration_name", NEW."site_name", NEW."site_domain", NEW."site_host", NEW."site_url", NEW."header_background", NEW."header_text_color", NEW."footer_background", NEW."footer_text_color", NEW."container_background", NEW."container_text_color", NEW."page_background_image", NEW."facebook_url", NEW."twitter_url", NEW."instagram_url", NEW."linkedin_url", NEW."github_url", NEW."owner_name", NEW."copyright", NEW."created_at", NEW."updated_at", NEW."default_setup", NEW."guest_user_name", NEW."special_user_name", NEW."smtp_server", NEW."smtp_port", NEW."smtp_user", NEW."smtp_password", NEW."smtp_domain", NEW."smtp_authentication", NEW."contact_email_from", NEW."contact_email_to", NEW."contact_email_subject", NEW."captcha_site_key", NEW."captcha_secret_key", NEW."enabled", NEW."version", NEW."validity", NEW."temporal_state", NEW."base_version", NEW."base_updated_at", NEW."deployment_id", NEW."temporal_deleted", NEW."database", NEW."routing_host", NEW."routing_path", tstzrange(NOW(), 'infinity'))
-    ON CONFLICT ("id", "version", system_period) DO UPDATE SET "id" = EXCLUDED."id", "configuration_name" = EXCLUDED."configuration_name", "site_name" = EXCLUDED."site_name", "site_domain" = EXCLUDED."site_domain", "site_host" = EXCLUDED."site_host", "site_url" = EXCLUDED."site_url", "header_background" = EXCLUDED."header_background", "header_text_color" = EXCLUDED."header_text_color", "footer_background" = EXCLUDED."footer_background", "footer_text_color" = EXCLUDED."footer_text_color", "container_background" = EXCLUDED."container_background", "container_text_color" = EXCLUDED."container_text_color", "page_background_image" = EXCLUDED."page_background_image", "facebook_url" = EXCLUDED."facebook_url", "twitter_url" = EXCLUDED."twitter_url", "instagram_url" = EXCLUDED."instagram_url", "linkedin_url" = EXCLUDED."linkedin_url", "github_url" = EXCLUDED."github_url", "owner_name" = EXCLUDED."owner_name", "copyright" = EXCLUDED."copyright", "created_at" = EXCLUDED."created_at", "updated_at" = EXCLUDED."updated_at", "default_setup" = EXCLUDED."default_setup", "guest_user_name" = EXCLUDED."guest_user_name", "special_user_name" = EXCLUDED."special_user_name", "smtp_server" = EXCLUDED."smtp_server", "smtp_port" = EXCLUDED."smtp_port", "smtp_user" = EXCLUDED."smtp_user", "smtp_password" = EXCLUDED."smtp_password", "smtp_domain" = EXCLUDED."smtp_domain", "smtp_authentication" = EXCLUDED."smtp_authentication", "contact_email_from" = EXCLUDED."contact_email_from", "contact_email_to" = EXCLUDED."contact_email_to", "contact_email_subject" = EXCLUDED."contact_email_subject", "captcha_site_key" = EXCLUDED."captcha_site_key", "captcha_secret_key" = EXCLUDED."captcha_secret_key", "enabled" = EXCLUDED."enabled", "version" = EXCLUDED."version", "validity" = EXCLUDED."validity", "temporal_state" = EXCLUDED."temporal_state", "base_version" = EXCLUDED."base_version", "base_updated_at" = EXCLUDED."base_updated_at", "deployment_id" = EXCLUDED."deployment_id", "temporal_deleted" = EXCLUDED."temporal_deleted", "database" = EXCLUDED."database", "routing_host" = EXCLUDED."routing_host", "routing_path" = EXCLUDED."routing_path";
+    INSERT INTO "site_setups_history" ("id", "configuration_name", "site_name", "site_domain", "site_host", "site_url", "header_background", "header_text_color", "footer_background", "footer_text_color", "container_background", "container_text_color", "page_background_image", "facebook_url", "twitter_url", "instagram_url", "linkedin_url", "github_url", "owner_name", "copyright", "created_at", "updated_at", "default_setup", "guest_user_name", "special_user_name", "smtp_server", "smtp_port", "smtp_user", "smtp_password", "smtp_domain", "smtp_authentication", "contact_email_from", "contact_email_to", "contact_email_subject", "captcha_site_key", "captcha_secret_key", "enabled", "version", "validity", "temporal_state", "base_version", "base_updated_at", "deployment_id", "temporal_deleted", "database", "routing_host", "routing_path", "menu_position", system_period)
+    VALUES (NEW."id", NEW."configuration_name", NEW."site_name", NEW."site_domain", NEW."site_host", NEW."site_url", NEW."header_background", NEW."header_text_color", NEW."footer_background", NEW."footer_text_color", NEW."container_background", NEW."container_text_color", NEW."page_background_image", NEW."facebook_url", NEW."twitter_url", NEW."instagram_url", NEW."linkedin_url", NEW."github_url", NEW."owner_name", NEW."copyright", NEW."created_at", NEW."updated_at", NEW."default_setup", NEW."guest_user_name", NEW."special_user_name", NEW."smtp_server", NEW."smtp_port", NEW."smtp_user", NEW."smtp_password", NEW."smtp_domain", NEW."smtp_authentication", NEW."contact_email_from", NEW."contact_email_to", NEW."contact_email_subject", NEW."captcha_site_key", NEW."captcha_secret_key", NEW."enabled", NEW."version", NEW."validity", NEW."temporal_state", NEW."base_version", NEW."base_updated_at", NEW."deployment_id", NEW."temporal_deleted", NEW."database", NEW."routing_host", NEW."routing_path", NEW."menu_position", tstzrange(NOW(), 'infinity'))
+    ON CONFLICT ("id", "version", system_period) DO UPDATE SET "id" = EXCLUDED."id", "configuration_name" = EXCLUDED."configuration_name", "site_name" = EXCLUDED."site_name", "site_domain" = EXCLUDED."site_domain", "site_host" = EXCLUDED."site_host", "site_url" = EXCLUDED."site_url", "header_background" = EXCLUDED."header_background", "header_text_color" = EXCLUDED."header_text_color", "footer_background" = EXCLUDED."footer_background", "footer_text_color" = EXCLUDED."footer_text_color", "container_background" = EXCLUDED."container_background", "container_text_color" = EXCLUDED."container_text_color", "page_background_image" = EXCLUDED."page_background_image", "facebook_url" = EXCLUDED."facebook_url", "twitter_url" = EXCLUDED."twitter_url", "instagram_url" = EXCLUDED."instagram_url", "linkedin_url" = EXCLUDED."linkedin_url", "github_url" = EXCLUDED."github_url", "owner_name" = EXCLUDED."owner_name", "copyright" = EXCLUDED."copyright", "created_at" = EXCLUDED."created_at", "updated_at" = EXCLUDED."updated_at", "default_setup" = EXCLUDED."default_setup", "guest_user_name" = EXCLUDED."guest_user_name", "special_user_name" = EXCLUDED."special_user_name", "smtp_server" = EXCLUDED."smtp_server", "smtp_port" = EXCLUDED."smtp_port", "smtp_user" = EXCLUDED."smtp_user", "smtp_password" = EXCLUDED."smtp_password", "smtp_domain" = EXCLUDED."smtp_domain", "smtp_authentication" = EXCLUDED."smtp_authentication", "contact_email_from" = EXCLUDED."contact_email_from", "contact_email_to" = EXCLUDED."contact_email_to", "contact_email_subject" = EXCLUDED."contact_email_subject", "captcha_site_key" = EXCLUDED."captcha_site_key", "captcha_secret_key" = EXCLUDED."captcha_secret_key", "enabled" = EXCLUDED."enabled", "version" = EXCLUDED."version", "validity" = EXCLUDED."validity", "temporal_state" = EXCLUDED."temporal_state", "base_version" = EXCLUDED."base_version", "base_updated_at" = EXCLUDED."base_updated_at", "deployment_id" = EXCLUDED."deployment_id", "temporal_deleted" = EXCLUDED."temporal_deleted", "database" = EXCLUDED."database", "routing_host" = EXCLUDED."routing_host", "routing_path" = EXCLUDED."routing_path", "menu_position" = EXCLUDED."menu_position";
 
     RETURN NULL;
   END;
@@ -929,7 +929,7 @@ $$;
 -- Name: FUNCTION sys_ver_func_ed39d69bbb(); Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON FUNCTION public.sys_ver_func_ed39d69bbb() IS '{"verb":"update","source_table":"site_setups","history_table":"site_setups_history","columns":["id","configuration_name","site_name","site_domain","site_host","site_url","header_background","header_text_color","footer_background","footer_text_color","container_background","container_text_color","page_background_image","facebook_url","twitter_url","instagram_url","linkedin_url","github_url","owner_name","copyright","created_at","updated_at","default_setup","guest_user_name","special_user_name","smtp_server","smtp_port","smtp_user","smtp_password","smtp_domain","smtp_authentication","contact_email_from","contact_email_to","contact_email_subject","captcha_site_key","captcha_secret_key","enabled","version","validity","temporal_state","base_version","base_updated_at","deployment_id","temporal_deleted","database","routing_host","routing_path"],"primary_key":["id","version"],"gem_version":"0.4.0"}';
+COMMENT ON FUNCTION public.sys_ver_func_ed39d69bbb() IS '{"verb":"update","source_table":"site_setups","history_table":"site_setups_history","columns":["id","configuration_name","site_name","site_domain","site_host","site_url","header_background","header_text_color","footer_background","footer_text_color","container_background","container_text_color","page_background_image","facebook_url","twitter_url","instagram_url","linkedin_url","github_url","owner_name","copyright","created_at","updated_at","default_setup","guest_user_name","special_user_name","smtp_server","smtp_port","smtp_user","smtp_password","smtp_domain","smtp_authentication","contact_email_from","contact_email_to","contact_email_subject","captcha_site_key","captcha_secret_key","enabled","version","validity","temporal_state","base_version","base_updated_at","deployment_id","temporal_deleted","database","routing_host","routing_path","menu_position"],"primary_key":["id","version"],"gem_version":"0.4.0"}';
 
 
 SET default_tablespace = '';
@@ -1104,7 +1104,7 @@ CREATE TABLE public.blog_posts (
     base_updated_at timestamp(6) without time zone,
     deployment_id bigint,
     temporal_deleted boolean DEFAULT false NOT NULL,
-    CONSTRAINT blog_posts_temporal_state CHECK (((temporal_state)::text = ANY ((ARRAY['live'::character varying, 'draft'::character varying])::text[]))),
+    CONSTRAINT blog_posts_temporal_state CHECK (((temporal_state)::text = ANY (ARRAY[('live'::character varying)::text, ('draft'::character varying)::text]))),
     CONSTRAINT blog_posts_temporal_validity CHECK (((((temporal_state)::text = 'draft'::text) AND isempty(validity)) OR (((temporal_state)::text = 'live'::text) AND (NOT isempty(validity)))))
 );
 
@@ -1211,7 +1211,7 @@ CREATE TABLE public.cells (
     base_updated_at timestamp(6) without time zone,
     deployment_id bigint,
     temporal_deleted boolean DEFAULT false NOT NULL,
-    CONSTRAINT cells_temporal_state CHECK (((temporal_state)::text = ANY ((ARRAY['live'::character varying, 'draft'::character varying])::text[]))),
+    CONSTRAINT cells_temporal_state CHECK (((temporal_state)::text = ANY (ARRAY[('live'::character varying)::text, ('draft'::character varying)::text]))),
     CONSTRAINT cells_temporal_validity CHECK (((((temporal_state)::text = 'draft'::text) AND isempty(validity)) OR (((temporal_state)::text = 'live'::text) AND (NOT isempty(validity)))))
 );
 
@@ -1316,7 +1316,7 @@ CREATE TABLE public.contacts (
     base_updated_at timestamp(6) without time zone,
     deployment_id bigint,
     temporal_deleted boolean DEFAULT false NOT NULL,
-    CONSTRAINT contacts_temporal_state CHECK (((temporal_state)::text = ANY ((ARRAY['live'::character varying, 'draft'::character varying])::text[]))),
+    CONSTRAINT contacts_temporal_state CHECK (((temporal_state)::text = ANY (ARRAY[('live'::character varying)::text, ('draft'::character varying)::text]))),
     CONSTRAINT contacts_temporal_validity CHECK (((((temporal_state)::text = 'draft'::text) AND isempty(validity)) OR (((temporal_state)::text = 'live'::text) AND (NOT isempty(validity)))))
 );
 
@@ -1451,7 +1451,7 @@ CREATE TABLE public.footer_items (
     base_updated_at timestamp(6) without time zone,
     deployment_id bigint,
     temporal_deleted boolean DEFAULT false NOT NULL,
-    CONSTRAINT footer_items_temporal_state CHECK (((temporal_state)::text = ANY ((ARRAY['live'::character varying, 'draft'::character varying])::text[]))),
+    CONSTRAINT footer_items_temporal_state CHECK (((temporal_state)::text = ANY (ARRAY[('live'::character varying)::text, ('draft'::character varying)::text]))),
     CONSTRAINT footer_items_temporal_validity CHECK (((((temporal_state)::text = 'draft'::text) AND isempty(validity)) OR (((temporal_state)::text = 'live'::text) AND (NOT isempty(validity)))))
 );
 
@@ -1555,7 +1555,7 @@ CREATE TABLE public.image_files (
     deployment_id bigint,
     temporal_deleted boolean DEFAULT false NOT NULL,
     attachment_blob_id bigint,
-    CONSTRAINT image_files_temporal_state CHECK (((temporal_state)::text = ANY ((ARRAY['live'::character varying, 'draft'::character varying])::text[]))),
+    CONSTRAINT image_files_temporal_state CHECK (((temporal_state)::text = ANY (ARRAY[('live'::character varying)::text, ('draft'::character varying)::text]))),
     CONSTRAINT image_files_temporal_validity CHECK (((((temporal_state)::text = 'draft'::text) AND isempty(validity)) OR (((temporal_state)::text = 'live'::text) AND (NOT isempty(validity)))))
 );
 
@@ -1660,7 +1660,7 @@ CREATE TABLE public.menu_items (
     base_updated_at timestamp(6) without time zone,
     deployment_id bigint,
     temporal_deleted boolean DEFAULT false NOT NULL,
-    CONSTRAINT menu_items_temporal_state CHECK (((temporal_state)::text = ANY ((ARRAY['live'::character varying, 'draft'::character varying])::text[]))),
+    CONSTRAINT menu_items_temporal_state CHECK (((temporal_state)::text = ANY (ARRAY[('live'::character varying)::text, ('draft'::character varying)::text]))),
     CONSTRAINT menu_items_temporal_validity CHECK (((((temporal_state)::text = 'draft'::text) AND isempty(validity)) OR (((temporal_state)::text = 'live'::text) AND (NOT isempty(validity)))))
 );
 
@@ -1763,7 +1763,7 @@ CREATE TABLE public.pages (
     base_updated_at timestamp(6) without time zone,
     deployment_id bigint,
     temporal_deleted boolean DEFAULT false NOT NULL,
-    CONSTRAINT pages_temporal_state CHECK (((temporal_state)::text = ANY ((ARRAY['live'::character varying, 'draft'::character varying])::text[]))),
+    CONSTRAINT pages_temporal_state CHECK (((temporal_state)::text = ANY (ARRAY[('live'::character varying)::text, ('draft'::character varying)::text]))),
     CONSTRAINT pages_temporal_validity CHECK (((((temporal_state)::text = 'draft'::text) AND isempty(validity)) OR (((temporal_state)::text = 'live'::text) AND (NOT isempty(validity)))))
 );
 
@@ -1864,7 +1864,7 @@ CREATE TABLE public.post_comments (
     deployment_id bigint,
     temporal_deleted boolean DEFAULT false NOT NULL,
     user_id bigint,
-    CONSTRAINT post_comments_temporal_state CHECK (((temporal_state)::text = ANY ((ARRAY['live'::character varying, 'draft'::character varying])::text[]))),
+    CONSTRAINT post_comments_temporal_state CHECK (((temporal_state)::text = ANY (ARRAY[('live'::character varying)::text, ('draft'::character varying)::text]))),
     CONSTRAINT post_comments_temporal_validity CHECK (((((temporal_state)::text = 'draft'::text) AND isempty(validity)) OR (((temporal_state)::text = 'live'::text) AND (NOT isempty(validity)))))
 );
 
@@ -1982,7 +1982,7 @@ CREATE TABLE public.sections (
     base_updated_at timestamp(6) without time zone,
     deployment_id bigint,
     temporal_deleted boolean DEFAULT false NOT NULL,
-    CONSTRAINT sections_temporal_state CHECK (((temporal_state)::text = ANY ((ARRAY['live'::character varying, 'draft'::character varying])::text[]))),
+    CONSTRAINT sections_temporal_state CHECK (((temporal_state)::text = ANY (ARRAY[('live'::character varying)::text, ('draft'::character varying)::text]))),
     CONSTRAINT sections_temporal_validity CHECK (((((temporal_state)::text = 'draft'::text) AND isempty(validity)) OR (((temporal_state)::text = 'live'::text) AND (NOT isempty(validity)))))
 );
 
@@ -2187,7 +2187,8 @@ CREATE TABLE public.site_setups (
     database character varying DEFAULT 'paul-carrick'::character varying NOT NULL,
     routing_host character varying NOT NULL,
     routing_path character varying NOT NULL,
-    CONSTRAINT site_setups_temporal_state CHECK (((temporal_state)::text = ANY ((ARRAY['live'::character varying, 'draft'::character varying])::text[]))),
+    menu_position character varying DEFAULT 'top'::character varying NOT NULL,
+    CONSTRAINT site_setups_temporal_state CHECK (((temporal_state)::text = ANY (ARRAY[('live'::character varying)::text, ('draft'::character varying)::text]))),
     CONSTRAINT site_setups_temporal_validity CHECK (((((temporal_state)::text = 'draft'::text) AND isempty(validity)) OR (((temporal_state)::text = 'live'::text) AND (NOT isempty(validity)))))
 );
 
@@ -2263,7 +2264,8 @@ CREATE TABLE public.site_setups_history (
     system_period tstzrange NOT NULL,
     database character varying DEFAULT 'paul-carrick'::character varying NOT NULL,
     routing_host character varying NOT NULL,
-    routing_path character varying NOT NULL
+    routing_path character varying NOT NULL,
+    menu_position character varying DEFAULT 'top'::character varying NOT NULL
 );
 
 
@@ -2320,7 +2322,7 @@ CREATE TABLE public.users (
     base_updated_at timestamp(6) without time zone,
     deployment_id bigint,
     temporal_deleted boolean DEFAULT false NOT NULL,
-    CONSTRAINT users_temporal_state CHECK (((temporal_state)::text = ANY ((ARRAY['live'::character varying, 'draft'::character varying])::text[]))),
+    CONSTRAINT users_temporal_state CHECK (((temporal_state)::text = ANY (ARRAY[('live'::character varying)::text, ('draft'::character varying)::text]))),
     CONSTRAINT users_temporal_validity CHECK (((((temporal_state)::text = 'draft'::text) AND isempty(validity)) OR (((temporal_state)::text = 'live'::text) AND (NOT isempty(validity)))))
 );
 
@@ -3771,6 +3773,7 @@ ALTER TABLE ONLY public.cells
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261109120000'),
 ('20261108160000'),
 ('20261108140000'),
 ('20261108120000'),

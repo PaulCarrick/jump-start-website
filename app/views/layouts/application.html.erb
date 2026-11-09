@@ -33,7 +33,7 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
 </head>
 
-<body>
+<body class="site-menu-<%= site_menu_position %>">
 
 <style>
   <% if @site_information.present? %>

@@ -737,3 +737,21 @@ li.is-dragging > .outline-row { opacity: 0.4; }
   opacity: 0; visibility: hidden; transition: opacity .12s;
 }
 .admin-tooltip.is-visible { opacity: 1; visibility: visible; }
+
+/* Settings > Appearance > Menu position: four small pictures to choose from. */
+.admin-menu-position { border: 0; padding: 0; }
+.admin-menu-position legend { font-size: 1rem; float: none; margin-bottom: .25rem; }
+.admin-menu-position-choices { display: flex; flex-wrap: wrap; gap: 10px; }
+.admin-menu-position-choice {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 12px; cursor: pointer;
+  border: 1px solid var(--admin-line); border-radius: 12px; background: var(--admin-panel); font-size: 14px; min-width: 110px;
+}
+.admin-menu-position-choice:has(input:checked) { border-color: var(--admin-accent); box-shadow: 0 0 0 2px rgba(31, 95, 214, 0.25); }
+.admin-menu-position-choice input { position: absolute; opacity: 0; pointer-events: none; }
+.admin-menu-position-choice:has(input:focus-visible) { outline: 2px solid var(--admin-accent); outline-offset: 2px; }
+.admin-menu-position-picture { position: relative; width: 72px; height: 50px; border-radius: 6px; border: 1px solid var(--admin-line); background: var(--admin-ground); overflow: hidden; }
+.admin-menu-position-picture > span { position: absolute; background: var(--admin-accent); }
+.admin-menu-position-picture.is-top > span { left: 0; right: 0; top: 0; height: 11px; }
+.admin-menu-position-picture.is-bottom > span { left: 0; right: 0; bottom: 0; height: 11px; }
+.admin-menu-position-picture.is-left > span { top: 0; bottom: 0; left: 0; width: 18px; }
+.admin-menu-position-picture.is-right > span { top: 0; bottom: 0; right: 0; width: 18px; }

@@ -44,6 +44,15 @@ module ApplicationHelper
     { opens: opens, parts: parts }
   end
 
+  # Where the public site's menu sits ("top", "left", "right" or "bottom"); the
+  # admin keeps its own frame.
+  def site_menu_position
+    return "top" if controller.controller_path.start_with?("admin/")
+
+    position = @site_information.try(:menu_position).to_s
+    SiteSetup::MENU_POSITIONS.key?(position) ? position : "top"
+  end
+
   # Whether this administrator is editing this page from the public site.
   def page_editing_session?(page)
     value = session[:page_editing]

@@ -3,6 +3,10 @@ class SiteSetup < CatalogRecord
   include Enableable
   include BitemporalRecord
   validates :configuration_name, :site_name, :site_domain, :site_host, :site_url,  presence: true
+  # Where the site's menu sits: along the top, as a left or right sidebar, or
+  # as a bar along the bottom of the screen.
+  MENU_POSITIONS = { "top" => "Top", "left" => "Left sidebar", "right" => "Right sidebar", "bottom" => "Bottom bar" }.freeze
+  validates :menu_position, inclusion: { in: MENU_POSITIONS.keys, message: "must be top, left, right or bottom" }, if: -> { has_attribute?(:menu_position) }
   validates :contact_email_from, format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }, allow_blank: true
   validates :contact_email_to, format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }, allow_blank: true
 
