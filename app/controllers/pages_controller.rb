@@ -179,7 +179,9 @@ class PagesController < ApplicationController
     image_url  = get_image_url(image_file)
 
     if image_url.present?
-      label = image_file&.caption
+      # Captions are rich text; use their plain text so no paragraph ends up
+      # inside the link.
+      label = view_context.strip_tags(image_file&.caption.to_s).squish
       label = image_file&.name unless label.present?
 
       video_tag = view_context.link_to(label,

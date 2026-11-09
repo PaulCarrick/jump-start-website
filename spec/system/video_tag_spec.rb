@@ -6,7 +6,7 @@ RSpec.describe 'Video tags in a column', type: :system do
   let!(:site_setup) { SiteSetup.find_by(configuration_name: 'default') }
   let!(:page_record) { create(:page, name: 'wedding', section: 'wedding-content', title: 'Wedding') }
   let!(:section) { create(:section, page: page_record, content_type: 'wedding-content', section_name: 'wedding-text') }
-  let!(:video) { create(:image_file, name: 'joy-ryan-wedding', caption: 'Joy and Ryan’s wedding', mime_type: 'video/mp4') }
+  let!(:video) { create(:image_file, name: 'joy-ryan-wedding', caption: '<p>Joy and Ryan’s wedding</p>', mime_type: 'video/mp4') }
 
   before { driven_by(:selenium_chrome_headless) }
 

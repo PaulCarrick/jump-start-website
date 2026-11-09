@@ -55,10 +55,12 @@ export function processVideoImageTag(description, name) {
   let results = description;
 
   if (imageUrl) {
-    let label = imageFile.caption;
-
-    if (!label)
-      label = imageFile.name;
+    // Captions are rich text (often "<p>…</p>"); a paragraph inside the link
+    // would close the surrounding paragraph and leave the link empty, so the
+    // label is the caption's plain text.
+    const captionText = new DOMParser().parseFromString(imageFile.caption || "", "text/html").body.textContent.trim();
+    const label = (captionText || imageFile.name || "Video")
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
     const videoTag = `<a href="#" onclick="showVideoPlayer('${imageUrl}')">${label}</a>`;
 
