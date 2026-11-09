@@ -621,3 +621,20 @@ body .btn.admin-navigation-readonly:disabled {
 .page-edit-dialog-hint { margin: 6px 0 0; }
 .page-edit-dialog-error { color: #b42318; margin: 6px 0 0; font-size: 14px; min-height: 1em; }
 .page-edit-dialog-buttons { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+
+/* An open Show More: its box and the boxes it opened read as one box
+   (setupToggle.jsx sets data-box-join). Corners meet square, the gaps go,
+   and the shadow is trimmed where they meet. Boxes without rounding or
+   margins look the same as before. */
+[data-box-join="first"] {
+  border-bottom-left-radius: 0 !important; border-bottom-right-radius: 0 !important;
+  margin-bottom: 0 !important; clip-path: inset(-16px -16px 0 -16px);
+}
+[data-box-join="middle"] {
+  border-radius: 0 !important; margin-top: 0 !important; margin-bottom: 0 !important;
+  clip-path: inset(0 -16px 0 -16px);
+}
+[data-box-join="last"] {
+  border-top-left-radius: 0 !important; border-top-right-radius: 0 !important;
+  margin-top: 0 !important; clip-path: inset(0 -16px -16px -16px);
+}

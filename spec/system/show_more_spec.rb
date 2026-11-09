@@ -61,4 +61,24 @@ RSpec.describe 'Show More on a page', type: :system do
     expect(page).to have_text(/Another job.*Hidden details.*Job summary/m)
     expect(Section.find(other.id).section_order).to be < Section.find(details.id).section_order
   end
+
+  # With boxes (rounded, spaced cards), an open Show More reads as one box:
+  # the box it is in and the boxes it opened meet with no gap.
+  it 'joins the boxes while open and separates them again when closed' do
+    card = 'bg-white rounded-4 shadow-sm p-4 mb-4'
+    Cell.where(section_id: summary.id).update_all(formatting: { 'container_classes' => card, 'expanding_cells' => 'toggle, .expandableJobCells, btn btn-link p-0 text-dark' })
+    Cell.where(section_id: details.id).update_all(formatting: { 'container_classes' => "expandableJobCells #{card}" })
+    summary.update_columns(section_order: 1)
+    details.update_columns(section_order: 2)
+    visit page_path('work')
+    expect(page).to have_no_css('[data-box-join]')
+    click_button 'Show More'
+    expect(page).to have_content('Hidden details')
+    expect(page).to have_css('[data-box-join="first"]#job-summary')
+    expect(page).to have_css('[data-box-join="last"]#job-details')
+    gap = page.evaluate_script("document.querySelector('#job-details').getBoundingClientRect().top - document.querySelector('#job-summary').getBoundingClientRect().bottom")
+    expect(gap.abs).to be < 1
+    click_button 'Show Less'
+    expect(page).to have_no_css('[data-box-join]')
+  end
 end

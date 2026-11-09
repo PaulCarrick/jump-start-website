@@ -38,6 +38,46 @@ function updateButtons(className) {
   });
 }
 
+// While a Show More is open, the box it is in and the boxes it opened (when
+// they sit next to each other on the page) look like one box: each gets
+// data-box-join="first", "middle" or "last", and the stylesheet squares the
+// corners where they meet and removes the gaps. An attribute, not a class,
+// because React redraws classes.
+function sectionRow(element) {
+  return element?.closest?.("[data-section-row]") || null;
+}
+
+function joinBoxes(className) {
+  const key = stateKey(className);
+  if (!key) return;
+  const members = new Set();
+  toggleTargets.forEach((target, id) => {
+    if (target !== className) return;
+    const row = sectionRow(document.getElementById(id));
+    if (row) members.add(row);
+  });
+  document.querySelectorAll(`[data-section-row].${key}`).forEach((row) => members.add(row));
+  members.forEach((row) => row.removeAttribute("data-box-join"));
+  if (!isOpen(className) || members.size < 2) return;
+
+  const shown = Array.from(document.querySelectorAll("[data-section-row]")).filter((row) => row.getClientRects().length > 0);
+  let run = [];
+  const finish = () => {
+    if (run.length > 1) {
+      run.forEach((row, index) => {
+        const place = index === 0 ? "first" : index === run.length - 1 ? "last" : "middle";
+        row.setAttribute("data-box-join", place);
+      });
+    }
+    run = [];
+  };
+  shown.forEach((row) => {
+    if (members.has(row)) run.push(row);
+    else finish();
+  });
+  finish();
+}
+
 function listen() {
   if (listening) return;
   listening = true;
@@ -48,6 +88,7 @@ function listen() {
     event.preventDefault();
     document.documentElement.classList.toggle(`expanded-${stateKey(className)}`);
     updateButtons(className);
+    joinBoxes(className);
   });
 }
 
@@ -58,6 +99,7 @@ const setupToggle = (elementId = "", className = "") => {
     ensureStyle(className);
     listen();
     updateButtons(className);
+    joinBoxes(className);
     return () => toggleTargets.delete(elementId);
   }, [elementId, className]);
 };

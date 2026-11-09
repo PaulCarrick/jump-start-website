@@ -125,7 +125,9 @@ function CellRow({ editing, className, id, children, actionsTargetId }) {
     updateDividers();
     return () => observer.disconnect();
   }, [editing, children, actionsTargetId]);
-  return <div ref={row} className={className} id={id}>{children}</div>;
+  // data-section-row marks a section's own row (its box), for Show More to
+  // join the boxes it opens with the one it is in (setupToggle).
+  return <div ref={row} className={className} id={id} data-section-row="">{children}</div>;
 }
 
 CellRow.propTypes = {
