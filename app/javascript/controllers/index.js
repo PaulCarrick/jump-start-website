@@ -33,3 +33,6 @@ application.register("page-preview", PagePreviewController)
 
 import PublishReviewController from "./publish_review_controller"
 application.register("publish-review", PublishReviewController)
+
+import PageEditingController from "./page_editing_controller"
+application.register("page-editing", PageEditingController)

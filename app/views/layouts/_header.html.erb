@@ -44,7 +44,7 @@
                           <% if method %>
                             <%= link_to navigation_label(sub_item), site_local_path(link), method: method.to_sym, class: "header-bg header-text dropdown-item", target: "_self" %>
                           <% else %>
-                            <%= link_to navigation_label(sub_item), site_local_path(sub_item[:link]), class: "header-bg header-text dropdown-item", target: "_self" %>
+                            <%= link_to navigation_label(sub_item), site_local_path(sub_item[:link]), class: "header-bg header-text dropdown-item", target: navigation_target(sub_item) %>
                           <% end %>
                         </li>
                       <% end %>
@@ -53,7 +53,7 @@
                 <% else %>
                   <!-- Regular Menu Item -->
                   <% if menu_item.options == "image-file" %>
-                    <a href="<%= site_local_path(menu_item[:link]) %>" target="_self">
+                    <a href="<%= site_local_path(menu_item[:link]) %>" target="<%= navigation_target(menu_item) %>" rel="noopener">
                       <%= image_tag menu_item.icon,
                                     alt:   navigation_label(menu_item),
                                     class: "header-bg header-text nav-link px-lg-3 py-lg-4 text-uppercase"
@@ -64,7 +64,7 @@
                     <% if method %>
                       <%= link_to navigation_label(menu_item), site_local_path(link), method: method.to_sym, class: "header-text nav-link px-lg-3 py-lg-4 text-uppercase", target: "_self" %>
                     <% else %>
-                      <%= link_to navigation_label(menu_item), site_local_path(menu_item[:link]), class: "header-text nav-link px-lg-3 py-lg-4 text-uppercase", target: "_self" %>
+                      <%= link_to navigation_label(menu_item), site_local_path(menu_item[:link]), class: "header-text nav-link px-lg-3 py-lg-4 text-uppercase", target: navigation_target(menu_item) %>
                     <% end %>
                   <% end %>
                 <% end %>

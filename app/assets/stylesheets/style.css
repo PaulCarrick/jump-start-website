@@ -489,3 +489,44 @@ body .btn.admin-navigation-readonly:disabled {
     font-size: 1.25rem;
   }
 }
+
+/* Editing a page from the public site (administrators only) */
+.page-edit-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 3rem 3rem;
+  min-height: 3rem;
+}
+.page-edit-state { font-style: italic; opacity: 0.85; margin-right: 4px; }
+.page-edit-hint { color: #5b6475; font-size: 0.875rem; }
+.page-edit-message { color: #1d6b3c; font-size: 0.9rem; }
+/* Sections keep the space around them, so a right-click there finds them. */
+.page-editing .page-editing-section { display: flow-root; outline: 1px dashed transparent; }
+.page-editing .page-editing-section:hover { outline-color: rgba(31, 95, 214, 0.35); }
+.page-editing [data-cell-id]:hover { outline: 1px dashed rgba(31, 95, 214, 0.5); outline-offset: -1px; }
+.page-edit-target { outline: 2px solid #1f5fd6 !important; outline-offset: -2px; }
+.page-edit-menu {
+  position: fixed;
+  z-index: 2000;
+  min-width: 170px;
+  padding: 4px;
+  background: #fff;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+  font-size: 14px;
+}
+.page-edit-menu-item {
+  display: block;
+  width: 100%;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #1d2433;
+  text-align: left;
+}
+.page-edit-menu-item:hover, .page-edit-menu-item:focus { background: #eef4ff; outline: none; }
+.page-edit-menu-hint { padding: 4px 10px 2px; color: #667085; font-size: 12px; }

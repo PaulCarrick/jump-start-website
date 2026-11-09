@@ -28,7 +28,7 @@
                   <li>
 
                     <% if sub_item.options == "image-file" %>
-                      <a href="<%= site_local_path(sub_item[:link]) %>" target="_self">
+                      <a href="<%= site_local_path(sub_item[:link]) %>" target="<%= navigation_target(sub_item) %>" rel="noopener">
                         <%= image_tag sub_item.icon,
                                       alt:   navigation_label(sub_item),
                                       class: "footer-bg footer-text nav-link px-lg-3 py-lg-4 text-uppercase"
@@ -38,7 +38,7 @@
                       <%= link_to navigation_label(sub_item),
                                   site_local_path(sub_item[:link]),
                                   class:  "footer-bg footer-text text-decoration-none",
-                                  target: "_self"
+                                  target: navigation_target(sub_item)
                       %>
                     <% end %>
                   </li>
@@ -46,7 +46,7 @@
               </ul>
             <% else %>
               <% if footer_item.options == "image-file" %>
-                <a href="<%= site_local_path(footer_item[:link]) %>" target="_self">
+                <a href="<%= site_local_path(footer_item[:link]) %>" target="<%= navigation_target(footer_item) %>" rel="noopener">
                   <%= image_tag footer_item.icon,
                                 alt:   navigation_label(footer_item),
                                 class: "footer-bg footer-text nav-link px-lg-3 py-lg-4 text-uppercase"
@@ -56,7 +56,7 @@
                 <%= link_to navigation_label(footer_item),
                             site_local_path(footer_item[:link]),
                             class:  "footer-bg footer-text text-decoration-none",
-                            target: "_self"
+                            target: navigation_target(footer_item)
                 %>
               <% end %>
             <% end %>

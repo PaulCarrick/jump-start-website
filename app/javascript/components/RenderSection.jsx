@@ -184,6 +184,7 @@ const processCells = (
       {cells.map((cell, index) => (
         <div
           key={index}
+          data-cell-id={cell.id || undefined}
           className={`content-section-cell ${cell.container_class || ""}${editing ? " admin-section-cell" : ""}`}
           style={{
             ...(editing ? { alignSelf: "stretch", display: "flex", flexDirection: "column" } : {}),

@@ -112,6 +112,21 @@ An image column opens on the Image tab. A small preview of the column sits under
 
 **View page** opens the live page; **Classic editor** opens the previous page editor, which is kept while the workspace is new.
 
+### Editing from the page itself
+
+Signed in as an administrator, every page of the site has **Edit Page** at the bottom. Choosing it puts the page in editing mode: the page shows your drafts, and the button becomes **Editing… Save Changes** with **Cancel** beside it.
+
+Right-click the page and choose **Edit** to open the matching editor in a new tab:
+
+- on a **picture**: the media library with that picture selected;
+- on a **column's** text or the space beside it: that column in the page workspace;
+- on the **space above or below a section's content**: that section in the page workspace;
+- anywhere else, such as **beside the buttons**: the page workspace.
+
+Coming back to the page's tab shows what you saved. **Save Changes** publishes the changes made since you chose Edit Page, and **Cancel** discards them (it asks first). Changes made before you started, by you or by others, are left alone; the bar says when some are waiting, with a link to Review and publish. Shift + right-click still gives the browser's own menu.
+
+Links to the admin in the site's header and footer open it in a new tab.
+
 ### Creating a page
 
 1. Open **Pages**, then **New page**.

@@ -66,6 +66,25 @@ class Admin::ImageFilesController < Admin::AbstractAdminController
     redirect_to admin_image_files_path, status: :see_other
   end
 
+  # Opens the media library on the image a page shows at this address (the
+  # page's right-click "Edit image"). Image addresses carry their file's
+  # signed id: /rails/active_storage/blobs/(redirect|proxy)/<signed id>/<name>.
+  def locate
+    signed_id = URI.parse(params[:src].to_s).path.to_s[%r{/rails/active_storage/blobs/(?:redirect|proxy)/([^/]+)/}, 1]
+    blob = signed_id && ActiveStorage::Blob.find_signed(signed_id)
+    image = if blob
+              ImageFile.find_by(attachment_blob_id: blob.id) ||
+                ImageFile.find_by(id: ActiveStorage::Attachment.where(blob_id: blob.id, record_type: "ImageFile").select(:record_id))
+    end
+    if image
+      redirect_to admin_image_files_path(clear_search: true, selected: image.id), status: :see_other
+    else
+      redirect_to admin_image_files_path, status: :see_other, alert: "That picture is not in the media library (it may be part of the site's design)."
+    end
+  rescue URI::InvalidURIError
+    redirect_to admin_image_files_path, status: :see_other, alert: "That picture is not in the media library."
+  end
+
   def initialize
     super
 

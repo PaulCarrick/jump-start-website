@@ -10,6 +10,18 @@ module ApplicationHelper
     item.link.to_s.strip.start_with?('/admin') && !(user_signed_in? && ADMIN_AREA_ACCESS.include?(current_user.access))
   end
 
+  # Whether this administrator is editing this page from the public site.
+  def page_editing_session?(page)
+    value = session[:page_editing]
+    value.is_a?(Hash) && value["page_id"].to_i == page.id
+  end
+
+  # Links into the admin open in a new tab, so the site stays open beside it.
+  def navigation_target(item)
+    link = item.respond_to?(:link) ? item.link : item[:link]
+    link.to_s.strip.start_with?("/admin") ? "_blank" : "_self"
+  end
+
   # A "Login" item becomes "Log out" for someone who is signed in. The
   # controller does this for top-level items; sub-items are loaded in the view.
   def with_sign_out_link(item)

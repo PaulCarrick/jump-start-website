@@ -28,6 +28,14 @@
 <% else %>
   <% @missing_image ||= image_path("missing-image.jpg") %>
 
+  <% page_editing = @application_user&.admin? && @page.present? && page_editing_session?(@page) && params[:editing].present? %>
+  <div class="<%= 'page-editing' if page_editing %>"
+       <% if page_editing %>
+       data-controller="page-editing"
+       data-page-editing-workspace-value="<%= admin_page_workspace_path(@page) %>"
+       data-page-editing-image-value="<%= admin_locate_image_file_path %>"
+       data-action="contextmenu->page-editing#open"
+       <% end %>>
   <section class="bg-light text-secondary auto-size">
     <div class="container mb-5">
       <p class="alert"><%= alert %></p>
@@ -35,7 +43,7 @@
       <div id="contents">
         <% @contents.each do |content| %>
           <% section_classes = (@focused_section.present? && (@focused_section.section_name == content["section_name"])) ? 'highlight-section' : '' %>
-          <div class="<%= section_classes %>">
+          <div class="<%= section_classes %><%= ' page-editing-section' if page_editing %>"<% if page_editing %> data-section-id="<%= content['id'] %>"<% end %>>
             <%= react_component("RenderSection",
                                 {
                                   section:  content,
@@ -61,11 +69,34 @@
   </section>
 
   <% if @application_user&.admin? && @page.present? %>
-    <%= link_to "Edit Page",
-                edit_admin_page_path(@page),
-                class:  "mb-5 ms-5 btn btn-primary",
-                target: "_blank" %>
+    <div class="page-edit-bar" data-page-editing-area="page">
+      <% if page_editing %>
+        <% waiting = Admin::PageEditingController.session_changes(session[:page_editing]).size %>
+        <% others = Publishing.pending.size - waiting %>
+        <%= button_to admin_page_editing_save_path(@page), method: :post, class: "btn btn-primary page-edit-save",
+                      form: { class: "d-inline", data: { turbo: false } },
+                      title: "Publish the changes made since you started editing" do %>
+          <span class="page-edit-state">Editing…</span> Save Changes<%= " (#{waiting})" if waiting.positive? %>
+        <% end %>
+        <%= button_to "Cancel", admin_page_editing_cancel_path(@page), method: :post, class: "btn btn-outline-secondary",
+                      form: { class: "d-inline", data: { turbo: false } },
+                      onclick: (waiting.positive? ? "return confirm('Discard the #{waiting == 1 ? 'change' : "#{waiting} changes"} made since you started editing?');" : nil),
+                      title: "Discard the changes made since you started editing" %>
+        <span class="page-edit-hint">Right-click a picture, a column, the space around a section, or here to edit it.</span>
+        <% if others.positive? %>
+          <span class="page-edit-hint">
+            <%= others == 1 ? "1 other change is" : "#{others} other changes are" %> waiting from before; Save and Cancel leave
+            <%= others == 1 ? "it" : "them" %> alone (<%= link_to "Review and publish", admin_publishing_path, target: "_blank", rel: "noopener" %>).
+          </span>
+        <% end %>
+      <% else %>
+        <%= button_to "Edit Page", admin_page_editing_start_path(@page), method: :post, class: "btn btn-primary",
+                      form: { class: "d-inline", data: { turbo: false } } %>
+      <% end %>
+      <% if notice.present? %><span class="page-edit-message" role="status"><%= notice %></span><% end %>
+    </div>
   <% end %>
+  </div>
 <% end %>
 
 <%= render layout: "layouts/footer" do %>
