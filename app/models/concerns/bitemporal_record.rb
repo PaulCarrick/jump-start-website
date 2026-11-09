@@ -55,6 +55,9 @@ module BitemporalRecord
   # Discardable deletions are versions too. Retain live rows and attachments.
   def destroy
     return super unless PublishingContext.editing && !PublishingContext.deploying
+    # A draft that was never published has nothing on the site to delete: it is
+    # thrown away (with its children), not kept as a "deleted" change to publish.
+    return super unless self.class.unscoped.where(id: id, temporal_state: "live").exists?
     self.temporal_deleted = true
     save!(validate: false)
     @draft_deleted = true
