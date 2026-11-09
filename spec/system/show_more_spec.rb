@@ -41,4 +41,24 @@ RSpec.describe 'Show More on a page', type: :system do
     expect(page).to have_button(text: /Editing…\s+Save Changes/)
     check_show_more
   end
+
+  # Moving one part of a group used to split it, leaving the Show More far from
+  # the heading it belonged to. Now the group moves as one and comes back together.
+  it 'moves a section with the sections its Show More opens' do
+    other = create(:section, page: page_record, content_type: 'work-content', section_name: 'other-job', section_order: 3)
+    create(:cell, section: other, section_name: 'other-job', image: nil, link: nil, cell_order: 1, content: '<p>Another job</p>')
+    login_as(create(:user, access: 'super'))
+    visit page_path('work')
+    click_button 'Edit Page'
+    # The page reads: hidden details, summary, another job.
+    find("[data-section-id='#{summary.id}']").hover
+    within("[data-section-id='#{summary.id}'] .page-edit-section-handle") do
+      click_button 'Move this section down with its Show More group'
+    end
+    expect(page).to have_button(text: /Save Changes \(\d\)/)
+    expect(page).to have_text(/Another job.*Job summary/m)
+    click_button 'Show More'
+    expect(page).to have_text(/Another job.*Hidden details.*Job summary/m)
+    expect(Section.find(other.id).section_order).to be < Section.find(details.id).section_order
+  end
 end

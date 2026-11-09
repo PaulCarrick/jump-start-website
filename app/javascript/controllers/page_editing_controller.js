@@ -117,6 +117,30 @@ export default class extends Controller {
     return ids.filter((id, index) => ids.indexOf(id) === index);
   }
 
+  // The sections that move as one (marked by the server): a section with a
+  // "Show More" button and the sections it opens, or one section group.
+  // Moving one used to split a project from its hidden part, so its Show More
+  // ended up far from the heading it belonged to.
+  unit(id) {
+    const unit = this.blocks(id)[0]?.dataset.sectionUnit;
+    if (!unit) return [ id ];
+    return this.sectionIds().filter(sectionId => this.blocks(sectionId)[0].dataset.sectionUnit === unit);
+  }
+
+  unitBlocks(id) {
+    return this.unit(id).flatMap(sectionId => this.blocks(sectionId));
+  }
+
+  // The units in page order, each named by its first section.
+  units() {
+    const seen = new Set();
+    return this.sectionIds().filter(id => {
+      if (seen.has(id)) return false;
+      this.unit(id).forEach(member => seen.add(member));
+      return true;
+    });
+  }
+
   addSectionHandles() {
     if (!this.sectionsValue) return;
     const seen = new Set();
@@ -124,12 +148,13 @@ export default class extends Controller {
       const id = block.dataset.sectionId;
       if (seen.has(id)) return;
       seen.add(id);
+      const together = this.unit(id).length > 1 ? ' with its Show More group' : '';
       const handle = document.createElement('div');
       handle.className = 'page-edit-section-handle';
       handle.innerHTML = `
-        <span class="page-edit-drag" draggable="true" title="Drag to move this section" aria-hidden="true">⠿ Move</span>
-        <button type="button" data-move="up" title="Move this section up" aria-label="Move this section up">↑</button>
-        <button type="button" data-move="down" title="Move this section down" aria-label="Move this section down">↓</button>`;
+        <span class="page-edit-drag" draggable="true" title="Drag to move this section${together}" aria-hidden="true">⠿ Move</span>
+        <button type="button" data-move="up" title="Move this section up${together}" aria-label="Move this section up${together}">↑</button>
+        <button type="button" data-move="down" title="Move this section down${together}" aria-label="Move this section down${together}">↓</button>`;
       handle.querySelector('[data-move="up"]').addEventListener('click', event => { event.stopPropagation(); this.step(id, -1); });
       handle.querySelector('[data-move="down"]').addEventListener('click', event => { event.stopPropagation(); this.step(id, 1); });
       const grip = handle.querySelector('.page-edit-drag');
@@ -142,18 +167,18 @@ export default class extends Controller {
   }
 
   step(id, direction) {
-    const ids = this.sectionIds();
-    const index = ids.indexOf(id);
-    const other = ids[index + direction];
+    const units = this.units();
+    const own = this.unit(id)[0];
+    const other = units[units.indexOf(own) + direction];
     if (!other) return this.flash(direction < 0 ? 'This section is already first.' : 'This section is already last.');
     this.place(id, other, direction > 0);
     this.saveOrder();
   }
 
-  // Puts the dragged section's blocks before or after another section's.
+  // Puts the moving group's blocks before or after another group's.
   place(id, targetId, after) {
-    const moving = this.blocks(id);
-    const target = this.blocks(targetId);
+    const moving = this.unitBlocks(id);
+    const target = this.unitBlocks(targetId);
     if (after) target[target.length - 1].after(...moving);
     else target[0].before(...moving);
   }
@@ -162,14 +187,14 @@ export default class extends Controller {
     this.draggedSection = id;
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData('text/plain', id);
-    this.blocks(id).forEach(block => block.classList.add('page-edit-dragging'));
+    this.unitBlocks(id).forEach(block => block.classList.add('page-edit-dragging'));
   }
 
   dropPlace(event) {
     if (!this.draggedSection) return null;
     const block = event.target.closest?.('[data-section-id]');
-    if (!block || block.dataset.sectionId === this.draggedSection) return null;
-    const blocks = this.blocks(block.dataset.sectionId);
+    if (!block || this.unit(this.draggedSection).includes(block.dataset.sectionId)) return null;
+    const blocks = this.unitBlocks(block.dataset.sectionId);
     const top = blocks[0].getBoundingClientRect().top;
     const bottom = blocks[blocks.length - 1].getBoundingClientRect().bottom;
     return { id: block.dataset.sectionId, after: event.clientY > (top + bottom) / 2, blocks };

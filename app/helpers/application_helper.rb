@@ -10,6 +10,40 @@ module ApplicationHelper
     item.link.to_s.strip.start_with?('/admin') && !(user_signed_in? && ADMIN_AREA_ACCESS.include?(current_user.access))
   end
 
+  # Which sections move together in the page editor, as { section id => unit
+  # name }: a section with a "Show More" button and the sections it opens (named
+  # by a shared class such as "expandableIbiCells"), and sections of one section
+  # group. Each hidden section joins one Show More only: the first of its
+  # classes that some section opens (a stray class copied from another project
+  # must not join two projects).
+  def section_move_units(contents)
+    opened_by = {}
+    contents.each do |content|
+      section_expansion(content)[:opens].each { |name| opened_by[name] ||= content["id"] }
+    end
+    units = contents.to_h do |content|
+      expansion = section_expansion(content)
+      opener = expansion[:parts].map { |name| opened_by[name] }.compact.first if expansion[:opens].empty?
+      [ content["id"], "section-#{opener || content['id']}" ]
+    end
+    contents.group_by { |content| content["section_group"].presence }.each do |group, members|
+      next if group.nil? || members.size < 2
+      unit = units[members.first["id"]]
+      members.each { |member| units.transform_values! { |value| value == units[member["id"]] ? unit : value } }
+    end
+    units
+  end
+
+  def section_expansion(content)
+    formats = Array(content["cells"]).map { |cell| cell["formatting"] || {} } + [ content["formatting"] || {} ]
+    formats = formats.select { |format| format.is_a?(Hash) }
+    opens = formats.flat_map { |format| [ format["expanding_cells"], format["expanding_rows"] ] }.compact
+                   .map { |value| value.to_s.split(",")[1].to_s.strip.delete_prefix(".") }.reject(&:blank?).uniq
+    parts = formats.flat_map { |format| [ format["container_classes"], format["row_classes"], format["classes"] ] }.compact
+                   .join(" ").split.select { |name| name.start_with?("expandable") }.uniq - opens
+    { opens: opens, parts: parts }
+  end
+
   # Whether this administrator is editing this page from the public site.
   def page_editing_session?(page)
     value = session[:page_editing]

@@ -42,9 +42,10 @@
       <p class="alert"><%= alert %></p>
 
       <div id="contents">
+        <% move_units = page_editing ? section_move_units(@contents) : {} %>
         <% @contents.each do |content| %>
           <% section_classes = (@focused_section.present? && (@focused_section.section_name == content["section_name"])) ? 'highlight-section' : '' %>
-          <div class="<%= section_classes %><%= ' page-editing-section' if page_editing %>"<% if page_editing %> data-section-id="<%= content['id'] %>"<% end %>>
+          <div class="<%= section_classes %><%= ' page-editing-section' if page_editing %>"<% if page_editing %> data-section-id="<%= content['id'] %>" data-section-unit="<%= move_units[content['id']] %>"<% end %>>
             <%= react_component("RenderSection",
                                 {
                                   section:  content,

@@ -123,7 +123,7 @@ Right-click the page and choose **Edit** to open the matching editor in a new ta
 - on the **space above or below a section's content**: that section in the page workspace;
 - anywhere else, such as **beside the buttons**: the page workspace.
 
-To move a section, point at it: a small handle (**⠿ Move ↑ ↓**) appears in its top-left corner. Drag **⠿ Move** above or below another section, or use the arrows to move it one place. The new order is saved as a draft straight away, like any other change.
+To move a section, point at it: a small handle (**⠿ Move ↑ ↓**) appears in its top-left corner. Drag **⠿ Move** above or below another section, or use the arrows to move it one place. The new order is saved as a draft straight away, like any other change. A section with a **Show More** button moves together with the sections it opens (and the sections of one section group move together), so a project never gets split from its hidden part; moving any one of them gathers the group in one place.
 
 Coming back to the page's tab shows what you saved. **Save Changes** publishes the changes made since you chose Edit Page, and **Cancel** discards them (it asks first). Changes made before you started, by you or by others, are left alone; the bar says when some are waiting, with a link to Review and publish. Shift + right-click still gives the browser's own menu.
 
