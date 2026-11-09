@@ -641,3 +641,10 @@ li.is-dragging > .outline-row { opacity: 0.4; }
 @media (max-width: 999.98px) {
   .workspace-outline { max-height: 320px; }
 }
+/* Keep the page preview inside its box: lists, pictures and videos shrink to
+   the column, and anything still wider is clipped at the edge. */
+.workspace-canvas { overflow: hidden; }
+.workspace-block { overflow: hidden; }
+.workspace-canvas select { max-width: calc(100% - 1em); }
+.workspace-canvas img, .workspace-canvas video, .workspace-canvas iframe, .workspace-canvas table { max-width: 100%; }
+.workspace-canvas img, .workspace-canvas video { height: auto; }
