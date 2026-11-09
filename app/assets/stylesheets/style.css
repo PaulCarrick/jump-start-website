@@ -638,3 +638,20 @@ body .btn.admin-navigation-readonly:disabled {
   border-top-left-radius: 0 !important; border-top-right-radius: 0 !important;
   margin-top: 0 !important; clip-path: inset(0 -16px -16px -16px);
 }
+
+/* On a short page the footer reaches the bottom of the window instead of
+   ending in a strip: the page is a column at least as tall as the window and
+   the footer takes the space left over. Longer pages are unchanged. */
+body:has(footer.footer-bg) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+body:has(footer.footer-bg) > :has(> footer.footer-bg) {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+body:has(footer.footer-bg) > :has(> footer.footer-bg) > footer.footer-bg {
+  flex: 1 0 auto;
+}
