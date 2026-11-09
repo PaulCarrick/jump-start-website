@@ -10,15 +10,15 @@ RSpec.describe 'Cell image selection', type: :system do
     image = create(:image_file)
     cell = create(:cell, cell_type: 'image', image: "ImageFile:#{image.name}", link: nil)
     visit edit_admin_cell_path(cell)
-    within('#imageDiv') { expect(page).to have_text(image.name) }
-    expect(page).to have_content("Current image: #{image.name}")
-    click_button 'Remove Image'
+    within('.column-media') { expect(page).to have_text(image.name) }
+    expect(page).to have_content("The picture #{image.name}.")
+    click_button 'Remove', exact: true
     expect(page).to have_no_css('#cellPreview img')
     click_button 'Save Column'
     expect(page).to have_current_path(admin_cells_path, ignore_query: true)
     expect(Cell.find(cell.id).image).to be_nil
     visit edit_admin_cell_path(cell)
-    expect(page).to have_no_button('Remove Image')
+    expect(page).to have_no_button('Remove', exact: true)
     expect(page).to have_no_css('#cellPreview img')
     expect(ImageFile.find(image.id).image).to be_attached
     PublishingContext.live = true
@@ -30,12 +30,12 @@ RSpec.describe 'Cell image selection', type: :system do
     replacement = create(:image_file)
     cell = create(:cell, cell_type: 'image', image: "ImageFile:#{image.name}", link: nil)
     visit edit_admin_cell_path(cell)
-    find('#image').send_keys(replacement.name)
-    within('#imageDiv') { find('[role=option]', text: replacement.name, exact_text: true).click }
+    find('#column-media').send_keys(replacement.name)
+    within('.column-media') { find('[role=option]', text: replacement.name, exact_text: true).click }
     click_button 'Save Column'
     expect(page).to have_current_path(admin_cells_path, ignore_query: true)
     expect(Cell.find(cell.id).image).to eq("ImageFile:#{replacement.name}")
     visit edit_admin_cell_path(cell)
-    within('#imageDiv') { expect(page).to have_text(replacement.name) }
+    within('.column-media') { expect(page).to have_text(replacement.name) }
   end
 end

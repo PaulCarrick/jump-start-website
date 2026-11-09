@@ -161,20 +161,27 @@ At the top: **History**, **Page settings**, **View page ↗** (the live page in 
 The panel has four tabs:
 
 - **Content**: the text (with **Switch to HTML View**) and the column's link.
-- **Image**: the picture, image group, slide show or video, with **New Image** and **Remove Image**.
+- **Image**: the picture, slide show (an image group) or video, chosen from one list, with **New Image** and **Remove**.
 - **Layout**: the formatting fields (margins, background, image and caption classes and styles).
 - **Advanced**: Enabled, the column's name and its order.
 
 A small preview of the column sits under the tabs. **Delete this column** removes it.
 
-### How to change a column's picture
+### How to choose a column's picture, slide show or video
 
-1. Open the page's workspace and click the picture column's name in the outline. A picture column opens on the **Image** tab.
-2. In **Image**, choose a picture from the list (type to search by name). Or choose **New Image** to upload one without leaving the page.
-3. To show a slide show instead, fill in **Image Group** with the group's name.
+1. Open the page's workspace and click the column's name in the outline. A picture column opens on the **Image** tab; for any other column, choose the **Image** tab.
+2. Click **Picture, slide show or video**. The list has three parts:
+   - **Slide shows (image groups)**: every image group, with how many pictures it has. The column shows them one after another, in the group's slide order (set it in Media; see [How to put a group's pictures in order](#how-to-put-a-group-s-pictures-in-order)).
+   - **Videos**: the MP4 videos in Media. The column shows the video with play controls.
+   - **Pictures**: every picture in Media.
+3. Choose one, or type part of its name to find it. The line under the list says what the column will show.
 4. Choose **Save Column**, then publish.
 
-![The Image tab: choose a picture, upload a new one, or name an image group](../public/admin-help/column-image.webp)
+**Remove** takes the picture, slide show or video off the column (the file stays in Media). **New Image** uploads a new file without leaving the page; it then appears in the list.
+
+![The Image tab: the column shows the slide show of the group nava](../public/admin-help/column-image.webp)
+
+![The list: slide shows with their sizes first, then videos, then pictures](../public/admin-help/column-media-list.webp)
 
 ### How to change a column's layout
 

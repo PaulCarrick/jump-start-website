@@ -92,10 +92,12 @@ const CellEditor: React.FC<CellEditorProps> = ({
       setCellData((prev) => {
         if (!prev) return null;
 
-        if (attribute === "image" && !newValue) {
+        // A slide show's pictures are worked out when the page is drawn; a
+        // saved list would keep showing the old slide show after a change.
+        if (attribute === "image") {
           const formatting = { ...(prev.formatting || {}) };
           delete formatting.slide_show_images;
-          return { ...prev, image: null, formatting };
+          return { ...prev, image: newValue ? (newValue as string) : null, formatting };
         }
         if (attribute === "useHtmlView") {
           return {

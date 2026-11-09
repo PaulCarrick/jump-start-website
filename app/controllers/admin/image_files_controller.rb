@@ -15,7 +15,8 @@ class Admin::ImageFilesController < Admin::AbstractAdminController
       render json: {
         images: ImageFile.images,
         videos: ImageFile.videos,
-        groups: ImageFile.where.not(group: [ nil, "" ]).distinct.order(:group).pluck(:group)
+        groups: ImageFile.where.not(group: [ nil, "" ]).distinct.order(:group).pluck(:group),
+        group_counts: ImageFile.where.not(group: [ nil, "" ]).group(:group).count
       }
     else
       super

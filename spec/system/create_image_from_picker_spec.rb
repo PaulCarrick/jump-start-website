@@ -33,7 +33,7 @@ RSpec.describe 'Create images while editing', type: :system do
     create_image_in_dialog('Created from column')
     expect(page).to have_current_path(edit_admin_cell_path(column))
     expect(page).to have_css('.ql-editor', text: 'Unsaved column content')
-    find('#image').click
+    find('#column-media').click
     expect(page).to have_css('[role="option"]', text: 'Created from column')
     find('[role="option"]', text: 'Created from column', exact_text: true).click
     click_button 'New Image'
@@ -81,9 +81,9 @@ RSpec.describe 'Create images while editing', type: :system do
     create_image_in_dialog('New nested image')
     click_button 'Save Column'
     click_link 'Edit Column'
-    find('#image').click
+    find('#column-media').click
     expect(page).to have_css('[role="option"]', text: 'New nested image')
-    find('#image').send_keys(:escape)
+    find('#column-media').send_keys(:escape)
     click_button 'Save Column'
     expect(find('#section_order').value).to eq('70')
     click_button 'Save Section'

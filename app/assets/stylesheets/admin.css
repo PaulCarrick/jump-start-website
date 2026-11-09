@@ -788,3 +788,7 @@ li.is-dragging > .outline-row { opacity: 0.4; }
 .workspace-duplicate-row .form-control { flex: 1; min-width: 0; }
 .workspace-duplicate-row .btn { white-space: nowrap; }
 .workspace-group-names { margin-bottom: 16px; }
+
+/* Column editor, Image tab: one list of pictures, slide shows and videos. */
+.column-media .column-media__group-heading { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; color: #57606a; }
+.column-media .form-text { margin-top: 4px; }

@@ -122,7 +122,7 @@ If you intend to add another independently routed website to an existing install
 
     ![Click a thumbnail to see its details and edit its caption](../public/admin-help/media-details.webp)
 2. Return to the home page's workspace. Add a section with an image and text layout, or click an existing image column.
-3. In the panel's **Image** tab, select the uploaded image (or use **New Image** to upload one without leaving the page). In the **Content** tab enter accompanying text such as "Explore our recent projects." Choose **Save Column** and check the image's fit in the preview.
+3. In the panel's **Image** tab, choose the uploaded image in **Picture, slide show or video** (or use **New Image** to upload one without leaving the page). The same list offers slide shows of image groups and videos. In the **Content** tab enter accompanying text such as "Explore our recent projects." Choose **Save Column** and check the image's fit in the preview.
 
     ![The Image tab: choose the uploaded picture](../public/admin-help/column-image.webp)
 4. Choose **Publish**, check the home page's group and publish it, then open the home page to check the result. Back in **Media**, the image's details now list the home page under **Used on**.

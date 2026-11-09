@@ -1,6 +1,7 @@
 import NewImageButton from "./NewImageButton";
 import { useImageChoices } from "../hooks/useImageChoices";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Select from "react-select";
 import { createImageFile } from "../services/imageFileService";
 import type { ImageType } from "../types/dataTypes";
 import { renderComboBox, renderSelect } from "./renderControlFunctions";
@@ -16,6 +17,85 @@ function imageChoice(image: string | null): string | null {
   if (!image) return null;
   const video = image.match(/^VideoImage:\s*"(.*)"$/);
   return video ? video[1] : image.replace(/^(ImageFile|ImageGroup|ImageSection):\s*/, '');
+}
+
+
+// The column's image field as one of the choices below: "ImageFile:name"
+// (a plain name counts as a picture too), "ImageGroup:group" for a slide show
+// of a group, or 'VideoImage:"name"' for a video.
+export function mediaReference(image: string | null | undefined): string {
+  const value = (image || "").trim();
+  if (!value) return "";
+  const video = value.match(/^VideoImage:\s*(?:"|&quot;)\s*(.+?)\s*(?:"|&quot;)$/);
+  if (video) return `VideoImage:"${video[1]}"`;
+  const typed = value.match(/^(ImageFile|ImageGroup|ImageSection):\s*(.+)$/);
+  if (typed) return `${typed[1]}:${typed[2].trim()}`;
+  if (/^(https?:|\/|\[)/.test(value)) return value;
+  return `ImageFile:${value}`;
+}
+
+type MediaOption = { label: string; value: string };
+
+// One list for everything a column can show: a picture, a slide show of an
+// image group, or a video. Choosing one stores the right reference.
+function MediaChooser({
+  image,
+  images,
+  groups,
+  groupCounts,
+  videos,
+  onChoose,
+}: {
+  image: string | null;
+  images: string[];
+  groups: string[];
+  groupCounts: Record<string, number>;
+  videos: string[];
+  onChoose: (reference: string) => void;
+}) {
+  const plural = (count: number | undefined) => (count === undefined ? "" : ` (${count} ${count === 1 ? "picture" : "pictures"})`);
+  // The short lists first, so slide shows and videos are not buried under
+  // every picture; typing searches all three.
+  const options = [
+    { label: "Slide shows (image groups)", options: groups.map((group) => ({ label: `${group}${plural(groupCounts[group])}`, value: `ImageGroup:${group}` })) },
+    { label: "Videos", options: videos.map((name) => ({ label: name, value: `VideoImage:"${name}"` })) },
+    { label: "Pictures", options: images.map((name) => ({ label: name, value: `ImageFile:${name}` })) },
+  ].filter((group) => group.options.length > 0);
+  const reference = mediaReference(image);
+  const all: MediaOption[] = options.flatMap((group) => group.options);
+  const current = reference ? all.find((option) => option.value === reference) || { label: reference, value: reference } : null;
+
+  let description = "Nothing chosen: the column shows only its text.";
+  if (reference.startsWith("ImageGroup:")) {
+    const group = reference.slice("ImageGroup:".length);
+    description = `A slide show of the group ${group}${plural(groupCounts[group])}, in its slide order.`;
+  } else if (reference.startsWith("VideoImage:")) {
+    description = `The video ${reference.slice('VideoImage:"'.length, -1)}, with play controls.`;
+  } else if (reference.startsWith("ImageSection:")) {
+    description = `The pictures of the section ${reference.slice("ImageSection:".length)}.`;
+  } else if (reference.startsWith("ImageFile:")) {
+    description = `The picture ${reference.slice("ImageFile:".length)}.`;
+  } else if (reference) {
+    description = `The picture at ${reference}.`;
+  }
+
+  return (
+    <div className="column-media">
+      <label htmlFor="column-media" className="form-label">Picture, slide show or video</label>
+      <Select<MediaOption, false>
+        inputId="column-media"
+        classNamePrefix="column-media"
+        value={current}
+        options={options}
+        onChange={(option) => onChoose(option?.value || "")}
+        isClearable
+        isSearchable
+        placeholder="Type to search pictures, groups and videos…"
+        noOptionsMessage={() => "Nothing matches. Upload it with New Image."}
+      />
+      <div className="form-text">{description}</div>
+    </div>
+  );
 }
 
 const imageTypeOptions = [
@@ -44,6 +124,10 @@ export default function ImagePicker({
   setValue: (value: string, attribute: string) => void;
 }) {
   const { choices, reload, error } = useImageChoices();
+  // Load the full list (with each group's size) for the column editor.
+  useEffect(() => {
+    if (referenceValues && !choices) reload();
+  }, [referenceValues, choices, reload]);
   availableImagesData = choices?.images ?? availableImagesData;
   availableImageGroupsData = choices?.groups ?? availableImageGroupsData;
   availableVideosData = choices?.videos ?? availableVideosData;
@@ -104,6 +188,26 @@ export default function ImagePicker({
     setUploadedImage(null);
     setImageName("");
   };
+
+  if (referenceValues) {
+    return (
+      <div className="mb-2">
+        <MediaChooser
+          image={image}
+          images={availableImagesData ?? []}
+          groups={availableImageGroupsData ?? []}
+          groupCounts={choices?.group_counts ?? {}}
+          videos={availableVideosData ?? []}
+          onChoose={(reference) => setValue(reference, "image")}
+        />
+        <div className="d-flex flex-wrap align-items-center gap-2 mt-2">
+          <NewImageButton onReturn={reload} />
+          {image && <button type="button" className="btn btn-secondary" onClick={() => setValue("", "image")}>Remove</button>}
+        </div>
+        {error && <div role="alert">{error} <button type="button" className="btn btn-link" onClick={reload}>Retry</button></div>}
+      </div>
+    );
+  }
 
   if (!image && imageType === "Upload") {
     return (

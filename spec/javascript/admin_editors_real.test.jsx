@@ -13,8 +13,9 @@ it('initializes the standalone column and image picker without changing parent h
   const onFinished = vi.fn();
   const { container } = render(<CellEditor cell={cell} editorOptions={{ availableSectionNames: ['section'], availableImages: ['photo'], availableImageGroups: ['gallery'], availableVideos: ['clip'] }} onFinished={onFinished} />);
   expect(screen.getByText('Save Column')).toBeTruthy();
-  fireEvent.change(container.querySelector('#image_type'), { target: { value: 'Groups' } });
-  expect(container.querySelector('#image_type').value).toBe('Groups');
+  // One list for pictures, slide shows and videos replaces the old type select.
+  expect(container.querySelector('#column-media')).toBeTruthy();
+  expect(container.querySelector('#image_type')).toBeNull();
   fireEvent.change(container.querySelector('#cell_name'), { target: { value: 'changed' } });
   fireEvent.click(screen.getByText('Cancel'));
   expect(onFinished).toHaveBeenCalledWith(cell);

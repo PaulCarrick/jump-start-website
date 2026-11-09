@@ -1,7 +1,7 @@
 import { siteFetch, sitePath } from "../sitePath";
 import { useCallback, useEffect, useState } from "react";
 
-type Choices = { images: string[]; videos: string[]; groups: string[] };
+type Choices = { images: string[]; videos: string[]; groups: string[]; group_counts?: Record<string, number> };
 let cached: { location: string; choices: Choices } | null = null;
 const changedEvent = "jumpstart:image-choices-changed";
 
