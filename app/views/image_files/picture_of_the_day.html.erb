@@ -9,6 +9,7 @@
       <%= link_to @image_file.image_url, target: "_blank" do %>
         <%= image_tag(@image_file.image_url,
                       alt: @image_file.name,
+                      class: "rounded-3",
                       style: "max-width: 400px; max-height: 400px; object-fit: contain;")
         %>
       <% end %>
