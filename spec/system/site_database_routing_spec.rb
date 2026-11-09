@@ -45,7 +45,8 @@ RSpec.describe 'Browser navigation within a site database', type: :system do
     click_button 'Log in'
     expect(page).to have_current_path(%r{\A/browser-site(?:/home|/admin)?/?\z}, ignore_query: true)
     visit "/browser-site/admin/cells/#{cell.id}/edit"
-    expect(page).to have_content('Draft workspace')
+    # The admin frame's Publish button stays inside the site's mount.
+    expect(page).to have_css('a.admin-publish-button[href="/browser-site/admin/publishing"]')
     within('#cellPreview') { expect(page).to have_link('Local home', href: '/browser-site/home') }
     click_button 'New Image'
     expect(page).to have_css('iframe[src^="/browser-site/admin/image_files/new"]')

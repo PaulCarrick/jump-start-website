@@ -1,15 +1,59 @@
-<!-- app/views/layouts/_admin_page.html.erb -->
-<%= render layout: "layouts/header" do %>
-<% end %>
+<!-- app/views/layouts/_admin_page.erb -->
+<%# The admin's own frame: top bar, grouped sidebar and content. It does not use
+    the public site's header and footer (docs/admin-redesign-plan.md, stage 1). %>
+<div class="admin-shell">
+  <header class="admin-topbar">
+    <button class="admin-menu-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#admin-sidebar"
+            aria-controls="admin-sidebar" aria-expanded="false" aria-label="Show or hide the admin menu">
+      <span aria-hidden="true">☰</span>
+    </button>
+    <%= link_to admin_root_path, class: "admin-brand", target: "_self" do %>
+      <span class="admin-brand-mark" aria-hidden="true"><%= @site_information&.site_name.to_s.split.map { |word| word[0] }.join.first(2).upcase.presence || "JS" %></span>
+      <span class="admin-brand-name"><%= @site_information&.site_name.presence || "Jump Start" %></span>
+      <span class="admin-brand-area">Admin</span>
+    <% end %>
+    <div class="admin-topbar-actions">
+      <%= link_to "View site ↗", site_local_path("/"), class: "admin-topbar-link", target: "_blank", rel: "noopener" %>
+      <% if admin_can_publish? %>
+        <%= link_to admin_publishing_path, class: "admin-publish-button", target: "_self",
+                    aria: { label: "Publish: #{pluralize(admin_pending_change_count, 'change')} waiting" } do %>
+          Publish
+          <% if admin_pending_change_count.positive? %>
+            <span class="admin-publish-count"><%= admin_pending_change_count %></span>
+          <% end %>
+        <% end %>
+      <% end %>
+      <span class="admin-account" title="<%= @application_user&.email %>"><%= @application_user&.name.presence || @application_user&.email %></span>
+      <%= link_to "Log out", site_local_path("/users/sign_out"), class: "admin-topbar-link", target: "_self" %>
+    </div>
+  </header>
 
-<div class="header-bg" width="100%">
-  <div style="max-width: 98%; background: white;">
-    <%= render layout: "layouts/admin_menu" do %>
+  <div class="admin-layout">
+    <nav id="admin-sidebar" class="admin-sidebar collapse" aria-label="Admin">
+      <% admin_navigation_groups.each do |group| %>
+        <% if group[:title] %>
+          <div class="admin-nav-heading"><%= group[:title] %></div>
+        <% end %>
+        <% group[:links].each do |link| %>
+          <%= link_to link.label, link.path, target: "_self",
+                      class: "admin-nav-link#{' is-current' if admin_navigation_current?(link)}",
+                      aria: { current: (admin_navigation_current?(link) ? "page" : nil) } %>
+        <% end %>
+      <% end %>
+      <div class="admin-nav-footer">
+        <%= link_to "Help", admin_help_path, class: "admin-nav-link#{' is-current' if controller_name == 'help' && action_name == 'show'}", target: "_self" %>
+        <%= link_to "New Site Tutorial", admin_tutorial_path, class: "admin-nav-link#{' is-current' if controller_name == 'help' && action_name == 'tutorial'}", target: "_self" %>
+      </div>
+    </nav>
+
+    <main class="admin-main">
+      <% if publishing_draft_editor? && admin_record_history_path %>
+        <div class="admin-record-tools">
+          <%= link_to "History", admin_record_history_path, class: "btn btn-secondary", target: "_self" %>
+        </div>
+      <% end %>
       <%= render 'shared/flash_error' %>
       <%= yield %>
-    <% end %>
+    </main>
   </div>
 </div>
-
-<%= render layout: "layouts/footer" do %>
-<% end %>

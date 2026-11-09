@@ -67,7 +67,7 @@ RSpec.describe "Returning from admin editors", type: :system do
   end
 
   it "uses the sidebar index when opening an editor there" do
-    within('#navbarNav') { click_link 'Sections', exact: false }
+    within('#admin-sidebar') { click_link 'Sections', exact: false }
     expect(page).to have_current_path(admin_sections_path)
     click_link 'Edit', href: edit_admin_section_path(section)
     click_button 'Cancel'

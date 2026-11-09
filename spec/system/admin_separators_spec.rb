@@ -24,8 +24,8 @@ RSpec.describe "Admin section separators", type: :system do
     expect(page.evaluate_script(<<~JS)).to eq([ "0px", "2px", "0px", "0px", "0px" ])
       Array.from(document.querySelectorAll('.admin-section-cell')).map(cell => getComputedStyle(cell).borderLeftWidth)
     JS
-    expect(page.evaluate_script("getComputedStyle(document.querySelector('.admin-sidebar')).alignItems")).to eq("flex-start")
-    expect(page.evaluate_script("getComputedStyle(document.querySelector('.admin-sidebar .nav-link')).whiteSpace")).to eq("nowrap")
+    expect(page.evaluate_script("getComputedStyle(document.querySelector('.admin-sidebar')).flexDirection")).to eq("column")
+    expect(page.evaluate_script("getComputedStyle(document.querySelector('.admin-sidebar .admin-nav-link')).whiteSpace")).to eq("nowrap")
     page.driver.browser.manage.window.resize_to(1440, 1800)
     page.save_screenshot(Rails.root.join("tmp/admin-section-separators.png"))
     page.execute_script("document.querySelectorAll('.admin-section-cell').forEach(cell => cell.style.width = '100%')")

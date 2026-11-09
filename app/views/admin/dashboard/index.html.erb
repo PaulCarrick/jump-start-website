@@ -1,12 +1,76 @@
 <!-- app/views/admin/dashboard/index.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
-  <h1> Admin Dashboard</h1>
-  <p>
-    Please chose an item for the menu on the left.
-  </p>
-  <p>
-    It is <b>highly</b> recommended that administration is not performed on a mobile device.
-    There is too much information to display.
-    If you must use a mobile device we recommend landscape mode.
-  </p>
+  <div class="admin-dashboard">
+    <div>
+      <h1 class="admin-page-title">Dashboard</h1>
+      <p class="admin-page-lead">Edits are saved as drafts. Visitors see them after you publish.</p>
+    </div>
+
+    <section class="admin-dashboard-cards" aria-label="Summary">
+      <% if admin_can_publish? %>
+        <%= link_to admin_publishing_path, class: "admin-card admin-card-draft", target: "_self" do %>
+          <span class="admin-card-label">Not published yet</span>
+          <span class="admin-card-value"><%= pluralize(@pending_changes.size, "change") %></span>
+          <span class="admin-card-detail">
+            <%= @pending_changes.empty? ? "Everything is live." : "Review and publish" %>
+          </span>
+        <% end %>
+      <% end %>
+      <div class="admin-card">
+        <span class="admin-card-label">Site</span>
+        <span class="admin-card-value"><%= pluralize(@page_count, "page") %></span>
+        <span class="admin-card-detail"><%= pluralize(@blog_post_count, "blog post") %> · <%= pluralize(@image_count, "image") %></span>
+      </div>
+      <% if @last_deployment %>
+        <div class="admin-card">
+          <span class="admin-card-label">Last published</span>
+          <span class="admin-card-value"><%= l(@last_deployment.effective_at.in_time_zone, format: :short) %></span>
+          <span class="admin-card-detail"><%= @last_deployment.summary.presence || "No note" %></span>
+        </div>
+      <% end %>
+    </section>
+
+    <div class="admin-dashboard-panels">
+      <% if @pending_changes.any? %>
+        <section class="admin-panel" aria-labelledby="pending-heading">
+          <h2 id="pending-heading">Waiting to be published</h2>
+          <ul class="admin-list">
+            <% @pending_changes.first(10).each do |record| %>
+              <li>
+                <% path = admin_record_edit_path(record) %>
+                <%= path ? link_to(admin_record_label(record), path, target: "_self") : admin_record_label(record) %>
+                <span class="admin-badge admin-badge-draft"><%= admin_record_change(record) %></span>
+              </li>
+            <% end %>
+          </ul>
+          <% if @pending_changes.size > 10 %>
+            <%= link_to "See all #{@pending_changes.size}", admin_publishing_path, target: "_self" %>
+          <% end %>
+        </section>
+      <% end %>
+
+      <section class="admin-panel" aria-labelledby="actions-heading">
+        <h2 id="actions-heading">Quick actions</h2>
+        <div class="admin-quick-actions">
+          <%= link_to "+ New page", new_admin_page_path, class: "admin-quick-action", target: "_self" %>
+          <%= link_to "+ New blog post", new_admin_blog_post_path, class: "admin-quick-action", target: "_self" %>
+          <%= link_to "Upload an image", new_admin_image_file_path, class: "admin-quick-action", target: "_self" %>
+          <%= link_to "Edit the header menu", admin_menu_items_path, class: "admin-quick-action", target: "_self" %>
+        </div>
+      </section>
+
+      <section class="admin-panel" aria-labelledby="recent-heading">
+        <h2 id="recent-heading">Recently edited</h2>
+        <ul class="admin-list">
+          <% @recently_edited.each do |record| %>
+            <li>
+              <% path = admin_record_edit_path(record) %>
+              <%= path ? link_to(admin_record_label(record), path, target: "_self") : admin_record_label(record) %>
+              <span class="admin-list-meta"><%= l(record.updated_at.in_time_zone.to_date, format: :short) %></span>
+            </li>
+          <% end %>
+        </ul>
+      </section>
+    </div>
+  </div>
 <% end %>

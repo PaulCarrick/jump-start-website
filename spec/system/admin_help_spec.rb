@@ -7,7 +7,7 @@ RSpec.describe 'Admin Help', type: :system do
     login_as(create(:user, access: 'super'))
     visit admin_pages_path
     within('.admin-sidebar') do
-      expect(page).to have_css('ul.navbar-nav > li:last-child a', text: /new site tutorial/i)
+      expect(page).to have_css('.admin-nav-footer a:last-child', text: /new site tutorial/i)
       find("a[href='/admin/help']").click
     end
     expect(page).to have_current_path(admin_help_path)
@@ -27,7 +27,7 @@ RSpec.describe 'Admin Help', type: :system do
     login_as(create(:user, access: 'super'))
     visit admin_help_path
     within('.admin-sidebar') do
-      expect(page).to have_css('li:has(a[href="/admin/help"]) + li a', text: /new site tutorial/i)
+      expect(page).to have_css('a[href="/admin/help"] + a', text: /new site tutorial/i)
       click_link 'New Site Tutorial'
     end
     expect(page).to have_current_path(admin_tutorial_path)
