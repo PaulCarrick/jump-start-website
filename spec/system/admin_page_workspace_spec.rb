@@ -94,6 +94,9 @@ RSpec.describe "Page workspace", type: :system do
 
   it "duplicates a section after asking for its name" do
     visit admin_page_workspace_path(page_record, section: first_section.id)
+    # Let the page's scripts finish drawing before clicking.
+    expect(page).to have_css(".workspace-panel .admin-panel-title", text: "garden-intro")
+    expect(page).to have_css("[data-react-class='RenderSection'] *")
     wait_for_new_page { accept_prompt(with: "garden-intro-copy") { click_button "Duplicate section" } }
     expect(page).to have_content("Section duplicated successfully.")
     copy = Section.find_by!(section_name: "garden-intro-copy")

@@ -530,3 +530,33 @@ body .btn.admin-navigation-readonly:disabled {
 }
 .page-edit-menu-item:hover, .page-edit-menu-item:focus { background: #eef4ff; outline: none; }
 .page-edit-menu-hint { padding: 4px 10px 2px; color: #667085; font-size: 12px; }
+/* Moving sections while editing a page */
+.page-editing .page-editing-section { position: relative; }
+.page-edit-section-handle {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 20;
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  background: #fff;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.page-editing-section:hover > .page-edit-section-handle,
+.page-edit-section-handle:focus-within { opacity: 1; }
+.page-edit-section-handle .page-edit-drag { cursor: grab; padding: 2px 8px; color: #1d2433; user-select: none; }
+.page-edit-section-handle button { border: 0; background: transparent; padding: 2px 8px; border-radius: 6px; color: #1d2433; }
+.page-edit-section-handle button:hover, .page-edit-section-handle button:focus { background: #eef4ff; outline: none; }
+.page-edit-dragging { opacity: 0.45; }
+.page-edit-drop-before { box-shadow: 0 -4px 0 #1f5fd6; }
+.page-edit-drop-after { box-shadow: 0 4px 0 #1f5fd6; }
+.page-edit-moving {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 2100;
+  padding: 8px 16px; border-radius: 8px; background: #1d2433; color: #fff; font-size: 14px;
+}

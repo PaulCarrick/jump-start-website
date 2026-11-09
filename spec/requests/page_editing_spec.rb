@@ -93,9 +93,48 @@ RSpec.describe 'Editing a page from the public site', type: :request do
     expect(document.at('header a[href="/family"]')['target']).to eq('_self')
   end
 
+  describe 'moving sections on the page' do
+    let!(:second) { create(:section, page: page_record, content_type: 'garden-content', section_name: 'garden-roses', section_order: 2) }
+    let!(:hidden) { create(:section, page: page_record, content_type: 'garden-content', section_name: 'garden-hidden', section_order: 3, enabled: false) }
+    let!(:third) { create(:section, page: page_record, content_type: 'garden-content', section_name: 'garden-tulips', section_order: 4) }
+
+    before do
+      section.update_columns(section_order: 1)
+      post admin_page_editing_start_path(page_record)
+    end
+
+    def working_order
+      PublishingContext.set(editing: true, deploying: false, live: false, preview: false) do
+        page_record.ordered_sections.map(&:section_name)
+      end
+    end
+
+    it 'saves the new order as drafts, changing only the sections that moved' do
+      patch admin_page_editing_sections_path(page_record), params: { sections: [ second.id, section.id, third.id ] }, as: :json
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body['changed']).to eq(2)
+      expect(working_order).to eq(%w[garden-roses garden-intro garden-hidden garden-tulips])
+      expect(Admin::PageEditingController.session_changes(session[:page_editing]).size).to eq(2)
+    end
+
+    it 'keeps a hidden section in its place' do
+      patch admin_page_editing_sections_path(page_record), params: { sections: [ third.id, second.id, section.id ] }, as: :json
+      expect(working_order).to eq(%w[garden-tulips garden-roses garden-hidden garden-intro])
+    end
+
+    it 'refuses sections that are not on the page' do
+      patch admin_page_editing_sections_path(page_record), params: { sections: [ second.id, 999_999 ] }, as: :json
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(working_order).to eq(%w[garden-intro garden-roses garden-hidden garden-tulips])
+    end
+  end
+
   it 'is only for administrators' do
     sign_in create(:user, access: 'read_only')
     post admin_page_editing_start_path(page_record)
+    expect(response).to have_http_status(:forbidden)
+    patch admin_page_editing_sections_path(page_record), params: { sections: [ section.id ] }, as: :json
     expect(response).to have_http_status(:forbidden)
     get page_path('garden')
     expect(response.body).not_to include('Edit Page')

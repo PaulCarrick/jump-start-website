@@ -45,6 +45,22 @@ RSpec.describe 'Editing a page from the public site', type: :system do
     expect(right_click_and_edit(find('.page-edit-hint', match: :first), 'Edit page')).to eq(admin_page_workspace_path(page_record))
   end
 
+  it 'moves a section down with its handle and back up on Cancel' do
+    other = create(:section, page: page_record, content_type: 'garden-content', section_name: 'garden-later', section_order: section.section_order.to_i + 1)
+    create(:cell, section: other, section_name: 'garden-later', image: nil, link: nil, content: '<p>Later section</p>')
+    visit page_path('garden')
+    click_button 'Edit Page'
+    expect(page).to have_css('.page-edit-section-handle', count: 2, visible: :all)
+    find("[data-section-id='#{section.id}']").hover
+    within("[data-section-id='#{section.id}'] .page-edit-section-handle") { click_button 'Move this section down' }
+    expect(page).to have_button(text: /Save Changes \(\d\)/)
+    expect(page).to have_text(/Later section.*Roses in bloom/m)
+
+    accept_confirm { click_button 'Cancel' }
+    expect(page).to have_button('Edit Page')
+    expect(page).to have_text(/Roses in bloom.*Later section/m)
+  end
+
   it 'leaves the page as it was on Cancel' do
     visit page_path('garden')
     click_button 'Edit Page'

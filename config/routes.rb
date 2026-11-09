@@ -64,6 +64,7 @@ Rails.application.routes.draw do
     post "/page_editing/:page_id/start", to: "page_editing#start", as: "page_editing_start"
     post "/page_editing/:page_id/save", to: "page_editing#save", as: "page_editing_save"
     post "/page_editing/:page_id/cancel", to: "page_editing#cancel", as: "page_editing_cancel"
+    patch "/page_editing/:page_id/sections", to: "page_editing#move_sections", as: "page_editing_sections"
     resources :image_files, except: [ :destroy ]
     delete "/image_files/:id", to: "image_files#destroy", as: "delete_image_file"
     get "/menus", to: "menus#index", as: "menus"
