@@ -95,6 +95,8 @@ Each stage: build, update the affected tests (system specs and `spec/e2e`), chec
 - Keep the current page, section and column editors behind "Classic editor" until this has been used for a while.
 - Tests: the page, section and column specs (`admin_pages_spec`, `admin_sections_spec`, `admin_return_navigation_spec`, `duplicate_sections_spec`, `renumber_sections_spec`, `div_ratio_spec`, `image_formatting_spec`, `cell_image_selection_spec`, `quill_two_editing_spec`) move to the new screen; Vitest for the React state.
 
+**Built (2026-11-08):** `/admin/pages/:id/workspace` (`PagesController#workspace`, `reorder`, `add_column`; views `pages/workspace` and its two panel partials; Stimulus `page-outline` and `page-preview`; `CellEditor` with `tabbed: true`). The Pages list, the dashboard and the ⋯ menu ("Classic editor") lead to it. Still through the classic screens, one click away: the section editor (name, order, column widths, the layout chooser for a new section) and the page's Renumber Sections. Columns move only within their own section.
+
 ### Stage 6 · Review and publish (medium, with back-end work)
 - Plain-language list of pending changes, grouped by page ("Employment History — page title changed"), before/after for changed text fields (from `Publishing.review_attributes`), links to open or preview.
 - Publish by page: `Publishing.deploy!` gains an optional list of pages; it publishes those pages' drafts (page, sections, columns, their menu items) and leaves the rest as drafts. Site Setup, users, menus without a page and blog posts form their own groups.

@@ -53,6 +53,11 @@ class Admin::SectionsController < Admin::AbstractAdminController
     section = page.sections.find(params[:id])
     grouped = section.section_group.present?
     copy = section.duplicate!(name: params[:section_name])
+    if params[:workspace].present?
+      redirect_to admin_page_workspace_path(page, section: copy.id), status: :see_other,
+                  notice: grouped ? "Section group duplicated successfully." : "Section duplicated successfully."
+      return
+    end
     redirect_to edit_admin_page_path(page, section_name: copy.section_name, return_url: params[:return_url].present? ? admin_return_url : nil),
                 status: :see_other, notice: grouped ? "Section group duplicated successfully." : "Section duplicated successfully."
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique => e

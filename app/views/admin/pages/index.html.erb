@@ -20,13 +20,14 @@
       <tbody>
         <% controller.get_items.each do |page| %>
           <tr class="admin-list-record">
-            <td class="admin-cell-title"><%= link_to(page.title.presence || page.name, edit_admin_page_path(page), target: "_self") %></td>
+            <td class="admin-cell-title"><%= link_to(page.title.presence || page.name, admin_page_workspace_path(page), target: "_self") %></td>
             <td class="admin-cell-muted">/<%= page.name %></td>
             <td><%= page.section %></td>
             <td><%= page.access.presence || "Everyone" %></td>
             <td><%= admin_status_badge(page) %></td>
             <td class="admin-cell-actions">
-              <%= admin_row_actions(page, show_path: admin_page_path(page), edit_path: edit_admin_page_path(page), delete_path: admin_page_path(page)) %>
+              <%= admin_row_actions(page, show_path: admin_page_path(page), edit_path: admin_page_workspace_path(page), delete_path: admin_page_path(page),
+                                    extra_links: [ [ "Classic editor", edit_admin_page_path(page) ] ]) %>
             </td>
           </tr>
         <% end %>

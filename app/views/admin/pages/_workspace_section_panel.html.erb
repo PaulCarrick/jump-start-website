@@ -1,0 +1,64 @@
+<%# The workspace panel for one section. %>
+<div class="workspace-panel-heading">
+  <%= link_to("← Page", workspace.call, class: "workspace-back", target: "_self") %>
+  <h2 class="admin-panel-title">Section: <%= section.section_name %></h2>
+  <p class="form-text"><%= admin_status_badge(section) %></p>
+</div>
+
+<%= form_with(model: section, scope: :section, url: admin_section_path(section), method: :patch, local: true, data: { turbo: false }) do |form| %>
+  <%= hidden_field_tag :return_url, workspace.call(section: section.id) %>
+  <fieldset <%= "disabled" unless can_change %>>
+    <%= render "shared/enabled_switch", form: form %>
+    <div class="mb-3">
+      <%= form.label :section_group, "Section group", class: "form-label" %>
+      <%= form.text_field :section_group, class: "form-control", placeholder: "No group" %>
+      <div class="form-text">Sections with the same group name belong together and are duplicated together.</div>
+    </div>
+  </fieldset>
+  <div class="admin-form-actions">
+    <%= form.submit "Save section", class: "btn btn-primary", disabled: !can_change %>
+  </div>
+<% end %>
+
+<h3 class="admin-tab-section">Columns</h3>
+<% if section.cells.empty? %>
+  <p class="form-text">No columns.</p>
+<% else %>
+  <ol class="workspace-column-list">
+    <% section.cells.each do |cell| %>
+      <li><%= link_to(workspace_cell_label(cell), workspace.call(cell: cell.id), target: "_self") %></li>
+    <% end %>
+  </ol>
+<% end %>
+
+<div class="admin-media-more">
+  <% if can_change %>
+    <%= button_to("+ Add column", admin_page_section_columns_path(page_record, section.id), method: :post,
+                  class: "btn btn-outline-primary btn-sm", form: { data: { turbo: false } }) %>
+  <% end %>
+  <%= link_to("Edit section layout", edit_admin_section_path(section,
+                                                               return_url:             workspace.call(section: section.id),
+                                                               cancel_url:             workspace.call(section: section.id),
+                                                               read_only_content_type: true,
+                                                               new_section:            false),
+              class: "btn btn-light btn-sm", target: "_self",
+              title: "The classic section editor: name, order, column widths and every column together") %>
+</div>
+
+<% if can_change %>
+  <div class="admin-panel-danger workspace-section-actions">
+    <%= form_with(url: admin_duplicate_page_section_path(page_id: page_record.id, id: section.id), method: :post, local: true,
+                  html: { onsubmit: "return requestSectionDuplicateName(this);" },
+                  data: { turbo: false, section_group: section.section_group.presence }) do %>
+      <%= hidden_field_tag :workspace, 1 %>
+      <%= hidden_field_tag :section_name %>
+      <%= submit_tag(section.section_group.present? ? "Duplicate group" : "Duplicate section", class: "btn btn-outline-secondary btn-sm") %>
+    <% end %>
+    <%= button_to("Delete section", admin_delete_section_path(section),
+                  method:  :delete,
+                  params:  { return_url: workspace.call },
+                  class:   "btn btn-outline-danger btn-sm",
+                  form:    { data: { turbo: false } },
+                  onclick: "return confirm('Delete this section and its columns?');") %>
+  </div>
+<% end %>

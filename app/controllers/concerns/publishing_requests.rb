@@ -78,8 +78,8 @@ module PublishingRequests
     # Some legacy editor links mutate data through GET requests, including
     # cancellation cleanup. Protect those as well as normal form submissions.
     admin_write = !request.get? && !request.head?
-    admin_write ||= %w[create update destroy duplicate renumber_sections add_section_to_page add_cell_to_section].include?(action_name)
-    admin_write ||= action_name == 'edit' && params[:canceled] == 'true'
+    admin_write ||= %w[create update destroy duplicate renumber_sections add_section_to_page add_cell_to_section reorder add_column].include?(action_name)
+    admin_write ||= %w[edit workspace].include?(action_name) && params[:canceled] == 'true'
     if controller_path.start_with?('admin/') && admin_write && !user&.admin?
       user ? head(:forbidden) : authenticate_user!
       return

@@ -1,0 +1,31 @@
+<%# The workspace panel for one column: the column editor, in tabs. %>
+<div class="workspace-panel-heading">
+  <%= link_to("← #{section.section_name}", workspace.call(section: section.id), class: "workspace-back", target: "_self") %>
+  <h2 class="admin-panel-title">Column <%= cell.cell_order %>: <%= cell.cell_name %></h2>
+  <p class="form-text"><%= admin_status_badge(cell) %></p>
+</div>
+
+<%= react_component("CellEditor", {
+      cell: cell,
+      editorOptions: {
+        availableSectionNames: @section_names,
+        availableImages:       @images,
+        availableImageGroups:  @groups,
+        availableVideos:       @videos,
+        returnUrl:             workspace.call(cell: cell.id),
+        cancelUrl:             workspace.call(section: section.id),
+        readOnlySectionName:   true,
+        tabbed:                true
+      }
+    }) %>
+
+<% if can_change %>
+  <div class="admin-panel-danger">
+    <%= button_to("Delete this column", admin_delete_cell_path(cell),
+                  method:  :delete,
+                  params:  { return_url: workspace.call(section: section.id) },
+                  class:   "btn btn-outline-danger btn-sm",
+                  form:    { data: { turbo: false } },
+                  onclick: "return confirm('Delete this column?');") %>
+  </div>
+<% end %>

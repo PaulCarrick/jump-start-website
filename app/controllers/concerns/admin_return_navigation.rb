@@ -29,7 +29,7 @@ module AdminReturnNavigation
     return unless local_path == "/admin" || local_path.start_with?("/admin/")
 
     route = Rails.application.routes.recognize_path(local_path, method: :get)
-    return unless route[:controller].start_with?("admin/") && %w[index show edit new].include?(route[:action])
+    return unless route[:controller].start_with?("admin/") && %w[index show edit new workspace].include?(route[:action])
 
     return if Rack::Utils.parse_nested_query(uri.query.to_s)["method"].present?
 

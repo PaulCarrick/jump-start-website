@@ -35,7 +35,17 @@ interface EditorOptions {
   cancelUrl?: string | null;
   readOnlySectionName?: boolean;
   newCell?: boolean;
+  // The page workspace shows the same fields in tabs inside its side panel.
+  tabbed?: boolean;
 }
+
+const CELL_EDITOR_TABS = [
+  ["content", "Content"],
+  ["image", "Image"],
+  ["layout", "Layout"],
+  ["advanced", "Advanced"],
+] as const;
+type CellEditorTab = (typeof CELL_EDITOR_TABS)[number][0];
 
 // Define props for CellEditor
 interface CellEditorProps {
@@ -62,6 +72,10 @@ const CellEditor: React.FC<CellEditorProps> = ({
   );
   const [imageMode, setImageMode] = useState<ImageType>(() => savedImageType(cellData?.image));
   const [error, setError] = useState<string | null>(null);
+  // An image column opens on its picture; anything else on its text.
+  const [activeTab, setActiveTab] = useState<CellEditorTab>(() =>
+    cellData?.image && !cellData?.content ? "image" : "content",
+  );
 
   // OnChange/OnBlur Callback
   const setValue = (newValue: any, attribute: string) => {
@@ -125,6 +139,126 @@ const CellEditor: React.FC<CellEditorProps> = ({
 
   if (!cellData) return <div>No column exists to edit.</div>;
 
+  const actions = (
+    <div className="row mb-2">
+      <div className="col-12 d-flex justify-content-start gap-2">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleSubmit}
+        >
+          Save Column
+        </button>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={handleCancel}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+
+  if (editorOptions.tabbed) {
+    // Every tab stays mounted (only hidden), so the text editor keeps its
+    // state and nothing typed is lost when switching tabs.
+    const pane = (name: CellEditorTab, children: React.ReactNode) => (
+      <div
+        role="tabpanel"
+        id={`cell-tab-${name}`}
+        aria-labelledby={`cell-tab-button-${name}`}
+        hidden={activeTab !== name}
+        className="cell-editor-pane"
+      >
+        {children}
+      </div>
+    );
+
+    return (
+      <ErrorBoundary>
+        <div className="cell-editor-tabbed">
+          {error && <div className="error-box">{error}</div>}
+          <div className="nav nav-tabs admin-tabs mb-3" role="tablist">
+            {CELL_EDITOR_TABS.map(([name, label]) => (
+              <button
+                key={name}
+                type="button"
+                role="tab"
+                id={`cell-tab-button-${name}`}
+                aria-controls={`cell-tab-${name}`}
+                aria-selected={activeTab === name}
+                className={`nav-link${activeTab === name ? " active" : ""}`}
+                onClick={() => setActiveTab(name)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          {pane(
+            "content",
+            <>
+              <div style={{ minHeight: "10em" }}>
+                {renderContent(
+                  "content",
+                  cellData?.content || null,
+                  setValue,
+                  cellData?.options?.html_view,
+                )}
+              </div>
+              {renderLink(cellData?.link || null, setValue)}
+            </>,
+          )}
+          {pane(
+            "image",
+            renderImage(
+              cellData?.image || null,
+              imageMode,
+              editorOptions.availableImages || [],
+              editorOptions.availableImageGroups || [],
+              editorOptions.availableVideos || [],
+              setValue,
+            ),
+          )}
+          {pane(
+            "layout",
+            <FormattingEditor
+              formatting={cellData?.formatting || {}}
+              onChange={setValue}
+            />,
+          )}
+          {pane(
+            "advanced",
+            <>
+              <EnabledSwitch enabled={cellData?.enabled} onChange={enabled => setCellData(previous => previous ? { ...previous, enabled } : previous)} />
+              {renderSectionName(
+                cellData?.section_name,
+                editorOptions.availableSectionNames,
+                setValue,
+                editorOptions.readOnlySectionName,
+              )}
+              {renderCellName(cellData?.cell_name, setValue)}
+              {renderCellOrder(cellData?.cell_order, setValue)}
+            </>,
+          )}
+          <div className="cell-editor-preview">
+            <div className="form-text mb-1">Preview of this column (the page preview updates when you save)</div>
+            <div id="cellPreview" className="border rounded p-1">
+              <RenderCell
+                cell={cellData}
+                editing={false}
+                noBorder={true}
+                noHidden={false}
+                onChange={onChange}
+              />
+            </div>
+          </div>
+          {actions}
+        </div>
+      </ErrorBoundary>
+    );
+  }
+
   return (
     <ErrorBoundary>
       <div>
@@ -183,24 +317,7 @@ const CellEditor: React.FC<CellEditorProps> = ({
           </div>
         </div>
 
-        <div className="row mb-2">
-          <div className="col-12 d-flex justify-content-start gap-2">
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={handleSubmit}
-            >
-              Save Column
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={handleCancel}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
+        {actions}
       </div>
     </ErrorBoundary>
   );

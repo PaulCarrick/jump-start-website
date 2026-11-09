@@ -1,0 +1,164 @@
+<!-- app/views/admin/pages/workspace.html.erb -->
+<%
+  page_record = controller.get_item
+  can_change = @application_user&.admin?
+  workspace = ->(options = {}) { admin_page_workspace_path(page_record, options) }
+%>
+<%= javascript_include_tag 'views/admin/pages/edit' %>
+<%= render layout: "layouts/admin_page" do %>
+  <div class="workspace-heading">
+    <div>
+      <h1 class="admin-page-title"><%= page_record.title.presence || page_record.name %></h1>
+      <span class="admin-cell-muted">/<%= page_record.name %></span>
+      <%= admin_status_badge(page_record) %>
+    </div>
+    <div class="workspace-heading-actions">
+      <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#page-settings">Page settings</button>
+      <%= link_to("View page ↗", site_local_path("/#{page_record.name}"), class: "btn btn-light", target: "_blank", rel: "noopener") %>
+      <%= link_to("Classic editor", edit_admin_page_path(page_record), class: "btn btn-light", target: "_self") %>
+    </div>
+  </div>
+
+  <div class="workspace">
+    <%# Outline: sections and their columns, in page order. %>
+    <nav class="workspace-outline" aria-label="Sections and columns"
+         data-controller="page-outline"
+         data-page-outline-url-value="<%= admin_page_order_path(page_record) %>"
+         data-page-outline-enabled-value="<%= can_change %>">
+      <h2 class="workspace-pane-title">Outline</h2>
+      <% if @sections.empty? %>
+        <p class="form-text">This page has no sections yet.</p>
+      <% end %>
+      <ol class="outline-sections" data-page-outline-target="sections">
+        <% @sections.each do |section| %>
+          <li class="outline-section<%= ' is-selected' if @selected_section&.id == section.id && !@selected_cell %>" data-id="<%= section.id %>">
+            <div class="outline-row">
+              <% if can_change %><span class="outline-handle" draggable="true" title="Drag to move" aria-hidden="true">⠿</span><% end %>
+              <%= link_to(workspace.call(section: section.id), class: "outline-label", target: "_self") do %>
+                <%= section.section_name %>
+              <% end %>
+              <% if section.section_group.present? %><span class="admin-badge admin-badge-hidden" title="Section group"><%= section.section_group %></span><% end %>
+              <% unless section.enabled %><span class="admin-badge admin-badge-hidden">Hidden</span><% end %>
+              <% if can_change %>
+                <span class="outline-moves">
+                  <button type="button" class="btn btn-sm btn-light" data-action="page-outline#up" title="Move section <%= section.section_name %> up" aria-label="Move section <%= section.section_name %> up">↑</button>
+                  <button type="button" class="btn btn-sm btn-light" data-action="page-outline#down" title="Move section <%= section.section_name %> down" aria-label="Move section <%= section.section_name %> down">↓</button>
+                </span>
+              <% end %>
+            </div>
+            <ol class="outline-cells">
+              <% section.cells.each do |cell| %>
+                <li class="outline-cell<%= ' is-selected' if @selected_cell&.id == cell.id %>" data-id="<%= cell.id %>">
+                  <div class="outline-row">
+                    <% if can_change %><span class="outline-handle" draggable="true" title="Drag to move" aria-hidden="true">⠿</span><% end %>
+                    <%= link_to(workspace.call(cell: cell.id), class: "outline-label outline-cell-label", target: "_self") do %>
+                      <%= workspace_cell_label(cell) %>
+                    <% end %>
+                    <% unless cell.enabled %><span class="admin-badge admin-badge-hidden">Hidden</span><% end %>
+                    <% if can_change %>
+                      <span class="outline-moves">
+                        <button type="button" class="btn btn-sm btn-light" data-action="page-outline#up" title="Move column <%= cell.cell_name %> up" aria-label="Move column <%= cell.cell_name %> up">↑</button>
+                        <button type="button" class="btn btn-sm btn-light" data-action="page-outline#down" title="Move column <%= cell.cell_name %> down" aria-label="Move column <%= cell.cell_name %> down">↓</button>
+                      </span>
+                    <% end %>
+                  </div>
+                </li>
+              <% end %>
+            </ol>
+          </li>
+        <% end %>
+      </ol>
+      <p class="admin-menu-status" role="status" aria-live="polite" data-page-outline-target="status"></p>
+      <% if can_change %>
+        <%= link_to("+ Add section",
+                    admin_add_section_to_existing_page_path(page_record, workspace: 1, new_section: true, read_only_content_type: true),
+                    class: "btn btn-outline-primary btn-sm w-100", target: "_self") %>
+      <% end %>
+    </nav>
+
+    <%# Preview: the page as it will look. Clicking a section selects it. %>
+    <section class="workspace-preview" aria-label="Preview" data-controller="page-preview">
+      <h2 class="workspace-pane-title">Preview <span class="form-text">— click a section to edit it</span></h2>
+      <div class="workspace-canvas">
+        <% if @sections.empty? %>
+          <p class="admin-list-empty">No content yet. Use "+ Add section" to start.</p>
+        <% end %>
+        <% @sections.each do |section| %>
+          <div class="workspace-block<%= ' is-selected' if @selected_section&.id == section.id %><%= ' is-hidden' unless section.enabled %>"
+               data-select-url="<%= workspace.call(section: section.id) %>"
+               data-action="click->page-preview#select keydown->page-preview#key"
+               tabindex="0" role="button" aria-label="Select section <%= section.section_name %>">
+            <span class="workspace-block-label"><%= section.section_name %></span>
+            <%= react_component("RenderSection", {
+                  section:  section.renderable_section,
+                  editing:  false,
+                  noBorder: true,
+                  noHidden: true
+                }) %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+
+    <%# Panel: the chosen column, the chosen section, or the page. %>
+    <aside class="workspace-panel" aria-label="Edit">
+      <% if @selected_cell %>
+        <%= render "workspace_cell_panel", page_record: page_record, section: @selected_section, cell: @selected_cell,
+                   workspace: workspace, can_change: can_change %>
+      <% elsif @selected_section %>
+        <%= render "workspace_section_panel", page_record: page_record, section: @selected_section,
+                   workspace: workspace, can_change: can_change %>
+      <% else %>
+        <h2 class="admin-panel-title">Edit this page</h2>
+        <ul class="workspace-tips">
+          <li>Click a section in the preview, or a name in the outline, to change it.</li>
+          <li>Drag ⠿ or use ↑ ↓ to reorder sections, and columns within a section.</li>
+          <li>Changes are saved as drafts. Use Publish (top right) to put them on the site.</li>
+        </ul>
+        <p class="form-text"><%= pluralize(@sections.size, "section") %>, <%= pluralize(@sections.sum { |section| section.cells.size }, "column") %>.</p>
+      <% end %>
+    </aside>
+  </div>
+
+  <%# Page settings dialog %>
+  <div class="modal fade" id="page-settings" tabindex="-1" aria-labelledby="page-settings-title" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <%= form_with(model: page_record, url: admin_page_path(page_record), method: :patch, local: true, data: { turbo: false }) do |form| %>
+          <div class="modal-header">
+            <h2 class="modal-title fs-5" id="page-settings-title">Page settings</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <%= hidden_field_tag :return_url, workspace.call %>
+            <fieldset <%= "disabled" unless can_change %>>
+              <%= render "shared/enabled_switch", form: form %>
+              <div class="mb-3">
+                <%= form.label :title, "Title", class: "form-label" %>
+                <%= form.text_field :title, class: "form-control" %>
+              </div>
+              <div class="mb-3">
+                <%= form.label :name, "Name*", class: "form-label" %>
+                <%= form.text_field :name, class: "form-control", required: true %>
+                <div class="form-text">The page's address: /<%= page_record.name %>. Changing it changes the address; update menu links to match.</div>
+              </div>
+              <div class="mb-3">
+                <%= form.label :access, "Access", class: "form-label" %>
+                <%= form.text_field :access, class: "form-control", placeholder: "Everyone" %>
+              </div>
+              <div class="mb-3">
+                <%= form.label :section, "Section", class: "form-label" %>
+                <%= form.text_field :section, class: "form-control" %>
+                <div class="form-text">The sections shown on this page are the ones with this content type. Change it only to show another set.</div>
+              </div>
+            </fieldset>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <%= form.submit "Save Page", class: "btn btn-primary", disabled: !can_change %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

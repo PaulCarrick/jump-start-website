@@ -50,12 +50,14 @@ module AdminListHelper
   end
 
   # Edit, plus a ⋯ menu with View, History and (for administrators) Delete.
-  def admin_row_actions(record, show_path:, edit_path:, delete_path:)
+  # extra_links: more [label, path] pairs for the menu, such as "Classic editor".
+  def admin_row_actions(record, show_path:, edit_path:, delete_path:, extra_links: [])
     history_path = if BitemporalRecord::MODELS.include?(record.class.name)
                      admin_publishing_history_path(model: record.class.name, record_id: record.id)
     end
     menu_items = [
       link_to("View", show_path, class: "dropdown-item", target: "_self"),
+      *extra_links.map { |label, path| link_to(label, path, class: "dropdown-item", target: "_self") },
       (link_to("History", history_path, class: "dropdown-item", target: "_self") if history_path),
       (delete_button("Delete", delete_path) if @application_user&.admin?)
     ].compact

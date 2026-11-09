@@ -50,6 +50,9 @@ Rails.application.routes.draw do
     get "/page/new_cell", to: "sections#add_cell_to_section", as: "add_cell_to_new_section"
     resources :pages, except: [ :destroy ]
     post "/pages/:id/renumber_sections", to: "pages#renumber_sections", as: "renumber_page_sections"
+    get "/pages/:id/workspace", to: "pages#workspace", as: "page_workspace"
+    patch "/pages/:id/order", to: "pages#reorder", as: "page_order"
+    post "/pages/:id/sections/:section_id/columns", to: "pages#add_column", as: "page_section_columns"
     delete "/pages/:id", to: "pages#destroy", as: "delete_page"
     get "/pages/:id/test", to: "pages#test"
     get "/page/new_section/:id", to: "pages#add_section_to_page", as: "add_section_to_existing_page"

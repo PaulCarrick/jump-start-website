@@ -71,6 +71,7 @@ module AdminNavigationHelper
   # contact messages) or has been deleted.
   def admin_record_edit_path(record)
     return if record.temporal_deleted?
+    return admin_page_workspace_path(record.id) if record.is_a?(Page)
 
     route = "edit_admin_#{record.class.model_name.singular}_path"
     respond_to?(route) ? public_send(route, record.id) : nil

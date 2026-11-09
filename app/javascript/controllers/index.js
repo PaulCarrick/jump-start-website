@@ -24,3 +24,9 @@ application.register("media-upload", MediaUploadController)
 
 import MediaGroupController from "./media_group_controller"
 application.register("media-group", MediaGroupController)
+
+import PageOutlineController from "./page_outline_controller"
+application.register("page-outline", PageOutlineController)
+
+import PagePreviewController from "./page_preview_controller"
+application.register("page-preview", PagePreviewController)

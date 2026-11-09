@@ -9,7 +9,10 @@ RSpec.describe "Returning from admin editors", type: :system do
     driven_by(:selenium_chrome_headless)
     login_as(create(:user, access: 'super'))
     visit admin_pages_path
-    click_link 'Edit', href: edit_admin_page_path(record)
+    # The Pages list opens the page workspace; the classic editor is in each
+    # page's ⋯ menu.
+    open_row_menu(admin_page_workspace_path(record))
+    click_link 'Classic editor', href: edit_admin_page_path(record)
   end
 
   def expect_page_section

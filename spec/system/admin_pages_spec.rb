@@ -11,7 +11,7 @@ RSpec.describe "Admin Pages", type: :system do
 
     visit admin_pages_path
 
-    expect(page).to have_link("Edit", href: edit_admin_page_path(page_record))
+    expect(page).to have_link("Edit", href: admin_page_workspace_path(page_record))
 
     page_record
   end
@@ -65,8 +65,9 @@ RSpec.describe "Admin Pages", type: :system do
     end
 
     it "renders action links for each page" do
-      expect(page).to have_link("Edit", href: edit_admin_page_path(page_record))
-      open_row_menu(edit_admin_page_path(page_record))
+      expect(page).to have_link("Edit", href: admin_page_workspace_path(page_record))
+      open_row_menu(admin_page_workspace_path(page_record))
+      expect(page).to have_link("Classic editor", href: edit_admin_page_path(page_record))
       expect(page).to have_css("form[action='#{admin_page_path(page_record)}'] button", text: "Delete")
     end
 
@@ -145,7 +146,7 @@ RSpec.describe "Admin Pages", type: :system do
     it "shows the page details" do
       search_pages(page_record.name)
 
-      open_row_menu(edit_admin_page_path(page_record))
+      open_row_menu(admin_page_workspace_path(page_record))
       expect(page).to have_link("View", href: admin_page_path(page_record))
       find(:xpath, "//a[text()='View' and @href='#{admin_page_path(page_record)}']").click
 
@@ -159,10 +160,10 @@ RSpec.describe "Admin Pages", type: :system do
     before { visit admin_pages_path }
 
     it "deletes an page successfully" do
-      open_row_menu(edit_admin_page_path(page_record))
+      open_row_menu(admin_page_workspace_path(page_record))
       find("form[action='#{admin_page_path(page_record)}'] button", text: "Delete").click
       page.driver.browser.switch_to.alert.accept # Confirm alert
-      expect(page).to have_no_link("Edit", href: edit_admin_page_path(page_record))
+      expect(page).to have_no_link("Edit", href: admin_page_workspace_path(page_record))
 
       expect(Page.exists?(page_record.id)).to be(false)
     end

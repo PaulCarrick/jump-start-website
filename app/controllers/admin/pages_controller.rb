@@ -42,16 +42,94 @@ class Admin::PagesController < Admin::AbstractAdminController
   end
 
   def edit
-    if (params[:canceled] == "true") && (params[:new_section] == "true") && params[:section_id].present?
-      # Cancelling "Add Section" removes the section it just made. Because this
-      # arrives as a plain link, only remove a section of this page that has
-      # never been published, so a crafted link cannot delete real content.
-      section = Section.find_by(id: params[:section_id], page_id: params[:id])
-      never_published = section.present? && !Section.unscoped.where(id: section.id, temporal_state: "live").exists?
-      section.destroy if never_published
+    remove_cancelled_new_section
+    super
+  end
+
+  # The page editor: outline, preview and a panel for the chosen section or
+  # column (docs/admin-redesign-plan.md, stage 5). The classic editor (edit)
+  # stays for anything not here yet.
+  def workspace
+    remove_cancelled_new_section
+    set_item
+    raise ActiveRecord::RecordNotFound, "Page not found." unless get_item
+
+    get_sections
+    @sections = @sections.to_a
+    cells = @sections.flat_map(&:cells)
+    @selected_cell = cells.find { |cell| cell.id == params[:cell].to_i } if params[:cell].present?
+    @selected_section = if @selected_cell
+                          @sections.find { |section| section.id == @selected_cell.section_id }
+    elsif params[:section].present?
+                          @sections.find { |section| section.id == params[:section].to_i }
+    end
+    @selected_cell.formatting = {} if @selected_cell && @selected_cell.formatting.blank?
+    @section_names = Section.distinct.order(:section_name).pluck(:section_name)
+  rescue StandardError => e
+    handle_error(:index, e)
+  end
+
+  # Takes the page's sections in their new order, each with its columns in
+  # their new order: [{ id:, cells: [id, ...] }, ...]. Columns stay in their
+  # own section. Only what changed is saved, as drafts.
+  def reorder
+    return render(json: { error: "Only administrators can change pages." }, status: :forbidden) unless @application_user&.admin?
+
+    page = Page.find(params[:id])
+    sections = page.ordered_sections.includes(:cells).to_a.index_by(&:id)
+    entries = Array(params.require(:sections)).map do |entry|
+      { id: entry[:id].to_i, cells: Array(entry[:cells]).map(&:to_i) }
+    end
+    unless entries.map { |entry| entry[:id] }.sort == sections.keys.sort &&
+           entries.all? { |entry| entry[:cells].sort == sections[entry[:id]].cells.map(&:id).sort }
+      return render(json: { error: "The page has changed since it was opened. Reload the page." }, status: :unprocessable_content)
     end
 
-    super
+    changed = 0
+    Page.transaction do
+      entries.each_with_index do |entry, index|
+        section = sections[entry[:id]]
+        order = (index + 1) * 10
+        if section.section_order != order
+          section.update!(section_order: order)
+          changed += 1
+        end
+        cells = section.cells.index_by(&:id)
+        entry[:cells].each_with_index do |cell_id, cell_index|
+          cell = cells[cell_id]
+          next if cell.cell_order == cell_index + 1
+
+          cell.update!(cell_order: cell_index + 1)
+          changed += 1
+        end
+      end
+    end
+    render json: { changed: changed }
+  rescue ActiveRecord::StaleObjectError
+    render json: { error: "Someone else changed this page. Reload the page and try again." }, status: :conflict
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { error: e.record.errors.full_messages.to_sentence }, status: :unprocessable_content
+  end
+
+  # A new, empty text column at the end of a section, opened in the panel.
+  def add_column
+    page = Page.find(params[:id])
+    section = page.ordered_sections.find(params[:section_id])
+    unless @application_user&.admin?
+      redirect_to admin_page_workspace_path(page, section: section.id), status: :see_other, alert: "You are not permitted to add columns."
+      return
+    end
+
+    cell = section.cells.create!(section_name: section.section_name,
+                                 cell_name:    Cell.generate_unique_name,
+                                 cell_type:    "text",
+                                 cell_order:   section.cells.maximum(:cell_order).to_i + 1,
+                                 content:      "",
+                                 formatting:   { "classes" => "m-3" })
+    redirect_to admin_page_workspace_path(page, cell: cell.id), status: :see_other, notice: "Column added. Write its text below."
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to admin_page_workspace_path(params[:id], section: params[:section_id]), status: :see_other,
+                alert: "Could not add a column: #{e.record.errors.full_messages.to_sentence}"
   end
 
   def renumber_sections
@@ -108,11 +186,19 @@ class Admin::PagesController < Admin::AbstractAdminController
     @new_section            = true
     @read_only_content_type = true
 
+    if params[:workspace].present?
+      return_url = admin_page_workspace_path(page, section: section.id)
+      cancel_url = admin_page_workspace_path(page, new_section: true)
+    else
+      return_url = edit_admin_page_path(page, section_name: section.section_name, return_url: admin_return_url)
+      cancel_url = edit_admin_page_path(page, return_url: admin_return_url, new_section: true)
+    end
+
     redirect_to edit_admin_section_path(section,
                                         read_only_content_type: @read_only_content_type,
                                         new_section:            @new_section,
-                                        return_url:             edit_admin_page_path(page, section_name: section.section_name, return_url: admin_return_url),
-                                        cancel_url:             edit_admin_page_path(page, return_url: admin_return_url, new_section: true),
+                                        return_url:             return_url,
+                                        cancel_url:             cancel_url,
                                         turbo:                  false)
   end
 
@@ -126,6 +212,17 @@ class Admin::PagesController < Admin::AbstractAdminController
   end
 
   private
+
+  # Cancelling "Add Section" removes the section it just made. Because this
+  # arrives as a plain link, only remove a section of this page that has never
+  # been published, so a crafted link cannot delete real content.
+  def remove_cancelled_new_section
+    return unless params[:canceled] == "true" && params[:new_section] == "true" && params[:section_id].present?
+
+    section = Section.find_by(id: params[:section_id], page_id: params[:id])
+    never_published = section.present? && !Section.unscoped.where(id: section.id, temporal_state: "live").exists?
+    section.destroy if never_published
+  end
 
   def setup_options(page = nil)
     if page.present?
