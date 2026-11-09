@@ -37,7 +37,7 @@ RSpec.describe Admin::ImageFilesController, type: :controller do
 
     it "sets the correct default attributes" do
       get :index
-      expect(controller.instance_variable_get(:@page_limit)).to eq(4)
+      expect(controller.instance_variable_get(:@page_limit)).to eq(24)
       expect(controller.instance_variable_get(:@default_column)).to eq('id')
       expect(controller.instance_variable_get(:@has_query)).to be(true)
       expect(controller.instance_variable_get(:@has_sort)).to be(true)

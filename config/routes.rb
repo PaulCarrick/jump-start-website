@@ -56,6 +56,7 @@ Rails.application.routes.draw do
     get "/page/new_section", to: "pages#add_section_to_page", as: "add_section_to_new_page"
     resources :users, except: [ :destroy ]
     delete "/users/:id", to: "users#destroy", as: "delete_user"
+    post "/image_files/upload", to: "image_files#upload", as: "upload_image_files"
     resources :image_files, except: [ :destroy ]
     delete "/image_files/:id", to: "image_files#destroy", as: "delete_image_file"
     get "/menus", to: "menus#index", as: "menus"

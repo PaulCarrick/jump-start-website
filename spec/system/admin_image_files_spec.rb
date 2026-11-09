@@ -4,9 +4,10 @@ RSpec.describe "Admin Image Files", type: :system do
   def search_image_files(name)
     visit admin_image_files_path
 
-    expect(page).to have_field(name: 'q[name_cont]')
-    fill_in "q[name_cont]", with: name
-    click_button "Search Images"
+    field = 'q[name_or_caption_or_description_or_group_cont]'
+    expect(page).to have_field(name: field)
+    fill_in field, with: name
+    click_button "Search"
     expect(page).to have_current_path(%r{\A/admin/image_files\?.*q%5B})
   end
 
@@ -41,6 +42,7 @@ RSpec.describe "Admin Image Files", type: :system do
 
     it "lists all image files with their attributes" do
       search_image_files("Test Image")
+      click_link "Details of Test Image"
 
       expect(page).to have_content("Test Image")
       expect(page).to have_content("Test Caption")
@@ -50,9 +52,10 @@ RSpec.describe "Admin Image Files", type: :system do
 
     it "renders action links for each image file" do
       search_image_files("Test Image")
+      click_link "Details of Test Image"
 
       expect(page).to have_link("View", href: admin_image_file_path(image_file))
-      expect(page).to have_link("Edit", href: edit_admin_image_file_path(image_file))
+      expect(page).to have_link("Edit caption, description or file", href: %r{#{edit_admin_image_file_path(image_file)}\?return_url=})
       expect(page).to have_css("form[action='#{admin_image_file_path(image_file)}'] button", text: "Delete")
     end
 
@@ -113,10 +116,12 @@ RSpec.describe "Admin Image Files", type: :system do
     it "deletes an image file successfully" do
       search_image_files("Test Image")
 
-      expect(page).to have_current_path(/q%5Bname_cont%5D=Test(?:\+|%20)Image/)
+      expect(page).to have_current_path(/q%5Bname_or_caption_or_description_or_group_cont%5D=Test(?:\+|%20)Image/)
+      click_link "Details of Test Image"
       accept_confirm do
-        find("form[action='#{admin_image_file_path(image_file)}'] button", text: "Delete").click
+        click_button "Delete this file"
       end
+      expect(page).to have_content("Image File deleted successfully.")
       expect(page).not_to have_content("Test Image")
     end
   end

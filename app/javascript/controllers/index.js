@@ -18,3 +18,9 @@ application.register("admin-tabs", AdminTabsController)
 
 import MenuTreeController from "./menu_tree_controller"
 application.register("menu-tree", MenuTreeController)
+
+import MediaUploadController from "./media_upload_controller"
+application.register("media-upload", MediaUploadController)
+
+import MediaGroupController from "./media_group_controller"
+application.register("media-group", MediaGroupController)

@@ -1,122 +1,103 @@
 <!-- app/views/admin/image_files/index.html.erb -->
-<% content_for :title, "#{@site_information.site_name} - Admin Dashboard - Image Files" %>
-<%= javascript_include_tag 'views/admin/image_files/index' %>
-
+<%
+  current_group = @q&.conditions&.find { |condition| condition.key == "group_eq" }&.value
+  showing_ungrouped = @q&.conditions&.any? { |condition| condition.key == "group_blank" }
+  filtered = @q&.conditions.present?
+  library_path = ->(options = {}) { admin_image_files_path({ page: params[:page] }.compact.merge(options)) }
+  can_change = @application_user&.admin?
+%>
 <%= render layout: "layouts/admin_page" do %>
-  <h1 class="mb-3">Manage Image Files</h1>
-  <div class="mb-3">
-    <%= link_to("New Image", new_admin_image_file_path, class: "btn btn-primary", target: "_self") %>
+  <div class="admin-list-heading">
+    <h1 class="admin-page-title">Media</h1>
+    <span class="admin-list-count"><%= pluralize(@pagy&.count || controller.get_items.size, "file") %><%= " found" if filtered %></span>
+    <%= link_to("New Image", new_admin_image_file_path, class: "btn btn-outline-primary admin-list-new", target: "_self",
+                title: "Add one image with its caption and description") %>
   </div>
-  <div class="auto-size">
-    <div class="row admin-sort-header border-bottom border-dark mb-2">
-      <div class="col-5 text-center"><%= column_heading("Preview") %></div>
-      <div class="col-2"><%= sortable_column('Name', 'name', "image_files") %></div>
-      <div class="col-1"><%= sortable_column('Group', 'group', "image_files") %></div>
-      <div class="col-4 d-flex align-items-start justify-content-end flex-wrap gap-2">
-        <%= link_to "Clear Sort", '#', class: "btn btn-secondary", onclick: "clearSort()" %>
-        <%= render 'shared/top_page_navigation' %>
+
+  <% if can_change %>
+    <%= form_tag(admin_upload_image_files_path, method: :post, multipart: true, class: "admin-dropzone",
+                 data: { controller: "media-upload", turbo: false, action: "dragover->media-upload#over dragleave->media-upload#leave drop->media-upload#drop" }) do %>
+      <div class="admin-dropzone-text">
+        <strong>Drop images or MP4 videos here</strong>
+        <span>or <label for="media-upload-files" class="admin-dropzone-choose">choose files</label> — up to <%= Admin::ImageFilesController::MAX_UPLOAD_FILES %> at a time. Each is named after its file.</span>
+        <span class="admin-dropzone-chosen" data-media-upload-target="chosen" aria-live="polite"></span>
       </div>
+      <%= file_field_tag "files[]", id: "media-upload-files", multiple: true, accept: "image/*,video/mp4", class: "visually-hidden",
+                         data: { media_upload_target: "input", action: "change->media-upload#chosen" } %>
+      <label class="admin-dropzone-group">
+        <span>Add to group (optional)</span>
+        <%= text_field_tag :group, current_group, class: "form-control", list: "media-groups", placeholder: "No group" %>
+      </label>
+      <%= submit_tag "Upload", class: "btn btn-primary", disabled: true, data: { media_upload_target: "submit" } %>
+    <% end %>
+  <% end %>
+
+  <div class="admin-list-tools">
+    <%= admin_search_box(admin_image_files_path, "name_or_caption_or_description_or_group_cont", placeholder: "Search by name, caption, description or group") %>
+  </div>
+
+  <nav class="admin-chips" aria-label="Filter by group">
+    <%= link_to("All", admin_image_files_path(clear_search: true), class: "admin-chip#{' is-current' unless filtered}", target: "_self") %>
+    <% @group_counts.each do |group, count| %>
+      <%= link_to(admin_image_files_path("q[group_eq]" => group), class: "admin-chip#{' is-current' if current_group == group}", target: "_self") do %>
+        <%= group %> <span class="admin-chip-count"><%= count %></span>
+      <% end %>
+    <% end %>
+    <% if @ungrouped_count.positive? %>
+      <%= link_to(admin_image_files_path("q[group_blank]" => "1"), class: "admin-chip#{' is-current' if showing_ungrouped}", target: "_self") do %>
+        No group <span class="admin-chip-count"><%= @ungrouped_count %></span>
+      <% end %>
+    <% end %>
+  </nav>
+
+  <div class="admin-media">
+    <div>
+      <% if controller.get_items.empty? %>
+        <p class="admin-list-empty admin-table-box">No files found.</p>
+      <% end %>
+      <ul class="admin-media-grid">
+        <% controller.get_items.each do |image_file| %>
+          <li class="admin-media-card<%= ' is-selected' if @selected&.id == image_file.id %><%= ' is-hidden' unless image_file.enabled %>" data-image-id="<%= image_file.id %>">
+            <%= link_to(library_path.call(selected: image_file.id), class: "admin-media-thumb", target: "_self",
+                        title: "Details of #{image_file.name}", aria: { label: "Details of #{image_file.name}" }) do %>
+              <% if !image_file.image.attached? %>
+                <span class="admin-media-missing">No file</span>
+              <% elsif image_file.mime_type == "video/mp4" %>
+                <video src="<%= image_file.image_url %>#t=0.1" preload="metadata" muted playsinline></video>
+                <span class="admin-media-play" aria-hidden="true">▶</span>
+              <% else %>
+                <img src="<%= image_file.image_url %>" alt="" loading="lazy" decoding="async">
+              <% end %>
+            <% end %>
+            <div class="admin-media-meta">
+              <span class="admin-media-name" title="<%= image_file.name %>"><%= image_file.name %></span>
+              <span class="admin-media-sub">
+                <%= image_file.group.presence || "No group" %>
+                <% unless image_file.enabled %> · Hidden<% end %>
+                <% if image_file.respond_to?(:temporal_state) && image_file.temporal_state == "draft" %> · Draft<% end %>
+              </span>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+      <div class="admin-list-footer"><%= render 'shared/page_navigation' %></div>
     </div>
-    <div class="scrollable-container p-2" style="min-height: 90%">
-      <% controller.get_items.each do |image_file| %>
-        <div class="row mb-5">
-          <div class="col-5">
-            <% if image_file.image.attached? %>
-              <div class="row text-center">
-                <%= raw(image_file.caption) %>
-              </div>
-              <div class="row text-center">
-                <% if image_file.mime_type === "video/mp4" %>
-                  <video id="videoElement"
-                         controls style="width: 100%;"
-                         src="<%= image_file.image_url %>">
-                  </video>
-                <% else %>
-                  <%
-                    cell = Cell.new(section_name: "Temp",
-                                    cell_name:    "Temp",
-                                    cell_order:   1,
-                                    cell_type:    "image",
-                                    width:        "100%",
-                                    image:        "ImageFile:#{image_file.name}",
-                                    content:      image_file.description)
-                  %>
-                <% end %>
-              </div>
-              <div class="row">
-                <%= react_component("RenderCell",
-                                    {
-                                      cell:     cell,
-                                      editing:  false,
-                                      noBorder: true,
-                                      noHidden: true
-                                    }
-                    )
-                %>
-              </div>
-              <div class="row">
-                <%= raw(image_file.description) %>
-              </div>
-            <% else %>
-              "<p>No image available</p>"
-            <% end %>
-          </div>
-          <div class="col-2"><%= image_file.name %></div>
-          <div class="col-1">
-            <% if image_file.group.present? %>
-              <div class="mb-2"><%= image_file.group %></div>
-            <% end %>
-            <button type="button" class="btn btn-primary text-nowrap" onclick="addToGroup(<%= image_file.id %>)">
-              Add Group
-            </button>
-          </div>
-          <div class="col-4" style="min-height: 2em;">
-            <% delete_path = admin_image_file_path(image_file) %>
-            <%= action_links(image_file,
-                             admin_image_file_path(image_file),
-                             edit_admin_image_file_path(image_file),
-                             delete_path) %>
-          </div>
+
+    <aside class="admin-menu-panel admin-media-panel<%= ' is-empty' unless @selected %>" aria-label="Details of the chosen file">
+      <% if @selected %>
+        <%= render "details", image_file: @selected, library_path: library_path, can_change: can_change %>
+      <% else %>
+        <div class="admin-panel-empty">
+          <h2 class="admin-panel-title">Choose a file</h2>
+          <p class="form-text">Click a picture to see its details, where it is used, and to change its group.</p>
         </div>
       <% end %>
-      <div class="row mt-3 mb-3">
-        <div class="col-12 justify-content-end">
-          <%= render 'shared/page_navigation' %>
-        </div>
-      </div>
-    </div>
-    <%= search_form_for @q,
-                        url:    admin_image_files_path,
-                        class:  "mt-3 p-2 rounded-box",
-                        method: :get,
-                        html:   { target: "_self", "data-turbo": "false", "data-turbolinks": "false" } do |form| %>
-      <div class="row mt-2 mb-2">
-        <div class="col-2"><%= form.label :name_cont, "Name", class: "form-label" %></div>
-        <div class="col-3"><%= form.search_field :name_cont %></div>
-        <div class="col-2"><%= form.label :group_cont, "Group", class: "form-label" %></div>
-        <div class="col-3"><%= form.search_field :group_cont %></div>
-        <div class="col-1"></div>
-      </div>
-      <div class="row mt-2 mb-2">
-        <div class="col-2"><%= form.label :caption_cont, "Caption", class: "form-label" %></div>
-        <div class="col-3"><%= form.search_field :caption_cont %></div>
-        <div class="col-1"></div>
-        <div class="col-2"><%= form.label :description_cont, "Description", class: "form-label" %></div>
-        <div class="col-3"><%= form.search_field :description_cont %></div>
-        <div class="col-1"></div>
-      </div>
-      <div>
-        <%= form.submit "Search Images", class: "btn btn-primary" %>
-        <%= link_to 'Clear Search', admin_image_files_path(clear_search: true), class: "btn btn-secondary", target: "_self" %>
-      </div>
-    <% end %>
-    <div id="videoPlayer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 1000;">
-      <div style="position: relative; width: 80%; max-width: 800px; margin: 50px auto; background: #fff; padding: 20px; border-radius: 10px;">
-        <video id="videoElement" controls style="width: 100%;"></video>
-        <button type="button" class="btn btn-danger" onclick="closeVideoPlayer()" style="display: block; margin: 20px auto;">
-          Close
-        </button>
-      </div>
-    </div>
+    </aside>
   </div>
+
+  <datalist id="media-groups">
+    <% @group_counts.each_key do |group| %>
+      <option value="<%= group %>"></option>
+    <% end %>
+  </datalist>
 <% end %>

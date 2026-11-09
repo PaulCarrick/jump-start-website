@@ -520,3 +520,50 @@ a.admin-card:hover { color: var(--admin-text); border-color: var(--admin-accent)
   .admin-menu-link { display: none; }
   .admin-menu-children { padding-left: 16px; }
 }
+
+/* Media library (stage 4) */
+.admin-dropzone {
+  display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;
+  padding: 16px; margin-bottom: 14px;
+  border: 2px dashed var(--admin-line); border-radius: 12px; background: var(--admin-panel);
+}
+.admin-dropzone.is-over { border-color: var(--admin-accent); background: #eef4ff; }
+.admin-dropzone-text { display: grid; gap: 2px; flex: 1 1 260px; color: var(--admin-muted); }
+.admin-dropzone-text strong { color: var(--admin-text); }
+.admin-dropzone-choose { color: var(--admin-accent); text-decoration: underline; cursor: pointer; }
+.admin-dropzone-chosen { color: var(--admin-text); font-size: 13px; overflow-wrap: anywhere; }
+.admin-dropzone-group { display: grid; gap: 4px; font-size: 13px; color: var(--admin-muted); flex: 0 1 220px; }
+.admin-dropzone:focus-within { outline: 2px solid var(--admin-accent); outline-offset: 2px; }
+.admin-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 14px; }
+.admin-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px;
+  border: 1px solid var(--admin-line); background: var(--admin-panel); color: var(--admin-text); text-decoration: none; font-size: 13px;
+}
+.admin-chip:hover { border-color: var(--admin-accent); }
+.admin-chip.is-current { background: var(--admin-accent); border-color: var(--admin-accent); color: #fff; }
+.admin-chip-count { opacity: 0.7; font-size: 12px; }
+.admin-media { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
+@media (max-width: 900px) { .admin-media { grid-template-columns: 1fr; } .admin-media-panel { order: -1; position: static; } .admin-media-panel.is-empty { display: none; } }
+.admin-media-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.admin-media-card { background: var(--admin-panel); border: 1px solid var(--admin-line); border-radius: 10px; overflow: hidden; }
+.admin-media-card.is-selected { border-color: var(--admin-accent); box-shadow: 0 0 0 2px rgba(31, 95, 214, 0.25); }
+.admin-media-card.is-hidden img, .admin-media-card.is-hidden video { opacity: 0.45; }
+.admin-media-thumb { position: relative; display: block; aspect-ratio: 4 / 3; background: var(--admin-ground); }
+.admin-media-thumb img, .admin-media-thumb video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.admin-media-play {
+  position: absolute; inset: auto 8px 8px auto; width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6); color: #fff; display: grid; place-items: center; font-size: 12px;
+}
+.admin-media-missing { display: grid; place-items: center; height: 100%; color: var(--admin-muted); font-size: 13px; }
+.admin-media-meta { display: grid; padding: 6px 8px 8px; min-width: 0; }
+.admin-media-name { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-media-sub { color: var(--admin-muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-media-preview { margin: -16px -16px 12px; background: var(--admin-ground); border-radius: 12px 12px 0 0; overflow: hidden; }
+.admin-media-preview img, .admin-media-preview video { display: block; width: 100%; max-height: 260px; object-fit: contain; }
+.admin-media-preview .admin-media-missing { height: 120px; }
+.admin-media-facts { font-size: 14px; margin: 8px 0 12px; }
+.admin-media-facts dt { color: var(--admin-muted); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em; margin-top: 8px; }
+.admin-media-facts dd { margin: 2px 0 0; overflow-wrap: anywhere; }
+.admin-media-usage { list-style: none; margin: 0; padding: 0; }
+.admin-media-group-fields { grid-template-columns: minmax(0, 1fr) 110px; }
+.admin-media-more { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }

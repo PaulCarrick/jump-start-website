@@ -1,0 +1,91 @@
+<%# The media library's details panel for one file. %>
+<% return_here = library_path.call(selected: image_file.id) %>
+<div class="admin-media-preview">
+  <% if !image_file.image.attached? %>
+    <span class="admin-media-missing">No file</span>
+  <% elsif image_file.mime_type == "video/mp4" %>
+    <video src="<%= image_file.image_url %>" controls preload="metadata"></video>
+  <% else %>
+    <a href="<%= image_file.image_url %>" target="_blank" rel="noopener" title="Open full size">
+      <img src="<%= image_file.image_url %>" alt="<%= strip_tags(image_file.caption.to_s).squish.presence || image_file.name %>">
+    </a>
+  <% end %>
+</div>
+
+<h2 class="admin-panel-title"><%= image_file.name %></h2>
+<p class="form-text"><%= admin_status_badge(image_file) %> <%= image_file.mime_type %></p>
+
+<dl class="admin-media-facts">
+  <% if image_file.caption.present? %>
+    <dt>Caption</dt>
+    <dd><%= strip_tags(image_file.caption).squish %></dd>
+  <% end %>
+  <% if image_file.description.present? %>
+    <dt>Description</dt>
+    <dd><%= truncate(strip_tags(image_file.description).squish, length: 200) %></dd>
+  <% end %>
+  <dt>Used on</dt>
+  <dd>
+    <% if @usages.blank? %>
+      Not used on any page.
+    <% else %>
+      <ul class="admin-media-usage">
+        <% @usages.each do |usage| %>
+          <li>
+            <% if usage.page %>
+              <%= link_to(usage.label, edit_admin_page_path(usage.page), target: "_self") %>
+            <% else %>
+              <%= usage.label %>
+            <% end %>
+            <span class="admin-cell-muted">· <%= usage.ways.join(", ") %></span>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </dd>
+</dl>
+
+<%= form_with(model: image_file, url: admin_image_file_path(image_file), method: :patch, local: true,
+              class: "admin-media-quick", data: { turbo: false, controller: "media-group" }) do |form| %>
+  <%= hidden_field_tag :return_url, return_here %>
+  <fieldset <%= "disabled" unless can_change %>>
+    <%= render "shared/enabled_switch", form: form %>
+    <div class="admin-field-grid admin-media-group-fields">
+      <div class="mb-3">
+        <%= form.label :group, "Group", class: "form-label" %>
+        <%= form.text_field :group, class: "form-control", list: "media-groups", placeholder: "No group",
+                            data: { action: "change->media-group#changed", media_group_target: "group",
+                                    original: image_file.group.to_s,
+                                    next_orders: ImageFile.where.not(group: [ nil, "" ]).group(:group).maximum(:slide_order).transform_values { |order| order.to_i + 1 }.to_json } %>
+      </div>
+      <div class="mb-3">
+        <%= form.label :slide_order, "Slide order", class: "form-label" %>
+        <%= form.number_field :slide_order, class: "form-control", step: 1, min: 1, max: 999,
+                              data: { media_group_target: "order" } %>
+      </div>
+    </div>
+  </fieldset>
+  <div class="admin-form-actions">
+    <%= link_to("Close", library_path.call, class: "btn btn-secondary", target: "_self") %>
+    <%= form.submit "Save", class: "btn btn-primary", disabled: !can_change %>
+  </div>
+<% end %>
+
+<div class="admin-media-more">
+  <%= link_to("Edit caption, description or file", edit_admin_image_file_path(image_file, return_url: return_here), class: "btn btn-outline-primary btn-sm", target: "_self") %>
+  <%= link_to("View", admin_image_file_path(image_file), class: "btn btn-light btn-sm", target: "_self") %>
+  <% if BitemporalRecord::MODELS.include?("ImageFile") %>
+    <%= link_to("History", admin_publishing_history_path(model: "ImageFile", record_id: image_file.id), class: "btn btn-light btn-sm", target: "_self") %>
+  <% end %>
+</div>
+
+<% if can_change %>
+  <div class="admin-panel-danger">
+    <%= button_to("Delete this file", admin_image_file_path(image_file),
+                  method:  :delete,
+                  params:  { return_url: library_path.call },
+                  class:   "btn btn-outline-danger btn-sm",
+                  form:    { data: { turbo: false } },
+                  onclick: "return confirm('#{j(@usages.present? ? 'This file is used on a page. Delete it anyway?' : 'Delete this file?')}');") %>
+  </div>
+<% end %>

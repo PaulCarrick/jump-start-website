@@ -44,8 +44,9 @@ RSpec.describe "Admin Menus screen", type: :system do
       fill_in "Links to", with: "/first"
       click_button "Save item"
     end
-    expect(page).to have_content("Menu Item updated successfully.")
+    # Wait for the redirect before reading the page.
     expect(page).to have_current_path(admin_menus_path(kind: "header", selected: menu_item_1.id))
+    expect(page).to have_content("Menu Item updated successfully.")
     expect(page).to have_css(".admin-menu-label", text: "First item")
   end
 
@@ -55,6 +56,7 @@ RSpec.describe "Admin Menus screen", type: :system do
       fill_in "Links to", with: "javascript:alert(1)"
       click_button "Save item"
     end
+    expect(page).to have_current_path(/edit/)
     expect(page).to have_content("must be a page on this site")
     expect(MenuItem.find(menu_item_1.id).link).to eq("/one")
   end

@@ -21,8 +21,8 @@ RSpec.describe 'Consistent action button heights', type: :system do
     image = create(:image_file)
     visit admin_image_files_path
     expect(page).to have_link('New Image')
-    expect(page).to have_button('Add Group')
-    expect(page).to have_button('Search Images')
+    expect(page).to have_button('Upload', disabled: true)
+    expect(page).to have_button('Search')
     expect(page).to have_css('.btn.disabled')
     expect_uniform_buttons
     page.driver.browser.manage.window.resize_to(390, 844)
