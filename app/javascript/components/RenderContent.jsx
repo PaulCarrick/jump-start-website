@@ -19,11 +19,10 @@ const RenderContent = ({
                        }) => {
   const rowClasses = `row ${options.row_classes}`;
   let text         = content;
+  // In the two-part layouts the text has its own column, so the picture side
+  // gets none (a slide show would otherwise repeat it). A single column with
+  // a slide show shows its text above the slides (RenderSlideShow).
   let captions     = "";
-
-  if (options.slide_show_images) {
-    captions = text;
-  }
 
   switch (options.row_style) {
     case "text-left":

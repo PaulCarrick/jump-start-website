@@ -64,7 +64,7 @@ class Admin::PagesController < Admin::AbstractAdminController
                           @sections.find { |section| section.id == params[:section].to_i }
     end
     @selected_cell.formatting = {} if @selected_cell && @selected_cell.formatting.blank?
-    @section_names = Section.distinct.order(:section_name).pluck(:section_name)
+    @section_names = @sections.map(&:section_name).compact.uniq
   rescue StandardError => e
     handle_error(:index, e)
   end
