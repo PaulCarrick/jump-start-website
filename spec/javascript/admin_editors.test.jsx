@@ -10,7 +10,7 @@ vi.mock('react-quill-new', () => ({ Quill: { import: () => class {}, register: v
 vi.mock('../../app/javascript/components/RenderCell', () => ({ default: () => <div>Preview</div> }));
 vi.mock('../../app/javascript/components/renderUtilities', () => ({
   renderSectionName: () => null, renderCellName: () => null, renderImage: () => null,
-  renderLink: () => null, renderCellOrder: () => null,
+  renderLink: () => null, renderCellOrder: () => null, renderCellWidth: () => null,
   renderContent: (key, value, setValue) => <input aria-label="Column content" value={value || ''} onChange={e => setValue(e.target.value, key)} />
 }));
 import HtmlEditor from '../../app/javascript/components/HtmlEditor.jsx';

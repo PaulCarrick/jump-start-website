@@ -307,7 +307,7 @@ export function formattingOptions(formattingData: Record<string, any>) {
   if (!isPresent(formattingData?.classes))
     fields.push({ label: "Classes", value: "classes" });
 
-  if (!isPresent(formattingData?.formatting))
+  if (!isPresent(formattingData?.styles))
     fields.push({ label: "Styles", value: "styles" });
 
   if (!isPresent(formattingData?.image_caption))
@@ -315,9 +315,6 @@ export function formattingOptions(formattingData: Record<string, any>) {
 
   if (!isPresent(formattingData?.caption_position))
     fields.push({ label: "Image Caption Position", value: "caption_position" });
-
-  if (!isPresent(formattingData?.caption_classes))
-    fields.push({ label: "Caption Classes", value: "caption_classes" });
 
   if (!isPresent(formattingData?.caption_classes))
     fields.push({ label: "Caption Classes", value: "caption_classes" });

@@ -16,6 +16,7 @@ import {
   renderImage,
   renderLink,
   renderCellOrder,
+  renderCellWidth,
   renderSectionName,
   renderCellName,
 } from "./renderUtilities";
@@ -239,6 +240,7 @@ const CellEditor: React.FC<CellEditorProps> = ({
               )}
               {renderCellName(cellData?.cell_name, setValue)}
               {renderCellOrder(cellData?.cell_order, setValue)}
+              {renderCellWidth(cellData?.width || null, setValue)}
             </>,
           )}
           <div className="cell-editor-preview">
@@ -293,6 +295,7 @@ const CellEditor: React.FC<CellEditorProps> = ({
         )}
         {renderLink(cellData?.link || null, setValue)}
         {renderCellOrder(cellData?.cell_order, setValue)}
+        {renderCellWidth(cellData?.width || null, setValue)}
         <FormattingEditor
           formatting={cellData?.formatting || {}}
           onChange={setValue}

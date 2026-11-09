@@ -10,6 +10,7 @@ class Section < ApplicationRecord
 
   after_find :verify_checksum, unless: -> { Thread.current[:skip_checksum_verification] }
   after_find :setup_formatting
+  after_update :rename_cells, if: :saved_change_to_section_name?
 
   include Checksum
   include Validation
@@ -25,6 +26,7 @@ class Section < ApplicationRecord
   scope :names, ->() { all.distinct.order(:section_name).pluck(:section_name) }
 
   validates :section_name, presence: true, uniqueness: { conditions: -> { working_or_live } }
+  validates :section_name, format: { with: /\A[\w\-. ]+\z/, message: "can only use letters, numbers, spaces, dots, dashes and underscores" }, allow_blank: true, if: :section_name_changed?
 
   def self.ransackable_attributes(auth_object = nil)
     %w[content_type section_name image link description]
@@ -502,6 +504,14 @@ class Section < ApplicationRecord
 
     unless skip_check || validate_html(description, :description)
       errors.add(:base, "Invalid HTML in Description.")
+    end
+  end
+
+  # Columns keep their section's name (the page uses it as the section's
+  # anchor), so a renamed section renames them too, as drafts like any edit.
+  def rename_cells
+    Cell.where(section_id: id).where.not(section_name: section_name).find_each do |cell|
+      cell.update!(section_name: section_name)
     end
   end
 end

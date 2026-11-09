@@ -51,7 +51,7 @@ vi.mock("../../app/javascript/components/renderUtilities", () => ({
   renderContent: () => null,
   renderImage: () => null,
   renderLink: () => null,
-  renderCellOrder: () => null,
+  renderCellOrder: () => null, renderCellWidth: () => null,
   renderSectionOrder: () => null,
 }));
 vi.mock("../../app/javascript/services/imageFileService", () => ({

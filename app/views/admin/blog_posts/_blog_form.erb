@@ -9,7 +9,6 @@
   <%= render "shared/enabled_switch", form: form %>
   <%= hidden_field_tag :return_url, admin_return_url %>
   <%= form.hidden_field :content, id: "blog_post_content", name: "blog_post[content]" %>
-  <%= form.hidden_field :posted, value: controller.get_item&.posted.present? ? controller.get_item.posted : DateTime.now %>
 
   <h1>
     <% if controller.get_item&.persisted? %>
@@ -48,6 +47,16 @@
                     options_for_select(%w[Personal Professional], form.object.blog_type),
                     class: "form-control"
     %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :posted, "Posted (UTC)", class: "form-label" %>
+    <%= form.datetime_local_field :posted,
+                                  value: (form.object.posted.presence || Time.current).utc.strftime("%Y-%m-%dT%H:%M:%S"),
+                                  step:  1,
+                                  class: "form-control",
+                                  aria:  { describedby: "blogPostedHelp" } %>
+    <div id="blogPostedHelp" class="form-text">The date shown on the post. Posts are listed newest first.</div>
   </div>
 
   <div class="mb-3">

@@ -47,6 +47,20 @@ RSpec.describe 'Site setup name suggestions', type: :system do
     find_field('site_setup[site_name]').send_keys(:tab)
     expect(page).to have_field('site_setup[site_url]', with: 'https://example.com/updated-site')
     expect(page).to have_field('site_setup[database]', with: 'original-site', readonly: true, visible: :all)
-    expect(page).to have_field('site_setup[owner_name]', with: 'Updated Site')
+    # A running site's owner is not derived from its name, so it stays.
+    expect(page).to have_field('site_setup[owner_name]', with: 'Test User')
+  end
+
+  it 'renames a running site without moving its address or database' do
+    setup = create(:site_setup, default_setup: false, configuration_name: 'main', database: 'main-site-database',
+                   site_name: 'Jump Start Website', owner_name: 'Jump Start', site_url: 'http://localhost:3000')
+    visit edit_admin_site_setup_path(setup)
+    fill_in 'site_setup[site_name]', with: 'Paul Carrick'
+    find_field('site_setup[site_name]').send_keys(:tab)
+    expect(page).to have_field('site_setup[site_name]', with: 'Paul Carrick')
+    expect(page).to have_field('site_setup[site_url]', with: 'http://localhost:3000')
+    expect(page).to have_field('site_setup[database]', with: 'main-site-database', visible: :all)
+    expect(page).to have_field('site_setup[owner_name]', with: 'Jump Start')
+    expect(page).to have_no_content('New administrator')
   end
 end

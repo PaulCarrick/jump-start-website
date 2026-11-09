@@ -10,6 +10,7 @@ vi.mock('../../app/javascript/components/renderUtilities', () => ({
   renderImage: () => <div>Image picker</div>,
   renderLink: () => <div>Link field</div>,
   renderCellOrder: () => <div>Order field</div>,
+  renderCellWidth: (width, setValue) => <input aria-label="Width" value={width || ''} onChange={e => setValue(e.target.value, 'width')} />,
   renderContent: (key, value, setValue) => <input aria-label="Column content" value={value || ''} onChange={e => setValue(e.target.value, key)} />
 }));
 import CellEditor from '../../app/javascript/components/CellEditor';
@@ -46,6 +47,16 @@ describe('the column editor in the page workspace', () => {
     render(<CellEditor cell={{ ...cell, content: null, image: 'ImageFile:rose' }} editorOptions={{ tabbed: true }} />);
     expect(screen.getByRole('tab', { name: 'Image' }).getAttribute('aria-selected')).toBe('true');
     expect(shown(screen.getByText('Image picker'))).toBe(true);
+  });
+
+  it('edits the column width on the Advanced tab', () => {
+    const onChange = vi.fn();
+    render(<CellEditor cell={{ ...cell, width: 'auto' }} editorOptions={{ tabbed: true }} />);
+    fireEvent.click(screen.getByRole('tab', { name: 'Advanced' }));
+    const width = screen.getByLabelText('Width');
+    expect(shown(width)).toBe(true);
+    fireEvent.change(width, { target: { value: '100%' } });
+    expect(screen.getByLabelText('Width').value).toBe('100%');
   });
 
   it('keeps the classic layout without the option', () => {

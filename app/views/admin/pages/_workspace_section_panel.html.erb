@@ -10,6 +10,12 @@
   <fieldset <%= "disabled" unless can_change %>>
     <%= render "shared/enabled_switch", form: form %>
     <div class="mb-3">
+      <%= form.label :section_name, "Section name", class: "form-label" %>
+      <%= form.text_field :section_name, class: "form-control", required: true, pattern: "[A-Za-z0-9_\\-. ]+",
+                          title: "Letters, numbers, spaces, dots, dashes and underscores" %>
+      <div class="form-text">Also the section's anchor on the page (/<%= page_record.name %>#<%= section.section_name %>). Its columns are renamed with it.</div>
+    </div>
+    <div class="mb-3">
       <%= form.label :section_group, "Section group", class: "form-label" %>
       <%= form.text_field :section_group, class: "form-control", placeholder: "No group" %>
       <div class="form-text">Sections with the same group name belong together and are duplicated together.</div>

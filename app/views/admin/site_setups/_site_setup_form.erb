@@ -29,7 +29,7 @@
               method: site_setup.persisted? ? :patch : :post,
               local:  true,
               class:  "admin-settings-form",
-              data:   { controller: "site-setup admin-tabs" }) do |form| %>
+              data:   { controller: "site-setup admin-tabs", site_setup_persisted_value: site_setup.persisted? }) do |form| %>
   <%= render "shared/enabled_switch", form: form %>
   <%= hidden_field_tag :return_url, admin_return_url %>
 

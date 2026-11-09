@@ -274,6 +274,31 @@ export function renderCellOrder(
   );
 }
 
+// A column's width on the page: "auto" (its layout classes decide) or a size
+// such as 100%, 41% or 300px.
+export function renderCellWidth(width: string | null = null, setValue: any = null) {
+  return (
+    <div className="row mb-2">
+      <div className="col-2 d-flex align-items-center">
+        <label htmlFor="width">Width:</label>
+      </div>
+      <div className="col-5">
+        <div id="cellWidthDiv">
+          {renderInput(
+            "width",
+            width,
+            setValue,
+            null,
+            {},
+            "auto, or a size such as 100% or 41%",
+          )}
+        </div>
+        <div className="form-text">Two-column sections usually set this with the section&apos;s column ratio.</div>
+      </div>
+    </div>
+  );
+}
+
 export function renderLink(link: string | null, setValue: any = null) {
   return (
     <div className="row mb-2">

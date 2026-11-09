@@ -11,6 +11,9 @@ class Cell < ApplicationRecord
 
   validates :cell_name, presence: true, uniqueness: { conditions: -> { working_or_live } }
   validate :content_is_valid
+  # "auto", or a CSS size such as 100%, 41%, 300px or 20rem.
+  validates :width, format: { with: /\A(auto|\d{1,4}(\.\d+)?(%|px|rem|em|vw))\z/, message: "must be auto or a size such as 100% or 300px" },
+                    allow_blank: true
 
   scope :by_section_name, ->(name) { where(section_name: name).order(:cell_order) }
 
