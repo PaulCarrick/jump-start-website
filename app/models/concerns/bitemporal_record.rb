@@ -108,9 +108,23 @@ module BitemporalRecord
   end
 
   def _update_row(*args, **options)
-    # Active Storage defers touch timestamps and clears their dirty state before
-    # writing them. They are audit maintenance, not a separate content edit.
-    return super if args[1] == 'touch'
+    # Active Storage touches records (for example when its background job has
+    # read a new upload). That is audit maintenance, not a content edit, so it
+    # changes only a draft's own row and never the live one: the live row's
+    # time is what a draft is checked against, and moving it made publishing
+    # refuse the draft as "changed since this draft began". Every version
+    # shares the id, so the row is chosen by version too.
+    if args[1] == 'touch'
+      names = Array(args[0]).map(&:to_s)
+      if temporal_state_in_database == 'live'
+        # Rails has already set the new time in memory; put the stored one back.
+        stored = Array.wrap(self.class.unscoped.where(id: id, version: version_in_database).pick(*names))
+        names.zip(stored).each { |name, value| @attributes.write_from_database(name, value) }
+        return 0
+      end
+      values = names.index_with { |name| _read_attribute(name) }
+      return self.class.unscoped.where(id: id, version: version_in_database).update_all(values)
+    end
     return super unless PublishingContext.editing && !PublishingContext.deploying
     connection = self.class.connection
     connection.execute('SELECT pg_advisory_xact_lock(87342, 1)')

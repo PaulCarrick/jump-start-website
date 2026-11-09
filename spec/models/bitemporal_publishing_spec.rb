@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Bitemporal publishing' do
+  include ActiveSupport::Testing::TimeHelpers
   after { PublishingContext.reset }
 
   BitemporalRecord::MODELS.each do |name|
@@ -128,6 +129,35 @@ RSpec.describe 'Bitemporal publishing' do
     expect(ImageFile.find(image.id).image.blob.id).to eq(replacement_blob)
     expect(ActiveStorage::Blob.exists?(original_blob)).to be(true)
     expect(ActiveStorage::Attachment.where(blob_id: replacement_blob)).to exist
+  end
+
+  # After a new upload is saved as a draft, Active Storage's background job
+  # reads the file and then touches the records that use it. The job knows
+  # nothing of drafts, so it touched the live row, and publishing then refused
+  # the draft as "changed since this draft began".
+  it 'publishes an image draft after the upload has been analysed' do
+    admin = create(:user, access: 'super')
+    image = create(:image_file)
+    live_time = ImageFile.unscoped.where(id: image.id, temporal_state: 'live').pick(:updated_at)
+    travel 1.minute
+    PublishingContext.editing = true
+    File.open(Rails.root.join('spec/fixtures/files/sample.jpg'), 'rb') do |file|
+      image.image = { io: file, filename: 'replacement.jpg', content_type: 'image/jpeg' }
+    end
+    image.save!
+    PublishingContext.reset
+    travel 1.minute
+    ActiveStorage::Blob.find(image.attachment_blob_id).update!(metadata: { 'analyzed' => true })
+    expect(ImageFile.unscoped.where(id: image.id, temporal_state: 'live').pick(:updated_at)).to eq(live_time)
+    expect { Publishing.deploy!(actor: admin, summary: 'Replace image') }.not_to raise_error
+  end
+
+  it 'never changes the live row when a live record is touched' do
+    image = create(:image_file)
+    live_time = ImageFile.unscoped.where(id: image.id).pick(:updated_at)
+    travel 1.minute
+    ImageFile.find(image.id).touch
+    expect(ImageFile.unscoped.where(id: image.id).pick(:updated_at)).to eq(live_time)
   end
 
   it 'propagates both time coordinates when reading historical associations' do
