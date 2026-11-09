@@ -354,6 +354,20 @@ Choose **Media** in the sidebar. Files are shown as thumbnails, newest first, 24
 
 **View**, **History** and **Delete this file** are in the details too. Delete warns you when the picture is used on a page.
 
+### How to put a group's pictures in order
+
+A group's pictures are shown as a slide show, in their slide order. To change it:
+
+1. Choose **Media**, then click the group's chip (for example **travel**).
+2. **Slide show order** appears above the pictures: one rounded box per picture, with its number, a small thumbnail and its name.
+3. Drag a box to its new place. The others move aside as you go. Or click a box and use **←** and **→** (**Home** and **End** move it to the start or the end).
+4. Let go. The new order is saved as a draft at once ("Saved as a draft") and the pictures below follow it.
+5. Publish when you are ready.
+
+![Slide show order: drag a rounded box to a new place](../public/admin-help/slide-order.webp)
+
+Hidden pictures stay in the list, faded, so their place is kept. Uploading to a group adds the new pictures at the end; drag them into place afterwards.
+
 ### How to upload pictures or videos
 
 1. Choose **Media**.

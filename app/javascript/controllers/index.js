@@ -24,6 +24,8 @@ application.register("media-upload", MediaUploadController)
 
 import MediaGroupController from "./media_group_controller"
 application.register("media-group", MediaGroupController)
+import SlideOrderController from "./slide_order_controller"
+application.register("slide-order", SlideOrderController)
 
 import PageOutlineController from "./page_outline_controller"
 application.register("page-outline", PageOutlineController)

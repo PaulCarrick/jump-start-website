@@ -559,6 +559,28 @@ a.admin-card:hover { color: var(--admin-text); border-color: var(--admin-accent)
 .admin-chip:hover { border-color: var(--admin-accent); }
 .admin-chip.is-current { background: var(--admin-accent); border-color: var(--admin-accent); color: #fff; }
 .admin-chip-count { opacity: 0.7; font-size: 12px; }
+/* A group's slide show order: rounded boxes like the group chips, dragged into place. */
+.admin-slide-order { margin: 0 0 16px; padding: 12px 14px; background: var(--admin-panel); border: 1px solid var(--admin-line); border-radius: 12px; }
+.admin-slide-order-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 10px; }
+.admin-slide-order-head .admin-panel-title { margin: 0; font-size: 15px; }
+.admin-slide-order-status { font-size: 13px; color: var(--admin-accent); }
+.admin-slide-strip { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.admin-slide {
+  display: inline-flex; align-items: center; gap: 8px; padding: 4px 14px 4px 4px; border-radius: 999px;
+  border: 1px solid var(--admin-line); background: var(--admin-panel); color: var(--admin-text); font-size: 13px;
+  cursor: grab; user-select: none; touch-action: none; max-width: 240px;
+}
+.admin-slide:hover, .admin-slide:focus-visible { border-color: var(--admin-accent); outline: none; }
+.admin-slide:focus-visible { box-shadow: 0 0 0 3px rgba(31, 95, 214, 0.25); }
+.admin-slide.is-dragging { cursor: grabbing; border-color: var(--admin-accent); background: var(--admin-accent); color: #fff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18); }
+.admin-slide-strip.is-sorting .admin-slide:not(.is-dragging) { opacity: 0.85; }
+.admin-slide.is-hidden .admin-slide-thumb { opacity: 0.45; }
+.admin-slide-number { min-width: 20px; text-align: center; font-size: 12px; opacity: 0.7; }
+.admin-slide-thumb {
+  width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex: none; pointer-events: none;
+  background: var(--admin-ground); display: inline-flex; align-items: center; justify-content: center; font-size: 11px;
+}
+.admin-slide-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .admin-media { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
 @media (max-width: 900px) { .admin-media { grid-template-columns: 1fr; } .admin-media-panel { order: -1; position: static; } .admin-media-panel.is-empty { display: none; } }
 .admin-media-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }

@@ -61,6 +61,7 @@ Rails.application.routes.draw do
     delete "/users/:id", to: "users#destroy", as: "delete_user"
     post "/image_files/upload", to: "image_files#upload", as: "upload_image_files"
     get "/image_files/locate", to: "image_files#locate", as: "locate_image_file"
+    patch "/image_files/group_order", to: "image_files#group_order", as: "image_files_group_order"
     post "/page_editing/:page_id/start", to: "page_editing#start", as: "page_editing_start"
     post "/page_editing/:page_id/save", to: "page_editing#save", as: "page_editing_save"
     post "/page_editing/:page_id/cancel", to: "page_editing#cancel", as: "page_editing_cancel"

@@ -22,6 +22,8 @@ class Admin::ImageFilesController < Admin::AbstractAdminController
       @group_counts = ImageFile.where.not(group: [ nil, "" ]).group(:group).order(:group).count
       @ungrouped_count = ImageFile.where(group: [ nil, "" ]).count
       @selected = ImageFile.find_by(id: params[:selected]) if params[:selected].present?
+      group = @q&.conditions&.find { |condition| condition.key == "group_eq" }&.value
+      @group_slides = ImageFile.where(group: group).order(ImageFile.arel_table[:slide_order].asc.nulls_last, :id).to_a if group.present?
       @usages = ImageUsage.for(@selected) if @selected
     end
   end
@@ -66,6 +68,37 @@ class Admin::ImageFilesController < Admin::AbstractAdminController
     redirect_to admin_image_files_path, status: :see_other
   end
 
+  # Saves the order of a group's slide show from the media library's strip of
+  # pictures: params[:ids] lists every file of the group in its new order.
+  # Slide numbers become 1, 2, 3 ...; only the files whose number changes are
+  # saved (as drafts, like any other change).
+  def group_order
+    group = params[:group].to_s.strip
+    ids = Array(params[:ids]).map(&:to_i)
+    files = group.present? ? ImageFile.where(group: group).to_a : []
+    if files.empty? || ids.uniq.size != ids.size || ids.sort != files.map(&:id).sort
+      render json: { error: "The group has changed since the page was opened. Reload the page and try again." }, status: :unprocessable_content
+      return
+    end
+
+    by_id = files.index_by(&:id)
+    changed = 0
+    ImageFile.transaction do
+      ids.each_with_index do |id, index|
+        file = by_id[id]
+        next if file.slide_order == index + 1
+
+        file.update!(slide_order: index + 1)
+        changed += 1
+      end
+    end
+    render json: { changed: changed }
+  rescue ActiveRecord::StaleObjectError
+    render json: { error: "Someone else changed this group. Reload the page and try again." }, status: :conflict
+  rescue ActiveRecord::RecordInvalid => error
+    render json: { error: error.record.errors.full_messages.to_sentence }, status: :unprocessable_content
+  end
+
   # Opens the media library on the image a page shows at this address (the
   # page's right-click "Edit image"). Image addresses carry their file's
   # signed id: /rails/active_storage/blobs/(redirect|proxy)/<signed id>/<name>.
@@ -97,6 +130,18 @@ class Admin::ImageFilesController < Admin::AbstractAdminController
     @fields            = %i[ image ] + ImageFile.column_names
                                                 .map(&:to_sym)
                                                 .reject { |column| (BitemporalRecord::META + %w[attachment_blob_id]).include?(column.to_s) }
+  end
+
+  # Showing one group lists its files in slide show order (unless a column
+  # heading was chosen to sort by), so the grid matches the order strip.
+  def set_items
+    super
+    group = @q&.conditions&.find { |condition| condition.key == "group_eq" }&.value
+    return if group.blank? || params[:sort].present? || session[:image_files_sort].present?
+
+    results = @q.result(distinct: true).reorder(ImageFile.arel_table[:slide_order].asc.nulls_last, ImageFile.arel_table[:id].asc)
+    @pagy, @results = pagy(results, limit: @page_limit)
+    instance_variable_set(get_plural_record_name, @results)
   end
 
   private

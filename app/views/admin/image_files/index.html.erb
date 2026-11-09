@@ -50,6 +50,38 @@
     <% end %>
   </nav>
 
+  <% if can_change && @group_slides.present? %>
+    <section class="admin-slide-order" aria-labelledby="slide-order-title"
+             data-controller="slide-order"
+             data-slide-order-url-value="<%= admin_image_files_group_order_path %>"
+             data-slide-order-group-value="<%= current_group %>">
+      <div class="admin-slide-order-head">
+        <h2 class="admin-panel-title" id="slide-order-title">Slide show order</h2>
+        <span class="form-text">Drag a picture to a new place, or click one and use ← and →. The order is saved as a draft.</span>
+        <span class="admin-slide-order-status" data-slide-order-target="status" role="status" aria-live="polite"></span>
+      </div>
+      <ol class="admin-slide-strip" data-slide-order-target="list">
+        <% @group_slides.each_with_index do |image_file, index| %>
+          <li class="admin-slide<%= ' is-hidden' unless image_file.enabled %>" tabindex="0"
+              data-id="<%= image_file.id %>" data-name="<%= image_file.name %>"
+              aria-label="<%= image_file.name %>, slide <%= index + 1 %> of <%= @group_slides.size %>"
+              title="Drag to move <%= image_file.name %>"
+              data-action="pointerdown->slide-order#grab pointermove->slide-order#drag pointerup->slide-order#drop pointercancel->slide-order#drop keydown->slide-order#key">
+            <span class="admin-slide-number" aria-hidden="true"><%= index + 1 %></span>
+            <% if image_file.image.attached? && image_file.mime_type == "video/mp4" %>
+              <span class="admin-slide-thumb admin-slide-video" aria-hidden="true">▶</span>
+            <% elsif image_file.image.attached? %>
+              <img class="admin-slide-thumb" src="<%= image_file.image_url %>" alt="" loading="lazy" decoding="async" draggable="false">
+            <% else %>
+              <span class="admin-slide-thumb" aria-hidden="true"></span>
+            <% end %>
+            <span class="admin-slide-name"><%= image_file.name %></span>
+          </li>
+        <% end %>
+      </ol>
+    </section>
+  <% end %>
+
   <div class="admin-media">
     <div>
       <% if controller.get_items.empty? %>
