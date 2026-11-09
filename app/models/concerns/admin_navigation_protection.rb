@@ -17,7 +17,10 @@ module AdminNavigationProtection
 
   def preserve_admin_navigation
     return unless PublishingContext.editing && !PublishingContext.deploying
-    return if (changed - POSITION_FIELDS).empty?
+    # A form sends empty fields back as "" where the record had nil; that is
+    # not a change, so moving an item through its form is still allowed.
+    changed_fields = changes.reject { |_field, (before, after)| before.blank? && after.blank? }.keys
+    return if (changed_fields - POSITION_FIELDS).empty?
 
     if attribute_in_database('link').to_s.start_with?('/admin')
       errors.add(:base, 'Items linking to /admin are read-only.')
