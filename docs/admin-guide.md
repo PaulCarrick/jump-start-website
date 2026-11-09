@@ -354,6 +354,8 @@ While editing a page on the site (**Edit Page**), right-click a section and choo
 
 Columns are normally edited in the panel of the [page workspace](#the-page-workspace). The **Columns** list under Page parts shows every column with a small preview and can open the classic column editor, which has the same fields on one long form.
 
+**Moving a column to another section.** In the classic column editor, **Section this column belongs to** moves the column into the section you choose; it does not rename anything. While a move is set, a yellow note says where the column will go (with **Keep it in …** to undo it), and **Save Column** asks before moving it. To rename a section, change its **Section name** in the section's panel in the page workspace; its columns go with it. (In the page workspace a column's section cannot be changed.)
+
 ![The Columns list](../public/admin-help/columns-list.webp)
 
 ## Writing and formatting content

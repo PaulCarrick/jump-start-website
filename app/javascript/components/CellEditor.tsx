@@ -10,6 +10,7 @@ import {
   CellCallback,
   ImageType,
 } from "../types/dataTypes";
+import Select from "react-select";
 import React, { useState } from "react";
 import {
   renderContent,
@@ -17,7 +18,6 @@ import {
   renderLink,
   renderCellOrder,
   renderCellWidth,
-  renderSectionName,
   renderCellName,
 } from "./renderUtilities";
 import FormattingEditor from "./FormattingEditor";
@@ -72,6 +72,8 @@ const CellEditor: React.FC<CellEditorProps> = ({
         : null),
   );
   const [imageMode, setImageMode] = useState<ImageType>(() => savedImageType(cellData?.image));
+  // The section the column is in now; choosing another one moves the column.
+  const [startingSection] = useState<string>(() => (cell?.section_name || "").trim());
   const [error, setError] = useState<string | null>(null);
   // An image column opens on its picture; anything else on its text.
   const [activeTab, setActiveTab] = useState<CellEditorTab>(() =>
@@ -119,6 +121,15 @@ const CellEditor: React.FC<CellEditorProps> = ({
 
     if (!cellData) return;
 
+    const target = (cellData.section_name || "").trim();
+    if (startingSection && target && target !== startingSection && cellData.id && cellData.id > 0) {
+      const sure = window.confirm(
+        `Move this column out of the section “${startingSection}” and into “${target}”?\n\n` +
+        "This does not rename the section. To rename a section, change its Section name in the section's panel.",
+      );
+      if (!sure) return;
+    }
+
     if (onFinished) {
       onFinished(cellData);
       return;
@@ -141,6 +152,46 @@ const CellEditor: React.FC<CellEditorProps> = ({
   };
 
   if (!cellData) return <div>No column exists to edit.</div>;
+
+  // Which section the column is in. Changing it moves the column (it does not
+  // rename the section), so the field says so and warns while a move is set.
+  const chosenSection = (cellData.section_name || "").trim();
+  const moving = Boolean(startingSection && chosenSection && chosenSection !== startingSection);
+  const sectionField = (
+    <div className="mb-3 cell-section-field">
+      <label htmlFor="section_name" className="form-label">Section this column belongs to</label>
+      {editorOptions.readOnlySectionName ? (
+        <input id="section_name" className="form-control" value={chosenSection} readOnly />
+      ) : (
+        <Select
+          inputId="section_name"
+          value={chosenSection ? { label: chosenSection, value: chosenSection } : null}
+          options={(editorOptions.availableSectionNames || []).map((name) => ({ label: name, value: name }))}
+          onChange={(option) => setValue(option?.value || "", "section_name")}
+          isSearchable
+          placeholder="Choose a section…"
+        />
+      )}
+      <div className="form-text">
+        {editorOptions.readOnlySectionName ? (
+          <>To rename this section, change its Section name in the section's panel.</>
+        ) : (
+          <>
+            Choosing another section <strong>moves</strong> this column there. To rename the section, change its
+            Section name in the section's panel instead.
+          </>
+        )}
+      </div>
+      {moving && (
+        <div className="alert alert-warning py-2 mt-2 mb-0" role="alert">
+          When you save, this column moves from <strong>{startingSection}</strong> to <strong>{chosenSection}</strong>.{" "}
+          <button type="button" className="btn btn-link p-0 align-baseline" onClick={() => setValue(startingSection, "section_name")}>
+            Keep it in {startingSection}
+          </button>
+        </div>
+      )}
+    </div>
+  );
 
   const actions = (
     <div className="row mb-2">
@@ -234,12 +285,7 @@ const CellEditor: React.FC<CellEditorProps> = ({
             "advanced",
             <>
               <EnabledSwitch enabled={cellData?.enabled} onChange={enabled => setCellData(previous => previous ? { ...previous, enabled } : previous)} />
-              {renderSectionName(
-                cellData?.section_name,
-                editorOptions.availableSectionNames,
-                setValue,
-                editorOptions.readOnlySectionName,
-              )}
+              {sectionField}
               {renderCellName(cellData?.cell_name, setValue)}
               {renderCellOrder(cellData?.cell_order, setValue)}
               {renderCellWidth(cellData?.width || null, setValue)}
@@ -272,12 +318,7 @@ const CellEditor: React.FC<CellEditorProps> = ({
           </div>
         )}
         <EnabledSwitch enabled={cellData?.enabled} onChange={enabled => setCellData(previous => previous ? { ...previous, enabled } : previous)} />
-        {renderSectionName(
-          cellData?.section_name,
-          editorOptions.availableSectionNames,
-          setValue,
-          editorOptions.readOnlySectionName,
-        )}
+        {sectionField}
         {renderCellName(cellData?.cell_name, setValue)}
         <div style={{ minHeight: "10em" }}>
           {renderContent(

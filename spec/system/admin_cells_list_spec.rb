@@ -41,7 +41,7 @@ RSpec.describe 'Admin Cells list', type: :system do
     expect(page).to have_title(/Admin Dashboard: Columns/)
     click_link 'New Column'
     expect(page).to have_css('h1', text: 'New Column')
-    find('#sectionNameDiv input[role="combobox"]').set(section.section_name)
+    find('#section_name').set(section.section_name)
     find('[role="option"]', text: section.section_name, exact_text: true).click
     replace_react('#cell_name', 'Created from Manage Columns')
     enter_column_text 'New column content'
