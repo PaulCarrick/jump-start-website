@@ -66,7 +66,7 @@
               data-id="<%= image_file.id %>" data-name="<%= image_file.name %>"
               aria-label="<%= image_file.name %>, slide <%= index + 1 %> of <%= @group_slides.size %>"
               title="Drag to move <%= image_file.name %>"
-              data-action="pointerdown->slide-order#grab pointermove->slide-order#drag pointerup->slide-order#drop pointercancel->slide-order#drop keydown->slide-order#key">
+              data-action="pointerdown->slide-order#grab keydown->slide-order#key">
             <span class="admin-slide-number" aria-hidden="true"><%= index + 1 %></span>
             <% if image_file.image.attached? && image_file.mime_type == "video/mp4" %>
               <span class="admin-slide-thumb admin-slide-video" aria-hidden="true">▶</span>

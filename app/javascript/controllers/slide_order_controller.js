@@ -21,22 +21,31 @@ export default class extends Controller {
 
   // Dragging -----------------------------------------------------------------
 
+  // While a box is held, the whole page follows the pointer: the movement
+  // events go to whatever is under the pointer (often another box), not to
+  // the box being dragged.
   grab(event) {
-    if (event.button !== 0) return;
+    if (event.button !== 0 || this.dragged) return;
     const item = event.currentTarget;
     event.preventDefault();
     item.focus({ preventScroll: true });
-    item.setPointerCapture(event.pointerId);
     this.dragged = item;
+    this.pointerId = event.pointerId;
     this.startX = event.clientX;
     this.startY = event.clientY;
     this.moved = false;
+    this.onMove = moveEvent => this.drag(moveEvent);
+    this.onUp = upEvent => this.drop(upEvent);
+    window.addEventListener("pointermove", this.onMove);
+    window.addEventListener("pointerup", this.onUp);
+    window.addEventListener("pointercancel", this.onUp);
   }
 
   drag(event) {
     const item = this.dragged;
-    if (!item || event.currentTarget !== item) return;
+    if (!item || event.pointerId !== this.pointerId) return;
     if (!this.moved && Math.hypot(event.clientX - this.startX, event.clientY - this.startY) < 5) return;
+    event.preventDefault();
     if (!this.moved) {
       this.moved = true;
       item.classList.add("is-dragging");
@@ -48,20 +57,34 @@ export default class extends Controller {
       return event.clientX >= box.left && event.clientX <= box.right && event.clientY >= box.top && event.clientY <= box.bottom;
     });
     if (!target) return;
+    // Past the middle of the box under the pointer, go after it; before it otherwise.
     const box = target.getBoundingClientRect();
-    if (event.clientX > box.left + box.width / 2) target.after(item);
-    else target.before(item);
+    if (event.clientX > box.left + box.width / 2) {
+      if (target.nextElementSibling !== item) target.after(item);
+    } else if (target.previousElementSibling !== item) {
+      target.before(item);
+    }
     this.renumber();
   }
 
   drop(event) {
     const item = this.dragged;
-    if (!item || event.currentTarget !== item) return;
+    if (!item || event.pointerId !== this.pointerId) return;
     this.dragged = null;
+    window.removeEventListener("pointermove", this.onMove);
+    window.removeEventListener("pointerup", this.onUp);
+    window.removeEventListener("pointercancel", this.onUp);
     item.classList.remove("is-dragging");
     this.listTarget.classList.remove("is-sorting");
-    if (item.hasPointerCapture?.(event.pointerId)) item.releasePointerCapture(event.pointerId);
     if (this.moved) this.save();
+  }
+
+  disconnect() {
+    if (this.onMove) window.removeEventListener("pointermove", this.onMove);
+    if (this.onUp) {
+      window.removeEventListener("pointerup", this.onUp);
+      window.removeEventListener("pointercancel", this.onUp);
+    }
   }
 
   // Keyboard -----------------------------------------------------------------

@@ -25,14 +25,28 @@ RSpec.describe 'Dragging the pictures of a group into order', type: :system do
     expect(page).to have_css('.admin-slide[data-name="birds-1"] .admin-slide-number', text: '3')
   end
 
-  it 'moves a picture by dragging it' do
-    source = find('.admin-slide[data-name="birds-3"]')
-    target = find('.admin-slide[data-name="birds-1"]')
-    page.driver.browser.action
-        .move_to(source.native).click_and_hold
-        .move_by(-10, 0)
-        .move_to(target.native, -(target.native.rect.width / 2 - 4), 0)
-        .release.perform
+  # The pointer moves in small steps, as a mouse does, so the movement events
+  # land on the other boxes it passes over (dragging along a row once did
+  # nothing because of that).
+  def drag_onto(item, target, past:)
+    from = item.native.rect
+    to = target.native.rect
+    distance = (to.x + to.width / 2 + past) - (from.x + from.width / 2)
+    steps = (distance.abs / 15.0).ceil
+    action = page.driver.browser.action.move_to(item.native).click_and_hold
+    steps.times { action = action.move_by((distance / steps).round, 0) }
+    action.release.perform
+  end
+
+  it 'moves a picture to the right along the row by dragging it' do
+    drag_onto(find('.admin-slide[data-name="birds-1"]'), find('.admin-slide[data-name="birds-3"]'), past: 10)
+    expect(strip_names).to eq(%w[birds-2 birds-3 birds-1])
+    expect(page).to have_css('.admin-slide-order-status', text: 'Saved as a draft')
+    expect(saved_order).to eq(%w[birds-2 birds-3 birds-1])
+  end
+
+  it 'moves a picture to the left along the row by dragging it' do
+    drag_onto(find('.admin-slide[data-name="birds-3"]'), find('.admin-slide[data-name="birds-1"]'), past: -10)
     expect(strip_names).to eq(%w[birds-3 birds-1 birds-2])
     expect(page).to have_css('.admin-slide-order-status', text: 'Saved as a draft')
     expect(saved_order).to eq(%w[birds-3 birds-1 birds-2])
