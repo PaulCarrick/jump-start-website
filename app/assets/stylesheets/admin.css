@@ -792,3 +792,12 @@ li.is-dragging > .outline-row { opacity: 0.4; }
 /* Column editor, Image tab: one list of pictures, slide shows and videos. */
 .column-media .column-media__group-heading { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; color: #57606a; }
 .column-media .form-text { margin-top: 4px; }
+
+/* The page workspace's full-window editor (?full=1): the panel alone, as
+   wide as the window, with the admin menu out of the way. */
+.admin-shell:has(.workspace.is-full-window) .admin-sidebar { display: none; }
+.workspace.is-full-window { display: block; }
+.workspace.is-full-window .workspace-panel { position: static; max-height: none; overflow: visible; padding: 20px 28px; }
+.workspace-full-chooser { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; max-width: 720px; }
+.workspace-full-chooser .form-label { margin: 0; font-weight: 600; }
+.workspace-page-form { max-width: 720px; }

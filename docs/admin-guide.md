@@ -133,7 +133,22 @@ The workspace has three parts:
 - The **preview** (middle) shows the page as it will look. Click a section to select it. Links in the preview do not take you away.
 - The **panel** (right) edits whatever you selected.
 
-At the top: **History**, **Page settings**, **View page ↗** (the live page in a new tab) and **Classic editor** (the older page editor).
+At the top: **History**, **Page settings**, **View page ↗** (the live page in a new tab), **Full-window editor ↗** and **Classic editor** (the older page editor).
+
+### How to edit in a full window
+
+The editor on the right can also fill a whole window, which gives long text and wide layouts more room.
+
+1. In the workspace, choose **Full-window editor ↗**. It opens in a new tab on whatever you were editing: a column, a section, or the page.
+2. Use **Editing** at the top to choose another section or column, or **The page** for the page's own settings (title, name, access, section) and **+ Add section**.
+3. Edit and save as usual; you stay in the full window.
+4. **← Back to the workspace** shows the outline and the preview again, on the same item.
+
+![Full-window editor ↗ next to View page](../public/admin-help/full-window-link.webp)
+
+![A column in the full-window editor](../public/admin-help/full-window-column.webp)
+
+![The page's own settings in the full-window editor](../public/admin-help/full-window-page.webp)
 
 ### How to change a page's title, address or access
 

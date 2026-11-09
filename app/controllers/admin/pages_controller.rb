@@ -116,7 +116,7 @@ class Admin::PagesController < Admin::AbstractAdminController
     page = Page.find(params[:id])
     section = page.ordered_sections.find(params[:section_id])
     unless @application_user&.admin?
-      redirect_to admin_page_workspace_path(page, section: section.id), status: :see_other, alert: "You are not permitted to add columns."
+      redirect_to admin_page_workspace_path(page, section: section.id, **full_window_option), status: :see_other, alert: "You are not permitted to add columns."
       return
     end
 
@@ -126,9 +126,9 @@ class Admin::PagesController < Admin::AbstractAdminController
                                  cell_order:   section.cells.maximum(:cell_order).to_i + 1,
                                  content:      "",
                                  formatting:   { "classes" => "m-3" })
-    redirect_to admin_page_workspace_path(page, cell: cell.id), status: :see_other, notice: "Column added. Write its text below."
+    redirect_to admin_page_workspace_path(page, cell: cell.id, **full_window_option), status: :see_other, notice: "Column added. Write its text below."
   rescue ActiveRecord::RecordInvalid => e
-    redirect_to admin_page_workspace_path(params[:id], section: params[:section_id]), status: :see_other,
+    redirect_to admin_page_workspace_path(params[:id], section: params[:section_id], **full_window_option), status: :see_other,
                 alert: "Could not add a column: #{e.record.errors.full_messages.to_sentence}"
   end
 
@@ -187,8 +187,8 @@ class Admin::PagesController < Admin::AbstractAdminController
     @read_only_content_type = true
 
     if params[:workspace].present?
-      return_url = admin_page_workspace_path(page, section: section.id)
-      cancel_url = admin_page_workspace_path(page, new_section: true)
+      return_url = admin_page_workspace_path(page, section: section.id, **full_window_option)
+      cancel_url = admin_page_workspace_path(page, new_section: true, **full_window_option)
     else
       return_url = edit_admin_page_path(page, section_name: section.section_name, return_url: admin_return_url)
       cancel_url = edit_admin_page_path(page, return_url: admin_return_url, new_section: true)
@@ -257,4 +257,10 @@ class Admin::PagesController < Admin::AbstractAdminController
 
     instance_variable_set(get_singular_record_name, @result)
   end
+
+  # Keeps the page workspace's full-window view ("full=1") on a redirect.
+  def full_window_option
+    params[:full].present? ? { full: 1 } : {}
+  end
+
 end

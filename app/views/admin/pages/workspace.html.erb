@@ -2,7 +2,11 @@
 <%
   page_record = controller.get_item
   can_change = @application_user&.admin?
-  workspace = ->(options = {}) { admin_page_workspace_path(page_record, options) }
+  # "Full window": only the editor panel, filling the window (opened from the
+  # workspace's "Full-window editor" link). Every link and save keeps it.
+  full_window = params[:full].present?
+  workspace = ->(options = {}) { admin_page_workspace_path(page_record, full_window ? options.merge(full: 1) : options) }
+  selection = @selected_cell ? { cell: @selected_cell.id } : (@selected_section ? { section: @selected_section.id } : {})
 %>
 <%= javascript_include_tag 'views/admin/pages/edit' %>
 <%= render layout: "layouts/admin_page" do %>
@@ -15,12 +19,38 @@
     <div class="workspace-heading-actions">
       <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#page-settings">Page settings</button>
       <%= link_to("View page ↗", site_local_path("/#{page_record.name}"), class: "btn btn-light", target: "_blank", rel: "noopener") %>
-      <%= link_to("Classic editor", edit_admin_page_path(page_record), class: "btn btn-light", target: "_self") %>
+      <% if full_window %>
+        <%= link_to("← Back to the workspace", admin_page_workspace_path(page_record, selection), class: "btn btn-light", target: "_self",
+                    title: "Show the outline and the preview again") %>
+      <% else %>
+        <%= link_to("Full-window editor ↗", admin_page_workspace_path(page_record, selection.merge(full: 1)), class: "btn btn-light",
+                    target: "_blank", rel: "noopener", title: "Open the editor panel on its own, filling a new window") %>
+        <%= link_to("Classic editor", edit_admin_page_path(page_record), class: "btn btn-light", target: "_self") %>
+      <% end %>
     </div>
   </div>
 
-  <div class="workspace">
+  <% if full_window %>
+    <%# Without the outline, this list chooses what to edit. %>
+    <div class="workspace-full-chooser">
+      <label for="workspace-full-choice" class="form-label">Editing</label>
+      <select id="workspace-full-choice" class="form-select" onchange="if (this.value) window.location.href = this.value;">
+        <option value="<%= workspace.call %>" <%= 'selected' if selection.empty? %>>The page (choose a section or column)</option>
+        <% @sections.each do |section| %>
+          <optgroup label="<%= section.section_name %>">
+            <option value="<%= workspace.call(section: section.id) %>" <%= 'selected' if @selected_section&.id == section.id && !@selected_cell %>>Section: <%= section.section_name %></option>
+            <% section.cells.each do |cell| %>
+              <option value="<%= workspace.call(cell: cell.id) %>" <%= 'selected' if @selected_cell&.id == cell.id %>>Column <%= cell.cell_order %>: <%= workspace_cell_label(cell) %></option>
+            <% end %>
+          </optgroup>
+        <% end %>
+      </select>
+    </div>
+  <% end %>
+
+  <div class="workspace<%= ' is-full-window' if full_window %>">
     <%# Outline: sections and their columns, in page order. %>
+    <% unless full_window %>
     <nav class="workspace-outline" aria-label="Sections and columns"
          data-controller="page-outline"
          data-page-outline-url-value="<%= admin_page_order_path(page_record) %>"
@@ -99,6 +129,7 @@
         <% end %>
       </div>
     </section>
+    <% end %>
 
     <%# Panel: the chosen column, the chosen section, or the page. %>
     <aside class="workspace-panel" aria-label="Edit">
@@ -108,6 +139,21 @@
       <% elsif @selected_section %>
         <%= render "workspace_section_panel", page_record: page_record, section: @selected_section,
                    workspace: workspace, can_change: can_change %>
+      <% elsif full_window %>
+        <h2 class="admin-panel-title">Page: <%= page_record.title.presence || page_record.name %></h2>
+        <p class="form-text">Choose a section or column under Editing above, or change the page's own settings here.</p>
+        <%= form_with(model: page_record, url: admin_page_path(page_record), method: :patch, local: true, data: { turbo: false }, class: "workspace-page-form", namespace: "full_window") do |form| %>
+          <%= hidden_field_tag :return_url, workspace.call %>
+          <%= render "workspace_page_fields", form: form, page_record: page_record, can_change: can_change %>
+          <div class="admin-form-actions">
+            <%= form.submit "Save Page", class: "btn btn-primary", disabled: !can_change %>
+          </div>
+        <% end %>
+        <% if can_change %>
+          <%= link_to("+ Add section",
+                      admin_add_section_to_existing_page_path(page_record, workspace: 1, new_section: true, read_only_content_type: true, full: 1),
+                      class: "btn btn-outline-primary btn-sm mt-3", target: "_self") %>
+        <% end %>
       <% else %>
         <h2 class="admin-panel-title">Edit this page</h2>
         <ul class="workspace-tips">
@@ -131,27 +177,7 @@
           </div>
           <div class="modal-body">
             <%= hidden_field_tag :return_url, workspace.call %>
-            <fieldset <%= "disabled" unless can_change %>>
-              <%= render "shared/enabled_switch", form: form %>
-              <div class="mb-3">
-                <%= form.label :title, "Title", class: "form-label" %>
-                <%= form.text_field :title, class: "form-control" %>
-              </div>
-              <div class="mb-3">
-                <%= form.label :name, "Name*", class: "form-label" %>
-                <%= form.text_field :name, class: "form-control", required: true %>
-                <div class="form-text">The page's address: /<%= page_record.name %>. Changing it changes the address; update menu links to match.</div>
-              </div>
-              <div class="mb-3">
-                <%= form.label :access, "Access", class: "form-label" %>
-                <%= form.text_field :access, class: "form-control", placeholder: "Everyone" %>
-              </div>
-              <div class="mb-3">
-                <%= form.label :section, "Section", class: "form-label" %>
-                <%= form.text_field :section, class: "form-control" %>
-                <div class="form-text">The sections shown on this page are the ones with this content type. Change it only to show another set.</div>
-              </div>
-            </fieldset>
+            <%= render "workspace_page_fields", form: form, page_record: page_record, can_change: can_change %>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

@@ -40,6 +40,7 @@
 <div class="admin-media-more">
   <% if can_change %>
     <%= button_to("+ Add column", admin_page_section_columns_path(page_record, section.id), method: :post,
+                  params: (params[:full].present? ? { full: 1 } : {}),
                   class: "btn btn-outline-primary btn-sm", form: { data: { turbo: false } }) %>
   <% end %>
   <%= link_to("Edit section layout", edit_admin_section_path(section,
@@ -59,6 +60,7 @@
   <%= form_with(url: admin_duplicate_page_section_path(page_id: page_record.id, id: section.id), method: :post, local: true,
                 class: "workspace-duplicate", data: { turbo: false }) do %>
     <%= hidden_field_tag :workspace, 1 %>
+    <%= hidden_field_tag :full, 1, id: nil if params[:full].present? %>
     <%= hidden_field_tag :group, 0, id: "duplicate-section-group-#{section.id}" %>
     <label class="form-label" for="duplicate-section-name-<%= section.id %>">Name for the copy of this section</label>
     <div class="workspace-duplicate-row">
@@ -71,6 +73,7 @@
     <%= form_with(url: admin_duplicate_page_section_path(page_id: page_record.id, id: section.id), method: :post, local: true,
                   class: "workspace-duplicate", data: { turbo: false }) do %>
       <%= hidden_field_tag :workspace, 1 %>
+      <%= hidden_field_tag :full, 1, id: nil if params[:full].present? %>
       <%= hidden_field_tag :group, 1, id: "duplicate-group-flag-#{section.id}" %>
       <label class="form-label" for="duplicate-group-name-<%= section.id %>">Name for a copy of the whole group (<%= pluralize(group_members.size, "section") %>)</label>
       <div class="workspace-duplicate-row">
@@ -85,6 +88,7 @@
     <%= form_with(url: admin_rename_page_section_group_path(page_record), method: :patch, local: true, class: "workspace-group-names", data: { turbo: false }) do %>
       <%= hidden_field_tag :group, section.section_group %>
       <%= hidden_field_tag :section_id, section.id %>
+      <%= hidden_field_tag :full, 1, id: nil if params[:full].present? %>
       <label class="form-label" for="rename-group-<%= section.id %>">Group</label>
       <%= text_field_tag :new_group, section.section_group, id: "rename-group-#{section.id}", class: "form-control mb-2",
                          required: true, pattern: name_pattern, title: "Letters, numbers, spaces, dots, dashes and underscores" %>

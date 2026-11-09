@@ -1,0 +1,22 @@
+<%# The page's own settings: in the Page settings box, and in the full-window editor. %>
+<fieldset <%= "disabled" unless can_change %>>
+  <%= render "shared/enabled_switch", form: form %>
+  <div class="mb-3">
+    <%= form.label :title, "Title", class: "form-label" %>
+    <%= form.text_field :title, class: "form-control" %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :name, "Name*", class: "form-label" %>
+    <%= form.text_field :name, class: "form-control", required: true %>
+    <div class="form-text">The page's address: /<%= page_record.name %>. Changing it changes the address; update menu links to match.</div>
+  </div>
+  <div class="mb-3">
+    <%= form.label :access, "Access", class: "form-label" %>
+    <%= form.text_field :access, class: "form-control", placeholder: "Everyone" %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :section, "Section", class: "form-label" %>
+    <%= form.text_field :section, class: "form-control" %>
+    <div class="form-text">The sections shown on this page are the ones with this content type. Change it only to show another set.</div>
+  </div>
+</fieldset>

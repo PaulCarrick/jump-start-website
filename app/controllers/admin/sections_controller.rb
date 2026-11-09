@@ -66,7 +66,7 @@ class Admin::SectionsController < Admin::AbstractAdminController
     if request.format.json?
       render json: { message: message, sections: copies.map { |copy| { id: copy.id, name: copy.section_name, group: copy.section_group } } }
     elsif params[:workspace].present?
-      redirect_to admin_page_workspace_path(page, section: copies.first.id), status: :see_other, notice: message
+      redirect_to admin_page_workspace_path(page, section: copies.first.id, **full_window_option), status: :see_other, notice: message
     else
       redirect_to edit_admin_page_path(page, section_name: copies.first.section_name, return_url: params[:return_url].present? ? admin_return_url : nil),
                   status: :see_other, notice: message
@@ -76,7 +76,7 @@ class Admin::SectionsController < Admin::AbstractAdminController
     if request.format.json?
       render json: { error: message }, status: :unprocessable_content
     elsif params[:workspace].present?
-      redirect_to admin_page_workspace_path(page, section: params[:id]), status: :see_other, alert: "Could not duplicate: #{message}"
+      redirect_to admin_page_workspace_path(page, section: params[:id], **full_window_option), status: :see_other, alert: "Could not duplicate: #{message}"
     else
       redirect_to edit_admin_page_path(page, return_url: params[:return_url].present? ? admin_return_url : nil), status: :see_other,
                   alert: "Could not duplicate: #{message}"
@@ -91,12 +91,12 @@ class Admin::SectionsController < Admin::AbstractAdminController
 
     names = params[:names].respond_to?(:to_unsafe_h) ? params[:names].to_unsafe_h : {}
     members = Section.rename_group!(page_id: page.id, group: params[:group].to_s, new_group: params[:new_group], names: names)
-    redirect_to admin_page_workspace_path(page, section: params[:section_id].presence || members.first.id), status: :see_other,
+    redirect_to admin_page_workspace_path(page, section: params[:section_id].presence || members.first.id, **full_window_option), status: :see_other,
                 notice: "Group renamed to #{members.first.section_group}."
   rescue ActiveRecord::RecordInvalid => e
-    redirect_to admin_page_workspace_path(page, section: params[:section_id]), status: :see_other, alert: e.record.errors.full_messages.to_sentence
+    redirect_to admin_page_workspace_path(page, section: params[:section_id], **full_window_option), status: :see_other, alert: e.record.errors.full_messages.to_sentence
   rescue ActiveRecord::RecordNotFound
-    redirect_to admin_page_workspace_path(page), status: :see_other, alert: "That group is no longer on this page."
+    redirect_to admin_page_workspace_path(page, **full_window_option), status: :see_other, alert: "That group is no longer on this page."
   end
 
   def create
@@ -266,4 +266,10 @@ class Admin::SectionsController < Admin::AbstractAdminController
       formatting:       {}
     )
   end
+
+  # Keeps the page workspace's full-window view ("full=1") on a redirect.
+  def full_window_option
+    params[:full].present? ? { full: 1 } : {}
+  end
+
 end
