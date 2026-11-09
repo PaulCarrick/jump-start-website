@@ -13,16 +13,16 @@ RSpec.describe 'Site setup name suggestions', type: :system do
     expect(SiteSetup.count).to eq(count)
     expect(page).to have_field('site_setup[site_name]', with: original.site_name)
     expect(page).to have_field('site_setup[site_domain]', with: original.site_domain)
-    expect(page).to have_unchecked_field('site_setup[default_setup]')
+    expect(page).to have_unchecked_field('site_setup[default_setup]', visible: :all)
     find_field('site_setup[configuration_name]').click
     find_field('site_setup[configuration_name]').send_keys(:tab)
     expect(page).to have_field('site_setup[owner_name]', with: original.owner_name)
     expect(page).to have_field('site_setup[site_url]', with: original.site_url)
     fill_in 'site_setup[configuration_name]', with: 'jumpstart-website'
-    expect(page).to have_field('site_setup[database]', with: original.database)
+    expect(page).to have_field('site_setup[database]', with: original.database, visible: :all)
     find_field('site_setup[configuration_name]').send_keys(:tab)
     expect(page).to have_field('site_setup[site_name]', with: 'Jumpstart Website')
-    expect(page).to have_field('site_setup[database]', with: 'jumpstart-website')
+    expect(page).to have_field('site_setup[database]', with: 'jumpstart-website', visible: :all)
     expect(page).to have_field('site_setup[owner_name]', with: 'Jumpstart Website')
     expect(page).to have_field('site_setup[site_url]', with: "#{original.site_url}/jumpstart-website")
     expect(page).to have_content('jumpstart-website@example.com')
@@ -46,7 +46,7 @@ RSpec.describe 'Site setup name suggestions', type: :system do
     fill_in 'site_setup[site_name]', with: 'updated-site'
     find_field('site_setup[site_name]').send_keys(:tab)
     expect(page).to have_field('site_setup[site_url]', with: 'https://example.com/updated-site')
-    expect(page).to have_field('site_setup[database]', with: 'original-site', readonly: true)
+    expect(page).to have_field('site_setup[database]', with: 'original-site', readonly: true, visible: :all)
     expect(page).to have_field('site_setup[owner_name]', with: 'Updated Site')
   end
 end

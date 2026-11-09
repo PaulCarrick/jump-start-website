@@ -1,0 +1,26 @@
+<%# One item of the menu tree, with its own items inside it. %>
+<% children = @children[item.id] || [] %>
+<li class="admin-menu-node<%= ' is-selected' if @selected&.id == item.id %>" data-id="<%= item.id %>" data-menu-tree-target="node">
+  <div class="admin-menu-row<%= ' is-disabled' unless item.enabled %>">
+    <% if can_change %>
+      <span class="admin-menu-handle" draggable="true" title="Drag to move" aria-hidden="true">⠿</span>
+    <% end %>
+    <%= link_to(item.label.presence || "(no label)", menus_path.call(selected: item.id), class: "admin-menu-label", target: "_self") %>
+    <span class="admin-menu-link"><%= item.link %></span>
+    <% unless item.enabled %><span class="admin-badge admin-badge-hidden">Hidden</span><% end %>
+    <% if item.respond_to?(:temporal_state) && item.temporal_state == "draft" %><span class="admin-badge admin-badge-draft">Draft</span><% end %>
+    <% if can_change %>
+      <span class="admin-menu-moves">
+        <button type="button" class="btn btn-sm btn-light" data-action="menu-tree#moveUp" aria-label="Move <%= item.label %> up" title="Move <%= item.label %> up">↑</button>
+        <button type="button" class="btn btn-sm btn-light" data-action="menu-tree#moveDown" aria-label="Move <%= item.label %> down" title="Move <%= item.label %> down">↓</button>
+        <button type="button" class="btn btn-sm btn-light" data-action="menu-tree#outdent" aria-label="Move <%= item.label %> out one level" title="Move <%= item.label %> out one level">←</button>
+        <button type="button" class="btn btn-sm btn-light" data-action="menu-tree#indent" aria-label="Put <%= item.label %> inside the item above" title="Put <%= item.label %> inside the item above">→</button>
+      </span>
+    <% end %>
+  </div>
+  <ol class="admin-menu-children">
+    <% children.each do |child| %>
+      <%= render "node", item: child, menus_path: menus_path, can_change: can_change %>
+    <% end %>
+  </ol>
+</li>

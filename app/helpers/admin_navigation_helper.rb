@@ -6,8 +6,7 @@ module AdminNavigationHelper
 
   def admin_navigation_groups
     site_links = [
-      AdminLink.new(label: "Header menu", path: admin_menu_items_path, controllers: %w[menu_items]),
-      AdminLink.new(label: "Footer", path: admin_footer_items_path, controllers: %w[footer_items])
+      AdminLink.new(label: "Menus", path: admin_menus_path, controllers: %w[menus menu_items footer_items])
     ]
     # Secondary sites share the default site's setup, so they do not edit it.
     site_links << AdminLink.new(label: "Settings", path: admin_site_setups_path, controllers: %w[site_setups]) unless SiteContext.tenant?

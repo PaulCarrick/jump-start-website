@@ -25,6 +25,24 @@ class Admin::SiteSetupsController < Admin::AbstractAdminController
     handle_error(:index, error)
   end
 
+  # Sends a short message with this setup's saved mail settings, so the
+  # administrator can see at once whether the contact form will work.
+  def test_email
+    raise "You are not permitted to change #{class_title}." unless @application_user&.admin?
+
+    set_item
+    recipient = @result.contact_email_to.presence || @application_user.email
+    raise "Enter the mail server and the from address first." if @result.smtp_server.blank? || @result.contact_email_from.blank?
+
+    ContactMailer.test_email(@result, recipient).deliver_now
+    flash[:notice] = "Test email sent to #{recipient}. If it does not arrive in a few minutes, check the spam folder and the mail server settings."
+  rescue StandardError => error
+    Rails.logger.warn("Test email failed for site setup #{params[:id]}: #{error.class}: #{error.message}")
+    flash[:error] = "The test email could not be sent: #{error.message}"
+  ensure
+    redirect_to edit_admin_site_setup_path(params[:id], tab: "email", return_url: admin_return_url), status: :see_other unless performed?
+  end
+
   COLOR_ARRAY = [
     %w[ Default #0d6efd ],
     %w[ Black black ],
@@ -151,5 +169,5 @@ class Admin::SiteSetupsController < Admin::AbstractAdminController
     %w[ "Dark Slate Gray" DarkSlateGray ],
     %w[ "Dim Gray" DimGray ],
     %w[ "Slate Gray" SlateGray ]
-  ]
+  ].map { |parts| [ parts[0...-1].join(" ").delete(%q(")), parts.last ] }.uniq { |_name, value| value.downcase }.freeze
 end

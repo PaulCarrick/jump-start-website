@@ -1,0 +1,30 @@
+<%# The fields of a menu or footer item, for the Menus screen's panel. %>
+<%= render "shared/enabled_switch", form: form %>
+
+<div class="mb-3">
+  <%= form.label :label, "Label*", class: "form-label" %>
+  <%= form.text_field :label, class: "form-control", required: true, maxlength: form.object.class::LABEL_LIMIT %>
+</div>
+
+<div class="mb-3">
+  <%= form.label :link, "Links to", class: "form-label" %>
+  <%= form.text_field :link, class: "form-control", list: "admin-page-links", placeholder: "Choose a page or type a web address" %>
+  <div class="form-text">Pick one of the site's pages, or type an address such as https://example.com or mailto:you@example.com.</div>
+</div>
+
+<details class="admin-panel-more"<%= " open" if form.object.icon.present? || form.object.options.present? || form.object.access.present? %>>
+  <summary>More settings</summary>
+  <div class="mb-3">
+    <%= form.label :access, "Access", class: "form-label" %>
+    <%= form.text_field :access, class: "form-control", placeholder: "Everyone" %>
+    <div class="form-text">Leave empty for everyone, or name the roles that see it.</div>
+  </div>
+  <div class="mb-3">
+    <%= form.label :icon, "Icon", class: "form-label" %>
+    <%= form.text_field :icon, class: "form-control", placeholder: "Enter the icon filename, if any" %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :options, "Options", class: "form-label" %>
+    <%= form.text_field :options, class: "form-control", placeholder: "Enter the options, if any" %>
+  </div>
+</details>

@@ -29,6 +29,7 @@ RSpec.describe "Admin Site Setups", type: :system do
         expect(page).to have_field("site_setup[site_domain]", type: "text")
         expect(page).to have_field("site_setup[site_host]", type: "text")
         expect(page).to have_field("site_setup[site_url]", type: "text")
+        click_button "Appearance"
         expect(page).to have_select("site_setup[header_background]")
         expect(page).to have_select("site_setup[header_text_color]")
         expect(page).to have_select("site_setup[footer_background]")
@@ -36,6 +37,7 @@ RSpec.describe "Admin Site Setups", type: :system do
         expect(page).to have_select("site_setup[container_background]")
         expect(page).to have_select("site_setup[container_text_color]")
         expect(page).to have_field("Background Image", type: "text")
+        click_button "Social links"
         expect(page).to have_field("Facebook URL", type: "text")
         expect(page).to have_field("Twitter URL", type: "text")
         expect(page).to have_field("Instagram URL", type: "text")
@@ -47,11 +49,14 @@ RSpec.describe "Admin Site Setups", type: :system do
         fill_in "site_setup[configuration_name]", with: "alternate"
         fill_in "site_setup[owner_name]", with: "Test User"
         fill_in "site_setup[site_name]", with: "Test"
-        fill_in "site_setup[database]", with: "new-site-database"
         fill_in "site_setup[site_domain]", with: "example.com"
         fill_in "site_setup[site_host]", with: "example.com"
         fill_in "site_setup[site_url]", with: "https://example.com"
 
+        click_button "Advanced"
+        fill_in "site_setup[database]", with: "new-site-database"
+
+        click_button "Appearance"
         select "Default", from: "site_setup[header_background]"
         select "White", from: "site_setup[header_text_color]"
         select "Default", from: "site_setup[footer_background]"
@@ -71,6 +76,23 @@ RSpec.describe "Admin Site Setups", type: :system do
 
       it "renders the correct title and header" do
         expect(page).to have_selector("h1", text: "Edit Site Setup")
+      end
+
+      it "opens the tab of a required field that is empty" do
+        page.execute_script("document.querySelector('[name=\"site_setup[guest_user_name]\"]').value = ''")
+        click_button "Save Site Setup"
+        expect(page).to have_css("#settings-tab-advanced.active")
+        expect(page).to have_field("site_setup[guest_user_name]", with: "")
+        expect(page).to have_current_path(/tab=advanced/)
+      end
+
+      it "sends a test email from the Email tab" do
+        click_button "Email"
+        click_button "Send a test email"
+        # Wait for the redirect (it adds return_url) before reading the page.
+        expect(page).to have_current_path(/return_url=.*tab=email/)
+        expect(page).to have_css("#settings-tab-email.active")
+        expect(page).to have_content(/Test email sent to|The test email could not be sent/)
       end
 
       it "updates the site setup successfully" do

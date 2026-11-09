@@ -12,6 +12,21 @@ export default class extends Controller {
     this.originalNames = ['site_setup[site_name]', 'site_setup[configuration_name]'].map(field => this.slug(this.originalFields.get(field) || '')).filter(Boolean);
   }
 
+  // Keeps the swatch beside each color list and the small preview in step.
+  colorChanged(event) {
+    const field = event.target.dataset.colorField;
+    const color = event.target.value;
+    const swatch = this.element.querySelector(`[data-color-swatch="${field}"]`);
+    if (swatch) swatch.style.background = color;
+    const [area, part] = field.startsWith('header') ? ['header', field.slice(7)]
+      : field.startsWith('footer') ? ['footer', field.slice(7)]
+      : ['container', field.slice(10)];
+    const preview = this.element.querySelector(`[data-preview="${area}"]`);
+    if (!preview) return;
+    if (part === 'background') preview.style.background = color;
+    else preview.style.color = color;
+  }
+
   slug(value) {
     return value.normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
       .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');

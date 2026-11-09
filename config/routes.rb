@@ -58,6 +58,8 @@ Rails.application.routes.draw do
     delete "/users/:id", to: "users#destroy", as: "delete_user"
     resources :image_files, except: [ :destroy ]
     delete "/image_files/:id", to: "image_files#destroy", as: "delete_image_file"
+    get "/menus", to: "menus#index", as: "menus"
+    patch "/menus/order", to: "menus#reorder", as: "menus_order"
     resources :menu_items, except: [ :destroy ]
     delete "/menu_items/:id", to: "menu_items#destroy", as: "delete_menu_item"
     resources :footer_items, except: [ :destroy ]
@@ -65,6 +67,7 @@ Rails.application.routes.draw do
     post '/publishing/database_sync/:id', to: 'publishing#retry_databases', as: :retry_database_sync
     resources :site_setups, except: [ :destroy ]
     delete "/site_setups/:id", to: "site_setups#destroy", as: "delete_site_setup"
+    post "/site_setups/:id/test_email", to: "site_setups#test_email", as: "test_email_site_setup"
   end
 
   resources :blogs

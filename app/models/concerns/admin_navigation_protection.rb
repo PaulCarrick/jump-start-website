@@ -1,6 +1,9 @@
-# Admin navigation entries remain visible but cannot be changed by editors.
+# Admin navigation entries remain visible and can be moved, but editors cannot otherwise change them.
 module AdminNavigationProtection
   extend ActiveSupport::Concern
+
+  # Moving an entry within its menu changes only these.
+  POSITION_FIELDS = %w[menu_order footer_order parent_id].freeze
 
   included do
     validate :preserve_admin_navigation, on: :update
@@ -14,6 +17,8 @@ module AdminNavigationProtection
 
   def preserve_admin_navigation
     return unless PublishingContext.editing && !PublishingContext.deploying
+    return if (changed - POSITION_FIELDS).empty?
+
     if attribute_in_database('link').to_s.start_with?('/admin')
       errors.add(:base, 'Items linking to /admin are read-only.')
     end

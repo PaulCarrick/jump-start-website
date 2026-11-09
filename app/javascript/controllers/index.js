@@ -12,3 +12,9 @@ application.register("navigation", NavigationController)
 
 import SiteSetupController from "./site_setup_controller"
 application.register("site-setup", SiteSetupController)
+
+import AdminTabsController from "./admin_tabs_controller"
+application.register("admin-tabs", AdminTabsController)
+
+import MenuTreeController from "./menu_tree_controller"
+application.register("menu-tree", MenuTreeController)

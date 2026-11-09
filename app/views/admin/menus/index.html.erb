@@ -1,0 +1,115 @@
+<!-- app/views/admin/menus/index.html.erb -->
+<%
+  model_key = @kind == "header" ? :menu_item : :footer_item
+  order_field = @kind_settings[:order]
+  can_change = @application_user&.admin?
+  menus_path = ->(options = {}) { admin_menus_path({ kind: @kind }.merge(options)) }
+  list_path = @kind == "header" ? admin_menu_items_path : admin_footer_items_path
+%>
+<%= render layout: "layouts/admin_page" do %>
+  <div class="admin-list-heading">
+    <h1 class="admin-page-title">Menus</h1>
+    <span class="admin-list-count"><%= pluralize(@items.size, "item") %></span>
+    <% if can_change %>
+      <%= link_to("Add an item", menus_path.call(new: 1), class: "btn btn-primary admin-list-new", target: "_self") %>
+    <% end %>
+  </div>
+
+  <nav class="admin-segmented" aria-label="Which menu">
+    <% Admin::MenusController::KINDS.each do |kind, settings| %>
+      <%= link_to(settings[:label], admin_menus_path(kind: kind), class: "admin-segment#{' is-current' if kind == @kind}",
+                  target: "_self", aria: { current: (kind == @kind ? "page" : nil) }) %>
+    <% end %>
+  </nav>
+
+  <div class="admin-menus">
+    <section class="admin-menu-tree-box" aria-label="<%= @kind_settings[:label] %>"
+             data-controller="menu-tree"
+             data-menu-tree-url-value="<%= admin_menus_order_path %>"
+             data-menu-tree-kind-value="<%= @kind %>"
+             data-menu-tree-depth-value="<%= Admin::MenusController::MAX_DEPTH %>"
+             data-menu-tree-enabled-value="<%= can_change %>">
+      <p class="admin-tab-lead">
+        <% if can_change %>
+          Drag an item by its handle to move it, or onto another item to put it inside. The arrow buttons do the same from the keyboard. Changes are saved as drafts until you publish.
+        <% else %>
+          Only administrators can change the menus.
+        <% end %>
+      </p>
+      <% if @roots.empty? %>
+        <p class="admin-list-empty">This menu has no items yet.</p>
+      <% end %>
+      <ol class="admin-menu-tree" data-menu-tree-target="root">
+        <% @roots.each do |item| %>
+          <%= render "node", item: item, menus_path: menus_path, can_change: can_change %>
+        <% end %>
+      </ol>
+      <p class="admin-menu-status" role="status" aria-live="polite" data-menu-tree-target="status"></p>
+      <p class="admin-menu-list-link">
+        <%= link_to("Show the #{@kind_settings[:label].downcase} as a list", list_path, target: "_self") %>
+        <% if @kind == "header" %>· the list also holds the old "Admin" menu entries<% end %>
+      </p>
+    </section>
+
+    <aside class="admin-menu-panel" aria-label="Edit the chosen item">
+      <% if params[:new].present? && can_change %>
+        <% item = @kind_settings[:model].new(enabled: true) %>
+        <h2 class="admin-panel-title">New item</h2>
+        <p class="form-text">It is added at the end of the menu; drag it where you want it afterwards.</p>
+        <%= form_with(model: item, scope: model_key,
+                      url: (@kind == "header" ? admin_menu_items_path : admin_footer_items_path),
+                      method: :post, local: true, data: { turbo: false }) do |form| %>
+          <%= hidden_field_tag :return_url, menus_path.call %>
+          <%= form.hidden_field order_field, value: @roots.size + 1 %>
+          <% if @kind == "header" %><%= form.hidden_field :menu_type, value: "Main" %><% end %>
+          <%= render "item_fields", form: form, read_only: false %>
+          <div class="admin-form-actions">
+            <%= link_to("Cancel", menus_path.call, class: "btn btn-secondary", target: "_self") %>
+            <%= form.submit "Add item", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      <% elsif @selected %>
+        <% read_only = @selected.admin_navigation_read_only? || !can_change %>
+        <h2 class="admin-panel-title"><%= @selected.label.presence || "(no label)" %></h2>
+        <p class="form-text"><%= admin_status_badge(@selected) %></p>
+        <% if @selected.admin_navigation_read_only? %>
+          <p class="form-text">Items linking to /admin can be moved but not changed.</p>
+        <% end %>
+        <%= form_with(model: @selected, scope: model_key,
+                      url: (@kind == "header" ? admin_menu_item_path(@selected) : admin_footer_item_path(@selected)),
+                      method: :patch, local: true, data: { turbo: false }) do |form| %>
+          <%= hidden_field_tag :return_url, menus_path.call(selected: @selected.id) %>
+          <fieldset <%= "disabled" if read_only %>>
+            <%= render "item_fields", form: form, read_only: read_only %>
+          </fieldset>
+          <div class="admin-form-actions">
+            <%= link_to("Close", menus_path.call, class: "btn btn-secondary", target: "_self") %>
+            <%= form.submit "Save item", class: "btn btn-primary", disabled: read_only %>
+          </div>
+        <% end %>
+        <% if can_change && !@selected.admin_navigation_read_only? %>
+          <div class="admin-panel-danger">
+            <%= button_to("Delete this item",
+                          (@kind == "header" ? admin_delete_menu_item_path(@selected) : admin_delete_footer_item_path(@selected)),
+                          method:  :delete,
+                          params:  { return_url: menus_path.call },
+                          class:   "btn btn-outline-danger btn-sm",
+                          form:    { data: { turbo: false } },
+                          onclick: "return confirm('Delete this item? Items inside it move to the top level.');") %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="admin-panel-empty">
+          <h2 class="admin-panel-title">Choose an item</h2>
+          <p class="form-text">Click an item's name to change its label, its link or who sees it.</p>
+        </div>
+      <% end %>
+    </aside>
+  </div>
+
+  <datalist id="admin-page-links">
+    <% @pages.each do |page| %>
+      <option value="/<%= page.name %>"><%= page.title.presence || page.name %></option>
+    <% end %>
+  </datalist>
+<% end %>

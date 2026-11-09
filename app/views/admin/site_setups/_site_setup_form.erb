@@ -1,295 +1,327 @@
 <!-- app/views/admin/site_setups/_site_setup_form.html.erb -->
-
-<%= form_with(model:  controller.get_item,
-              url:    controller.get_item.persisted? ? admin_site_setup_path(controller.get_item) : admin_site_setups_path,
-              method: controller.get_item.persisted? ? :patch : :post,
-              local:  true, data: { controller: "site-setup" }) do |form| %>
-  <%= render "shared/enabled_switch", form: form %>
-  <%= hidden_field_tag :return_url, admin_return_url %>
-
-  <h1>
-    <% if controller.get_item&.persisted? %>
+<%
+  site_setup = controller.get_item
+  tabs = [
+    [ "general", "General" ],
+    [ "email", "Email" ],
+    [ "appearance", "Appearance" ],
+    [ "social", "Social links" ],
+    [ "advanced", "Advanced" ]
+  ]
+  active_tab = tabs.map(&:first).include?(params[:tab]) ? params[:tab] : "general"
+  colors = Admin::SiteSetupsController::COLOR_ARRAY
+%>
+<div class="admin-settings-heading">
+  <h1 class="admin-page-title">
+    <% if site_setup&.persisted? %>
       Edit <%= controller.model_title %>
     <% else %>
       New <%= controller.model_title %>
     <% end %>
   </h1>
+  <% if site_setup&.persisted? %>
+    <span class="admin-cell-muted"><%= site_setup.site_name %></span>
+  <% end %>
+</div>
 
-  <div class="mb-3">
-    <%= form.label :configuration_name, "Configuration Name*", class: "form-label" %>
-    <%= form.text_field :configuration_name,
-                        data: { action: "blur->site-setup#nameChanged" },
-                        class:       "form-control",
-                        required:    true,
-                        placeholder: "Enter the configuration name for this #{controller.model_title}"
-    %>
-  </div>
+<%= form_with(model:  site_setup,
+              url:    site_setup.persisted? ? admin_site_setup_path(site_setup) : admin_site_setups_path,
+              method: site_setup.persisted? ? :patch : :post,
+              local:  true,
+              class:  "admin-settings-form",
+              data:   { controller: "site-setup admin-tabs" }) do |form| %>
+  <%= render "shared/enabled_switch", form: form %>
+  <%= hidden_field_tag :return_url, admin_return_url %>
 
-  <div class="mb-3">
-    <%= form.label :default_setup, "Default setup", class: "form-label" %>
-    <%= form.check_box :default_setup,
-                       class: "form-check-input" %>
-  </div>
+  <ul class="nav nav-tabs admin-tabs" role="tablist">
+    <% tabs.each do |name, label| %>
+      <li class="nav-item" role="presentation">
+        <button type="button"
+                class="nav-link<%= ' active' if name == active_tab %>"
+                id="settings-tab-<%= name %>"
+                role="tab"
+                data-bs-toggle="tab"
+                data-bs-target="#settings-<%= name %>"
+                data-tab-name="<%= name %>"
+                aria-controls="settings-<%= name %>"
+                aria-selected="<%= name == active_tab %>"><%= label %></button>
+      </li>
+    <% end %>
+  </ul>
 
-  <div class="mb-3">
-    <%= form.label :owner_name, "Owner Name*", class: "form-label" %>
-    <%= form.text_field :owner_name,
-                        class:       "form-control",
-                        required:    true,
-                        placeholder: "Enter the owner name for this #{controller.model_title}"
-    %>
-  </div>
+  <div class="tab-content admin-tab-panel">
+    <%# General %>
+    <div class="tab-pane<%= ' show active' if active_tab == 'general' %>" id="settings-general" role="tabpanel" aria-labelledby="settings-tab-general">
+      <p class="admin-tab-lead">The site's name, owner and address.</p>
+      <div class="mb-3">
+        <%= form.label :configuration_name, "Configuration Name*", class: "form-label" %>
+        <%= form.text_field :configuration_name,
+                            data: { action: "blur->site-setup#nameChanged" },
+                            class:       "form-control",
+                            required:    true,
+                            aria:        { describedby: "siteSetupConfigurationHelp" },
+                            placeholder: "Enter the configuration name for this #{controller.model_title}" %>
+        <div id="siteSetupConfigurationHelp" class="form-text">A short name for this setup. Changing it suggests the site name, owner, address and database.</div>
+      </div>
 
-  <div class="mb-3">
-    <%= form.label :database, "Database*", class: "form-label" %>
-    <% provisioned = form.object.persisted? && SiteDatabase.table_exists? && SiteDatabase.exists?(site_setup_id: form.object.id) %>
-    <%= form.text_field :database, class: "form-control", required: true, readonly: provisioned,
-                        aria: { describedby: "siteSetupDatabaseHelp" } %>
-    <div id="siteSetupDatabaseHelp" class="form-text">
-      <%= provisioned ? 'This database is managed. Renaming it requires a separate migration.' : 'Deploying this setup creates its database. The Site URL selects the website by host and path.' %>
+      <div class="admin-field-grid">
+        <div class="mb-3">
+          <%= form.label :site_name, "Site Name*", class: "form-label" %>
+          <%= form.text_field :site_name,
+                              data: { action: "blur->site-setup#nameChanged" },
+                              class:       "form-control",
+                              required:    true,
+                              placeholder: "Enter the site name for this #{controller.model_title}" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :owner_name, "Owner Name*", class: "form-label" %>
+          <%= form.text_field :owner_name,
+                              class:       "form-control",
+                              required:    true,
+                              placeholder: "Enter the owner name for this #{controller.model_title}" %>
+        </div>
+      </div>
+
+      <p class="form-text" data-site-admin-preview></p>
+
+      <div class="admin-field-grid">
+        <div class="mb-3">
+          <%= form.label :site_domain, "Site Domain*", class: "form-label" %>
+          <%= form.text_field :site_domain,
+                              class:       "form-control",
+                              required:    true,
+                              placeholder: "Enter the site domain for this #{controller.model_title}" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :site_host, "Site Host*", class: "form-label" %>
+          <%= form.text_field :site_host,
+                              class:       "form-control",
+                              required:    true,
+                              placeholder: "Enter the site host for this #{controller.model_title}" %>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :site_url, "Site URL*", class: "form-label" %>
+        <%= form.text_field :site_url,
+                            class:       "form-control",
+                            required:    true,
+                            placeholder: "Enter the site URL for this #{controller.model_title}" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :copyright, "Copyright", class: "form-label" %>
+        <%= form.text_field :copyright,
+                            class:       "form-control",
+                            placeholder: "Enter the copyright this #{controller.model_title} (optional)" %>
+        <div class="form-text">Shown at the foot of every page.</div>
+      </div>
+    </div>
+
+    <%# Email %>
+    <div class="tab-pane<%= ' show active' if active_tab == 'email' %>" id="settings-email" role="tabpanel" aria-labelledby="settings-tab-email">
+      <p class="admin-tab-lead">The mail server the contact form sends through, and where those messages go.</p>
+      <h2 class="admin-tab-section">Mail server</h2>
+      <div class="admin-field-grid">
+        <div class="mb-3">
+          <%= form.label :smtp_server, "Email server (SMTP host)", class: "form-label" %>
+          <%= form.text_field :smtp_server,
+                              class:       "form-control",
+                              placeholder: "Enter the address for the SMTP server for this #{controller.model_title}" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :smtp_port, "Email Server Port", class: "form-label" %>
+          <%= form.text_field :smtp_port,
+                              class:       "form-control",
+                              value:       site_setup&.smtp_port || 465,
+                              placeholder: "Enter the port for the SMTP server for this #{controller.model_title}",
+                              list:        "smtp-port-options" %>
+          <datalist id="smtp-port-options">
+            <option value="25">25 (Unencrypted)</option>
+            <option value="465">465 (SSL)</option>
+            <option value="587">587 (TLS)</option>
+          </datalist>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :smtp_user, "Email server username", class: "form-label" %>
+          <%= form.text_field :smtp_user,
+                              class:       "form-control",
+                              placeholder: "Enter the username for the SMTP server for this #{controller.model_title}" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :smtp_password, "Email server password", class: "form-label" %>
+          <%= form.password_field :smtp_password,
+                                  class:       "form-control",
+                                  placeholder: "Enter the password for the SMTP server for this #{controller.model_title}" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :smtp_authentication, "SMTP Server Authentication", class: "form-label" %>
+          <%= form.select :smtp_authentication,
+                          options_for_select([ [ "Plain", "plain" ], [ "Login", "login" ] ], form.object.smtp_authentication),
+                          { include_blank: "Select Authentication" },
+                          class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :smtp_domain, "Email server default domain", class: "form-label" %>
+          <%= form.text_field :smtp_domain,
+                              class:       "form-control",
+                              placeholder: "Enter the default domain for the SMTP server for this #{controller.model_title}" %>
+        </div>
+      </div>
+
+      <h2 class="admin-tab-section">Contact form messages</h2>
+      <div class="admin-field-grid">
+        <div class="mb-3">
+          <%= form.label :contact_email_from, "Contact email from address", class: "form-label" %>
+          <%= form.email_field :contact_email_from,
+                               class:       "form-control",
+                               placeholder: "Enter the email address that the contact email will be from for this #{controller.model_title}" %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :contact_email_to, "Contact email to address", class: "form-label" %>
+          <%= form.email_field :contact_email_to,
+                               class:       "form-control",
+                               placeholder: "Enter the email address that the contact email will sent to for this #{controller.model_title}" %>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :contact_email_subject, "Contact Email subject line", class: "form-label" %>
+        <%= form.text_field :contact_email_subject,
+                            class:       "form-control",
+                            placeholder: "Enter the subject line for the contact email for this #{controller.model_title}" %>
+      </div>
+
+      <% if site_setup&.persisted? %>
+        <div class="admin-test-email">
+          <div>
+            <strong>Check the settings</strong>
+            <div class="form-text">Sends a short message to the "to" address using the settings as last saved. Save first if you have changed them.</div>
+          </div>
+          <button type="submit" form="site-setup-test-email" class="btn btn-outline-primary"<%= ' disabled' unless @application_user&.admin? %>>Send a test email</button>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Appearance %>
+    <div class="tab-pane<%= ' show active' if active_tab == 'appearance' %>" id="settings-appearance" role="tabpanel" aria-labelledby="settings-tab-appearance">
+      <p class="admin-tab-lead">The colors of the header, the page and the footer.</p>
+      <div class="admin-appearance">
+        <div class="admin-field-grid">
+          <% [
+               [ :header_background, "Header Background Color*" ],
+               [ :header_text_color, "Header Text Color*" ],
+               [ :container_background, "Container Background Color*" ],
+               [ :container_text_color, "Container Text Color*" ],
+               [ :footer_background, "Footer Background Color*" ],
+               [ :footer_text_color, "Footer Text Color*" ]
+             ].each do |field, label| %>
+            <div class="mb-3">
+              <%= form.label field, label, class: "form-label" %>
+              <div class="admin-color-field">
+                <span class="admin-color-swatch" data-color-swatch="<%= field %>" style="background: <%= site_setup.public_send(field) %>"></span>
+                <%= form.select field,
+                                options_for_select(colors, site_setup.public_send(field)),
+                                { },
+                                required: true,
+                                class:    "form-control",
+                                data:     { action: "change->site-setup#colorChanged", color_field: field } %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <figure class="admin-color-preview" aria-label="Preview of the colors">
+          <div class="admin-color-preview-header" data-preview="header" style="background: <%= site_setup.header_background %>; color: <%= site_setup.header_text_color %>">
+            <%= site_setup.site_name.presence || "Your site" %>
+          </div>
+          <div class="admin-color-preview-body" data-preview="container" style="background: <%= site_setup.container_background %>; color: <%= site_setup.container_text_color %>">
+            <strong>A page heading</strong>
+            <span>Text on the page looks like this.</span>
+          </div>
+          <div class="admin-color-preview-footer" data-preview="footer" style="background: <%= site_setup.footer_background %>; color: <%= site_setup.footer_text_color %>">
+            <%= site_setup.copyright.presence || "Footer" %>
+          </div>
+          <figcaption class="form-text">Preview</figcaption>
+        </figure>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :page_background_image, "Background Image", class: "form-label" %>
+        <%= form.text_field :page_background_image,
+                            class:       "form-control",
+                            placeholder: "Enter the background image for this #{controller.model_title} (optional)" %>
+      </div>
+    </div>
+
+    <%# Social links %>
+    <div class="tab-pane<%= ' show active' if active_tab == 'social' %>" id="settings-social" role="tabpanel" aria-labelledby="settings-tab-social">
+      <p class="admin-tab-lead">Links shown as icons in the footer. Leave a box empty to hide that icon.</p>
+      <% [
+           [ :facebook_url, "Facebook URL", "Facebook" ],
+           [ :twitter_url, "Twitter URL", "Twitter" ],
+           [ :instagram_url, "Instagram URL", "Instagram" ],
+           [ :linkedin_url, "Linkedin URL", "LinkedIn" ],
+           [ :github_url, "GitHub URL", "Github" ]
+         ].each do |field, label, name| %>
+        <div class="mb-3">
+          <%= form.label field, label, class: "form-label" %>
+          <%= form.text_field field,
+                              class:       "form-control",
+                              placeholder: "Enter the #{name} URL for this #{controller.model_title} (optional)" %>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Advanced %>
+    <div class="tab-pane<%= ' show active' if active_tab == 'advanced' %>" id="settings-advanced" role="tabpanel" aria-labelledby="settings-tab-advanced">
+      <p class="admin-tab-lead">Settings that are rarely changed.</p>
+      <div class="admin-field-grid">
+        <div class="mb-3">
+          <%= form.label :guest_user_name, "Guest User Name*", class: "form-label" %>
+          <%= form.text_field :guest_user_name,
+                              class:       "form-control",
+                              value:       site_setup&.guest_user_name || "guest",
+                              required:    true,
+                              placeholder: "Enter the guest user name this #{controller.model_title}" %>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :database, "Database*", class: "form-label" %>
+        <% provisioned = form.object.persisted? && SiteDatabase.table_exists? && SiteDatabase.exists?(site_setup_id: form.object.id) %>
+        <%= form.text_field :database, class: "form-control", required: true, readonly: provisioned,
+                            aria: { describedby: "siteSetupDatabaseHelp" } %>
+        <div id="siteSetupDatabaseHelp" class="form-text">
+          <%= provisioned ? 'This database is managed. Renaming it requires a separate migration.' : 'Deploying this setup creates its database. The Site URL selects the website by host and path.' %>
+        </div>
+      </div>
+
+      <div class="form-check mb-3">
+        <%= form.check_box :default_setup, class: "form-check-input" %>
+        <%= form.label :default_setup, "Default setup", class: "form-check-label" %>
+        <div class="form-text">The setup used when no other matches the address.</div>
+      </div>
     </div>
   </div>
 
-  <div class="mb-3">
-    <%= form.label :site_name, "Site Name*", class: "form-label" %>
-    <%= form.text_field :site_name,
-                        data: { action: "blur->site-setup#nameChanged" },
-                        class:       "form-control",
-                        required:    true,
-                        placeholder: "Enter the site name for this #{controller.model_title}"
-    %>
-  </div>
-
-  <p class="form-text" data-site-admin-preview></p>
-
-  <div class="mb-3">
-    <%= form.label :site_domain, "Site Domain*", class: "form-label" %>
-    <%= form.text_field :site_domain,
-                        class:       "form-control",
-                        required:    true,
-                        placeholder: "Enter the site domain for this #{controller.model_title}"
-    %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :site_host, "Site Host*", class: "form-label" %>
-    <%= form.text_field :site_host,
-                        class:       "form-control",
-                        required:    true,
-                        placeholder: "Enter the site host for this #{controller.model_title}"
-    %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :site_url, "Site URL*", class: "form-label" %>
-    <%= form.text_field :site_url,
-                        class:       "form-control",
-                        required:    true,
-                        placeholder: "Enter the site URL for this #{controller.model_title}"
-    %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :guest_user_name, "Guest User Name*", class: "form-label" %>
-    <%= form.text_field :guest_user_name,
-                        class:       "form-control",
-                        value:       controller.get_item&.guest_user_name || "guest",
-                        required:    true,
-                        placeholder: "Enter the guest user name this #{controller.model_title}"
-    %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :smtp_server, "Email server (SMTP host)", class: "form-label" %>
-    <%= form.text_field :smtp_server,
-                        class:       "form-control",
-                        placeholder: "Enter the address for the SMTP server for this #{controller.model_title}"
-    %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :smtp_port, "Email Server Port", class: "form-label" %>
-    <%= form.text_field :smtp_port,
-                        class: "form-control",
-                        value: controller.get_item&.smtp_port || 465,
-                        placeholder: "Enter the port for the SMTP server for this #{controller.model_title}",
-                        list: "smtp-port-options" %>
-
-    <datalist id="smtp-port-options">
-      <option value="25">25 (Unencrypted)</option>
-      <option value="465">465 (SSL)</option>
-      <option value="587">587 (TLS)</option>
-    </datalist>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :smtp_user, "Email server username", class: "form-label" %>
-    <%= form.text_field :smtp_user,
-                        class:       "form-control",
-                        placeholder: "Enter the username for the SMTP server for this #{controller.model_title}" %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :smtp_password, "Email server password", class: "form-label" %>
-    <%= form.password_field :smtp_password,
-                            class:       "form-control",
-                            placeholder: "Enter the password for the SMTP server for this #{controller.model_title}" %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :smtp_authentication, "SMTP Server Authentication", class: "form-label" %>
-    <%= form.select :smtp_authentication,
-                    options_for_select([["Plain", "plain"], ["Login", "login"]], form.object.smtp_authentication),
-                    { include_blank: "Select Authentication" },
-                    class: "form-control" %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :smtp_domain, "Email server default domain", class: "form-label" %>
-    <%= form.text_field :smtp_domain,
-                        class:       "form-control",
-                        placeholder: "Enter the default domain for the SMTP server for this #{controller.model_title}"
-    %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :contact_email_from, "Contact email from address", class: "form-label" %>
-    <%= form.email_field :contact_email_from,
-                         class:       "form-control",
-                         placeholder: "Enter the email address that the contact email will be from for this #{controller.model_title}" %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :contact_email_to, "Contact email to address", class: "form-label" %>
-    <%= form.email_field :contact_email_to,
-                         class:       "form-control",
-                         placeholder: "Enter the email address that the contact email will sent to for this #{controller.model_title}" %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :contact_email_subject, "Contact Email subject line", class: "form-label" %>
-    <%= form.text_field :contact_email_subject,
-                        class:       "form-control",
-                        placeholder: "Enter the subject line for the contact email for this #{controller.model_title}"
-    %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :header_background, "Header Background Color*", class: "form-label" %><br>
-    <%= form.select :header_background,
-                    options_for_select(Admin::SiteSetupsController::COLOR_ARRAY,
-                                       controller.get_item.header_background),
-                    required: true,
-                    class:    'form-control' %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :header_text_color, "Header Text Color*", class: "form-label" %><br>
-    <%= form.select :header_text_color,
-                    options_for_select(Admin::SiteSetupsController::COLOR_ARRAY,
-                                       controller.get_item.header_text_color),
-                    required: true,
-                    class:    'form-control' %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :footer_background, "Footer Background Color*", class: "form-label" %><br>
-    <%= form.select :footer_background,
-                    options_for_select(Admin::SiteSetupsController::COLOR_ARRAY,
-                                       controller.get_item.footer_background),
-                    required: true,
-                    class:    'form-control' %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :footer_text_color, "Footer Text Color*", class: "form-label" %><br>
-    <%= form.select :footer_text_color,
-                    options_for_select(Admin::SiteSetupsController::COLOR_ARRAY,
-                                       controller.get_item.footer_text_color),
-                    required: true,
-                    class:    'form-control' %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :container_background, "Container Background Color*", class: "form-label" %><br>
-    <%= form.select :container_background,
-                    options_for_select(Admin::SiteSetupsController::COLOR_ARRAY,
-                                       controller.get_item.container_background),
-                    required: true,
-                    class:    'form-control' %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :container_text_color, "Container Text Color*", class: "form-label" %><br>
-    <%= form.select :container_text_color,
-                    options_for_select(Admin::SiteSetupsController::COLOR_ARRAY,
-                                       controller.get_item.container_text_color),
-                    required: true,
-                    class:    'form-control' %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :page_background_image, "Background Image", class: "form-label" %>
-    <%= form.text_field :page_background_image,
-                        class:       "form-control",
-                        placeholder: "Enter the background image for this #{controller.model_title} (optional)"
-    %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :facebook_url, "Facebook URL", class: "form-label" %>
-    <%= form.text_field :facebook_url,
-                        class:       "form-control",
-                        placeholder: "Enter the Facebook URL for this #{controller.model_title} (optional)"
-    %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :twitter_url, "Twitter URL", class: "form-label" %>
-    <%= form.text_field :twitter_url,
-                        class:       "form-control",
-                        placeholder: "Enter the Twitter URL for this #{controller.model_title} (optional)"
-    %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :instagram_url, "Instagram URL", class: "form-label" %>
-    <%= form.text_field :instagram_url,
-                        class:       "form-control",
-                        placeholder: "Enter the Instagram URL for this #{controller.model_title} (optional)"
-    %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :linkedin_url, "Linkedin URL", class: "form-label" %>
-    <%= form.text_field :linkedin_url,
-                        class:       "form-control",
-                        placeholder: "Enter the LinkedIn URL for this #{controller.model_title} (optional)"
-    %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :github_url, "GitHub URL", class: "form-label" %>
-    <%= form.text_field :github_url,
-                        class:       "form-control",
-                        placeholder: "Enter the Github URL for this #{controller.model_title} (optional)"
-    %>
-  </div>
-
-  <div class="mb-3">
-    <%= form.label :copyright, "Copyright", class: "form-label" %>
-    <%= form.text_field :copyright,
-                        class:       "form-control",
-                        placeholder: "Enter the copyright this #{controller.model_title} (optional)"
-    %>
-  </div>
-
-
-  <div class="pb-3">
-    * - Required Fields
-  </div>
-  <div class="mb-3">
-    <%= form.submit "Save #{controller.model_title}", class: "btn btn-primary me-3", disabled: !@application_user&.admin? %>
+  <div class="admin-form-actions">
+    <span class="form-text">* Required fields</span>
     <%= link_to("Cancel", admin_return_url, class: "btn btn-secondary", target: "_self") %>
+    <%= form.submit "Save #{controller.model_title}", class: "btn btn-primary", disabled: !@application_user&.admin? %>
   </div>
+<% end %>
+
+<% if site_setup&.persisted? %>
+  <%= form_tag(admin_test_email_site_setup_path(site_setup), method: :post, id: "site-setup-test-email", class: "d-none", data: { turbo: false }) do %>
+    <%= hidden_field_tag :return_url, admin_return_url %>
+  <% end %>
 <% end %>
