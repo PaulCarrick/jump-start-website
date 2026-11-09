@@ -18,4 +18,13 @@ class FooterItem < ApplicationRecord
 
   validates :label, presence: true, length: { maximum: LABEL_LIMIT }
   validates :footer_order, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
+
+  # Fields the admin list's search box may use.
+  def self.ransackable_attributes(auth_object = nil)
+    %w[label link]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
+  end
 end

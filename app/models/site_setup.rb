@@ -37,4 +37,13 @@ class SiteSetup < CatalogRecord
       errors.add(:default, 'There can only be one default site setup.')
     end
   end
+
+  # Fields the admin list's search box may use.
+  def self.ransackable_attributes(auth_object = nil)
+    %w[configuration_name site_name site_domain owner_name]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
+  end
 end

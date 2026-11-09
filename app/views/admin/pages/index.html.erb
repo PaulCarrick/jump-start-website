@@ -1,54 +1,40 @@
 <!-- app/views/admin/pages/index.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
-  <h1 class="mb-3">Manage Pages</h1>
-  <div class="mb-3">
-    <%= link_to("New page", new_admin_page_path, class: "btn btn-primary", target: "_self") %>
+  <%= admin_list_heading("Pages", count: @pagy&.count || controller.get_items.size, new_label: "New page", new_path: new_admin_page_path) %>
+  <div class="admin-list-tools">
+    <%= admin_search_box(admin_pages_path, "title_or_name_or_section_cont", placeholder: "Search pages by title, name or section") %>
+    <%= link_to "Clear Sort", '#', class: "admin-clear-sort", onclick: "clearSort()" %>
   </div>
-  <div class="row admin-sort-header border-bottom border-dark mb-2">
-    <div class="col-2">
-      <%= sortable_column('Name', 'name', "pages") %>
-    </div>
-    <div class="col-2">
-      <%= sortable_column('Section', 'section', "pages") %>
-    </div>
-    <div class="col-4">
-      <%= sortable_column('Title', 'title', "pages") %>
-    </div>
-    <div class="col-2">
-      <%= sortable_column('Access', 'access', "pages") %>
-    </div>
-    <div class="col-2">
-      <%= link_to "Clear Sort", '#', class: "btn btn-secondary", onclick: "clearSort()" %>
-    </div>
-  </div>
-  <div class="scrollable-container p-2">
-    <% controller.get_items.each do |page| %>
-      <div class="row admin-list-record">
-        <div class="col-2">
-          <%= page.name %>
-        </div>
-        <div class="col-2">
-          <%= page.section %>
-        </div>
-        <div class="col-4">
-          <%= page.title %>
-        </div>
-        <div class="col-2">
-          <%= page.access %>
-        </div>
-        <div class="col-2" style="min-height: 2em;">
-          <% delete_path = admin_page_path(page) %>
-          <%= action_links(page,
-                           admin_page_path(page),
-                           edit_admin_page_path(page),
-                           delete_path) %>
-        </div>
-      </div>
+  <div class="admin-table-box">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th scope="col"><%= admin_sort_heading("Title", "title", "pages") %></th>
+          <th scope="col"><%= admin_sort_heading("Name", "name", "pages") %></th>
+          <th scope="col"><%= admin_sort_heading("Section", "section", "pages") %></th>
+          <th scope="col"><%= admin_sort_heading("Access", "access", "pages") %></th>
+          <th scope="col">Status</th>
+          <th scope="col"><span class="visually-hidden">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% controller.get_items.each do |page| %>
+          <tr class="admin-list-record">
+            <td class="admin-cell-title"><%= link_to(page.title.presence || page.name, edit_admin_page_path(page), target: "_self") %></td>
+            <td class="admin-cell-muted">/<%= page.name %></td>
+            <td><%= page.section %></td>
+            <td><%= page.access.presence || "Everyone" %></td>
+            <td><%= admin_status_badge(page) %></td>
+            <td class="admin-cell-actions">
+              <%= admin_row_actions(page, show_path: admin_page_path(page), edit_path: edit_admin_page_path(page), delete_path: admin_page_path(page)) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% if controller.get_items.empty? %>
+      <p class="admin-list-empty">No pages found.</p>
     <% end %>
-    <div class="row mt-3 mb-3">
-      <div class="col-12 justify-content-end">
-        <%= render 'shared/page_navigation' %>
-      </div>
-    </div>
   </div>
+  <div class="admin-list-footer"><%= render 'shared/page_navigation' %></div>
 <% end %>

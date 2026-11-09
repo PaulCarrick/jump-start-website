@@ -4,7 +4,7 @@ class Admin::BlogPostsController < Admin::AbstractAdminController
   def initialize
     super
 
-    @page_limit = 3
+    @page_limit = 20
     @default_column = 'posted'
     @default_direction = 'desc'
     @has_query = true

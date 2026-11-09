@@ -29,7 +29,7 @@ RSpec.describe "Admin Users", type: :system do
     end
 
     it "lists all users with their attributes" do
-      within ".scrollable-container" do
+      within ".admin-table-box" do
         expect(page).to have_content("test@example.com")
         expect(page).to have_content("Test User")
         expect(page).to have_content("admin")
@@ -39,7 +39,18 @@ RSpec.describe "Admin Users", type: :system do
 
     it "renders action links for each user" do
       expect(page).to have_link("Edit", href: edit_admin_user_path(user))
+      open_row_menu(edit_admin_user_path(user))
       expect(page).to have_css("form[action='#{admin_user_path(user)}'] button", text: "Delete")
+    end
+
+    it "searches users by email or name" do
+      fill_in "q[email_or_name_cont]", with: "Test User"
+      click_button "Search"
+      expect(page).to have_current_path(/q%5Bemail_or_name_cont%5D=Test/)
+      within ".admin-table-box" do
+        expect(page).to have_content("test@example.com")
+      end
+      expect(page).to have_link("Clear")
     end
 
     it "navigates to the new user page" do
@@ -129,6 +140,7 @@ RSpec.describe "Admin Users", type: :system do
     before { visit admin_users_path }
 
     it "deletes a user successfully" do
+      open_row_menu(edit_admin_user_path(user))
       find("form[action='#{admin_user_path(user)}'] button", text: "Delete").click
       page.driver.browser.switch_to.alert.accept # Confirm alert
       expect(page).not_to have_content("test@example.com")

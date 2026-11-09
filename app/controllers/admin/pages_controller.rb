@@ -6,7 +6,7 @@ class Admin::PagesController < Admin::AbstractAdminController
 
     @page_limit             = 20
     @default_column         = 'name'
-    @has_query              = false
+    @has_query              = true
     @has_sort               = true
     @model_class            = Page
     @read_only_content_type = true

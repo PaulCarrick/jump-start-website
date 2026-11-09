@@ -41,7 +41,7 @@ RSpec.describe Admin::FooterItemsController, type: :controller do
       get :index
       expect(controller.instance_variable_get(:@page_limit)).to eq(20)
       expect(controller.instance_variable_get(:@default_column)).to eq('label')
-      expect(controller.instance_variable_get(:@has_query)).to be(false)
+      expect(controller.instance_variable_get(:@has_query)).to be(true)
       expect(controller.instance_variable_get(:@has_sort)).to be(true)
       expect(controller.instance_variable_get(:@model_class)).to eq(FooterItem)
     end

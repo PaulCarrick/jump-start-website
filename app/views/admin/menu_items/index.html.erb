@@ -1,60 +1,42 @@
 <!-- app/views/admin/menu_items/index.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
-  <h1 class="mb-3">Manage Menu Items</h1>
-  <div class="mb-3">
-    <%= link_to("New Menu Item", new_admin_menu_item_path, class: "btn btn-primary", target: "_self") %>
+  <%= admin_list_heading("Header menu", count: @pagy&.count || controller.get_items.size, new_label: "New Menu Item", new_path: new_admin_menu_item_path) %>
+  <div class="admin-list-tools">
+    <%= admin_search_box(admin_menu_items_path, "label_or_link_cont", placeholder: "Search menu items by label or link") %>
+    <%= link_to "Clear Sort", '#', class: "admin-clear-sort", onclick: "clearSort()" %>
   </div>
-  <div class="row admin-sort-header border-bottom border-dark mb-2">
-    <div class="col-2">
-      <%= sortable_column('Menu Type', 'menu_type', "menu_items") %>
-    </div>
-    <div class="col-2">
-      <%= sortable_column('Label', 'label', "menu_items") %>
-    </div>
-    <div class="col-1">
-      <%= sortable_column('Menu Order', 'menu_order', "menu_items") %>
-    </div>
-    <div class="col-2">
-      <%= sortable_column('Access', 'access', "menu_items") %>
-    </div>
-    <div class="col-3">
-      <%= sortable_column('Link', 'link', "menu_items") %>
-    </div>
-    <div class="col-2">
-      <%= link_to "Clear Sort", '#', class: "btn btn-secondary", onclick: "clearSort()" %>
-    </div>
-  </div>
-  <div class="scrollable-container p-2">
-    <% controller.get_items.each do |menu_item| %>
-      <div class="row admin-list-record">
-        <div class="col-2">
-          <%= menu_item.menu_type %>
-        </div>
-        <div class="col-2">
-          <%= menu_item.label %>
-        </div>
-        <div class="col-1">
-          <%= menu_item.menu_order %>
-        </div>
-        <div class="col-2">
-          <%= menu_item.access %>
-        </div>
-        <div class="col-3">
-          <%= menu_item.link %>
-        </div>
-        <div class="col-2" style="min-height: 2em;">
-          <% delete_path = admin_menu_item_path(menu_item) %>
-          <%= action_links(menu_item,
-                           admin_menu_item_path(menu_item),
-                           edit_admin_menu_item_path(menu_item),
-                           delete_path) %>
-        </div>
-      </div>
+  <div class="admin-table-box">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th scope="col"><%= admin_sort_heading("Label", "label", "menu_items") %></th>
+          <th scope="col"><%= admin_sort_heading("Menu Type", "menu_type", "menu_items") %></th>
+          <th scope="col"><%= admin_sort_heading("Menu Order", "menu_order", "menu_items") %></th>
+          <th scope="col"><%= admin_sort_heading("Link", "link", "menu_items") %></th>
+          <th scope="col"><%= admin_sort_heading("Access", "access", "menu_items") %></th>
+          <th scope="col">Status</th>
+          <th scope="col"><span class="visually-hidden">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% controller.get_items.each do |menu_item| %>
+          <tr class="admin-list-record">
+            <td class="admin-cell-title"><%= link_to(menu_item.label, edit_admin_menu_item_path(menu_item), target: "_self") %></td>
+            <td><%= menu_item.menu_type %></td>
+            <td><%= menu_item.menu_order %></td>
+            <td class="admin-cell-muted"><%= menu_item.link %></td>
+            <td><%= menu_item.access.presence || "Everyone" %></td>
+            <td><%= admin_status_badge(menu_item) %></td>
+            <td class="admin-cell-actions">
+              <%= admin_row_actions(menu_item, show_path: admin_menu_item_path(menu_item), edit_path: edit_admin_menu_item_path(menu_item), delete_path: admin_menu_item_path(menu_item)) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% if controller.get_items.empty? %>
+      <p class="admin-list-empty">No menu items found.</p>
     <% end %>
   </div>
-  <div class="row mt-3 mb-3">
-    <div class="col-12 justify-content-end">
-      <%= render 'shared/page_navigation' %>
-    </div>
-  </div>
+  <div class="admin-list-footer"><%= render 'shared/page_navigation' %></div>
 <% end %>

@@ -152,16 +152,20 @@ RSpec.describe "Admin Blog Posts", type: :system do
     end
 
     it "lists all blog posts" do
-      expect(page).to have_content("View")
-      expect(page).to have_content("Edit")
-      expect(page).to have_content("Delete")
+      [ blog_post, blog_post_1, blog_post_2 ].each do |post|
+        expect(page).to have_link("Edit", href: edit_admin_blog_post_path(post))
+      end
+      open_row_menu(edit_admin_blog_post_path(blog_post_1))
+      expect(page).to have_link("View", href: admin_blog_post_path(blog_post_1))
+      expect(page).to have_button("Delete")
     end
 
 
     it "renders action links for each blog post" do
       search_blog_posts("Content One")
-      expect(page).to have_link("View", href: admin_blog_post_path(blog_post_1))
       expect(page).to have_link("Edit", href: edit_admin_blog_post_path(blog_post_1))
+      open_row_menu(edit_admin_blog_post_path(blog_post_1))
+      expect(page).to have_link("View", href: admin_blog_post_path(blog_post_1))
       expect(page).to have_css("form[action='#{admin_blog_post_path(blog_post_1)}'] button", text: "Delete")
     end
 
@@ -171,7 +175,8 @@ RSpec.describe "Admin Blog Posts", type: :system do
         expect(page).to have_css('[aria-disabled="true"]', count: 4)
         expect(page).to have_no_link('Next')
       end
-      create(:blog_post)
+      # The list shows 20 posts a page; three exist already.
+      create_list(:blog_post, 18)
       visit admin_blog_posts_path(sort: 'title', direction: 'asc')
       within('nav[aria-label="Pagination"]') { click_link 'Next' }
       expect(page).to have_current_path(admin_blog_posts_path(sort: 'title', direction: 'asc', page: 2))
@@ -214,7 +219,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
 
       expect(page).to have_current_path(admin_blog_posts_path(clear_search: true))
       expect(page).to have_field("Author", with: "")
-      within ".scrollable-container" do
+      within ".admin-table-box" do
         expect(page).to have_content("Author One")
         expect(page).to have_content("Author Two")
         [ blog_post, blog_post_1, blog_post_2 ].each do |post|
@@ -227,7 +232,8 @@ RSpec.describe "Admin Blog Posts", type: :system do
   describe "Sorting functionality" do
     it "sorts by posted date" do
       visit admin_blog_posts_path(sort: "posted", direction: "desc")
-      posted_dates = page.all(".row .col-2:nth-child(3)").map(&:text)
+      posted_dates = page.all(".admin-table tbody td:nth-child(4)").map(&:text)
+      expect(posted_dates.size).to eq(3)
       expect(posted_dates).to eq(posted_dates.sort.reverse)
     end
   end
@@ -247,6 +253,7 @@ RSpec.describe "Admin Blog Posts", type: :system do
 
       expect {
         sleep 1
+        open_row_menu(edit_admin_blog_post_path(blog_post_1))
         find("form[action='#{admin_blog_post_path(blog_post_1)}'] button", text: "Delete").click
         sleep 2
         page.driver.browser.switch_to.alert.accept # Confirm the alert

@@ -1,60 +1,39 @@
+<!-- app/views/admin/users/index.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
-  <div class="row mb-2">
-    <h1 class="mb-3">Manage Users</h1>
-    <div class="mb-3">
-      <%= link_to("New User", new_admin_user_path, class: "btn btn-primary", target: "_self") %>
-    </div>
-    <div class="row admin-sort-header border-bottom border-dark mb-2">
-      <div class="col-3">
-        <%= sortable_column('Email', 'email', "users") %>
-      </div>
-      <div class="col-2">
-        <%= sortable_column('Name', 'name', "users") %>
-      </div>
-      <div class="col-2">
-        <%= sortable_column('Access', 'access', "users") %>
-      </div>
-      <div class="col-2">
-        <%= sortable_column('Roles', 'roles', "users") %>
-      </div>
-      <div class="col-3">
-      </div>
-    </div>
-    <div class="scrollable-container p-2 border-bottom border-dark" style="max-height: 60%">
-      <% if @users.present? %>
-        <% @users.each do |user| %>
-          <div class="row admin-list-record">
-            <div class="col-3">
-              <%= user.email %>
-            </div>
-            <div class="col-2">
-              <%= user.name || "N/A" %>
-            </div>
-            <div class="col-2 text-start">
-              <%= user.access %>
-            </div>
-            <div class="col-2">
-              <%= user.roles.present? ? user.roles : "None" %>
-            </div>
-            <div class="col-3" style="min-height: 2em;">
-              <% delete_path = admin_user_path(user) %>
-              <%= action_links(user,
-                               admin_user_path(user),
-                               edit_admin_user_path(user),
-                               delete_path)
-              %>
-            </div>
-          </div>
-        <% end %>
-      <% else %>
-        <p>No users found.</p>
-      <% end %>
-    </div>
-
-    <div class="row mt-3 mb-3">
-      <div class="col-12 justify-content-end">
-        <%= render "shared/page_navigation" %>
-      </div>
-    </div>
+  <%= admin_list_heading("Users", count: @pagy&.count || @users.to_a.size, new_label: "New User", new_path: new_admin_user_path) %>
+  <div class="admin-list-tools">
+    <%= admin_search_box(admin_users_path, "email_or_name_cont", placeholder: "Search users by email or name") %>
   </div>
+  <div class="admin-table-box">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th scope="col"><%= admin_sort_heading("Email", "email", "users") %></th>
+          <th scope="col"><%= admin_sort_heading("Name", "name", "users") %></th>
+          <th scope="col"><%= admin_sort_heading("Access", "access", "users") %></th>
+          <th scope="col"><%= admin_sort_heading("Roles", "roles", "users") %></th>
+          <th scope="col">Status</th>
+          <th scope="col"><span class="visually-hidden">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% (@users || []).each do |user| %>
+          <tr class="admin-list-record">
+            <td class="admin-cell-title"><%= link_to(user.email, edit_admin_user_path(user), target: "_self") %></td>
+            <td><%= user.name.presence || "N/A" %></td>
+            <td><%= user.access %></td>
+            <td class="admin-cell-muted"><%= user.roles.presence || "None" %></td>
+            <td><%= admin_status_badge(user) %></td>
+            <td class="admin-cell-actions">
+              <%= admin_row_actions(user, show_path: admin_user_path(user), edit_path: edit_admin_user_path(user), delete_path: admin_user_path(user)) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% if @users.blank? %>
+      <p class="admin-list-empty">No users found.</p>
+    <% end %>
+  </div>
+  <div class="admin-list-footer"><%= render "shared/page_navigation" %></div>
 <% end %>

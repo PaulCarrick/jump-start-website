@@ -10,7 +10,7 @@ class Admin::SiteSetupsController < Admin::AbstractAdminController
 
     @page_limit     = 20
     @default_column = 'configuration_name'
-    @has_query      = false
+    @has_query      = true
     @has_sort       = true
     @model_class    = SiteSetup
   end

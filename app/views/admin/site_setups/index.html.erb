@@ -1,66 +1,45 @@
 <!-- app/views/admin/site_setups/index.html.erb -->
 <%= render layout: "layouts/admin_page" do %>
-  <h1 class="mb-3">Manage Site Setups</h1>
-  <div class="mb-3">
-    <%= link_to("New #{controller.model_title}", new_admin_site_setup_path, class: "btn btn-primary", target: "_self") %>
+  <%= admin_list_heading("Site setups", count: @pagy&.count || controller.get_items.size, new_label: "New #{controller.model_title}", new_path: new_admin_site_setup_path) %>
+  <div class="admin-list-tools">
+    <%= admin_search_box(admin_site_setups_path, "configuration_name_or_site_name_or_site_domain_cont", placeholder: "Search setups by name or domain") %>
+    <%= link_to "Clear Sort", '#', class: "admin-clear-sort", onclick: "clearSort()" %>
   </div>
-  <div class="row admin-sort-header border-bottom border-dark mb-2">
-    <div class="col-2">
-      <%= sortable_column('Configuration Name', 'configuration_name', "site_setups") %>
-    </div>
-    <div class="col-2">
-      <%= sortable_column('Site Name', 'site_name', "site_setups") %>
-    </div>
-    <div class="col-1">
-      <%= sortable_column('Owner', 'owner_name', "site_setups") %>
-    </div>
-    <div class="col-2">
-      <%= sortable_column('Domain', 'site_domain', "site_setups") %>
-    </div>
-    <div class="col-1">
-      <%= sortable_column('Host', 'site_host', "site_setups") %>
-    </div>
-    <div class="col-2">
-      <%= sortable_column('URL', 'site_url', "site_setups") %>
-    </div>
-    <div class="col-2">
-      <%= link_to "Clear Sort", '#', class: "btn btn-secondary", onclick: "clearSort()" %>
-    </div>
-  </div>
-  <div class="scrollable-container p-2">
-    <% controller.get_items.each do |site_setup| %>
-      <div class="row admin-list-record">
-        <div class="col-2">
-          <%= site_setup.configuration_name %>
-        </div>
-        <div class="col-2">
-          <%= site_setup.site_name %>
-        </div>
-        <div class="col-1">
-          <%= site_setup.owner_name %>
-        </div>
-        <div class="col-2">
-          <%= site_setup.site_domain %>
-        </div>
-        <div class="col-1">
-          <%= site_setup.site_host %>
-        </div>
-        <div class="col-2">
-          <%= site_setup.site_url %>
-        </div>
-        <div class="col-2" style="min-height: 2em;">
-          <% delete_path = admin_site_setup_path(site_setup) %>
-          <%= action_links(site_setup,
-                           admin_site_setup_path(site_setup),
-                           edit_admin_site_setup_path(site_setup),
-                           delete_path) %>
-        </div>
-      </div>
+  <div class="admin-table-box">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th scope="col"><%= admin_sort_heading("Site Name", "site_name", "site_setups") %></th>
+          <th scope="col"><%= admin_sort_heading("Configuration Name", "configuration_name", "site_setups") %></th>
+          <th scope="col"><%= admin_sort_heading("Owner", "owner_name", "site_setups") %></th>
+          <th scope="col"><%= admin_sort_heading("Domain", "site_domain", "site_setups") %></th>
+          <th scope="col"><%= admin_sort_heading("URL", "site_url", "site_setups") %></th>
+          <th scope="col">Status</th>
+          <th scope="col"><span class="visually-hidden">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% controller.get_items.each do |site_setup| %>
+          <tr class="admin-list-record">
+            <td class="admin-cell-title">
+              <%= link_to(site_setup.site_name, edit_admin_site_setup_path(site_setup), target: "_self") %>
+              <% if site_setup.default_setup %><span class="admin-badge admin-badge-hidden">Default</span><% end %>
+            </td>
+            <td><%= site_setup.configuration_name %></td>
+            <td><%= site_setup.owner_name %></td>
+            <td><%= site_setup.site_domain %></td>
+            <td class="admin-cell-muted"><%= site_setup.site_url %></td>
+            <td><%= admin_status_badge(site_setup) %></td>
+            <td class="admin-cell-actions">
+              <%= admin_row_actions(site_setup, show_path: admin_site_setup_path(site_setup), edit_path: edit_admin_site_setup_path(site_setup), delete_path: admin_site_setup_path(site_setup)) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% if controller.get_items.empty? %>
+      <p class="admin-list-empty">No site setups found.</p>
     <% end %>
   </div>
-  <div class="row mt-3 mb-3">
-    <div class="col-12 justify-content-end">
-      <%= render 'shared/page_navigation' %>
-    </div>
-  </div>
+  <div class="admin-list-footer"><%= render 'shared/page_navigation' %></div>
 <% end %>

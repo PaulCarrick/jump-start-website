@@ -44,7 +44,7 @@ RSpec.describe Admin::BlogPostsController, type: :controller do
 
     it "sets the correct default attributes" do
       get :index
-      expect(controller.instance_variable_get(:@page_limit)).to eq(3)
+      expect(controller.instance_variable_get(:@page_limit)).to eq(20)
       expect(controller.instance_variable_get(:@default_column)).to eq('posted')
       expect(controller.instance_variable_get(:@has_query)).to be(true)
       expect(controller.instance_variable_get(:@has_sort)).to be(true)

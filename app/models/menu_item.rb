@@ -20,4 +20,13 @@ class MenuItem < ApplicationRecord
   validates :label, presence: true, length: { maximum: LABEL_LIMIT }
   validates :menu_type, inclusion: { in: MENU_TYPES, message: "must be Main or Admin" }, allow_blank: true
   validates :menu_order, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
+
+  # Fields the admin list's search box may use.
+  def self.ransackable_attributes(auth_object = nil)
+    %w[label link menu_type]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
+  end
 end

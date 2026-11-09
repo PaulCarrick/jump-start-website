@@ -81,7 +81,7 @@ RSpec.describe "Admin Footer Items", type: :system do
     end
 
     it "lists all footer items with their attributes" do
-      within ".scrollable-container" do
+      within ".admin-table-box" do
         expect(page).to have_content("Item 1")
         expect(page).to have_content("Item 2")
       end
@@ -95,8 +95,9 @@ RSpec.describe "Admin Footer Items", type: :system do
     end
 
     it "renders action links for each footer item" do
-      within ".scrollable-container" do
+      within ".admin-table-box" do
         expect(page).to have_link("Edit", href: edit_admin_footer_item_path(footer_item_1))
+        open_row_menu(edit_admin_footer_item_path(footer_item_1))
         expect(page).to have_css("form[action='#{admin_footer_item_path(footer_item_1)}'] button", text: "Delete")
       end
     end

@@ -92,7 +92,7 @@ RSpec.describe "Admin Site Setups", type: :system do
     before { visit admin_site_setups_path }
 
     it "lists all site setups with their attributes" do
-      within ".scrollable-container" do
+      within ".admin-table-box" do
         expect(page).to have_content("default")
       end
     end
@@ -103,8 +103,9 @@ RSpec.describe "Admin Site Setups", type: :system do
     end
 
     it "renders action links for each site setup" do
-      within ".scrollable-container" do
+      within ".admin-table-box" do
         expect(page).to have_link("Edit", href: edit_admin_site_setup_path(site_setup))
+        open_row_menu(edit_admin_site_setup_path(site_setup))
         expect(page).to have_css("form[action='#{admin_site_setup_path(site_setup)}'] button", text: "Delete")
       end
     end

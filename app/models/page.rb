@@ -60,4 +60,13 @@ class Page < ApplicationRecord
 
     "#{prefix}#{max_number + 1}"
   end
+
+  # Fields the admin list's search box may use.
+  def self.ransackable_attributes(auth_object = nil)
+    %w[name section title access]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
+  end
 end

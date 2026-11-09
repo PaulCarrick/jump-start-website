@@ -1,86 +1,59 @@
 <!-- app/views/admin/blog_posts/index.html.erb -->
 <%= javascript_include_tag 'views/admin/blog_posts/index' %>
 <%= render layout: "layouts/admin_page" do %>
-  <h1 class="mb-3">Manage Blogs</h1>
-  <div class="mb-3">
-    <%= link_to("New Blog", new_admin_blog_post_path, class: "btn btn-primary", target: "_self" ) %>
-  </div>
-  <div class="row admin-sort-header border-bottom border-dark mb-2">
-    <div class="col-2">
-      <%= sortable_column('Author', 'author', "blog_posts") %>
-    </div>
-    <div class="col-2">
-      <%= sortable_column('Title', 'title', "blog_posts") %>
-    </div>
-    <div class="col-2">
-      <%= sortable_column('Posted', 'posted', "blog_posts") %>
-    </div>
-    <div class="col-4">
-      <%= column_heading("Contents") %>
-    </div>
-    <div class="col-2 text-end">
-      <%= link_to "Clear Sort", '#', class: "btn btn-secondary", onclick: "clearSort()" %>
-    </div>
-  </div>
-  <div class="scrollable-container p-2">
-    <% controller.get_items.each do |blog| %>
-      <div class="row admin-list-record">
-        <div class="col-2">
-          <%= blog.author %>
-        </div>
-        <div class="col-2">
-          <%= blog.title %>
-        </div>
-        <div class="col-2">
-          <%= blog.posted %>
-        </div>
-        <div class="col-4">
-          <%= raw(Utilities.truncate_html(blog.content, 768)) %>
-        </div>
-        <div class="col-2" style="min-height: 2em;">
-          <% delete_path = admin_blog_post_path(blog) %>
-          <%= action_links(blog, admin_blog_post_path(blog), edit_admin_blog_post_path(blog), delete_path) %>
-        </div>
-      </div>
-    <% end %>
-  </div>
-  <div class="row">
-    <div class="col-12 justify-content-end">
-      <%= render 'shared/page_navigation' %>
-    </div>
-  </div>
+  <%= admin_list_heading("Blog", count: @pagy&.count || controller.get_items.size, new_label: "New Blog", new_path: new_admin_blog_post_path) %>
   <%= search_form_for @q,
                       url:    admin_blog_posts_path,
-                      class:  "mt-3 p-2 rounded-box",
+                      class:  "admin-filters",
                       method: :get,
-                      html: { target: "_self", "data-turbo": "false", "data-turbolinks": "false" } do |form| %>
-    <div class="row mt-2 mb-2">
-      <div class="col-2"><%= form.label :author_cont, "Author", class: "form-label" %></div>
-      <div class="col-3"><%= form.search_field :author_cont %></div>
-      <div class="col-1"></div>
-      <div class="col-2"><%= form.label :title_cont, "Title", class: "form-label" %></div>
-      <div class="col-3"><%= form.search_field :title_cont %></div>
-    </div>
-    <div class="row mt-2 mb-2">
-      <div class="col-2"><%= form.label :posted_cont, "Posted", class: "form-label" %></div>
-      <div class="col-3">
-        <%= form.text_field :posted_date_eq,
-                            placeholder: "YYYY-DD-MM",
-                            class:       "form-control",
-                            pattern:     "\\d{4}-\\d{2}-\\d{2}",
-                            title:       "Please enter the date in the format YYYY-DD-MM."
-        %>
-      </div>
-      <div class="col-1"></div>
-      <div class="col-2"><%= form.label :content_cont, "Contents", class: "form-label" %></div>
-      <div class="col-3"><%= form.search_field :content_cont %></div>
-    </div>
-    <div>
-      <%= form.submit "Search Blogs", class: "btn btn-primary" %>
-      <%= link_to 'Clear Search', admin_blog_posts_path(clear_search: true), class: "btn btn-secondary", target: "_self" %>
-    </div>
+                      html: { target: "_self", "data-turbo": "false", "data-turbolinks": "false", role: "search" } do |form| %>
+    <label><span>Title</span><%= form.search_field :title_cont, class: "form-control" %></label>
+    <label><span>Author</span><%= form.search_field :author_cont, class: "form-control" %></label>
+    <label><span>Contents</span><%= form.search_field :content_cont, class: "form-control" %></label>
+    <label><span>Posted (YYYY-MM-DD)</span>
+      <%= form.text_field :posted_date_eq,
+                          placeholder: "YYYY-MM-DD",
+                          class:       "form-control",
+                          pattern:     "\\d{4}-\\d{2}-\\d{2}",
+                          title:       "Please enter the date in the format YYYY-MM-DD." %>
+    </label>
+    <%= form.submit "Search Blogs", class: "btn btn-secondary" %>
+    <%= link_to 'Clear Search', admin_blog_posts_path(clear_search: true), class: "admin-search-clear", target: "_self" %>
+    <%= link_to "Clear Sort", '#', class: "admin-clear-sort", onclick: "clearSort()" %>
   <% end %>
-<% end %>
-
-<%= render layout: "layouts/footer" do %>
+  <div class="admin-table-box">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th scope="col"><%= admin_sort_heading("Title", "title", "blog_posts") %></th>
+          <th scope="col"><%= admin_sort_heading("Author", "author", "blog_posts") %></th>
+          <th scope="col">Type</th>
+          <th scope="col"><%= admin_sort_heading("Posted", "posted", "blog_posts") %></th>
+          <th scope="col">Status</th>
+          <th scope="col"><span class="visually-hidden">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% controller.get_items.each do |blog| %>
+          <tr class="admin-list-record">
+            <td class="admin-cell-title">
+              <%= link_to(blog.title, edit_admin_blog_post_path(blog), target: "_self") %>
+              <div class="admin-cell-excerpt"><%= truncate(strip_tags(blog.content.to_s).squish, length: 160) %></div>
+            </td>
+            <td><%= blog.author %></td>
+            <td><%= blog.blog_type %><%= " · #{blog.visibility}" if blog.visibility.present? && blog.visibility != "Public" %></td>
+            <td class="admin-cell-muted"><%= blog.posted %></td>
+            <td><%= admin_status_badge(blog) %></td>
+            <td class="admin-cell-actions">
+              <%= admin_row_actions(blog, show_path: admin_blog_post_path(blog), edit_path: edit_admin_blog_post_path(blog), delete_path: admin_blog_post_path(blog)) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% if controller.get_items.empty? %>
+      <p class="admin-list-empty">No blog posts found.</p>
+    <% end %>
+  </div>
+  <div class="admin-list-footer"><%= render 'shared/page_navigation' %></div>
 <% end %>
