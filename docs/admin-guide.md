@@ -329,6 +329,23 @@ The text editor works like a word processor: use its toolbar for headings, **bol
 - Some content uses **Show More** and **Show Less** to hide part of a project until it is clicked. Check both the closed and the open view on the site.
 - To link a video stored in Media, type `VideoImage:"name"` in a column's text, using the video's name. The page shows a link, labelled with the video's caption, that plays it.
 
+### How to check spelling and grammar
+
+Every text editor in the admin (columns, blog posts and picture captions) has a **Check spelling and grammar** button under it.
+
+1. Write or change the text, then choose **Check spelling and grammar**.
+2. Possible problems are underlined in the text, **red** for spelling and **blue** for grammar, and listed under the button with an explanation.
+3. For each one, click a suggestion (for example **mistakes**) to change the text, keeping its formatting. Click the word in quotes to select it in the text, or **Ignore** to leave it as it is. **Ignore all** appears when the same word is flagged more than once, which is handy for names.
+4. Save the column or post as usual. Fixes change only the editor's text until you save.
+
+If you type in the editor after a check, the results are cleared, because their places are no longer right; check again to see what is left.
+
+![Possible problems underlined in the text: red for spelling, blue for grammar](../public/admin-help/grammar-underlines.webp)
+
+![The list of problems, each with its suggestions and Ignore](../public/admin-help/grammar-list.webp)
+
+The check is done by LanguageTool, a free, open-source checker. The text is sent to LanguageTool's public service unless the site has its own copy (`LANGUAGETOOL_URL` in the server's settings), so check only text that may be public. Names and technical words are often flagged as spelling mistakes; use **Ignore**. The public service allows a limited amount of text a minute; if it is busy, wait a minute and try again.
+
 ## Image files and groups
 
 ### The media library

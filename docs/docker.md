@@ -48,3 +48,7 @@ The downloadable images use `Dockerfile-rails.quickstart` and `Dockerfile-databa
 The existing `Dockerfile-rails`, `Dockerfile-database`, `bin/build`, `bin/compose`, and `docker-compose-*.yml` continue to use the production build path. Do not replace an existing production deployment with `compose.yml`: it is a separate fresh-install setup, with different volumes and startup behavior.
 
 The legacy database container runs its PostgreSQL 15 cluster at `/var/lib/postgresql/15/main`; both its image volume declaration and Compose `postgres_data` mount target that directory. Before recreating an older database container that mounted `/var/lib/postgresql/data`, take and verify a logical database backup from the running container. The mount change does not move existing data: restore the backup into the corrected deployment and verify it before removing the old container or volumes.
+
+## Spelling and grammar checks
+
+The admin's **Check spelling and grammar** button sends the editor's text to LanguageTool's public service (https://api.languagetool.org) by default. To keep the text on your own server, run LanguageTool yourself, for example the `erikvl87/languagetool` image (it needs about 1 GB of memory), and set `LANGUAGETOOL_URL` to its address (for example `http://languagetool:8010`). `LANGUAGETOOL_LANGUAGE` chooses the language (default `en-US`).

@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import ReactQuill, { Quill } from "react-quill-new";
 import { storableHtml } from "./quillHtml";
 import { html as beautifyHtml } from "js-beautify";
+import GrammarChecker from "./GrammarChecker";
 
 // Define a custom DivBlot
 const Block = Quill.import("blots/block");
@@ -83,7 +84,12 @@ const HtmlEditor = ({
   useHtmlView = false,
   noSwitchButton = false,
   simpleToolbar = false,
+  grammarCheck = null,
 }) => {
+  // Spelling and grammar checks are for administrators editing site content
+  // (the admin marks its pages with this meta tag), not the contact form.
+  const showGrammarCheck =
+    grammarCheck ?? (!simpleToolbar && !!document.querySelector('meta[name="admin-image-create"]'));
   const [isHtmlView, setIsHtmlView] = useState(useHtmlView); // Toggle for raw HTML view
   const [editorContent, setEditorContent] = useState(value || ""); // Store editor content
   const quillRef = useRef(null);
@@ -224,6 +230,7 @@ const HtmlEditor = ({
           placeholder={placeholder}
         />
       )}
+      {!isHtmlView && showGrammarCheck && <GrammarChecker quillRef={quillRef} />}
       {!noSwitchButton && (
         <div className="row align-items-center">
           <div className="flex-container">
@@ -264,6 +271,7 @@ HtmlEditor.propTypes = {
   useHtmlView: PropTypes.bool,
   noSwitchButton: PropTypes.bool,
   simpleToolbar: PropTypes.bool,
+  grammarCheck: PropTypes.bool,
   theme: PropTypes.string,
 };
 
