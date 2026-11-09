@@ -108,3 +108,37 @@ RSpec.describe 'Publishing chosen groups from the review page', type: :request d
     expect(Publishing.pending.map(&:id)).to eq([ garden.id ])
   end
 end
+
+RSpec.describe 'The review page with forgery protection on', type: :request do
+  let!(:setup) { create(:site_setup) }
+  let!(:garden) { create(:page, name: 'garden', title: 'Garden') }
+
+  around do |example|
+    previous = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = true
+    example.run
+  ensure
+    ActionController::Base.allow_forgery_protection = previous
+  end
+
+  # Both buttons submit the same form, so its token must work for both.
+  %i[deploy discard].each do |action|
+    it "accepts the page's own form token for #{action == :deploy ? 'Publish' : 'Discard selected'}" do
+      sign_in create(:user, access: 'super')
+      get edit_admin_page_path(garden)
+      token = Nokogiri::HTML(response.body).at('meta[name="csrf-token"]')['content']
+      patch admin_page_path(garden), params: { page: { title: 'Our Garden' }, authenticity_token: token }
+      get admin_publishing_path
+      form = Nokogiri::HTML(response.body).at('#publish-form')
+      params = {
+        authenticity_token: form.at('input[name="authenticity_token"]')['value'],
+        groups: form.css('input[name="groups[]"]').map { |box| box['value'] },
+        reviewed: form.css('input[name="reviewed[]"]').map { |field| field['value'] }
+      }
+      post(action == :deploy ? admin_deploy_publishing_path : admin_discard_publishing_path, params: params)
+
+      expect(response).to redirect_to(admin_publishing_path)
+      expect(Publishing.pending).to be_empty
+    end
+  end
+end

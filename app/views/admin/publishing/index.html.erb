@@ -25,7 +25,11 @@
   <% if @groups.empty? %>
     <p class="admin-list-empty admin-table-box">No pending changes. Everything on the site is published.</p>
   <% else %>
+    <%# Two buttons post this form to different addresses (Publish and Discard
+        selected), so it carries the session token rather than one tied to a
+        single address. %>
     <%= form_with url: admin_deploy_publishing_path, method: :post, local: true, id: "publish-form",
+                  authenticity_token: form_authenticity_token,
                   data: { controller: "publish-review", action: "submit->publish-review#confirm", turbo: false } do |form| %>
       <div class="publish-toolbar">
         <button type="button" class="btn btn-sm btn-light" data-action="publish-review#all">Select all</button>

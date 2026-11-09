@@ -87,6 +87,10 @@ const HtmlEditor = ({
   const [isHtmlView, setIsHtmlView] = useState(useHtmlView); // Toggle for raw HTML view
   const [editorContent, setEditorContent] = useState(value || ""); // Store editor content
   const quillRef = useRef(null);
+  // Quill rewrites loaded HTML it does not model (classes such as "lead",
+  // inline styles, some tags) the moment it starts. Until the person edits,
+  // nothing is reported, so opening a record and saving it keeps its HTML.
+  const editedRef = useRef(false);
 
   const changeCallback = useMemo(() => compileCallback(onChange), [onChange]);
   const blurCallback = useMemo(() => compileCallback(onBlur), [onBlur]);
@@ -97,6 +101,7 @@ const HtmlEditor = ({
 
       // Add handler for background color
       quill.getModule("toolbar").addHandler("backgroundColor", (value) => {
+        editedRef.current = true;
         const range = quill.getSelection();
         if (range) {
           quill.format("backgroundColor", value);
@@ -105,6 +110,7 @@ const HtmlEditor = ({
 
       // Add handler for the 'div' button (not on the simple toolbar)
       if (!simpleToolbar) quill.getModule("toolbar").addHandler("div", () => {
+        editedRef.current = true;
         const range = quill.getSelection();
         if (range) {
           quill.insertEmbed(range.index, "div", { backgroundColor: "white" });
@@ -130,8 +136,10 @@ const HtmlEditor = ({
   const toggleView = () => {
     const nextView = !isHtmlView;
     if (nextView) {
-      const content =
-        quillRef.current?.getEditor().getSemanticHTML() ?? editorContent;
+      // Unedited content is shown as stored, not as Quill rewrote it.
+      const content = editedRef.current
+        ? (quillRef.current?.getEditor().getSemanticHTML() ?? editorContent)
+        : editorContent;
       setEditorContent(prettyPrintHtml(storableHtml(content)));
     }
     // The string callbacks write HTML to Rails fields, so only React callbacks
@@ -172,12 +180,17 @@ const HtmlEditor = ({
     return formattedHtml.trim();
   }
 
-  const handleChange = (content) => {
+  // Quill passes the change's source; "api" changes before any edit are its
+  // own clean-up of the loaded HTML, not the person's work.
+  const handleChange = (content, delta, source) => {
+    if (source && source !== "user" && !editedRef.current) return;
+    editedRef.current = true;
     setEditorContent(content); // Keep local state updated
     sendChange(storableHtml(content), id);
   };
 
   const handleBlur = () => {
+    if (!isHtmlView && !editedRef.current) return;
     const quill = quillRef.current?.getEditor();
     const content = isHtmlView
       ? editorContent
@@ -192,7 +205,7 @@ const HtmlEditor = ({
         <textarea
           id={`${id}_text`}
           value={editorContent}
-          onChange={(e) => handleChange(e.target.value)}
+          onChange={(e) => handleChange(e.target.value, null, "user")}
           onBlur={handleBlur}
           className="form-control"
           placeholder="Edit raw HTML here"
