@@ -5,7 +5,8 @@
 import { isPresent } from "./utilities";
 import { renderSelect } from "./renderControlFunctions";
 import { backgroundColors } from "./backgroundColors";
-import React, { useState } from "react";
+import { hasRoundedBox, setRoundedBox } from "./roundedClasses";
+import React, { useEffect, useState } from "react";
 
 // Define types
 interface FormattingEditorProps {
@@ -21,6 +22,13 @@ const FormattingEditor: React.FC<FormattingEditorProps> = ({
     useState<Record<string, any>>(formatting);
   const [formattingMode, setFormattingMode] = useState<string>("safe");
 
+  // Other tabs of the column editor (the Image tab's "Round the picture
+  // corners") change the formatting too; follow them so a later change here
+  // does not put back the old values.
+  useEffect(() => {
+    setFormattingData(formatting);
+  }, [formatting]);
+
   const updateFormatting = (
     transform: (previous: Record<string, any>) => Record<string, any>,
   ) => {
@@ -34,8 +42,19 @@ const FormattingEditor: React.FC<FormattingEditorProps> = ({
   };
 
   // Handle input changes for existing key-value pairs
-  const handleChange = (value: string, key: string) => {
+  const handleChange = (value: any, key: string) => {
     updateFormatting((prev) => {
+      const hasBackgroundColor = Boolean(prev["background-color"]);
+      if (key === "roundedBox") {
+        return { ...prev, classes: setRoundedBox(prev.classes, Boolean(value), hasBackgroundColor) };
+      }
+      if (key === "backgroundColor" && hasRoundedBox(prev.classes)) {
+        return {
+          ...prev,
+          "background-color": value,
+          classes: setRoundedBox(prev.classes, true, Boolean(value)),
+        };
+      }
       const marginPrefixes: Record<string, string> = {
         marginTop: "mt",
         marginLeft: "ms",
@@ -275,6 +294,33 @@ function renderAttributes(formatting: Record<string, any>, setValue: any) {
             marginRightOptions,
             setValue,
           )}
+        </div>
+      </div>
+      <div className="row mb-2">
+        <div className="col-2"></div>
+        <div className="col-10">
+          <div className="form-check">
+            <input
+              id="roundedBox"
+              type="checkbox"
+              className="form-check-input"
+              checked={hasRoundedBox(formatting.classes)}
+              aria-describedby="roundedBoxHelp"
+              onChange={(event) => setValue(event.target.checked, "roundedBox")}
+            />
+            <label htmlFor="roundedBox" className="form-check-label">Use rounded borders</label>
+          </div>
+          <div id="roundedBoxHelp" className="form-text">
+            Puts the column in a rounded white box with a soft shadow. Use Margin Bottom for the space under it.
+          </div>
+        </div>
+      </div>
+      <div className="row mb-2">
+        <label htmlFor="classes" className="col-2 d-flex align-items-center">Classes:</label>
+        <div className="col-10">
+          <input id="classes" className="form-control" value={formatting.classes || ""}
+            aria-describedby="classesHelp" onChange={event => setValue(event.target.value, "classes")} />
+          <div id="classesHelp" className="form-text">The margins and rounded borders above are written here. Example: mb-3 text-center.</div>
         </div>
       </div>
       <div className="row">

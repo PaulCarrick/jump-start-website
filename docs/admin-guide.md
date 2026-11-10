@@ -190,7 +190,8 @@ A small preview of the column sits under the tabs. **Delete this column** remove
    - **Videos**: the MP4 videos in Media. The column shows the video with play controls.
    - **Pictures**: every picture in Media.
 3. Choose one, or type part of its name to find it. The line under the list says what the column will show.
-4. Choose **Save Column**, then publish.
+4. To give the pictures rounded corners, tick **Round the picture corners** (for a slide show, **Round the corners of the group's pictures**). It is not offered for videos.
+5. Choose **Save Column**, then publish.
 
 **Remove** takes the picture, slide show or video off the column (the file stays in Media). **New Image** uploads a new file without leaving the page; it then appears in the list.
 
@@ -202,7 +203,9 @@ A small preview of the column sits under the tabs. **Delete this column** remove
 
 1. Open the column and choose the **Layout** tab.
 2. Use the pickers for margins, colours (from the site's palette) and classes. **Switch to Formatting Mode** shows the raw CSS classes and styles, for advanced use.
-3. Choose **Save Column** and check the preview, on a narrow window too.
+3. To put the column in a rounded white box with a soft shadow, tick **Use rounded borders** under the margins. Use **Margin Bottom** for the space under the box. If the column has a **Background Color**, the box keeps that colour instead of white.
+4. **Classes** shows the classes the margins and the rounded borders write, and you can type your own there. Untick **Use rounded borders** to take the box away again.
+5. Choose **Save Column** and check the preview, on a narrow window too.
 
 ![The Layout tab: margins, backgrounds and classes](../public/admin-help/column-layout.webp)
 

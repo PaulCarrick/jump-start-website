@@ -21,6 +21,7 @@ import {
   renderCellName,
 } from "./renderUtilities";
 import FormattingEditor from "./FormattingEditor";
+import RoundedPictureCheckbox from "./RoundedPictureCheckbox";
 import { savedImageType } from "./ImagePicker";
 import { useEditorDraft } from "../hooks/useEditorDraft";
 
@@ -265,14 +266,21 @@ const CellEditor: React.FC<CellEditorProps> = ({
           )}
           {pane(
             "image",
-            renderImage(
-              cellData?.image || null,
-              imageMode,
-              editorOptions.availableImages || [],
-              editorOptions.availableImageGroups || [],
-              editorOptions.availableVideos || [],
-              setValue,
-            ),
+            <>
+              {renderImage(
+                cellData?.image || null,
+                imageMode,
+                editorOptions.availableImages || [],
+                editorOptions.availableImageGroups || [],
+                editorOptions.availableVideos || [],
+                setValue,
+              )}
+              <RoundedPictureCheckbox
+                image={cellData?.image || null}
+                formatting={cellData?.formatting || {}}
+                onChange={setValue}
+              />
+            </>,
           )}
           {pane(
             "layout",
@@ -336,6 +344,11 @@ const CellEditor: React.FC<CellEditorProps> = ({
           editorOptions.availableVideos || [],
           setValue,
         )}
+        <RoundedPictureCheckbox
+          image={cellData?.image || null}
+          formatting={cellData?.formatting || {}}
+          onChange={setValue}
+        />
         {renderLink(cellData?.link || null, setValue)}
         {renderCellOrder(cellData?.cell_order, setValue)}
         {renderCellWidth(cellData?.width || null, setValue)}
