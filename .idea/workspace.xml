@@ -9,8 +9,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3153a936-0f87-4ffa-80b3-2e1e98ebdc0b" name="Changes" comment="Polishing things.">
-      <change beforePath="$PROJECT_DIR$/.idea/scopes/Assets.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/rails-website.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/rails-website.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/images/gear.svg" beforeDir="false" afterPath="$PROJECT_DIR$/public/images/gear.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/images/keys.svg" beforeDir="false" afterPath="$PROJECT_DIR$/public/images/keys.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/images/search.svg" beforeDir="false" afterPath="$PROJECT_DIR$/public/images/search.svg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -581,7 +584,8 @@
       <workItem from="1793900953910" duration="1269000" />
       <workItem from="1793907006950" duration="599000" />
       <workItem from="1793975018183" duration="581000" />
-      <workItem from="1794170288026" duration="498000" />
+      <workItem from="1794170288026" duration="6471000" />
+      <workItem from="1794316248352" duration="379000" />
     </task>
     <task id="LOCAL-00001" summary="IDE Changes and WIP">
       <option name="closed" value="true" />
@@ -706,7 +710,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="ruby-line">
           <url>file://$PROJECT_DIR$/app/controllers/api/V1/pages_controller.rb</url>
-          <line>35</line>
+          <line>39</line>
           <properties myBlockOrdinal="-1">
             <option name="block-ordinal" value="-1" />
           </properties>
