@@ -21,24 +21,27 @@ The final option is to install from source. This is fairly quick to load the rep
    **sudo /usr/local/jump-start-website/installation/install**
 
 ## Docker
-1) Pull the Database image:\
-   **docker pull paulcarrick/jump-start-website-database:latest**
-2) Pull the Server image:\
-   **docker pull paulcarrick/jump-start-website-server:latest**
-3) Create the needed volumes:\
-   **docker volume create jump_start_server_postgres_data** \
-   **docker volume create jump_start_server_storage** \
-   **docker volume create jump_start_server_user_home**
-4) Create the needed network:\
-   **sudo docker network create jump_start_server_network**
-5) Run the Database container:\
-   **docker run -d -p 5432:5432 --name jump_start_server_database --volume jump_start_server_postgres_data:/var/lib/postgresql/data --volume jump_start_server_storage:/rails/storage --volume jump_start_server_user_home:/home/jump_start --network jump_start_server_network --network-alias db paulcarrick/jump-start-website-database:latest**
-6) Run the Server container:\
-   **docker run -d -p 3000:3000 --name jump_start_server_rails --volume jump_start_server_storage:/rails/storage --volume jump_start_server_user_home:/home/jump_start --network jump_start_server_network paulcarrick/jump-start-website-server:latest**\
-\
-After the containers are running you will have an http server available running on port 3000 locally.
-The containers are designed to be used behind a reverse proxy (NGINX or Apache). You can change the parameters to use port 80 easily if you simply want an http server. If you want an ssl server you can change the port to 443 and set the mode to https (see the documentation), however there is no way to
-install the certificates (which is why it's normally behind a proxy). If you need this you can use the 3rd option source code to regenerate the containers with your certificates.   
+Ready-made images for AMD64 and ARM64 (Intel and Apple Silicon or other ARM servers) are published on GitHub and Docker Hub:
+
+| | GitHub (GHCR) | Docker Hub |
+|---|---|---|
+| Web server | `ghcr.io/paulcarrick/jump-start-website-rails` | `docker.io/paulcarrick/jump-start-website-server` |
+| Database | `ghcr.io/paulcarrick/jump-start-website-database` | `docker.io/paulcarrick/jump-start-website-database` |
+
+Each release has a version tag (for example `v2.2.0`) and `latest`. You need Docker with Compose and Python 3.
+
+1) Get `compose.yml` and `bin/docker-setup` from this repository (clone it, or download just those two files).
+2) Create the private settings file (database password, secret key and the administrator's login):\
+   **bin/docker-setup**
+3) Add the image names to the `.env` it created (use the same version for both):\
+   **JUMPSTART_RAILS_IMAGE=ghcr.io/paulcarrick/jump-start-website-rails:v2.2.0**\
+   **JUMPSTART_DATABASE_IMAGE=ghcr.io/paulcarrick/jump-start-website-database:v2.2.0**
+4) Download the images and start them:\
+   **docker compose pull**\
+   **docker compose up -d --no-build**
+5) Open http://localhost:3000 and sign in with `ADMIN_EMAIL` and `ADMIN_PASSWORD` from `.env`.
+
+The database and the uploaded files are kept in Docker volumes, so they survive restarts and upgrades. The site listens on localhost only; to put it on the Internet, set `SITE_URL` and run it behind an HTTPS reverse proxy (NGINX or Apache). See [docs/docker.md](docs/docker.md) for building the images yourself, upgrades, backups and public hosting.
 
 ## Source Code
 1) Clone the repository\
@@ -49,17 +52,17 @@ install the certificates (which is why it's normally behind a proxy). If you nee
    * To install simply run: **installation/install.sh**\
    Answer the questions and **jump-start-website** will be installed.\
    \
-   It can take quite a bit if you need to install ruby. If you are on Debian 12,
-   currently you need to choose yes on the ruby install as ruby >= 3.2.0
-   is not available yet. Otherwise, if you already have ruby >= 3.2.0
-   skip installing ruby it will save you a lot of time.
+   It can take quite a while if you need to install Ruby. Jump Start Website
+   needs Ruby 4.0.7 (see `.ruby-version`), which most Linux distributions do
+   not ship yet, so choose yes on the Ruby install unless you already have it.
+   If you do, skip installing Ruby; it will save you a lot of time.
    * If you want to configure rather than install it is a little more difficult.\
    You need to set up a .env file in the root of the repository.\
    \
    There are two examples provided **example.env** and **docker-example.env**.
    Use **example.env** if you are running the rails app locally on the server.
    Use **docker-example.env** if you are going to build your own docker image
-   (note there is a pre-built image on docker hub; see above).
+   (note there are pre-built images; see Docker above).
    After setting up the .env file you can run **bin/start_server.sh**.\
    \
    You can also run the server as a service. Edit **installation/jumpstartwebsite.service**

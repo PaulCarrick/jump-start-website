@@ -106,7 +106,7 @@ Pages, Blog, Users, Settings, Sections and Columns are lists that all work the s
 2. Choose **⋯**, then **Delete**, and confirm.
 3. The deletion is a draft. Choose **Publish** to remove it from the site, or **Discard selected** on Review and publish to keep it.
 
-Deleting a section also removes its columns.
+Deleting a section also removes its columns. Something that was never published (a new section you cancelled, for example) is removed at once, with what is inside it, and leaves nothing to publish.
 
 ## Pages, sections, and columns
 
@@ -379,7 +379,7 @@ The text editor works like a word processor: use its toolbar for headings, **bol
 
 - **Switch to HTML View** shows the page's code (HTML) for advanced editing. Use it only if you know HTML, then switch back and check the result.
 - Formatting fields (the **Layout** tab) offer pickers for margins, colours from the site's palette, and classes. **Switch to Formatting Mode** shows the raw CSS classes and styles.
-- Some content uses **Show More** and **Show Less** to hide part of a project until it is clicked. Check both the closed and the open view on the site.
+- Some content uses **Show More** and **Show Less** to hide part of a project until it is clicked. Check both the closed and the open view on the site. When sections are styled as rounded boxes, an open Show More and the sections it opened join into one box.
 - To link a video stored in Media, type `VideoImage:"name"` in a column's text, using the video's name. The page shows a link, labelled with the video's caption, that plays it.
 
 ### How to check spelling and grammar
@@ -513,7 +513,7 @@ Choose **Menus** in the sidebar to arrange the **Header menu** and the **Footer*
 - **←** moves it out one level; **→** puts it inside the item above (as a dropdown entry or footer link).
 - Or drag its **⠿** handle above, below or onto another item.
 
-Each move is saved as a draft at once. Items that link to `/admin` can be moved but not changed. Addresses that could run code are refused.
+Each move is saved as a draft at once. Items that link to `/admin` can be moved (with the buttons, the handle or their panel) but their label and link cannot be changed. Addresses that could run code are refused.
 
 ## Users and access
 

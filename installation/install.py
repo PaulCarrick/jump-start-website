@@ -192,7 +192,7 @@ def parse_arguments():
         "-r",
         "--install-ruby",
         action="store_true",
-        help="Install Ruby 3.2",
+        help="Install Ruby 4.0.7",
         default=False,
     )
     parser.add_argument(

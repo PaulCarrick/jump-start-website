@@ -18,11 +18,13 @@ The first start prepares the primary, cache, queue, and cable databases and crea
 
 The Container release workflow publishes version tags and `latest` to GHCR for AMD64 and ARM64 when a `v*` Git tag is pushed. Make the packages public before advertising anonymous downloads. Publishing is separate from local builds.
 
-Distribute `compose.yml` and `bin/docker-setup` together. Run setup, then add the published image names to `.env` (replace OWNER, REPO, and VERSION with your release):
+The project's own images are `ghcr.io/paulcarrick/jump-start-website-rails` and `ghcr.io/paulcarrick/jump-start-website-database`. The same images are copied to Docker Hub as `docker.io/paulcarrick/jump-start-website-server` (the Rails image) and `docker.io/paulcarrick/jump-start-website-database`, with the same version tags and `latest`.
+
+Distribute `compose.yml` and `bin/docker-setup` together. Run setup, then add the published image names to `.env` (use one version for both; a fork publishes under its own owner and repository name):
 
 ```
-JUMPSTART_RAILS_IMAGE=ghcr.io/OWNER/REPO-rails:VERSION
-JUMPSTART_DATABASE_IMAGE=ghcr.io/OWNER/REPO-database:VERSION
+JUMPSTART_RAILS_IMAGE=ghcr.io/paulcarrick/jump-start-website-rails:v2.2.0
+JUMPSTART_DATABASE_IMAGE=ghcr.io/paulcarrick/jump-start-website-database:v2.2.0
 ```
 
 Then run `docker compose pull` and `docker compose up -d --no-build`. No repository source is needed for that path.
