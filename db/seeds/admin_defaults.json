@@ -226,6 +226,45 @@
       "parent_id": null,
       "page_id": null,
       "enabled": true
+    },
+    {
+      "icon": "",
+      "options": "",
+      "access": "",
+      "parent_id": null,
+      "page_id": null,
+      "enabled": true,
+      "menu_type": "Help",
+      "id": 14,
+      "label": "Help",
+      "link": "/admin/help",
+      "menu_order": 1
+    },
+    {
+      "icon": "",
+      "options": "",
+      "access": "",
+      "parent_id": null,
+      "page_id": null,
+      "enabled": true,
+      "menu_type": "Help",
+      "id": 15,
+      "label": "Video Tutorial",
+      "link": "/tutorial/jump-start-website-tutorial.mp4",
+      "menu_order": 2
+    },
+    {
+      "icon": "",
+      "options": "",
+      "access": "",
+      "parent_id": null,
+      "page_id": null,
+      "enabled": true,
+      "menu_type": "Help",
+      "id": 16,
+      "label": "New Site Tutorial",
+      "link": "/admin/tutorial",
+      "menu_order": 3
     }
   ],
   "footer_items": [

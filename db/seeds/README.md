@@ -1,7 +1,8 @@
 # Admin defaults
 
 `bin/rails db:seed` loads the checked-in snapshot in `admin_defaults.json`:
-13 menu items (public navigation, three header icon links, and admin links),
+16 menu items (public navigation, three header icon links, admin links, and the
+three Help links at the foot of the admin sidebar: Help, Video Tutorial and New Site Tutorial),
 5 footer items (the OTHER group and its four links), plus the
 generic localhost site setup and starter home page. The home page includes
 its legacy welcome section and has no columns. The default site URL is

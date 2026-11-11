@@ -1,0 +1,151 @@
+WEBVTT
+
+00:00:00.400 --> 00:00:01.725
+Jump Start Website.
+
+00:00:01.725 --> 00:00:05.352
+Build a website from scratch, with no coding at all.
+
+00:00:06.967 --> 00:00:13.514
+A brand-new Jump Start Website starts almost empty: one Hello World page, a menu, and a footer.
+
+00:00:13.514 --> 00:00:20.336
+In the next few minutes, we'll turn it into a small website for an example business, Willow Studio.
+
+00:00:21.567 --> 00:00:23.854
+First, sign in as the administrator.
+
+00:00:23.854 --> 00:00:27.094
+This login was created when the site was installed.
+
+00:00:27.094 --> 00:00:32.940
+After signing in, you land on the admin dashboard, where you change everything on your site.
+
+00:00:34.167 --> 00:00:36.885
+Open Settings, and edit the site's setup.
+
+00:00:36.885 --> 00:00:43.382
+On the General tab, give the site its name, the owner's name, and a copyright line for the footer.
+
+00:00:43.382 --> 00:00:46.100
+On the Appearance tab, choose the colors.
+
+00:00:46.100 --> 00:00:48.685
+Here, a green header and a dark footer.
+
+00:00:48.685 --> 00:00:49.348
+Then save.
+
+00:00:49.348 --> 00:00:54.917
+Your changes are kept as a draft, so nothing changes for visitors until you publish.
+
+00:00:56.133 --> 00:00:57.934
+Next, upload your pictures.
+
+00:00:57.934 --> 00:01:02.668
+In Media, choose the files, or drop them on the page, and press Upload.
+
+00:01:02.668 --> 00:01:07.936
+Each picture is named after its file, and is ready to use anywhere on the site.
+
+00:01:09.167 --> 00:01:11.508
+Now open Pages, and the home page.
+
+00:01:11.508 --> 00:01:16.605
+Its workspace has an outline of the page, a preview, and an editing panel.
+
+00:01:16.605 --> 00:01:20.187
+In Page settings, change the page's title, and save.
+
+00:01:20.187 --> 00:01:25.835
+Then hide the starter section: click it, switch off Enabled, and save the section.
+
+00:01:27.067 --> 00:01:28.910
+Now add a section of your own.
+
+00:01:28.910 --> 00:01:33.211
+Choose a template: here, text on the left, and a picture on the right.
+
+00:01:33.211 --> 00:01:34.932
+Type the text in the editor.
+
+00:01:34.932 --> 00:01:39.786
+Use the toolbar to make the first line a heading, then write a sentence or two.
+
+00:01:39.786 --> 00:01:42.183
+Choose the picture that goes beside it.
+
+00:01:42.183 --> 00:01:47.959
+Press Generate Columns to build the section's two columns, check them, and press Save Section.
+
+00:01:47.959 --> 00:01:51.953
+You're back in the workspace, and the new section is on the page.
+
+00:01:57.800 --> 00:01:59.640
+Let's make it look finished.
+
+00:01:59.640 --> 00:02:04.438
+Open the text column, go to its Layout tab, and tick Use rounded borders.
+
+00:02:04.438 --> 00:02:08.448
+That puts the text in a rounded white box with a soft shadow.
+
+00:02:08.448 --> 00:02:09.499
+Save the column.
+
+00:02:09.499 --> 00:02:15.612
+Then open the picture column, and on its Image tab, tick Round the picture corners, and save.
+
+00:02:16.833 --> 00:02:18.501
+Next, add a second page.
+
+00:02:18.501 --> 00:02:20.515
+Under Pages, choose New page.
+
+00:02:20.515 --> 00:02:25.448
+Give it a title, a name, which becomes its address, and a section name.
+
+00:02:25.448 --> 00:02:28.782
+Save it, and open the new page in its workspace.
+
+00:02:28.782 --> 00:02:41.287
+Add a section the same way as before: choose a template, this time with the picture on the left, type a heading and a short story, choose a picture, generate the columns, and save.
+
+00:02:49.067 --> 00:02:53.132
+To put the new page in the menu, open Menus, and add an item.
+
+00:02:53.132 --> 00:02:56.398
+Give it a label, About, and the address it opens.
+
+00:02:56.398 --> 00:02:56.865
+Add it.
+
+00:02:56.865 --> 00:03:02.930
+New items go at the end, so use the arrows to move it up, until it sits right next to Home.
+
+00:03:04.167 --> 00:03:08.525
+Everything so far is a draft, so visitors haven't seen any of it.
+
+00:03:08.525 --> 00:03:12.079
+Press Publish to review the changes, grouped by page.
+
+00:03:12.079 --> 00:03:16.035
+Select them all, add a short note if you like, and publish.
+
+00:03:16.035 --> 00:03:17.712
+Every change is now live.
+
+00:03:18.933 --> 00:03:23.718
+And here is the finished site: its own name, colors, pictures, and pages.
+
+00:03:23.718 --> 00:03:27.323
+Scroll down to the footer, with the new copyright line.
+
+00:03:27.323 --> 00:03:30.535
+And click About in the menu to open the new page.
+
+00:03:36.567 --> 00:03:39.545
+That's it: a new website, built from scratch.
+
+00:03:39.545 --> 00:03:45.106
+The Help and New Site Tutorial pages in the admin explain every step in more detail.

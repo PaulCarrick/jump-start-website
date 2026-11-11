@@ -33,7 +33,7 @@ Sign in with an account that has administrator access, then open the admin: choo
 The admin has three parts:
 
 - The **top bar** shows the site's name, **View site** (opens the public site in a new tab), **Publish** with the number of changes waiting, your name and **Log out**.
-- The **sidebar** is grouped: **Dashboard**; **Content** (Pages, Blog, Media); **Site** (Menus, Settings, Users); **Page parts** (Sections, Columns); and **Help** and **New Site Tutorial** at the bottom. On a phone, the ☰ button opens it.
+- The **sidebar** is grouped: **Dashboard**; **Content** (Pages, Blog, Media); **Site** (Menus, Settings, Users); **Page parts** (Sections, Columns); and **Help**, **Video Tutorial** (a narrated video, about four minutes, of building a website from an empty site; it opens in a new tab) and **New Site Tutorial** at the bottom. On a phone, the ☰ button opens it.
 - The **Dashboard** shows how many changes are not published yet, the site's counts, when it was last published, **Quick actions** (New page, New blog post, Upload an image, Edit the header menu) and the pages and posts edited most recently. Click one of them to open it.
 
 ### A typical change, start to finish
@@ -515,6 +515,8 @@ Choose **Menus** in the sidebar to arrange the **Header menu** and the **Footer*
 - **↑** and **↓** move it up or down.
 - **←** moves it out one level; **→** puts it inside the item above (as a dropdown entry or footer link).
 - Or drag its **⠿** handle above, below or onto another item.
+
+The links at the bottom of the admin sidebar (Help, Video Tutorial, New Site Tutorial) are menu items of the type **Help**. Change, hide or add them on the old **Menu Items** list (**Show the header menu as a list** at the foot of the Menus page).
 
 Each move is saved as a draft at once. Items that link to `/admin` can be moved (with the buttons, the handle or their panel) but their label and link cannot be changed. Addresses that could run code are refused.
 

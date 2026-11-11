@@ -20,9 +20,12 @@ RSpec.describe AdminDefaultsSeed do
       site_url: 'http://localhost:3000', database: 'jump-start',
       routing_host: 'localhost', routing_path: ''
     )
-    expect(MenuItem.count).to eq(13)
+    expect(MenuItem.count).to eq(16)
     expect(FooterItem.count).to eq(5)
-    expect(MenuItem.where('link LIKE ?', '/admin%').count).to eq(9)
+    expect(MenuItem.where('link LIKE ?', '/admin%').count).to eq(11)
+    expect(MenuItem.where(menu_type: 'Help').order(:menu_order).pluck(:label, :link)).to eq([
+      [ 'Help', '/admin/help' ], [ 'Video Tutorial', '/tutorial/jump-start-website-tutorial.mp4' ], [ 'New Site Tutorial', '/admin/tutorial' ]
+    ])
     expect(MenuItem.root_main_menu_items.pluck(:label)).to eq([ 'Home', 'Contact', 'Search', 'Admin Dashboard', 'Login' ])
     expect(MenuItem.where(options: 'image-file').pluck(:icon)).to contain_exactly(
       '/images/search.svg', '/images/gear.svg', '/images/keys.svg'
@@ -38,7 +41,7 @@ RSpec.describe AdminDefaultsSeed do
     expect(section.cells).to be_empty
     expect(section.temporal_state).to eq('live')
     expect(MenuItem.pending_versions).to be_empty
-    expect(MenuItem.live_versions.count).to eq(13)
+    expect(MenuItem.live_versions.count).to eq(16)
     expect { described_class.load! }.not_to change { [ SiteSetup.unscoped.count, MenuItem.unscoped.count, FooterItem.unscoped.count, Page.unscoped.count, Section.unscoped.count, Cell.unscoped.count ] }
   end
 

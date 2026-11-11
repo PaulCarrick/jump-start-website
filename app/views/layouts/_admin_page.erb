@@ -41,8 +41,12 @@
         <% end %>
       <% end %>
       <div class="admin-nav-footer">
-        <%= link_to "Help", admin_help_path, class: "admin-nav-link#{' is-current' if controller_name == 'help' && action_name == 'show'}", target: "_self" %>
-        <%= link_to "New Site Tutorial", admin_tutorial_path, class: "admin-nav-link#{' is-current' if controller_name == 'help' && action_name == 'tutorial'}", target: "_self" %>
+        <% admin_help_links.each do |item| %>
+          <%= link_to item.label, item.link,
+                      class: "admin-nav-link#{' is-current' if admin_help_link_current?(item)}",
+                      aria: { current: (admin_help_link_current?(item) ? "page" : nil) },
+                      **(admin_help_link_new_tab?(item) ? { target: "_blank", rel: "noopener" } : { target: "_self" }) %>
+        <% end %>
       </div>
     </nav>
 

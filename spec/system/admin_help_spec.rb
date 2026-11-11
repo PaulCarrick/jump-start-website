@@ -1,7 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe 'Admin Help', type: :system do
-  before { driven_by(:selenium_chrome_headless) }
+  # The sidebar's Help links are "Help" menu items, as the seed and the migration make them.
+  before do
+    driven_by(:selenium_chrome_headless)
+    [ [ 'Help', '/admin/help' ], [ 'Video Tutorial', '/tutorial/jump-start-website-tutorial.mp4' ], [ 'New Site Tutorial', '/admin/tutorial' ] ]
+      .each.with_index(1) { |(label, link), order| MenuItem.create!(label: label, link: link, menu_type: 'Help', menu_order: order) }
+  end
 
   it 'opens the complete guide from the bottom of the sidebar and follows topic links' do
     login_as(create(:user, access: 'super'))
@@ -41,11 +46,13 @@ RSpec.describe 'Admin Help', type: :system do
     end
   end
 
-  it 'opens the step-by-step tutorial below Help' do
+  it 'opens the step-by-step tutorial below Help and the video tutorial' do
     login_as(create(:user, access: 'super'))
     visit admin_help_path
-    within('.admin-sidebar') do
-      expect(page).to have_css('a[href="/admin/help"] + a', text: /new site tutorial/i)
+    within('.admin-sidebar .admin-nav-footer') do
+      expect(page.all('a').map(&:text)).to eq([ 'Help', 'Video Tutorial', 'New Site Tutorial' ])
+      expect(page).to have_css('a[href="/admin/help"][aria-current="page"]')
+      expect(page).to have_css('a[href="/admin/help"] + a[href="/tutorial/jump-start-website-tutorial.mp4"][target="_blank"]', text: 'Video Tutorial')
       click_link 'New Site Tutorial'
     end
     expect(page).to have_current_path(admin_tutorial_path)
@@ -54,6 +61,15 @@ RSpec.describe 'Admin Help', type: :system do
     expect(page).to have_css('h2', text: 'Path B: two-container installation')
     expect(page).to have_css('h2', text: 'Edit your Site Setup')
     expect(page).to have_css('h2', text: 'Create an About page with text and images')
+  end
+
+  it "follows the site's Help menu items: a hidden one is left out" do
+    MenuItem.find_by(label: 'Video Tutorial').update!(enabled: false)
+    login_as(create(:user, access: 'super'))
+    visit admin_pages_path
+    within('.admin-sidebar .admin-nav-footer') do
+      expect(page.all('a').map(&:text)).to eq([ 'Help', 'New Site Tutorial' ])
+    end
   end
 
   it 'allows a read-only user to read the guide' do

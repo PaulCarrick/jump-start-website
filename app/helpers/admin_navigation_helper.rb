@@ -28,6 +28,21 @@ module AdminNavigationHelper
     ]
   end
 
+  # The links at the foot of the sidebar (Help, Video Tutorial, New Site Tutorial) are the
+  # enabled "Help" menu items, so each site can change them on the Menu Items list. A
+  # link outside the admin (the video) opens in a new tab.
+  def admin_help_links
+    MenuItem.enabled.where(menu_type: "Help", parent_id: nil).order(:menu_order, :id).select { |item| item.link.present? }
+  end
+
+  def admin_help_link_current?(item)
+    request.path == item.link
+  end
+
+  def admin_help_link_new_tab?(item)
+    !item.link.start_with?("/admin")
+  end
+
   def admin_navigation_current?(link)
     link.controllers.include?(controller_name) && controller_path.start_with?("admin/")
   end

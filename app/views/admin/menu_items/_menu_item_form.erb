@@ -24,7 +24,7 @@
   <div class="mb-3">
     <%= form.label :menu_type, "Menu Type", class: "form-label" %><br>
     <%= form.select :menu_type,
-                    options_for_select(%w[Main Admin], controller.get_item.menu_type),
+                    options_for_select(%w[Main Admin Help], controller.get_item.menu_type),
                     required: true,
                     class: "form-control"
     %>
