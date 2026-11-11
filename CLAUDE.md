@@ -63,7 +63,7 @@ An open-source website builder: once installed, every page, menu, image, blog po
 ## Secrets and private files (the repository is public)
 - Never commit secrets: `.env*`, `config/master.key`, `config/credentials/*.key`, `certs/`, `secrets/` are git-ignored; keep it that way. Settings that need a value go in the env templates with a placeholder, never the real value.
 - SMTP and reCAPTCHA settings live in the Site Setup records in the database (and its history), not in the code; treat database dumps and backups as sensitive.
-- The résumés in the repository root (`Resume-PaulCarrick*.docx` / `.pdf`) are public on purpose (the owner decided on 2026-11-08). Other personal files in the working folder, such as `settings.zip`, are untracked: never `git add` them, and never use `git add -A` or `git add .` here; add files by name.
+- The résumé is `public/Resume-PaulCarrick_11-11-2026.pdf`, public on purpose (the Professional Overview's "Paul's Resume" link, column `overview_text`, points to it as `../Resume-PaulCarrick_11-11-2026.pdf`). The older résumés were removed on 2026-11-11 at the owner's request. When a new one comes, add it, remove the old one and change that link in the column editor. Other personal files in the working folder, such as `settings.zip`, are untracked: never `git add` them, and never use `git add -A` or `git add .` here; add files by name.
 - `installation/dump.sql` is shipped starter data: it must hold no real accounts, passwords or private content.
 
 ## Production server (paul-carrick.com)
