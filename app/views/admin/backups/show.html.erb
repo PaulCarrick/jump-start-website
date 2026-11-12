@@ -1,0 +1,90 @@
+<%# Backup and restore: the same files as bin/backup_database.sh, kept on the administrator's computer. %>
+<%= render layout: "layouts/admin_page" do %>
+  <div class="admin-list-heading">
+    <h1 class="admin-page-title">Backup and restore</h1>
+  </div>
+
+  <div class="admin-backup" data-controller="site-backup"
+       data-site-backup-status-url-value="<%= admin_backup_status_path %>"
+       data-site-backup-start-url-value="<%= admin_backup_start_path %>"
+       data-site-backup-download-url-value="<%= admin_backup_path %>/download/"
+       data-site-backup-discard-url-value="<%= admin_backup_discard_path %>"
+       data-site-backup-upload-url-value="<%= admin_backup_upload_path %>"
+       data-site-backup-plan-url-value="<%= admin_backup_plan_path %>"
+       data-site-backup-restore-url-value="<%= admin_backup_restore_path %>"
+       data-site-backup-discard-uploads-url-value="<%= admin_backup_discard_uploads_path %>"
+       data-site-backup-dismiss-url-value="<%= admin_backup_dismiss_path %>"
+       data-site-backup-chunk-value="<%= SiteBackup::CHUNK_BYTES %>"
+       data-site-backup-status-value="<%= @status.to_json %>">
+
+    <p class="admin-backup-intro">
+      A backup is a set of files saved on <strong>your computer</strong>, never kept on the server:
+      one file for each database (<code>rails_database_11-12-2026.dump</code>) and, if you choose, one for the
+      pictures and other uploaded files (<code>rails_images_11-12-2026.tar.gz</code>). They are the same files
+      <code>bin/backup_database.sh</code> makes, so backups made either way can be restored here.
+      The files hold every account and setting, including the email password: keep them private.
+    </p>
+
+    <div class="admin-backup-status" data-site-backup-target="status" role="status" aria-live="polite" hidden></div>
+
+    <section class="admin-card admin-backup-section" aria-labelledby="backup-heading">
+      <h2 id="backup-heading">Back up</h2>
+      <fieldset>
+        <legend class="form-label fs-6">What to back up</legend>
+        <% @databases.each_with_index do |database, index| %>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="backup-database-<%= index %>" value="<%= database %>"
+                   data-site-backup-target="database" checked>
+            <label class="form-check-label" for="backup-database-<%= index %>">
+              Database <strong><%= database %></strong><%= index.zero? ? " (the main site: pages, accounts, settings, menus, blog)" : " (a second site)" %>
+            </label>
+          </div>
+        <% end %>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="backup-images" data-site-backup-target="images" checked>
+          <label class="form-check-label" for="backup-images">
+            Pictures and uploaded files (the <code>storage</code> folder; it can be large)
+          </label>
+        </div>
+      </fieldset>
+      <p class="form-text">
+        In Chrome or Edge you choose a folder and the files are saved straight into it. Other browsers download
+        them one after another like any download.
+      </p>
+      <div class="d-flex flex-wrap gap-2">
+        <button type="button" class="btn btn-primary" data-action="site-backup#backup" data-site-backup-target="backupButton">
+          Back up now
+        </button>
+        <button type="button" class="btn btn-outline-secondary" data-action="site-backup#saveAgain"
+                data-site-backup-target="saveAgainButton" hidden>Save the waiting backup</button>
+        <button type="button" class="btn btn-outline-danger" data-action="site-backup#discard"
+                data-site-backup-target="discardButton" hidden>Delete the copy on the server</button>
+      </div>
+    </section>
+
+    <section class="admin-card admin-backup-section" aria-labelledby="restore-heading">
+      <h2 id="restore-heading">Restore</h2>
+      <p>
+        Choose the backup files to restore: a database file replaces <strong>that</strong> database, and an images file
+        replaces every picture and uploaded file. Choose only the parts you want back. The current database is saved on
+        the server first, in <code>tmp/backup/before_restore</code>. Restoring a database logs everyone out: log in again
+        with an account and password from the backup.
+      </p>
+      <div class="mb-3">
+        <label for="restore-files" class="form-label">Backup files</label>
+        <input type="file" id="restore-files" class="form-control" multiple accept=".dump,.gz"
+               data-site-backup-target="files" data-action="change->site-backup#choose">
+      </div>
+      <ul class="admin-backup-plan" data-site-backup-target="plan"></ul>
+      <div class="mb-3">
+        <label for="restore-confirm" class="form-label">Type <strong>RESTORE</strong> to confirm</label>
+        <input type="text" id="restore-confirm" class="form-control admin-backup-confirm" autocomplete="off"
+               data-site-backup-target="confirm" data-action="input->site-backup#checkRestore">
+      </div>
+      <div class="d-flex flex-wrap gap-2">
+        <button type="button" class="btn btn-danger" data-action="site-backup#restore"
+                data-site-backup-target="restoreButton" disabled>Restore</button>
+      </div>
+    </section>
+  </div>
+<% end %>

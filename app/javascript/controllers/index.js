@@ -38,3 +38,6 @@ application.register("publish-review", PublishReviewController)
 
 import PageEditingController from "./page_editing_controller"
 application.register("page-editing", PageEditingController)
+
+import SiteBackupController from "./site_backup_controller"
+application.register("site-backup", SiteBackupController)

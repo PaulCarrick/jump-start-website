@@ -801,3 +801,14 @@ li.is-dragging > .outline-row { opacity: 0.4; }
 .workspace-full-chooser { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; max-width: 720px; }
 .workspace-full-chooser .form-label { margin: 0; font-weight: 600; }
 .workspace-page-form { max-width: 720px; }
+
+/* Backup and restore (Admin > Backup and restore). */
+.admin-backup { max-width: 960px; }
+.admin-backup-intro { line-height: 1.6; }
+.admin-backup-section { display: block; margin-bottom: 1.5rem; }
+.admin-backup-section h2 { font-size: 1.25rem; margin-bottom: .75rem; }
+.admin-backup-section fieldset { margin-bottom: .75rem; }
+.admin-backup-plan { margin: 0 0 1rem; }
+.admin-backup-plan:empty { display: none; }
+.admin-backup-confirm { max-width: 16rem; }
+.admin-backup-status { overflow-wrap: anywhere; }

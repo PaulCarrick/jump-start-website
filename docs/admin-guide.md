@@ -21,6 +21,7 @@ The pictures show the paul-carrick.com site. Your own site shows your own pages 
 - [Users and access](#users-and-access)
 - [Site setups](#site-setups)
 - [History and restoring an earlier version](#history-and-restoring-an-earlier-version)
+- [Backup and restore](#backup-and-restore)
 - [Keyboard shortcuts](#keyboard-shortcuts)
 - [Common questions](#common-questions)
 
@@ -604,6 +605,30 @@ Everything keeps its earlier versions.
 ![A page's history, with Restore as Draft beside each version](../public/admin-help/record-history.webp)
 
 Passwords and secret settings are never restored.
+
+## Backup and restore
+
+Choose **Backup and restore** in the sidebar (under Site; administrators of the main site only). A backup is a set of files saved on **your computer**; nothing is kept on the server.
+
+- One file for each database, for example `rails_database_11-12-2026.dump` (pages, accounts, settings, menus, blog posts, and the email password: keep the files private).
+- One file for the pictures and other uploaded files, for example `rails_images_11-12-2026.tar.gz`. It can be large.
+
+They are the same files as `bin/backup_database.sh` makes on the server, so backups made either way can be restored here, including older ones with extra words in their names such as `rails_database_before_menu_position_11-09-2026.dump`.
+
+### How to back up
+
+1. Tick the databases and, if you want them, the pictures and uploaded files.
+2. Choose **Back up now**. In Chrome or Edge, choose a folder on your computer: the files are saved straight into it and the server's copy is deleted. In other browsers the files download one after another; when they have finished, choose **Delete the copy on the server**.
+3. If the page was closed before the files were saved, the backup waits on the server: open the page again and choose **Save the waiting backup** (or delete it).
+
+### How to restore
+
+1. Under **Restore**, choose the backup files you want back. Each database file replaces its database; choose the database for a file whose name does not match one of this site's (for example a backup of `rails` restored into a new install's `jump_start`). An images file replaces every picture and uploaded file.
+2. Type **RESTORE** and choose **Restore**. The files upload in parts, then the server restores them; the page shows how far it has got.
+3. The current database is saved on the server first, in `tmp/backup/before_restore`. A database is replaced in one step, so a restore that fails leaves it as it was.
+4. Restoring a database logs everyone out. Log in again with an account and password **from the backup**, then open Backup and restore to see how it ended. The site restarts by itself.
+
+The restored database keeps its own Site URL. On a server with a different address the site answers only at that URL; point the domain at the new server, or change the Site URL from the server's console.
 
 ## Keyboard shortcuts
 

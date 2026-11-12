@@ -11,6 +11,10 @@ module AdminNavigationHelper
     # Secondary sites share the default site's setup, so they do not edit it.
     site_links << AdminLink.new(label: "Settings", path: admin_site_setups_path, controllers: %w[site_setups]) unless SiteContext.tenant?
     site_links << AdminLink.new(label: "Users", path: admin_users_path, controllers: %w[users])
+    # A restore replaces every site's accounts and pages, so only the main site's administrators get it.
+    if !SiteContext.tenant? && @application_user&.admin?
+      site_links << AdminLink.new(label: "Backup and restore", path: admin_backup_path, controllers: %w[backups])
+    end
 
     [
       { title: nil, links: [ AdminLink.new(label: "Dashboard", path: admin_root_path, controllers: %w[dashboard]) ] },

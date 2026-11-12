@@ -36,6 +36,16 @@ Rails.application.routes.draw do
     get 'publishing/history', to: 'publishing#history', as: :publishing_history
     get "help", to: "help#show", as: :help
     get "tutorial", to: "help#tutorial", as: :tutorial
+    get "backup", to: "backups#show", as: :backup
+    get "backup/status", to: "backups#status", as: :backup_status
+    get "backup/download/:name", to: "backups#download", as: :backup_download, constraints: { name: %r{[^/]+} }
+    post "backup/start", to: "backups#start", as: :backup_start
+    post "backup/discard", to: "backups#discard", as: :backup_discard
+    post "backup/upload", to: "backups#upload", as: :backup_upload
+    post "backup/plan", to: "backups#plan", as: :backup_plan
+    post "backup/restore", to: "backups#restore", as: :backup_restore
+    post "backup/discard_uploads", to: "backups#discard_uploads", as: :backup_discard_uploads
+    post "backup/dismiss", to: "backups#dismiss", as: :backup_dismiss
     root "dashboard#index" # Admin dashboard
     resources :blog_posts, except: [ :destroy ]
     delete "/blog_posts/:id", to: "blog_posts#destroy", as: "delete_blog_post"
