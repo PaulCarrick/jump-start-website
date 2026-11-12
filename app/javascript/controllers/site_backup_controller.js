@@ -65,12 +65,8 @@ export default class extends Controller {
     if (files.length === 0) return
     if (this.folder) {
       for (const file of files) {
-        this.message(`Saving ${file.name} (${this.size(file.size)}) into the folder ${this.folder.name}…`, "info")
-        const response = await fetch(this.downloadUrlValue + encodeURIComponent(file.name), { credentials: "same-origin" })
-        if (!response.ok) return this.message(`${file.name} could not be downloaded.`, "danger")
-        const handle = await this.folder.getFileHandle(file.name, { create: true })
-        const writable = await handle.createWritable()
-        await response.body.pipeTo(writable)
+        const saved = await this.saveFile(file)
+        if (!saved) return
       }
       await this.discard()
       this.message(`Saved ${files.map((file) => file.name).join(", ")} into the folder ${this.folder.name}, and deleted the copy on the server.`, "success")
@@ -84,8 +80,49 @@ export default class extends Controller {
         link.remove()
         await new Promise((resolve) => setTimeout(resolve, 1500))
       }
-      this.message("Your browser is downloading the files. When they have finished, choose Delete the copy on the server.", "info")
+      this.message("Your browser is downloading the files. When they have finished, choose Delete the copy on the server. " +
+                   "A very large pictures file may not download completely this way: Chrome or Edge saves it reliably.", "info")
     }
+  }
+
+  // Fetches the file in pieces and writes them in order into the chosen folder, so a
+  // large file never travels as one long response. A piece that fails is tried again.
+  async saveFile(file) {
+    const piece = 16 * 1024 * 1024
+    let writable
+    try {
+      const handle = await this.folder.getFileHandle(file.name, { create: true })
+      writable = await handle.createWritable()
+      for (let offset = 0; offset < file.size; offset += piece) {
+        this.message(`Saving ${file.name} into the folder ${this.folder.name}: ${this.size(offset)} of ${this.size(file.size)}…`, "info")
+        const data = await this.fetchPiece(file.name, offset, Math.min(piece, file.size - offset))
+        await writable.write(data)
+      }
+      await writable.close()
+      return true
+    } catch (error) {
+      if (writable) await writable.abort().catch(() => {})
+      this.message(`${file.name} could not be saved: ${error.message}. The backup is still on the server: choose Save the waiting backup to try again.`, "danger")
+      return false
+    }
+  }
+
+  async fetchPiece(name, offset, length) {
+    const query = new URLSearchParams({ offset, length })
+    let lastError
+    for (let attempt = 1; attempt <= 4; attempt += 1) {
+      try {
+        const response = await fetch(`${this.downloadUrlValue}${encodeURIComponent(name)}?${query}`, { credentials: "same-origin" })
+        if (!response.ok) throw new Error(`the server answered ${response.status}`)
+        const data = await response.arrayBuffer()
+        if (data.byteLength !== length) throw new Error(`a piece was ${data.byteLength} bytes instead of ${length}`)
+        return data
+      } catch (error) {
+        lastError = error
+        await new Promise((resolve) => setTimeout(resolve, attempt * 2000))
+      }
+    }
+    throw lastError
   }
 
   // *** Restoring ***

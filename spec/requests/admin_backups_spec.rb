@@ -22,6 +22,23 @@ RSpec.describe 'Admin backup and restore', type: :request do
     expect(response.body).to include('Backup and restore', SiteBackup.main_database, 'Type <strong>RESTORE</strong>')
   end
 
+  it 'sends a finished backup whole or in pieces' do
+    sign_in create(:user, access: 'admin')
+    FileUtils.mkdir_p(work.join('files'))
+    work.join('files', 'rails_images_11-12-2026.tar.gz').binwrite('0123456789')
+
+    get admin_backup_download_path(name: 'rails_images_11-12-2026.tar.gz')
+    expect(response.body).to eq('0123456789')
+    expect(response.headers['Cache-Control']).to include('no-transform')
+
+    get admin_backup_download_path(name: 'rails_images_11-12-2026.tar.gz', offset: 4, length: 3)
+    expect(response.body).to eq('456')
+    expect(response.headers['X-File-Size']).to eq('10')
+
+    get admin_backup_download_path(name: 'rails_images_11-12-2026.tar.gz', offset: 0, length: SiteBackup::DOWNLOAD_PIECE_BYTES + 1)
+    expect(response).to have_http_status(:range_not_satisfiable)
+  end
+
   it 'refuses a file that is not a backup, a restore without RESTORE, and an unknown download' do
     sign_in create(:user, access: 'admin')
     post admin_backup_upload_path(name: 'evil.sh', offset: 0, last: true), params: 'x',

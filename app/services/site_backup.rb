@@ -28,6 +28,7 @@ class SiteBackup
   DATABASE_FILE = /\A(?<database>[A-Za-z0-9_-]+?)_database_[A-Za-z0-9_.-]*\.dump\z/
   IMAGES_FILE = /\A(?<database>[A-Za-z0-9_-]+?)_images_[A-Za-z0-9_.-]*\.tar\.gz\z/
   CHUNK_BYTES = 8 * 1024 * 1024
+  DOWNLOAD_PIECE_BYTES = 16 * 1024 * 1024
   MAX_UPLOAD_BYTES = 20 * 1024 * 1024 * 1024
   STALE_UPLOAD_SECONDS = 24 * 60 * 60
 

@@ -24,13 +24,25 @@ class Admin::BackupsController < ApplicationController
     render json: { error: error.message }, status: :unprocessable_content
   end
 
+  # The whole file, or with offset (and length) one piece of it. The page fetches large
+  # files in pieces: a single response of a gigabyte or more is cut off when the
+  # visitor's connection is slower than the server (nginx stops reading once its
+  # buffer is full, and Puma gives up writing after a few seconds).
   def download
     file = SiteBackup.finished_file(params[:name])
     return head :not_found unless file
 
-    # no-transform keeps Rack::Deflater from compressing a large file again on the way out.
+    # no-transform keeps Rack::Deflater from compressing the file again on the way out.
     response.headers["Cache-Control"] = "private, no-transform"
-    send_file file, filename: file.basename.to_s, type: "application/octet-stream", disposition: "attachment"
+    response.headers["X-File-Size"] = file.size.to_s
+    return send_file(file, filename: file.basename.to_s, type: "application/octet-stream", disposition: "attachment") if params[:offset].blank?
+
+    offset = params[:offset].to_i
+    length = params[:length].present? ? params[:length].to_i : SiteBackup::DOWNLOAD_PIECE_BYTES
+    return head :range_not_satisfiable if offset.negative? || offset > file.size || length <= 0 || length > SiteBackup::DOWNLOAD_PIECE_BYTES
+
+    data = File.open(file, "rb") { |source| source.seek(offset) && source.read(length) } || ""
+    send_data data, type: "application/octet-stream", disposition: "attachment", filename: file.basename.to_s
   end
 
   def discard
